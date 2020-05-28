@@ -1,6 +1,5 @@
 #
-# Copyright 2020 Antoine Sanner
-#           2019 Lintao Fang
+# Copyright 2020 Lars Pastewka
 # 
 # ### MIT license
 # 
@@ -23,28 +22,8 @@
 # SOFTWARE.
 #
 
+"""
+Interpolation module
+"""
 
-# This is a gnuplot script to plot logfiles of contact mechanics simulations
-# (Tools.Logger )
-# To `gnuplot -c commandline/plot.plg Logger_output.log`
-# this assumes a particular layout of the logfile (order of the columns),
-# you may needto adjust this script
-
-name=ARG1
-
-set size 0.5,0.5
-set multiplot layout 3,1
-set font ",15"
-set tmargin 1
-set tics font ",6"
-
-set ylabel 'Fractional Area' font "Times-Roman,8"
-plot name using 2:4 title " Fractional Area " with linespoints pt 5
-#               ^ plot column 2 in x axis, column 4 in y axis
-set ylabel 'Total Force ' font "Times-Roman,8"
-plot name using 2:5 title " Total Force " with linespoints pt 6
-
-set xlabel 'Iteration' font "Times-Roman,8"
-set ylabel 'Offset' font "Times-Roman,8"
-plot name  using 2:6 title " Offset " with linespoints pt 8
-pause -1
+from _PyCo import Bicubic
