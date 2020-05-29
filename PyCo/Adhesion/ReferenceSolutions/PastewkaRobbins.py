@@ -31,10 +31,8 @@ See: L. Pastewka, M.O. Robbins, unpublished
 from __future__ import division
 
 import numpy as np
-from math import pi
-from scipy.optimize import brentq
 
-from PyCo.ReferenceSolutions.MaugisDugdale import afindroot
+from PyCo.Adhesion.ReferenceSolutions.MaugisDugdale import afindroot
 
 ###
 

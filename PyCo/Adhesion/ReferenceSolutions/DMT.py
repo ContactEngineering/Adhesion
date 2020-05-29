@@ -28,9 +28,7 @@ Helper tools for PyCo
 
 import math
 
-import numpy as np
-
-import PyCo.ReferenceSolutions.Hertz as Hertz
+import PyCo.ContactMechanics.ReferenceSolutions.Hertz as Hertz
 
 ###
 
@@ -52,7 +50,7 @@ def radius_and_pressure(N, R, Es, w):
         Work of adhesion.
     """
 
-    return Hertz.radius_and_pressure(N+2*math.pi*w*R, R, Es)
+    return Hertz.radius_and_pressure(N + 2 * math.pi * w * R, R, Es)
 
 
 def surface_stress(r, a, nu):

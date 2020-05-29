@@ -31,10 +31,8 @@ See: J.M. Baney, C.-Y. Hui, J. Adhesion Sci. Technol. 11, 393 (1997)
 from __future__ import division
 
 import numpy as np
-from math import pi
-from scipy.optimize import brentq
 
-from PyCo.ReferenceSolutions.MaugisDugdale import afindroot
+from PyCo.Adhesion.ReferenceSolutions.MaugisDugdale import afindroot
 
 ###
 
