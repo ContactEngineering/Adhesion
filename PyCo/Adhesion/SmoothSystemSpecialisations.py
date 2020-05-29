@@ -34,8 +34,8 @@ import copy
 import numpy as np
 import scipy
 
-from PyCo.ContactMechanics.Systems import SmoothContactSystem
-from PyCo.ContactMechanics.Systems import IncompatibleResolutionError
+from PyCo.Adhesion.Systems import SmoothContactSystem
+from PyCo.Adhesion.Systems import IncompatibleResolutionError
 from PyCo.SurfaceTopography import Topography
 from PyCo import Adhesion, ContactMechanics
 
