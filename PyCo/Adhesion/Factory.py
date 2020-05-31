@@ -15,7 +15,7 @@ def make_system(substrate, interaction, surface, communicator=MPI.COMM_WORLD,
     substrate   -- An instance of HalfSpace. Defines the solid mechanics in
                    the substrate
     interaction -- An instance of Interaction. Defines the contact formulation
-    surface     -- An instance of Topography, defines the profile.
+    surface     -- An instance of SurfaceTopography, defines the profile.
     Returns
     -------
     """
