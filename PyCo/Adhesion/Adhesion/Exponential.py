@@ -27,7 +27,7 @@
 Exponential attraction.
 """
 
-from . import Potential
+from PyCo.Adhesion import Potential
 import numpy as np
 from NuMPI import MPI
 

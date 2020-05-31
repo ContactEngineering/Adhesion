@@ -1,5 +1,6 @@
 #
-# Copyright 2016, 2018 Lars Pastewka
+# Copyright 2019 Antoine Sanner
+#           2016, 2019 Lars Pastewka
 #           2016 Till Junge
 # 
 # ### MIT license
@@ -24,10 +25,17 @@
 #
 
 """
-Efficient contact mechanics with Python
+Defines all interaction modes used in PyCo
 """
 
-from . import Adhesion, ContactMechanics, SurfaceTopography
+from .Potentials import Potential, SmoothPotential
+from .Potentials import LinearCorePotential, ParabolicCutoffPotential
+
+from .Harmonic import Harmonic
+from .VdW82 import VDW82, VDW82smooth, VDW82smoothMin, VDW82SimpleSmooth, VDW82SimpleSmoothMin, Lj82
+from .PowerLaw import PowerLaw
+
+from .Factory import make_system
 
 try:
     from importlib.metadata import version

@@ -28,14 +28,11 @@
 Defines the interface for PyCo systems
 """
 
-import abc
-
 import numpy as np
-import scipy
 
 from PyCo import Adhesion, ContactMechanics, SurfaceTopography
 from PyCo.Tools import compare_containers
-from PyCo.ContactMechanics.Systems import IncompatibleFormulationError, IncompatibleResolutionError, SystemBase
+from PyCo.ContactMechanics.Systems import IncompatibleResolutionError, SystemBase
 
 class SmoothContactSystem(SystemBase):
     """
