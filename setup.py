@@ -31,8 +31,7 @@ scripts = [
    ]
 
 setup(
-    name="PyCo",
-    cmdclass={'build_ext': CustomBuildExtCommand},
+    name="Adhesion",
     scripts=scripts,
     packages=find_packages(),
     package_data={'': ['ChangeLog.md']},
