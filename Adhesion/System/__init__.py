@@ -1,0 +1,8 @@
+
+from ContactMechanics.Systems import IncompatibleResolutionError
+
+from .Systems import SmoothContactSystem, BoundedSmoothContactSystem
+from .SmoothSystemSpecialisations import FastSmoothContactSystem
+from .PlasticSystemSpecialisations import PlasticSmoothContactSystem
+from .Factory import make_system
+

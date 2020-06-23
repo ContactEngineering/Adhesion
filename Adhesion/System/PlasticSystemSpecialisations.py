@@ -30,7 +30,7 @@ implements plastic mapping algorithms for contact systems
 import numpy as np
 
 import Adhesion, ContactMechanics, SurfaceTopography
-from Adhesion.Systems import SmoothContactSystem
+from Adhesion.System import SmoothContactSystem
 
 class PlasticSmoothContactSystem(SmoothContactSystem):
     """

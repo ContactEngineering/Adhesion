@@ -30,7 +30,7 @@ simpre sphere-on-flat contact simulation to measure pull-off hysteresis
 import numpy as np
 import matplotlib.pyplot as plt
 
-from System import make_system
+from Adhesion.System import make_system
 from SurfaceTopography import make_sphere
 from Adhesion import VDW82smoothMin as VdwPot
 from ContactMechanics import FreeFFTElasticHalfSpace as Substrate

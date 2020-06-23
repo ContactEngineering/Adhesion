@@ -29,8 +29,8 @@ from SurfaceTopography import Topography
 
 from NuMPI.Optimization import LBFGS
 from NuMPI.Tools.Reduction import Reduction
-from Adhesion import VDW82smoothMin
-from Adhesion import SmoothContactSystem
+from Adhesion.Interactions import VDW82smoothMin
+from Adhesion.System import SmoothContactSystem
 
 _toplot=False
 def test_wavy(comm):

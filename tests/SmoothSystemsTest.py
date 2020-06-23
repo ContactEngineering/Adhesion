@@ -3,9 +3,9 @@ import numpy as np
 import pytest
 
 from SurfaceTopography import make_sphere
-from Adhesion import Exponential, Lj82, LinearCorePotential
+from Adhesion.Interactions import Exponential, Lj82, LinearCorePotential
 from ContactMechanics import (FreeFFTElasticHalfSpace)
-from Adhesion import SmoothContactSystem, BoundedSmoothContactSystem
+from Adhesion.System import SmoothContactSystem, BoundedSmoothContactSystem
 from NuMPI import MPI
 
 

@@ -33,11 +33,11 @@ import pytest
 from mpi4py import MPI
 from ContactMechanics import FreeFFTElasticHalfSpace,PeriodicFFTElasticHalfSpace
 from ContactMechanics.Factory import make_system
-from Adhesion import HardWall, VDW82, Exponential
+from Adhesion.Interactions import VDW82, Exponential
 from SurfaceTopography import make_sphere
 from SurfaceTopography.IO import NPYReader
-from Adhesion import SmoothContactSystem
-from Tools import Logger
+from Adhesion.System import SmoothContactSystem
+from ContactMechanics.Tools import Logger
 
 import numpy as np
 

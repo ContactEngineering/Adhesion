@@ -27,8 +27,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import Adhesion.ReferenceSolutions.MaugisDugdale as MD
-from ContactMechanics import make_system
-from Adhesion import Dugdale
+from Adhesion.System import make_system
+from Adhesion.Interactions import Dugdale
 from ContactMechanics import FreeFFTElasticHalfSpace
 from ContactMechanics.Tools.Logger import screen
 from SurfaceTopography import make_sphere

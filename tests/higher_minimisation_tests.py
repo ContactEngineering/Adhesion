@@ -34,7 +34,7 @@ import math
 
 from ContactMechanics import make_system
 from SurfaceTopography import make_sphere
-from Adhesion import LJ93smoothMin as LJ_pot
+from Adhesion.Interactions import LJ93smoothMin as LJ_pot
 from ContactMechanics import FreeFFTElasticHalfSpace as Substrate
 
 

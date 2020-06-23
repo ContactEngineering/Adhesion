@@ -25,17 +25,8 @@
 #
 
 """
-Defines all interaction modes used in PyCo
+Defines all interaction modes used in Adhesion
 """
-
-from .Potentials import Potential, SmoothPotential
-from .Potentials import LinearCorePotential, ParabolicCutoffPotential
-
-from .Harmonic import Harmonic
-from .VdW82 import VDW82, VDW82smooth, VDW82smoothMin, VDW82SimpleSmooth, VDW82SimpleSmoothMin, Lj82
-from .PowerLaw import PowerLaw
-
-from .Factory import make_system
 
 try:
     from importlib.metadata import version

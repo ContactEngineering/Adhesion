@@ -31,11 +31,11 @@ from scipy.optimize import minimize_scalar
 from NuMPI.Optimization import LBFGS
 from NuMPI.Tools.Reduction import Reduction
 
-import Adhesion.Adhesion.ReferenceSolutions.MaugisDugdale as MD
+import Adhesion.ReferenceSolutions.MaugisDugdale as MD
 from ContactMechanics import FreeFFTElasticHalfSpace
 from SurfaceTopography import make_sphere
-from Adhesion import VDW82smoothMin
-from Adhesion import SmoothContactSystem
+from Adhesion.Interactions import VDW82smoothMin
+from Adhesion.System import SmoothContactSystem
 
 _toplot = True
 

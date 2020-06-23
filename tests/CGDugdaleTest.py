@@ -26,8 +26,8 @@ import numpy as np
 
 import pytest
 
-import Adhesion.Adhesion.ReferenceSolutions.MaugisDugdale as MD
-from Adhesion import Dugdale
+import Adhesion.ReferenceSolutions.MaugisDugdale as MD
+from Adhesion.Interactions import Dugdale
 from ContactMechanics import PeriodicFFTElasticHalfSpace, FreeFFTElasticHalfSpace
 from ContactMechanics import make_system
 from ContactMechanics.Tools.Logger import screen

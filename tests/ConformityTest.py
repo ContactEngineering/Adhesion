@@ -35,16 +35,11 @@ class SystemTest(unittest.TestCase):
     def setUp(self):
         self.modules = list([Adhesion,
                              Adhesion.Interactions,
-                             Adhesion.Lj93,
-                             Adhesion.Adhesion.VdW82,
+                             Adhesion.Interactions.Lj93,
+                             Adhesion.VdW82,
                              Adhesion.Potentials,
-                             System,
-                             Adhesion.SmoothSystemSpecialisations,
-
-ation.AugmentedLagrangian,
-ation.NewtonConfidenceRegion,
-ation.NewtonLineSearch,
-ation.common,
+                             Adhesion.System,
+                             Adhesion.System.SmoothSystemSpecialisations,
 ])
 
     def te_st_pylint_bitchiness(self):

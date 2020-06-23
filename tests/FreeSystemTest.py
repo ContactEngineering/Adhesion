@@ -36,13 +36,13 @@ from scipy.optimize import minimize
 
 from NuMPI import MPI
 
-import ContactMechanics as Solid
-import Adhesion as Contact
-import Tools as Tools
-from Adhesion import SmoothContactSystem
+import ContactMechanics as ContactMechanics
+import Adhesion.Interactions as Contact
+import ContactMechanics.Tools as Tools
+from Adhesion.System import SmoothContactSystem
 from ContactMechanics.Systems import NonSmoothContactSystem
-from Adhesion import FastSmoothContactSystem
-from Adhesion import make_system
+from Adhesion.System import FastSmoothContactSystem
+from Adhesion.System import make_system
 from SurfaceTopography import make_sphere
 
 pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
@@ -69,7 +69,7 @@ def test_minimization_simplesmoothmin(young, r_c):
     ext_surface = make_sphere(radius, [2 * r for r in res], [2 * s for s in size],
                                                 centre=[s / 2 for s in size], standoff=float('inf'))
 
-    substrate = Solid.FreeFFTElasticHalfSpace(
+    substrate = ContactMechanics.FreeFFTElasticHalfSpace(
         res, young, size, fft="numpy")
 
     pot = Contact.LJ93SimpleSmoothMin(eps, sig, r_c=r_c, r_ti=0.5)
@@ -138,7 +138,7 @@ def test_minimization(pot_class, young, base_res):
     ext_surface = make_sphere(radius, [2 * r for r in res], [2 * s for s in size],
                                                 centre=[s / 2 for s in size], standoff=float("inf"))
 
-    substrate = Solid.FreeFFTElasticHalfSpace(res, young, size, fft="numpy")
+    substrate = ContactMechanics.FreeFFTElasticHalfSpace(res, young, size, fft="numpy")
 
     if pot_class == Contact.VDW82smoothMin:
         pot = pot_class(gam * eps ** 8 / 3, 16 * np.pi * gam * eps ** 2, gamma=gam)
@@ -200,7 +200,7 @@ class FastSystemTest(unittest.TestCase):
         self.res = (base_res, base_res)
         self.young = 3  # +2*random()
 
-        self.substrate = Solid.FreeFFTElasticHalfSpace(
+        self.substrate = ContactMechanics.FreeFFTElasticHalfSpace(
             self.res, self.young, self.physical_sizes, fft="serial")
 
         self.eps = 1  # +np.random.rand()
@@ -412,7 +412,7 @@ class FastSystemTest(unittest.TestCase):
         energy_rc = (1., 1. / energy_c)
 
         for i in range(2):
-            substrate = Solid.PeriodicFFTElasticHalfSpace(res, young[i],
+            substrate = ContactMechanics.PeriodicFFTElasticHalfSpace(res, young[i],
                                                           size[i])
             interaction = Contact.LJ93smoothMin(
                 eps[i], sig[i], gam[i])
@@ -506,7 +506,7 @@ class FastSystemTest(unittest.TestCase):
 
             interaction = Contact.LJ93smoothMin(young / 18 * np.sqrt(2 / 5), 2.5 ** (1 / 6), gamma=gam)
 
-            substrate = Solid.FreeFFTElasticHalfSpace(surface.nb_grid_pts, young, surface.physical_sizes)
+            substrate = ContactMechanics.FreeFFTElasticHalfSpace(surface.nb_grid_pts, young, surface.physical_sizes)
             system = FastSmoothContactSystem(substrate, interaction, surface, margin=4)
 
             start_disp = - interaction.r_c + 1e-10
@@ -549,7 +549,7 @@ class FastSystemTest(unittest.TestCase):
         topography = make_sphere(radius, res, size, centre=centre)
         ext_topography = make_sphere(radius, (2 * n, 2 * n), (2 * s, 2 * s), centre=centre)
 
-        substrate = Solid.FreeFFTElasticHalfSpace(topography.nb_grid_pts, young,
+        substrate = ContactMechanics.FreeFFTElasticHalfSpace(topography.nb_grid_pts, young,
                                                   topography.physical_sizes,
                                                   check_boundaries=True)
 
@@ -557,7 +557,7 @@ class FastSystemTest(unittest.TestCase):
                        SmoothContactSystem(substrate, Contact.LJ93SimpleSmooth(0.01, 0.01, 10), topography)]:
             with self.subTest(system=system):
                 offset = 15
-                with self.assertRaises(Solid.FreeFFTElasticHalfSpace.FreeBoundaryError):
+                with self.assertRaises(ContactMechanics.FreeFFTElasticHalfSpace.FreeBoundaryError):
                     opt = system.minimize_proxy(offset=offset)
                 if False:
                     import matplotlib.pyplot as plt

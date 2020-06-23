@@ -29,10 +29,10 @@ Tries to guess displacements such that areas are equally spaced on a log scale.
 """
 
 import numpy as np
-from Adhesion import Exponential
+from Adhesion.Interactions import Exponential
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from SurfaceTopography import read_matrix
-from ContactMechanics import make_system
+from Adhesion.System import make_system
 from ContactMechanics.Tools.Logger import screen
 from ContactMechanics.IO.NetCDF import NetCDFContainer
 

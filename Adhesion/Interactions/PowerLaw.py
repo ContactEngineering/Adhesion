@@ -1,7 +1,7 @@
 import numpy as np
 from NuMPI import MPI
 
-from Adhesion import Potential, SoftWall
+from Adhesion.Interactions import Potential, SoftWall
 
 
 class PowerLaw(Potential):

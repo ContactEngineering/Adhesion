@@ -34,10 +34,10 @@ import copy
 import numpy as np
 import scipy
 
-from Adhesion.Systems import SmoothContactSystem
-from Adhesion.Systems import IncompatibleResolutionError
+from Adhesion.System import SmoothContactSystem
+from Adhesion.System import IncompatibleResolutionError
 from SurfaceTopography import Topography
-from PyCo import Adhesion, ContactMechanics
+import Adhesion, ContactMechanics
 
 
 # convenient container for storing correspondences betwees small and large

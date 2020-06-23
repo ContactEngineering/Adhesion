@@ -36,12 +36,12 @@ import time
 import os
 from netCDF4 import Dataset
 
-from Adhesion import make_system
+from Adhesion.System import make_system
 from ContactMechanics.Systems import IncompatibleResolutionError
-from Adhesion import SmoothContactSystem
+from Adhesion.System import SmoothContactSystem
 import ContactMechanics as Solid
 import Adhesion as Contact
-import Tools as Tools
+import ContactMechanics.Tools as Tools
 from SurfaceTopography import make_sphere
 
 import pytest

@@ -31,10 +31,10 @@ import unittest
 import numpy as np
 import Adhesion.ReferenceSolutions.MaugisDugdale as MD
 from scipy.optimize import minimize_scalar
-from Adhesion import Exponential
+from Adhesion.Interactions import Exponential
 from ContactMechanics import (FreeFFTElasticHalfSpace)
 from SurfaceTopography import make_sphere
-from Adhesion import SmoothContactSystem
+from Adhesion.System import SmoothContactSystem
 
 
 from NuMPI import MPI
