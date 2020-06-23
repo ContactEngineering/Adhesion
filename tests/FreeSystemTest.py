@@ -191,7 +191,7 @@ def test_minimization(pot_class, young, base_res):
         plt.show(block=True)
     assert result.success, "{}".format(result)
 
-
+@unittest.skip(reason="no support for FastSystem for the moment")
 class FastSystemTest(unittest.TestCase):
     def setUp(self):
         self.physical_sizes = (15, 15)  # (7.5+5*rand(), 7.5+5*rand())
