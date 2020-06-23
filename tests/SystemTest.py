@@ -40,7 +40,7 @@ from Adhesion.System import make_system
 from ContactMechanics.Systems import IncompatibleResolutionError
 from Adhesion.System import SmoothContactSystem
 import ContactMechanics as Solid
-import Adhesion as Contact
+import Adhesion.Interactions as Contact
 import ContactMechanics.Tools as Tools
 from SurfaceTopography import make_sphere
 
