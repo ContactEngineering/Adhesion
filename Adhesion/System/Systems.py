@@ -51,7 +51,8 @@ class SmoothContactSystem(SystemBase):
                        performed by the system
         surface     -- An instance of SurfaceTopography, defines the profile.
         """
-        super().__init__(substrate, interaction, surface)
+        super().__init__(substrate=substrate, surface=surface)
+        self.interaction = interaction
         if not compare_containers(surface.nb_grid_pts, substrate.nb_grid_pts):
             raise IncompatibleResolutionError(
                 ("the substrate ({}) and the surface ({}) have incompatible "
