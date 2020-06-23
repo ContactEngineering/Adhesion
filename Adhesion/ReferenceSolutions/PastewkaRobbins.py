@@ -32,7 +32,7 @@ from __future__ import division
 
 import numpy as np
 
-from PyCo.Adhesion.Adhesion.ReferenceSolutions.MaugisDugdale import afindroot
+from Adhesion.ReferenceSolutions.MaugisDugdale import afindroot
 
 ###
 

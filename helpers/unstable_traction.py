@@ -30,10 +30,10 @@ Trying to show that soft materials have unstable pulloff behavior
 import numpy as np
 import matplotlib.pyplot as plt
 
-from PyCo.System import make_system
-from PyCo.SurfaceTopography import make_sphere
-from PyCo.Adhesion import LJ93smoothMin as LJ_pot
-from PyCo.ContactMechanics import FreeFFTElasticHalfSpace as Substrate
+from System import make_system
+from SurfaceTopography import make_sphere
+from Adhesion import LJ93smoothMin as LJ_pot
+from ContactMechanics import FreeFFTElasticHalfSpace as Substrate
 
 plt.ion()
 for base_res in (64, ):#128, 256, 512, 1024):

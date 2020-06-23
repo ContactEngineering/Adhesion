@@ -32,9 +32,9 @@ http://dx.doi.org/10.1103/PhysRevLett.111.035502
 import numpy as np
 from NuMPI import MPI
 
-from PyCo.Adhesion import Potential, SmoothPotential
-from PyCo.Adhesion import ParabolicCutoffPotential
-from PyCo.Adhesion import LinearCorePotential
+from Adhesion import Potential, SmoothPotential
+from Adhesion import ParabolicCutoffPotential
+from Adhesion import LinearCorePotential
 
 
 class VDW82(Potential):

@@ -32,14 +32,14 @@ import os
 import scipy.optimize
 import numpy as np
 
-from PyCo.ContactMechanics import PeriodicFFTElasticHalfSpace
-from PyCo.SurfaceTopography.Generation import fourier_synthesis
+from ContactMechanics import PeriodicFFTElasticHalfSpace
+from SurfaceTopography.Generation import fourier_synthesis
 
 # TODO: this file uses deprecated API and is broken
 from NuMPI.Optimization import LBFGS
 from NuMPI.Tools.Reduction import Reduction
-from PyCo.Adhesion import VDW82smoothMin
-from PyCo.ContactMechanics.System import SmoothContactSystem
+from Adhesion import VDW82smoothMin
+from ContactMechanics.System import SmoothContactSystem
 
 from NuMPI import MPI
 

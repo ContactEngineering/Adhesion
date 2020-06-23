@@ -36,13 +36,13 @@ import time
 import os
 from netCDF4 import Dataset
 
-from PyCo.Adhesion import make_system
-from PyCo.ContactMechanics.Systems import IncompatibleResolutionError
-from PyCo.Adhesion import SmoothContactSystem
-import PyCo.ContactMechanics as Solid
-import PyCo.Adhesion as Contact
-import PyCo.Tools as Tools
-from PyCo.SurfaceTopography import make_sphere
+from Adhesion import make_system
+from ContactMechanics.Systems import IncompatibleResolutionError
+from Adhesion import SmoothContactSystem
+import ContactMechanics as Solid
+import Adhesion as Contact
+import Tools as Tools
+from SurfaceTopography import make_sphere
 
 import pytest
 from NuMPI import MPI
@@ -350,7 +350,7 @@ def test_LBFGSB_Hertz():
         system.substrate.local_topography_subdomain_slices] == contacting_points).all()
 
     comp_normal_force= np.sum(-substrate.evaluate_force(res.x))
-    from PyCo.ContactMechanics.ReferenceSolutions import Hertz as Hz
+    from ContactMechanics.ReferenceSolutions import Hertz as Hz
     a, p0 = Hz.radius_and_pressure(Hz.normal_load(offset, R, Es), R, Es)
 
     np.testing.assert_allclose(comp_normal_force,

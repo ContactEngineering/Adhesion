@@ -36,14 +36,14 @@ from scipy.optimize import minimize
 
 from NuMPI import MPI
 
-import PyCo.ContactMechanics as Solid
-import PyCo.Adhesion as Contact
-import PyCo.Tools as Tools
-from PyCo.Adhesion import SmoothContactSystem
-from PyCo.ContactMechanics.Systems import NonSmoothContactSystem
-from PyCo.Adhesion import FastSmoothContactSystem
-from PyCo.Adhesion import make_system
-from PyCo.SurfaceTopography import make_sphere
+import ContactMechanics as Solid
+import Adhesion as Contact
+import Tools as Tools
+from Adhesion import SmoothContactSystem
+from ContactMechanics.Systems import NonSmoothContactSystem
+from Adhesion import FastSmoothContactSystem
+from Adhesion import make_system
+from SurfaceTopography import make_sphere
 
 pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
                                 reason="tests only serial funcionalities, please execute with pytest")

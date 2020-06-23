@@ -29,8 +29,8 @@ implements plastic mapping algorithms for contact systems
 
 import numpy as np
 
-from PyCo import Adhesion, ContactMechanics, SurfaceTopography
-from PyCo.Adhesion.Systems import SmoothContactSystem
+import Adhesion, ContactMechanics, SurfaceTopography
+from Adhesion.Systems import SmoothContactSystem
 
 class PlasticSmoothContactSystem(SmoothContactSystem):
     """

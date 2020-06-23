@@ -24,13 +24,13 @@
 #
 
 import numpy as np
-from PyCo.ContactMechanics import PeriodicFFTElasticHalfSpace
-from PyCo.SurfaceTopography import Topography
-#from PyCo.Tools.Logger import screen
+from ContactMechanics import PeriodicFFTElasticHalfSpace
+from SurfaceTopography import Topography
+
 from NuMPI.Optimization import LBFGS
 from NuMPI.Tools.Reduction import Reduction
-from PyCo.Adhesion import VDW82smoothMin
-from PyCo.Adhesion import SmoothContactSystem
+from Adhesion import VDW82smoothMin
+from Adhesion import SmoothContactSystem
 
 _toplot=False
 def test_wavy(comm):

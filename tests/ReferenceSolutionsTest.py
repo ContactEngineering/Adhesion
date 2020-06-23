@@ -34,8 +34,8 @@ try:
     from scipy.special import ellipk, erf
 
     from tests.SurfaceTopography import PyCoTestCase
-    import PyCo.Adhesion.Adhesion.ReferenceSolutions.MaugisDugdale as MD
-    import PyCo.ContactMechanics.ReferenceSolutions.Hertz as Hz
+    import Adhesion.Adhesion.ReferenceSolutions.MaugisDugdale as MD
+    import ContactMechanics.ReferenceSolutions.Hertz as Hz
 
 except ImportError as err:
     import sys

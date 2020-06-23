@@ -31,17 +31,17 @@ try:
     import numpy as np
     from scipy.optimize import minimize
 
-    from PyCo.Tools.Optimisation import intersection_confidence_region
-    from PyCo.Tools.Optimisation import dogleg
-    from PyCo.Tools.Optimisation import steihaug_toint
-    from PyCo.Tools.Optimisation import modified_cholesky
-    from PyCo.Tools.Optimisation import first_wolfe_condition
-    from PyCo.Tools.Optimisation import second_wolfe_condition
-    from PyCo.Tools.Optimisation import line_search
-    from PyCo.Tools.Optimisation import augmented_lagrangian
-    from PyCo.Tools.Optimisation import newton_linesearch
-    from PyCo.Tools.Optimisation import newton_confidence_region
-    from PyCo.Tools import mean_err
+    from Tools.Optimisation import intersection_confidence_region
+    from Tools.Optimisation import dogleg
+    from Tools.Optimisation import steihaug_toint
+    from Tools.Optimisation import modified_cholesky
+    from Tools.Optimisation import first_wolfe_condition
+    from Tools.Optimisation import second_wolfe_condition
+    from Tools.Optimisation import line_search
+    from Tools.Optimisation import augmented_lagrangian
+    from Tools.Optimisation import newton_linesearch
+    from Tools.Optimisation import newton_confidence_region
+    from Tools import mean_err
 
 except ImportError as err:
     import sys

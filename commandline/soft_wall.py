@@ -29,12 +29,12 @@ Tries to guess displacements such that areas are equally spaced on a log scale.
 """
 
 import numpy as np
-from PyCo.Adhesion import Exponential
-from PyCo.ContactMechanics import PeriodicFFTElasticHalfSpace
-from PyCo.SurfaceTopography import read_matrix
-from PyCo.ContactMechanics import make_system
-from PyCo.ContactMechanics.Tools.Logger import screen
-from PyCo.ContactMechanics.IO.NetCDF import NetCDFContainer
+from Adhesion import Exponential
+from ContactMechanics import PeriodicFFTElasticHalfSpace
+from SurfaceTopography import read_matrix
+from ContactMechanics import make_system
+from ContactMechanics.Tools.Logger import screen
+from ContactMechanics.IO.NetCDF import NetCDFContainer
 
 ###
 
@@ -51,7 +51,7 @@ rho = 1.0
 
 ###
 
-# Read a surface topography from a text file. Returns a PyCo.SurfaceTopography.SurfaceTopography
+# Read a surface topography from a text file. Returns a SurfaceTopography.SurfaceTopography
 # object.
 surface = read_matrix('surface1.out')
 # Set the *physical* physical_sizes of the surface. We here set it to equal the shape,
@@ -68,7 +68,7 @@ substrate = PeriodicFFTElasticHalfSpace(surface.shape, 1.0,
 interaction = Exponential(gamma, rho)
 #interaction = LJ93smoothMin(1.0, 1.0)
 
-# Piece the full system together. In particular the PyCo.System.SystemBase
+# Piece the full system together. In particular the System.SystemBase
 # object knows how to optimize the problem. For the hard wall interaction it
 # will always use Polonsky & Keer's constrained conjugate gradient method.
 system = make_system(substrate, interaction, surface)

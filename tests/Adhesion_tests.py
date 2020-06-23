@@ -29,12 +29,12 @@ Tests adhesion-free systems for accuracy and compares performance
 
 import unittest
 import numpy as np
-import PyCo.Adhesion.Adhesion.ReferenceSolutions.MaugisDugdale as MD
+import Adhesion.ReferenceSolutions.MaugisDugdale as MD
 from scipy.optimize import minimize_scalar
-from PyCo.Adhesion import Exponential
-from PyCo.ContactMechanics import (FreeFFTElasticHalfSpace)
-from PyCo.SurfaceTopography import make_sphere
-from PyCo.Adhesion import SmoothContactSystem
+from Adhesion import Exponential
+from ContactMechanics import (FreeFFTElasticHalfSpace)
+from SurfaceTopography import make_sphere
+from Adhesion import SmoothContactSystem
 
 
 from NuMPI import MPI

@@ -32,10 +32,10 @@ from scipy.optimize import minimize
 import time
 import math
 
-from PyCo.ContactMechanics import make_system
-from PyCo.SurfaceTopography import make_sphere
-from PyCo.Adhesion import LJ93smoothMin as LJ_pot
-from PyCo.ContactMechanics import FreeFFTElasticHalfSpace as Substrate
+from ContactMechanics import make_system
+from SurfaceTopography import make_sphere
+from Adhesion import LJ93smoothMin as LJ_pot
+from ContactMechanics import FreeFFTElasticHalfSpace as Substrate
 
 
 class PulloffTest(unittest.TestCase):

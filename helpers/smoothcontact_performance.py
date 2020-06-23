@@ -27,16 +27,16 @@ Uses cProfile and Snakeviz to show in which function the most time is spent
 
 
 import numpy as np
-from PyCo.ContactMechanics import FreeFFTElasticHalfSpace
-from PyCo.SurfaceTopography import make_sphere
+from ContactMechanics import FreeFFTElasticHalfSpace
+from SurfaceTopography import make_sphere
 
 from FFTEngine import PFFTEngine
 from NuMPI.Optimization import LBFGS
 from NuMPI.Tools.Reduction import Reduction
 
 
-from PyCo.Adhesion import VDW82smoothMin
-from PyCo.System import SmoothContactSystem
+from Adhesion import VDW82smoothMin
+from System import SmoothContactSystem
 
 
 from NuMPI.IO import save_npy

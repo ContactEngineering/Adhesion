@@ -23,12 +23,12 @@
 #
 
 """
-Helper tools for PyCo
+Helper tools for Adhesion
 """
 
 import math
 
-import PyCo.ContactMechanics.ReferenceSolutions.Hertz as Hertz
+import ContactMechanics.ReferenceSolutions.Hertz as Hertz
 
 ###
 

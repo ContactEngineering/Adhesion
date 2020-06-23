@@ -26,12 +26,12 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 
-import PyCo.Adhesion.Adhesion.ReferenceSolutions.MaugisDugdale as MD
-from PyCo.ContactMechanics import make_system
-from PyCo.Adhesion import Dugdale
-from PyCo.ContactMechanics import FreeFFTElasticHalfSpace
-from PyCo.ContactMechanics.Tools.Logger import screen
-from PyCo.SurfaceTopography import make_sphere
+import Adhesion.ReferenceSolutions.MaugisDugdale as MD
+from ContactMechanics import make_system
+from Adhesion import Dugdale
+from ContactMechanics import FreeFFTElasticHalfSpace
+from ContactMechanics.Tools.Logger import screen
+from SurfaceTopography import make_sphere
 
 # TODO: this works for exactly these conditions but it sometimes locks for example at (64,64)
 nx, ny = (256, 256)

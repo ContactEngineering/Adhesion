@@ -25,14 +25,14 @@
 #
 
 """
-Defines the interface for PyCo systems
+Defines the interface for Adhesion systems
 """
 
 import numpy as np
 
-from PyCo import Adhesion, ContactMechanics, SurfaceTopography
-from PyCo.Tools import compare_containers
-from PyCo.ContactMechanics.Systems import IncompatibleResolutionError, SystemBase
+import Adhesion, ContactMechanics, SurfaceTopography
+from ContactMechanics.Tools import compare_containers
+from ContactMechanics.Systems import IncompatibleResolutionError, SystemBase
 
 class SmoothContactSystem(SystemBase):
     """

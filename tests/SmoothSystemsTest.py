@@ -2,10 +2,10 @@
 import numpy as np
 import pytest
 
-from PyCo.SurfaceTopography import make_sphere
-from PyCo.Adhesion import Exponential, Lj82, LinearCorePotential
-from PyCo.ContactMechanics import (FreeFFTElasticHalfSpace)
-from PyCo.Adhesion import SmoothContactSystem, BoundedSmoothContactSystem
+from SurfaceTopography import make_sphere
+from Adhesion import Exponential, Lj82, LinearCorePotential
+from ContactMechanics import (FreeFFTElasticHalfSpace)
+from Adhesion import SmoothContactSystem, BoundedSmoothContactSystem
 from NuMPI import MPI
 
 

@@ -30,20 +30,20 @@ Tests the potential classes
 import unittest
 import numpy as np
 
-from PyCo.Adhesion import LJ93
-from PyCo.Adhesion import LJ93smooth
-from PyCo.Adhesion import LJ93smoothMin
-from PyCo.Adhesion import LJ93SimpleSmooth
+from Adhesion import LJ93
+from Adhesion import LJ93smooth
+from Adhesion import LJ93smoothMin
+from Adhesion import LJ93SimpleSmooth
 
-from PyCo.Adhesion import VDW82
-from PyCo.Adhesion import VDW82smooth
-from PyCo.Adhesion import VDW82smoothMin
-from PyCo.Adhesion import VDW82SimpleSmooth
-from PyCo.Adhesion import LinearCorePotential
+from Adhesion import VDW82
+from Adhesion import VDW82smooth
+from Adhesion import VDW82smoothMin
+from Adhesion import VDW82SimpleSmooth
+from Adhesion import LinearCorePotential
 
-from PyCo.Adhesion import Exponential
-from PyCo.Adhesion import RepulsiveExponential
-import PyCo.Tools as Tools
+from Adhesion import Exponential
+from Adhesion import RepulsiveExponential
+import Tools as Tools
 
 from Adhesion.tests.lj93_ref_potential import V as LJ_ref_V, dV as LJ_ref_dV, d2V as LJ_ref_ddV
 from Adhesion.tests.lj93smooth_ref_potential import V as LJs_ref_V, dV as LJs_ref_dV, d2V as LJs_ref_ddV

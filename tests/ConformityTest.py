@@ -29,34 +29,23 @@ import unittest
 from pylint import epylint
 import pep8
 
-import PyCo
+
 
 class SystemTest(unittest.TestCase):
     def setUp(self):
-        self.modules = list([PyCo,
-                             PyCo.Adhesion,
-                             PyCo.Adhesion.Interactions,
-                             PyCo.Adhesion.Lj93,
-                             PyCo.Adhesion.Adhesion.VdW82,
-                             PyCo.Adhesion.Potentials,
-                             PyCo.ContactMechanics,
-                             PyCo.ContactMechanics.FFTElasticHalfSpace,
-                             PyCo.ContactMechanics.Substrates,
-                             PyCo.SurfaceTopography,
-                             PyCo.SurfaceTopography.FromFile,
-                             PyCo.SurfaceTopography.HeightContainer,
-                             PyCo.System,
-                             PyCo.Adhesion.SmoothSystemSpecialisations,
-                             PyCo.ContactMechanics.Systems,
-                             PyCo.Tools,
-                             PyCo.Tools.Optimisation.AugmentedLagrangian,
-                             PyCo.Tools.Optimisation.NewtonConfidenceRegion,
-                             PyCo.Tools.Optimisation.NewtonLineSearch,
-                             PyCo.Tools.Optimisation.common,
-                             PyCo.Tools.common,
-                             PyCo.Goodies,
-                             PyCo.Goodies.SurfaceAnalysis,
-                             PyCo.Goodies.SurfaceGeneration])
+        self.modules = list([Adhesion,
+                             Adhesion.Interactions,
+                             Adhesion.Lj93,
+                             Adhesion.Adhesion.VdW82,
+                             Adhesion.Potentials,
+                             System,
+                             Adhesion.SmoothSystemSpecialisations,
+
+ation.AugmentedLagrangian,
+ation.NewtonConfidenceRegion,
+ation.NewtonLineSearch,
+ation.common,
+])
 
     def te_st_pylint_bitchiness(self):
         print()

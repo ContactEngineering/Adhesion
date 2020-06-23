@@ -26,7 +26,7 @@
 
 ## Testing the Augmented Lagrangian of PyCo
 
-# The implementation of the augmented Lagrangian in PyCo.Tools follows closely the description of the `LANCELOT` algorithm described in Bierlaire (2006)
+# The implementation of the augmented Lagrangian in Tools follows closely the description of the `LANCELOT` algorithm described in Bierlaire (2006)
 
 # The function `augmented_lagrangian` has the form of custom minimizer for [scipy.optimize.minimize](http://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.optimize.minimize.html)
 

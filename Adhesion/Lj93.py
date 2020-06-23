@@ -29,9 +29,9 @@
 9-3 Lennard-Jones potential for wall interactions
 """
 
-from PyCo.Adhesion import Potential, SmoothPotential
-from PyCo.Adhesion import ParabolicCutoffPotential
-from PyCo.Adhesion import LinearCorePotential
+from Adhesion import Potential, SmoothPotential
+from Adhesion import ParabolicCutoffPotential
+from Adhesion import LinearCorePotential
 import numpy as np
 from NuMPI import MPI
 

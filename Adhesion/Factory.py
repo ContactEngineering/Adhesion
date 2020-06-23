@@ -1,8 +1,8 @@
 
 from NuMPI.Tools import Reduction
 from NuMPI import MPI
-from PyCo.ContactMechanics.Factory import _make_system_args
-import PyCo.ContactMechanics.Factory
+from ContactMechanics.Factory import _make_system_args
+import ContactMechanics.Factory
 
 def make_system(substrate, interaction, surface, communicator=MPI.COMM_WORLD,
                 physical_sizes=None, system_class=None,
@@ -21,7 +21,7 @@ def make_system(substrate, interaction, surface, communicator=MPI.COMM_WORLD,
     """
 
     if interaction=="hardwall":
-        return PyCo.ContactMechanics.Factory.make_system(substrate, surface, communicator=MPI.COMM_WORLD,
+        return ContactMechanics.Factory.make_system(substrate, surface, communicator=MPI.COMM_WORLD,
                 physical_sizes=physical_sizes,
                 **kwargs)
     else:
