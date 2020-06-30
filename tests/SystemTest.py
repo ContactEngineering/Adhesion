@@ -42,7 +42,7 @@ from Adhesion.System import SmoothContactSystem
 import ContactMechanics as Solid
 import Adhesion.Interactions as Contact
 import ContactMechanics.Tools as Tools
-from SurfaceTopography import make_sphere
+from SurfaceTopography import make_sphere, Topography
 
 import pytest
 from NuMPI import MPI
@@ -606,3 +606,17 @@ class FreeElasticHalfSpaceSystemTest(unittest.TestCase):
             error, tol, normalforce))
 
 
+def test_undefined_data():
+    t = Topography(
+        np.ma.masked_array(
+            data=[[1, 2, 3],
+                  [4, 5, 6]],
+            mask=[[False, True, False],
+                  [False, False, False]]
+        ), (2, 3))
+
+    interaction = Contact.Lj82(1., 1.)
+    substrate = Solid.PeriodicFFTElasticHalfSpace((2, 3), 1, (2, 3))
+    with pytest.raises(ValueError):
+        SmoothContactSystem(interaction=interaction,
+                            substrate=substrate, surface=t)
