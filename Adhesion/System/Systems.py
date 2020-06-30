@@ -51,6 +51,9 @@ class SmoothContactSystem(SystemBase):
                        performed by the system
         surface     -- An instance of SurfaceTopography, defines the profile.
         """
+        if surface.has_undefined_data:
+            raise ValueError("The topography you provided contains undefined "
+                             "data")
         super().__init__(substrate=substrate, surface=surface)
         self.interaction = interaction
         if not compare_containers(surface.nb_grid_pts, substrate.nb_grid_pts):
