@@ -73,7 +73,12 @@ class Exponential(Potential):
     def max_tensile(self):
         return - self.gam / self.rho
 
-    def naive_pot(self, r,pot=True,forces=False,curb=False, mask=(slice(None), slice(None))):
+    def naive_pot(self,
+                  r,
+                  potential=True,
+                  gradient=False,
+                  curvature=False,
+                  mask=(slice(None), slice(None))):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets. These have been collected in a single method to reuse the
             computated LJ terms for efficiency
@@ -83,9 +88,9 @@ class Exponential(Potential):
 
             Keyword Arguments:
             r      -- array of distances
-            pot    -- (default True) if true, returns potential energy
-            forces -- (default False) if true, returns forces
-            curb   -- (default False) if true, returns second derivative
+            potential    -- (default True) if true, returns potential energy
+            gradient -- (default False) if true, returns gradient
+            curvature   -- (default False) if true, returns second derivative
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=invalid-name
@@ -174,7 +179,9 @@ class RepulsiveExponential(Potential):
         return np.log(self.gam_rep / self.gam_att * self.rho_att**2 / self.rho_rep**2) \
                / (1 / self.rho_rep - 1 / self.rho_att)
 
-    def naive_pot(self, r,pot=True,forces=False,curb=False, mask=(slice(None), slice(None))):
+    def naive_pot(self, r,pot=True,gradient=False,curvature=False, mask=(slice(
+    None),
+    slice(None))):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets. These have been collected in a single method to reuse the
             computated LJ terms for efficiency
@@ -184,9 +191,9 @@ class RepulsiveExponential(Potential):
 
             Keyword Arguments:
             r      -- array of distances
-            pot    -- (default True) if true, returns potential energy
-            forces -- (default False) if true, returns forces
-            curb   -- (default False) if true, returns second derivative
+            potential    -- (default True) if true, returns potential energy
+            gradient -- (default False) if true, returns gradient
+            curvature   -- (default False) if true, returns second derivative
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=invalid-name

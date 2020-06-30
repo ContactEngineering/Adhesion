@@ -116,11 +116,11 @@ class LJ93(Potential):
                          ⎜     5      11 ⎟
                          ⎝    r      r   ⎠
 
-            Keyword Arguments:
+            Parameters:
             r      -- array of distances
-            pot    -- (default True) if true, returns potential energy
-            forces -- (default False) if true, returns forces
-            curb   -- (default False) if true, returns second derivative
+            potential    -- (default True) if true, returns potential energy
+            gradient -- (default False) if true, returns gradient
+            curvature   -- (default False) if true, returns second derivative
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=invalid-name

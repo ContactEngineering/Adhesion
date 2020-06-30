@@ -89,11 +89,12 @@ class VDW82(Potential):
             vdW"(r) = - ────── + ───────
                            4        10
                         2⋅r ⋅π     r
-            Keyword Arguments:
-            r      -- array of distances
-            pot    -- (default True) if true, returns potential energy
-            forces -- (default False) if true, returns forces
-            curb   -- (default False) if true, returns second derivative
+            Parameters:
+            -------------
+            r: array of distances
+            potential    -- (default True) if true, returns potential energy
+            gradient -- (default False) if true, returns gradient
+            curvature   -- (default False) if true, returns second derivative
         """
         V = dV = ddV = None
         r_2 = r**-2

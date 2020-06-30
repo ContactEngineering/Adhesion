@@ -56,11 +56,16 @@ class PowerLaw(Potential):
             V'(g) = (gamma0/rho)*e^(-g(r)/rho)
             V''(g) = -(gamma0/r_ho^2)*e^(-g(r)/rho)
 
-            Keyword Arguments:
-            r      -- array of distances
-            pot    -- (default True) if true, returns potential energy
-            forces -- (default False) if true, returns forces
-            curb   -- (default False) if true, returns second derivative
+            Parameters:
+            -----------
+            r:
+                array of distances between the two surfaces
+            potential: bool (default True)
+                if true, returns potential energy
+            gradient: bool, (default False)
+                if true, returns gradient
+            curvature: bool, (default False)
+                if true, returns second derivative
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=invalid-name

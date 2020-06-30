@@ -107,23 +107,30 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
             offsets.
             Keyword Arguments:
             r      -- array of distances
-            pot    -- (default True) if true, returns potential energy
-            forces -- (default False) if true, returns forces
-            curb   -- (default False) if true, returns second derivative
+            potential    -- (default True) if true, returns potential energy
+            gradient -- (default False) if true, returns gradient
+            curvature   -- (default False) if true, returns second derivative
 
         """
         raise NotImplementedError()
 
     def evaluate(self, r, pot=True, forces=False, curb=False, area_scale=1.):
         """Evaluates the potential and its derivatives
-        Keyword Arguments:
-        r          -- array of distances
-        pot        -- (default True) if true, returns potential energy
-        forces     -- (default False) if true, returns forces
-        curb       -- (default False) if true, returns second derivative
-        area_scale -- (default 1.) scale by this. (Interaction quantities are
-                      supposed to be expressed per unit area, so systems need
-                      to be able to scale their response for their nb_grid_pts))
+        Parameters:
+        -----------
+        r:
+            array of distances between the two surfaces
+        potential: bool (default True)
+            if true, returns potential energy
+        gradient: bool, (default False)
+            if true, returns gradient
+        curvature: bool, (default False)
+            if true, returns second derivative
+        area_scale: float (default 1.)
+            scale by this.
+            (Interaction quantities are supposed to be expressed per unit
+            area, so systems need to be able to scale their response for their
+            nb_grid_pts)
         """
         if np.isscalar(r):
             r = np.asarray(r)
@@ -738,9 +745,9 @@ class ChildPotential(Potential):
             offsets.
             Keyword Arguments:
             r      -- array of distances
-            pot    -- (default True) if true, returns potential energy
-            forces -- (default False) if true, returns forces
-            curb   -- (default False) if true, returns second derivative
+            potential    -- (default True) if true, returns potential energy
+            gradient -- (default False) if true, returns gradient
+            curvature   -- (default False) if true, returns second derivative
 
         """
         return self.parent_potential.naive_pot(r, pot, forces, curb)
