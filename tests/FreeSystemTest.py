@@ -64,10 +64,12 @@ def test_minimization_simplesmoothmin(young, r_c):
     res = (base_res, base_res)
 
     size = (15., 15.)
-    surface = make_sphere(radius, res, size,
-                                            standoff=float("inf"))
-    ext_surface = make_sphere(radius, [2 * r for r in res], [2 * s for s in size],
-                                                centre=[s / 2 for s in size], standoff=float('inf'))
+    surface = make_sphere(radius, res, size, standoff=float('inf'))
+    ext_surface = make_sphere(radius,
+                              [2 * r for r in res],
+                              [2 * s for s in size],
+                              centre=[s / 2 for s in size],
+                              standoff=1000)
 
     substrate = ContactMechanics.FreeFFTElasticHalfSpace(
         res, young, size, fft="numpy")
