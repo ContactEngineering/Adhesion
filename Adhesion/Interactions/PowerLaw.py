@@ -78,7 +78,7 @@ class PowerLaw(Potential):
         if pot:
             V = - w * gpm1 * g
         if forces:
-            dV = - p * w / rc * gpm1
+            dV = p * w / rc * gpm1
         if curb:
             ddV = - p * (p - 1) * w / rc ** 2 * gpm2
 

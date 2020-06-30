@@ -108,7 +108,7 @@ class VDW82(Potential):
             r_3 = r_2/r
         if forces:
             # Forces are the negative gradient
-            dV = r_3*(-a_pi/6 + 8*c_sr_r6)
+            dV = - r_3*(-a_pi/6 + 8*c_sr_r6)
         if curb:
             ddV = r_3/r*(-a_pi/2 + 72*c_sr_r6)
         return (V, dV, ddV)

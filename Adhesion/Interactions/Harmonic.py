@@ -38,7 +38,7 @@ class Harmonic(Potential):
         V (r) = 1/2 k r**2 for r < 0
     """
 
-    name = "lj9-3"
+    name = "harmonic"
 
     def __init__(self, spring_constant,communicator=MPI.COMM_WORLD):
         """
@@ -74,7 +74,7 @@ class Harmonic(Potential):
             V = 0.5*self.spring_constant*r**2
         if forces:
             # Forces are the negative gradient
-            dV = -self.spring_constant*r
+            dV = self.spring_constant*r
         if curb:
             ddV = self.spring_constant
         return (V, dV, ddV)

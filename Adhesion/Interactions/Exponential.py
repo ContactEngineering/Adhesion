@@ -90,7 +90,7 @@ class Exponential(Potential):
         # pylint: disable=bad-whitespace
         # pylint: disable=invalid-name
 
-        rho = self.rho if  np.isscalar(self.rho) else self.rho[mask]
+        rho = self.rho if np.isscalar(self.rho) else self.rho[mask]
         g = -r/ rho
 
         # Use exponential only for r > 0
@@ -98,11 +98,11 @@ class Exponential(Potential):
         if np.isscalar(r):
             if m:
                 V = -self.gam*np.exp(g)
-                dV = V/self.rho
+                dV = - V / self.rho
                 ddV = V/self.rho**2
             else:
                 V = -self.gam*(1+g+0.5*g**2)
-                dV = -self.gam/self.rho*(1+g)
+                dV = self.gam/self.rho*(1+g)
                 ddV = -self.gam/self.rho**2
         else:
             V = np.zeros_like(g)
@@ -113,8 +113,8 @@ class Exponential(Potential):
             gam = self.gam if  np.isscalar(self.gam) else self.gam[mask][m]
             rho = self.rho if  np.isscalar(self.rho) else self.rho[mask][m]
 
-            V[m] = -gam*np.exp(g[m])
-            dV[m] = V[m]/rho
+            V[m] = - gam*np.exp(g[m])
+            dV[m] = - V[m]/rho
             ddV[m] = V[m]/rho**2
 
             # Quadratic function for r < 0. This avoids numerical overflow at small r.
@@ -124,7 +124,7 @@ class Exponential(Potential):
             rho = self.rho if np.isscalar(self.rho) else self.rho[mask][m]
 
             V[m] = -gam*(1+g[m]+0.5*g[m]**2)
-            dV[m] = -gam/rho*(1+g[m])
+            dV[m] = gam/rho*(1+g[m])
             ddV[m] = -gam/rho**2
 
         return V, dV, ddV
@@ -196,11 +196,11 @@ class RepulsiveExponential(Potential):
         #if np.isscalar(r):
 
         V_att = -self.gam_att*np.exp(g_att)
-        dV_att = V_att/self.rho_att # = - derivatibe of V_att
+        dV_att = - V_att/self.rho_att # = derivatibe of V_att
         ddV_att = V_att/self.rho_att**2
 
         V_rep = self.gam_rep * np.exp(g_rep)
-        dV_rep = V_rep / self.rho_rep
+        dV_rep = - V_rep / self.rho_rep
         ddV_rep = V_rep / self.rho_rep ** 2
 
         V = V_att + V_rep

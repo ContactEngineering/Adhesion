@@ -80,7 +80,7 @@ class SoftWall(Interaction):
     """base class for smooth contact mechanics"""
     def __init__(self, communicator=MPI.COMM_WORLD):
         self.energy = None
-        self.force = None
+        self.gradient = None
         self.communicator = communicator
         self.pnp = Reduction(communicator)
 
@@ -115,28 +115,30 @@ class SoftWall(Interaction):
         return result
 
     def __getstate__(self):
-        return self.energy, self.force
+        return self.energy, self.gradient
 
     def __setstate__(self, state):
-        self.energy, self.force = state
+        self.energy, self.gradient = state
 
-    def compute(self, gap, pot=True, forces=False, area_scale=1.):
+    def compute(self, gap, pot=True, gradients=False, area_scale=1.):
         """
-        computes and stores the interaction energy and/or forces based on the
+        computes and stores the interaction energy and/or gradients based
+        on the
         as function of the gap
         Parameters:
         gap        -- array containing the point-wise gap values
         pot        -- (default True) whether the energy should be evaluated
-        forces     -- (default False) whether the forces should be evaluated
+        gradients     -- (default False) whether the gradients should be
+        evaluated
         area_scale -- (default 1.) scale by this. (Interaction quantities are
                       supposed to be expressed per unit area, so systems need
                       to be able to scale their response for their nb_grid_pts))
         """
-        energy, self.force = self.evaluate(
-            gap, pot, forces, area_scale)
+        energy, self.gradient = self.evaluate(
+            gap, pot, gradients, area_scale)
         self.energy = self.pnp.sum(energy)
 
-    def evaluate(self, gap, pot=True, forces=False, area_scale=1.):
+    def evaluate(self, gap, pot=True, gradients=False, area_scale=1.):
         """
         computes and returns the interaction energy and/or forces based on the
         as fuction of the gap
@@ -149,3 +151,9 @@ class SoftWall(Interaction):
                       to be able to scale their response for their nb_grid_pts))
         """
         raise NotImplementedError()
+
+    @property
+    def force(self):
+        if self.gradient is not None:
+            return - self.gradient
+        return None

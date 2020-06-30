@@ -97,7 +97,7 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
 
     def compute(self, gap, pot=True, forces=False, curb=False, area_scale=1.):
         # pylint: disable=arguments-differ
-        energy, self.force, self.curb = self.evaluate(
+        energy, self.gradient, self.curb = self.evaluate(
             gap, pot, forces, curb, area_scale)
         self.energy = self.pnp.sum(energy) if pot else None
 
@@ -370,7 +370,7 @@ class SmoothPotential(Potential):
         if pot:
             V = self.poly(dr)
         if forces:
-            dV = -self.dpoly(dr)  # Forces are the negative gradient
+            dV = self.dpoly(dr)
         if curb:
             ddV = self.ddpoly(dr)
         return (V, dV, ddV)
@@ -475,9 +475,9 @@ class SmoothPotential(Potential):
         xtol -- (default 1e-10) tolerance for numerical solution. Is scaled
                 by γ internally.
         """
-        dummy, force_t, ddV_t = self.naive_pot(self.r_t, pot=False,
+        dummy, gradient_t, ddV_t = self.naive_pot(self.r_t, pot=False,
                                                forces=True, curb=True)
-        dV_t = -force_t
+        dV_t = gradient_t
 
         def spline(Δrt):
             " from SplineHelper.py"
@@ -774,8 +774,9 @@ class LinearCorePotential(ChildPotential):
 
         if hardness is not None:
             def f(r):
-                pot, pres, curb =  self.parent_potential.evaluate(r, forces=True, curb=True)
-                return (pres - hardness)
+                pot, grad, curb =  self.parent_potential.evaluate(r,
+                forces=True, curb=True)
+                return (- grad - hardness)
 
             def fprime(r):
                pot, pres, curb =  self.parent_potential.evaluate(r, forces=True, curb=True)
@@ -805,7 +806,7 @@ class LinearCorePotential(ChildPotential):
     def compute_linear_part(self):
         " evaluates the two coefficients of the linear part of the potential"
         f_val, f_prime, dummy = self.parent_potential.evaluate(self.r_ti, True, True)
-        return np.poly1d((float(-f_prime), f_val + f_prime*self.r_ti))
+        return np.poly1d((float(f_prime), f_val - f_prime*self.r_ti))
 
     def __repr__(self):
         return "{0} -> LinearCorePotential: r_ti = {1.r_ti}".format(self.parent_potential.__repr__(),self)
@@ -1006,8 +1007,7 @@ class ParabolicCutoffPotential(ChildPotential):
 
         def adjust_pot(r):
             " shifts potentials, if an offset has been set"
-            V, dV, ddV = self.naive_pot(
-                r, pot, forces, curb)
+            V, dV, ddV = self.naive_pot(r, pot, forces, curb)
             for val, cond, fun, sgn in zip(  # pylint: disable=W0612
                     (V, dV, ddV),
                     (pot, -forces, curb),

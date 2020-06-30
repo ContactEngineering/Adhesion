@@ -43,6 +43,7 @@ from Adhesion.Interactions import LinearCorePotential
 
 from Adhesion.Interactions import Exponential
 from Adhesion.Interactions import RepulsiveExponential
+from Adhesion.Interactions import PowerLaw
 import ContactMechanics.Tools as Tools
 
 from tests.lj93_ref_potential import V as LJ_ref_V, dV as LJ_ref_dV, d2V as LJ_ref_ddV
@@ -70,7 +71,7 @@ class PotentialTest(unittest.TestCase):
             self.eps, self.sig, self.rcut).evaluate(
                 self.r, pot=True, forces=True, curb=True)
         V_ref   = LJ_ref_V  (self.r, self.eps, self.sig, self.rcut)
-        dV_ref  = LJ_ref_dV (self.r, self.eps, self.sig, self.rcut)
+        dV_ref  = - LJ_ref_dV (self.r, self.eps, self.sig, self.rcut)
         ddV_ref = LJ_ref_ddV(self.r, self.eps, self.sig, self.rcut)
 
         err_V   = ((  V -  V_ref)**2).sum()
@@ -89,7 +90,7 @@ class PotentialTest(unittest.TestCase):
         V, dV, ddV = smooth_pot.evaluate(
                 self.r, pot=True, forces=True, curb=True)
         V_ref   = LJs_ref_V  (self.r, self.eps, self.sig, rc1, rc2)
-        dV_ref  = -LJs_ref_dV (self.r, self.eps, self.sig, rc1, rc2)
+        dV_ref  = LJs_ref_dV (self.r, self.eps, self.sig, rc1, rc2)
         ddV_ref = LJs_ref_ddV(self.r, self.eps, self.sig, rc1, rc2)
 
         err_V   = ((  V-  V_ref)**2).sum()
@@ -112,7 +113,7 @@ class PotentialTest(unittest.TestCase):
         V, dV, ddV = smooth_pot.evaluate(
                 self.r, pot=True, forces=True, curb=True)
         V_ref   = LJs_ref_V  (self.r, self.eps, self.sig, rc1, rc2)
-        dV_ref  = -LJs_ref_dV (self.r, self.eps, self.sig, rc1, rc2)
+        dV_ref  = LJs_ref_dV (self.r, self.eps, self.sig, rc1, rc2)
         ddV_ref = LJs_ref_ddV(self.r, self.eps, self.sig, rc1, rc2)
 
         err_V   = ((  V-  V_ref)**2).sum()
@@ -152,8 +153,7 @@ class PotentialTest(unittest.TestCase):
     def test_LJ_gradient(self):
         pot = LJ93(self.eps, self.sig, self.rcut)
         x = np.random.random(3)-.5+self.sig
-        V, f, ddV = pot.evaluate(x, forces=True)
-        g = -f
+        V, g, ddV = pot.evaluate(x, forces=True)
 
         delta = self.sig/1e5
         approx_g = Tools.evaluate_gradient(
@@ -162,7 +162,6 @@ class PotentialTest(unittest.TestCase):
         tol = 1e-8
         error = Tools.mean_err(g, approx_g)
         msg = []
-        msg.append("f = {}".format(f))
         msg.append("g = {}".format(g))
         msg.append('approx = {}'.format(approx_g))
         msg.append("error = {}".format(error))
@@ -174,7 +173,7 @@ class PotentialTest(unittest.TestCase):
         x = np.random.random(3)-.5+self.sig
         V, dV, ddV = pot.evaluate(x, forces=True)
         f = V.sum()
-        g = -dV
+        g = dV
 
         delta = self.sig/1e5
         approx_g = Tools.evaluate_gradient(
@@ -210,7 +209,7 @@ class PotentialTest(unittest.TestCase):
         V, dV, ddV = smooth_pot.evaluate(
                 self.r, pot=True, forces=True, curb=True)
         V_ref   = LJs_ref_V  (self.r, eps, sig, rc1, rc2)
-        dV_ref  = -LJs_ref_dV (self.r, eps, sig, rc1, rc2)
+        dV_ref  = LJs_ref_dV (self.r, eps, sig, rc1, rc2)
         ddV_ref = LJs_ref_ddV(self.r, eps, sig, rc1, rc2)
 
         err_V   = ((  V-  V_ref)**2).sum()
@@ -386,8 +385,8 @@ class PotentialTest(unittest.TestCase):
 
         r_ti = pot.r_ti
 
-        assert abs(pot.evaluate(r_ti, True, True)[1] -hardness) < 1e-10
-
+        assert abs( - pot.evaluate(r_ti, True, True)[1] -hardness) < 1e-10
+        #           The gradient is minus the force
         "".format(LinearCorePotential)
         if False:
             import matplotlib.pyplot as plt
@@ -450,11 +449,11 @@ class PotentialTest(unittest.TestCase):
         pot = Exponential(1.0, 1.0)
         V, dV, ddV = pot.naive_pot(r)
         self.assertTrue((V<0.0).all())
-        self.assertTrue((dV<0.0).all())
+        self.assertTrue((dV>0.0).all())
         self.assertTrue((ddV<0.0).all())
         dV_num = np.diff(V)/np.diff(r)
         ddV_num = np.diff(dV_num)/(r[1]-r[0])
-        self.assertLess(abs((dV[:-1]+dV[1:])/2+dV_num).max(), 1e-4)
+        self.assertLess(abs((dV[:-1]+dV[1:])/2-dV_num).max(), 1e-4)
         self.assertLess(abs(ddV[1:-1]-ddV_num).max(), 1e-2)
 
     def test_RepulsiveExponential(self):
@@ -468,7 +467,7 @@ class PotentialTest(unittest.TestCase):
             V, dV, ddV = pot.naive_pot(r)
             dV_num = np.diff(V) / np.diff(r)
             ddV_num = np.diff(dV_num) / (r[1] - r[0])
-            errordV[i] = abs((dV[:-1] + dV[1:]) / 2 + dV_num).max()
+            errordV[i] = abs((dV[:-1] + dV[1:]) / 2 - dV_num).max()
             errorddV[i] = abs(ddV[1:-1] - ddV_num).max()
 
         if False:
@@ -678,7 +677,7 @@ def test_deepcopy(pot_creation):
     pot.compute(z, True, True, True)
     copied_potential.compute(np.random.random((1, 4)))
     np.testing.assert_allclose(pot.energy, np.sum(refvals[0]))
-    np.testing.assert_allclose(pot.force, refvals[1])
+    np.testing.assert_allclose(pot.gradient, refvals[1])
     np.testing.assert_allclose(pot.curb, refvals[2])
 
     if hasattr(pot,
