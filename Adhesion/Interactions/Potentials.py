@@ -38,7 +38,9 @@ import scipy.optimize
 from NuMPI import MPI
 
 from .Interactions import SoftWall
-#from helpers.debug_tools import dump_in_out
+
+
+
 
 class Potential(SoftWall, metaclass=abc.ABCMeta):
     """ Describes the minimum interface to interaction potentials for
@@ -362,6 +364,7 @@ class SmoothPotential(Potential):
         return (V if pot else None,
                 dV if forces else None,
                 ddV if curb else None)
+
 
     def spline_pot(self, r, pot=True, forces=False, curb=False):
         """ Evaluates the spline part and its derivatives of the potential.
@@ -817,8 +820,8 @@ class LinearCorePotential(ChildPotential):
 
     def __repr__(self):
         return "{0} -> LinearCorePotential: r_ti = {1.r_ti}".format(self.parent_potential.__repr__(),self)
-    #@dump_in_out(open("LinearCore.txt", "w"))
-    def _evaluate(self, r, pot=True, forces=False, curb=False):
+
+    def _evaluate(self, r, pot=True, forces=False, curb=False, mask=None):
         """Evaluates the potential and its derivatives
         Keyword Arguments:
         r          -- array of distances
@@ -828,8 +831,7 @@ class LinearCorePotential(ChildPotential):
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=invalid-name
-        if np.isscalar(r):
-            r = np.asarray(r)
+
         nb_dim = len(r.shape)
         if nb_dim == 0:
             r.shape = (1,)
@@ -842,15 +844,10 @@ class LinearCorePotential(ChildPotential):
         sl_core = np.ma.filled(r < self.r_ti, fill_value=False)
         sl_rest = np.logical_not(sl_core)
 
-        if np.ma.getmask(r) is not np.ma.nomask:
-            sl_rest = np.logical_and(sl_rest, np.logical_not(np.ma.getmask(r)))
-            sl_core = np.logical_and(sl_core, np.logical_not(np.ma.getmask(r)))
-
-
         # little hack to work around numpy bug
         if np.array_equal(sl_core, np.array([True])):
             V, dV, ddV = self.lin_pot(r, pot, forces, curb)
-            raise AssertionError(" I thought this code is never executed")
+            #raise AssertionError(" I thought this code is never executed")
         else:
             V[sl_core], dV[sl_core], ddV[sl_core] = \
                 self.lin_pot(r[sl_core], pot, forces, curb)
@@ -871,7 +868,7 @@ class LinearCorePotential(ChildPotential):
         curb   -- (default False) if true, returns second derivative
         """
         V = None if pot is False else self.lin_part(r)
-        dV = None if forces is False else -self.lin_part[1]
+        dV = None if forces is False else self.lin_part[1]
         ddV = None if curb is False else 0.
         return V, dV, ddV
 

@@ -94,7 +94,7 @@ class LJ93(Potential):
         """
         return self.sig
 
-    def naive_pot(self, r, pot=True, forces=False, curb=False):
+    def naive_pot(self, r, pot=True, forces=False, curb=False, mask=None):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets. These have been collected in a single method to reuse the
             computated LJ terms for efficiency
@@ -115,29 +115,25 @@ class LJ93(Potential):
             V_l''(r) = ε⋅⎜- ───── + ─────⎟
                          ⎜     5      11 ⎟
                          ⎝    r      r   ⎠
-
-            Parameters:
-            r      -- array of distances
-            potential    -- (default True) if true, returns potential energy
-            gradient -- (default False) if true, returns gradient
-            curvature   -- (default False) if true, returns second derivative
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=invalid-name
+
         V = dV = ddV = None
         sig_r3 = (self.sig/r)**3
         sig_r9 = sig_r3**3
+
         if pot:
             V = self.eps*(2./15*sig_r9 - sig_r3)
         if forces or curb:
             eps_r = self.eps/r
         if forces:
-            # Forces are the negative gradient
             dV = - eps_r*(6./5*sig_r9 - 3*sig_r3)
         if curb:
             ddV = 12*eps_r/r*(sig_r9 - sig_r3)
-        return (V, dV, ddV)
 
+
+        return (V, dV, ddV)
 
 class LJ93smooth(LJ93, SmoothPotential):
     """ 9-3 Lennard-Jones potential with forces splined to zero from

@@ -49,9 +49,8 @@ class Exponential(Potential):
 
 
     def __repr__(self, ):
-        return ("Potential '{0.name}': eps = {0.eps}, sig = {0.sig},"
-                "r_c = {1}").format(
-                    self, self.r_c if self.has_cutoff else 'None')
+        return ("Potential '{0.name}': gam = {0.gam}, rho = {0.rho},").format(
+                    self)
 
     def __getstate__(self):
         state = super().__getstate__(), self.rho, self.gam
@@ -179,9 +178,8 @@ class RepulsiveExponential(Potential):
         return np.log(self.gam_rep / self.gam_att * self.rho_att**2 / self.rho_rep**2) \
                / (1 / self.rho_rep - 1 / self.rho_att)
 
-    def naive_pot(self, r,pot=True,gradient=False,curvature=False, mask=(slice(
-    None),
-    slice(None))):
+    def naive_pot(self, r,pot=True,gradient=False,curvature=False,
+                  mask=(slice(None), slice(None))):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets. These have been collected in a single method to reuse the
             computated LJ terms for efficiency
@@ -197,18 +195,34 @@ class RepulsiveExponential(Potential):
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=invalid-name
+        if np.isscalar(self.rho_att):
+            rho_att = self.rho_att
+        else:
+            rho_att = self.rho_att[mask]
+        if np.isscalar(self.rho_rep):
+            rho_rep = self.rho_rep
+        else:
+            rho_rep = self.rho_rep[mask]
+        if np.isscalar(self.gam_att):
+            gam_att = self.gam_att
+        else:
+            gam_att = self.gam_att[mask]
+        if np.isscalar(self.gam_rep):
+            gam_rep = self.gam_rep
+        else:
+            gam_rep = self.gam_rep[mask]
         g_att = -r/self.rho_att
         g_rep = -r/self.rho_rep
 
         #if np.isscalar(r):
 
-        V_att = -self.gam_att*np.exp(g_att)
-        dV_att = - V_att/self.rho_att # = derivatibe of V_att
-        ddV_att = V_att/self.rho_att**2
+        V_att = -gam_att*np.exp(g_att)
+        dV_att = - V_att/rho_att # = derivatibe of V_att
+        ddV_att = V_att/rho_att**2
 
-        V_rep = self.gam_rep * np.exp(g_rep)
-        dV_rep = - V_rep / self.rho_rep
-        ddV_rep = V_rep / self.rho_rep ** 2
+        V_rep = gam_rep * np.exp(g_rep)
+        dV_rep = - V_rep / rho_rep
+        ddV_rep = V_rep / rho_rep ** 2
 
         V = V_att + V_rep
         dV = dV_att + dV_rep
