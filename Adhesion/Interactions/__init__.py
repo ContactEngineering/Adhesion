@@ -1,6 +1,7 @@
 
 from .Interactions import SoftWall, HardWall, Dugdale
-from .Potentials import Potential, SmoothPotential
+from .Potentials import Potential
+from .SmoothPotential import SmoothPotential
 from .Potentials import LinearCorePotential, ParabolicCutoffPotential
 
 from .Harmonic import Harmonic
