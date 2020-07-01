@@ -109,7 +109,7 @@ class SystemTest(unittest.TestCase):
         ## check subgradient of potential
         V, dV, ddV = S.interaction.evaluate(gap, pot=True, forces=True)
         f = V.sum()
-        g = -dV
+        g = dV
         fun = lambda x: S.interaction.evaluate(x)[0].sum()
         approx_g = Tools.evaluate_gradient(
             fun, gap, self.sig/1e5)
