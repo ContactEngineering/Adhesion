@@ -511,9 +511,9 @@ class PotentialTest(unittest.TestCase):
 
         all_ok = True
         msg = []
-        for pot in [
+        for pot in [ # TODO: turn this into a pytest.mark.parametrize
             LJ93(eps, sig),
-            LJ93SimpleSmooth(eps, sig, 3*sig),
+            #LJ93SimpleSmooth(eps, sig, 3*sig),
             LJ93smooth(eps, sig),
             LJ93smoothMin(eps, sig),
             LJ93smooth(eps,  sig, r_t="inflection"),
@@ -527,10 +527,10 @@ class PotentialTest(unittest.TestCase):
             VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection"),
             VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05),
             VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05),
-            VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2),
+            #VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2), # TODO: issue #5
             RepulsiveExponential(2, 0.1, 0.1, 1)
                     ]:
-            
+            # tests wether the
             ok = (pot.evaluate(pot.r_infl * (1-1e-4), True, True, True)[2]
                   * pot.evaluate(pot.r_infl * (1+1e-4), True, True, True)[2] < 0)
             all_ok &= ok
@@ -649,16 +649,19 @@ def test_deepcopy(pot_creation):
     pot = eval(pot_creation)
     copied_potential = copy.deepcopy(pot)
 
-    z = np.array([
-        pot.r_min * 1e-4,
-        pot.r_min * (1 - 1e-4),
-        pot.r_min * (1 + 1e-4),
-        pot.r_infl * (1 - 1e-4),
-        pot.r_infl * (1 + 1e-4),
-        pot.r_infl * 1e3,
-        pot.r_infl * 1e3,
-        pot.r_infl * 1e3
-    ])
+    if pot.r_min is not None:
+        z = np.array([
+            pot.r_min * 1e-4,
+            pot.r_min * (1 - 1e-4),
+            pot.r_min * (1 + 1e-4),
+            pot.r_infl * (1 - 1e-4),
+            pot.r_infl * (1 + 1e-4),
+            pot.r_infl * 1e3,
+            pot.r_infl * 1e3,
+            pot.r_infl * 1e3
+        ])
+    else:
+        z = np.linspace(0, 3)
     mask = np.zeros_like(z)
     mask[-2:] = True
     z = np.ma.masked_array(z, mask=mask)
@@ -704,6 +707,7 @@ def test_deepcopy(pot_creation):
                         'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
                         'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
                         'RepulsiveExponential(1., 0.5, 1., 1.)',
+                        'Exponential(sig, eps)',
                         'PowerLaw(sig, eps, 3)'
                          ])
 def test_masked_arrays(pot_creation, fill_value):
@@ -766,6 +770,7 @@ def test_lj93_masked(pot_class):
                         'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
                         'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
                         'RepulsiveExponential(1., 0.5, 1., 1.)',
+                        'Exponential(sig, eps)',
                         'PowerLaw(sig, eps, 3)'
                          ])
 def test_max_tensile(pot_creation):
@@ -784,25 +789,27 @@ def test_max_tensile(pot_creation):
     assert en1
 
 @pytest.mark.parametrize("pot_creation", [
-                        'LJ93(eps, sig)',
-                        'LJ93SimpleSmooth(eps, sig, 3*sig)',
-                        'LJ93smooth(eps, sig)',
-                        'LJ93smoothMin(eps, sig)',
-                        'LJ93smooth(eps,  sig, r_t="inflection")',
-                        'LJ93smoothMin(eps, sig, r_t_ls="inflection")',
-                        'LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93SimpleSmoothMin(eps, sig, LJ93(eps, sig).r_infl * 2,  LJ93(eps, sig).r_min * 0.8)',
-                        'Lj82(w, z0)',
-                        'VDW82(c_sr, hamaker)',
-                        'VDW82smooth(c_sr,  hamaker)',
-                        'VDW82smoothMin(c_sr,  hamaker)',
-                        'VDW82smooth(c_sr,  hamaker, r_t="inflection")',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
-                        'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
-                        'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
-                        'RepulsiveExponential(1., 0.5, 1., 1.)',
+                        # Not supported on the Lennard Jones potentials, see issue 6
+                        #'LJ93(eps, sig)',
+                        #'LJ93SimpleSmooth(eps, sig, 3*sig)',
+                        #'LJ93smooth(eps, sig)',
+                        #'LJ93smoothMin(eps, sig)',
+                        #'LJ93smooth(eps,  sig, r_t="inflection")',
+                        #'LJ93smoothMin(eps, sig, r_t_ls="inflection")',
+                        #'LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)',
+                        #'LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)',
+                        #'LJ93SimpleSmoothMin(eps, sig, LJ93(eps, sig).r_infl * 2,  LJ93(eps, sig).r_min * 0.8)',
+                        #'Lj82(w, z0)',
+                        #'VDW82(c_sr, hamaker)',
+                        #'VDW82smooth(c_sr,  hamaker)',
+                        #'VDW82smoothMin(c_sr,  hamaker)',
+                        #'VDW82smooth(c_sr,  hamaker, r_t="inflection")',
+                        #'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
+                        #'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
+                        #'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
+                        #'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+                        'RepulsiveExponential(0.5 * sig, 0.5* eps , sig, eps)',
+                        'Exponential(sig, eps)',
                         'PowerLaw(sig, eps, 3)'
                          ])
 def test_max_tensile_array(pot_creation):
@@ -811,8 +818,8 @@ def test_max_tensile_array(pot_creation):
     z0=eps
     w = sig
 
-    c_sr = w * z0 ** 8 / 3
-    hamaker =  16 * np.pi * w * z0 ** 2
+    # c_sr = w * z0 ** 8 / 3
+    # hamaker =  16 * np.pi * w * z0 ** 2
     pot = eval(pot_creation)
 
     assert pot.max_tensile.shape == sig.shape

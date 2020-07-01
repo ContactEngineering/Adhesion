@@ -23,10 +23,8 @@ class PowerLaw(Potential):
         self.offset = 0  # cutoff is intrinsic to the potential so that there is no offset needed.
 
     def __repr__(self, ):
-        # TODO
-        return ("Potential '{0.name}': eps = {0.eps}, sig = {0.sig},"
-                "rho = {1}").format(
-            self.gam, self.rho if self.has_cutoff else 'None')
+        return ("Potential '{0.name}': gam = {0.gam},"
+                "rho = {0.rho}").format(self)
 
     def __getstate__(self):
         state = super().__getstate__(), self.p, self.rho, self.gam
