@@ -1,4 +1,4 @@
-from Adhesion.Interactions import Potential
+from Adhesion.Interactions.Potentials import ChildPotential
 
 import abc
 
@@ -6,7 +6,7 @@ import numpy as np
 import scipy.optimize
 
 
-class SmoothPotential(Potential):
+class SmoothPotential(ChildPotential):
     """
     implements the splining of the potential tail using a fourth order
     polynomial than reaches zero within a finite cutoff radius
@@ -45,20 +45,23 @@ class SmoothPotential(Potential):
     eval_poly_and_cutoff
     """
 
-    def __init__(self, gamma=None, r_t=None):
+    def __init__(self, parent_potential, gamma=None, r_t=None):
         """
-        Keyword Arguments:
-        gamma   -- (default -V_min) Work of adhesion, defaults to the norm of
-                   minimum of the potential. Note the sign. γ is assumed to be
-                   non-negative value
-        r_t     -- (default r_min) transition point, defaults to r_min (argmin
-                   of pontential) can also be 'inflection' to transition at the
-                   inflection point
+        Parameters:
+        -----------
+        parent_potential: Potential instance
+            Potential which the spline cutoff should be applied
+        gamma: (default -V_min)
+            Work of adhesion, defaults to the norm of
+            minimum of the potential. Note the sign. γ is assumed to be
+            non-negative value
+        r_t: (default r_min)
+            transition point, defaults to r_min (argmin
+            of pontential) can also be 'inflection' to transition at the
+            inflection point
         """
         # pylint: disable=super-init-not-called
-        # not calling the superclass's __init__ because this is used in diamond
-        # inheritance and I do not want to have to worry about python's method
-        # nb_grid_pts order
+        super().__init__(parent_potential)
         self.gamma = gamma if gamma is not None else -self.naive_min
         # Warning: this assumes that the minimum of the potential is a negative
         # value. This will fail curiously if you use this class to implement a
@@ -89,9 +92,9 @@ class SmoothPotential(Potential):
         self.dpoly, self.ddpoly, self.r_c, self.offset = state
         super().__setstate__(superstate)
 
-    @abc.abstractmethod
     def __repr__(self):
-        raise NotImplementedError
+        return "{0} -> SmoothPotential: gamma = {1.gamma}, r_t = {1.r_t}" \
+            .format(self.parent_potential.__repr__(), self)
 
     def get_r_infl_spline(self):
         """
@@ -104,6 +107,35 @@ class SmoothPotential(Potential):
             return self.r_c - 0.5 * C3 / C4
         else:
             return None
+
+    @property
+    def r_infl(self):
+        r"""
+        convenience function returning the location of the potential's
+        inflection point
+        Depending on where the transition between the parent_potential and the
+        spline has been made this returns the inflection point of the spline or
+        of the parent_potential
+        """
+        r_infl_poly = SmoothPotential.get_r_infl_spline(self)
+        if r_infl_poly is not None:
+            if r_infl_poly < self.r_t:
+                return self.parent_potential.r_infl
+                # This is the property implementation in the parent_potential
+            else:
+                return r_infl_poly
+        else:
+            # The Spline wasn't determined already
+            return self.parent_potential.r_infl
+            # This is the old property implementation
+
+    @property
+    def r_min(self):
+        """
+        convenience function returning the location of the enery minimum
+        of the parent potential. (The spline begins at radii above r_min)
+        """
+        return self.parent_potential.r_min
 
     def _evaluate(self, r, pot=True, forces=False, curb=False):
         """Evaluates the potential and its derivatives
@@ -130,14 +162,14 @@ class SmoothPotential(Potential):
         if np.array_equal(sl_inner, np.array([True])):
             #            raise AssertionError(" I thought this code is never
             #            executed")
-            V, dV, ddV = self.naive_pot(r, pot, forces, curb)
+            V, dV, ddV = self.parent_potential.naive_pot(r, pot, forces, curb)
             V -= self.offset
             return (V if pot else None,
                     dV if forces else None,
                     ddV if curb else None)
         else:
-            V[sl_inner], dV[sl_inner], ddV[sl_inner] = self.naive_pot(
-                r[sl_inner], pot, forces, curb)
+            V[sl_inner], dV[sl_inner], ddV[sl_inner] = \
+                self.parent_potential.naive_pot(r[sl_inner], pot, forces, curb)
         V[sl_inner] -= self.offset
 
         sl_outer = np.logical_and(np.ma.filled(r < self.r_c, fill_value=False),
@@ -272,8 +304,8 @@ class SmoothPotential(Potential):
         xtol -- (default 1e-10) tolerance for numerical solution. Is scaled
                 by γ internally.
         """
-        dummy, gradient_t, ddV_t = self.naive_pot(self.r_t, pot=False,
-                                                  forces=True, curb=True)
+        dummy, gradient_t, ddV_t = self.parent_potential.naive_pot(
+            self.r_t, pot=False, forces=True, curb=True)
         dV_t = gradient_t
 
         def spline(Δrt):
@@ -287,8 +319,8 @@ class SmoothPotential(Potential):
             return np.poly1d(polycoeffs)
 
         if self.r_t <= self.r_min:
-            dummy, dummy, ddV_m = self.naive_pot(self.r_min, pot=False,
-                                                 forces=False, curb=True)
+            dummy, dummy, ddV_m = self.parent_potential.naive_pot(
+                self.r_min, pot=False, forces=False, curb=True)
 
             def inner_obj_fun(Δrt, gam_star):
                 " from SplineHelper.py"
@@ -347,7 +379,8 @@ class SmoothPotential(Potential):
                            "sense").format(self)
                 raise self.PotentialError(err_str)
         else:
-            V_m_t = self.naive_pot(np.array([self.r_t, self.r_min]))[0]
+            V_m_t = self.parent_potential.naive_pot(
+                np.array([self.r_t, self.r_min]))[0]
             Δgamma = V_m_t[0] - V_m_t[1]
             dgam = (Δgamma - self.gamma)
             if abs(ddV_t) > 1e-10:
@@ -451,8 +484,8 @@ class SmoothPotential(Potential):
         # pylint: disable=bad-continuation
         # pylint: disable=invalid-name
         # known coeffs
-        dummy, dV, ddV = self.naive_pot(self.r_t, pot=False, forces=True,
-                                        curb=True)
+        dummy, dV, ddV = self.parent_potential.naive_pot(
+            self.r_t, pot=False, forces=True, curb=True)
         C1 = self.coeffs[1] = -dV
         C2 = self.coeffs[2] = -ddV
         gam = -self.gamma

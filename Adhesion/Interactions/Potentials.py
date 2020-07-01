@@ -40,7 +40,7 @@ from NuMPI import MPI
 from .Interactions import SoftWall
 
 
-
+# TODO: This should probably be moved together with Interactions
 
 class Potential(SoftWall, metaclass=abc.ABCMeta):
     """ Describes the minimum interface to interaction potentials for

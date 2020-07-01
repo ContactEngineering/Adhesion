@@ -44,6 +44,8 @@ from Adhesion.Interactions import LinearCorePotential
 from Adhesion.Interactions import Exponential
 from Adhesion.Interactions import RepulsiveExponential
 from Adhesion.Interactions import PowerLaw
+from Adhesion.Interactions import SmoothPotential
+
 import ContactMechanics.Tools as Tools
 
 from tests.lj93_ref_potential import V as LJ_ref_V, dV as LJ_ref_dV, d2V as LJ_ref_ddV
@@ -147,7 +149,7 @@ class PotentialTest(unittest.TestCase):
     def test_LJsmoothSanity(self):
         """ make sure LJsmooth rejects common bad input
         """
-        self.assertRaises(LJ93smooth.PotentialError, LJ93smooth,
+        self.assertRaises(SmoothPotential.PotentialError, LJ93smooth,
                           self.eps, self.sig, -self.gam)
 
     def test_LJ_gradient(self):

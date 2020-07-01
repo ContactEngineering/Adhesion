@@ -134,59 +134,31 @@ class VDW82(Potential):
         r_infl = ╲╱ 12 ⋅6 ╱  ──────
                         ╲╱     A
         """
-        return (144*np.pi * self.c_sr / self.hamaker)**(1./6.)
+        return (144 * np.pi * self.c_sr / self.hamaker) ** (1. / 6.)
 
 
-class VDW82smooth(VDW82, SmoothPotential):
+def VDW82smooth(c_sr, hamaker, gamma=None, r_t=None,
+                communicator=MPI.COMM_WORLD):
     """
-    Van der Waals potential with a smoothly finite tail, see docstring of
-    SmoothPotential
+    Parameters:
+    -----------
+    c_sr: float
+        coefficient for repulsive part
+    hamaker:
+        Hamaker constant for substrate
+    gamma: (default ε)
+        Work of adhesion, defaults to ε
+    r_t: float (default r_min)
+         transition point, defaults to r_min
     """
-    name = 'vdw82smooth'
+    pot = SmoothPotential(VDW82(c_sr, hamaker, communicator=communicator),
+                          gamma, r_t)
+    pot.name = 'vdw82smooth'
+    return pot
 
-    def __init__(self, c_sr, hamaker, gamma=None, r_t=None,communicator=MPI.COMM_WORLD):
-        """
-        Keyword Arguments:
-        c_sr    -- coefficient for repulsive part
-        hamaker -- Hamaker constant for substrate
-        gamma   -- (default ε) Work of adhesion, defaults to ε
-        r_t     -- (default r_min) transition point, defaults to r_min
-        """
-        VDW82.__init__(self, c_sr, hamaker,communicator=communicator)
-        SmoothPotential.__init__(self, gamma, r_t)
 
-    def __repr__(self):
-        has_gamma = -self.gamma != self.naive_min
-        has_r_t = self.r_t != self.r_min
-        return ("Potential '{0.name}', C_sr = {0.c_sr}, Hamaker = "
-                "{0.hamaker}{1}{2}").format(
-                    self,
-                    ", γ = {.gamma}".format(self) if has_gamma else "",
-                    ", r_t = {}".format(
-                        self.r_t if has_r_t else "r_min"))  # nopep8
-
-    @property
-    def r_infl(self):
-        """
-        convenience function returning the location of the potential's
-        inflection point
-        Depending on where the transition between VDW82 and spline has been made
-        this returns the inflection point of the spline or of the original 
-        VDW82 Potential
-        """
-        r_infl_poly = SmoothPotential.get_r_infl_spline(self)
-        if r_infl_poly is not None:
-            if r_infl_poly < self.r_t:
-                return super().r_infl
-                # This is the old property implementation in the VDW82 Potential
-            else:
-                return r_infl_poly
-        else:
-            # The Spline wasn't determined already
-            return super().r_infl
-            # This is the old property implementation in the VDW82 Potential
-
-def VDW82smoothMin(c_sr, hamaker, gamma=None, r_ti=None, r_t_ls=None, communicator=MPI.COMM_WORLD):
+def VDW82smoothMin(c_sr, hamaker, gamma=None, r_ti=None, r_t_ls=None,
+                   communicator=MPI.COMM_WORLD):
     """
     When starting from a bad guess, or with a bad optimizer, sometimes
     optimisations that include potentials with a singularity at the origin

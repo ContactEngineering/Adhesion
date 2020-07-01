@@ -135,95 +135,26 @@ class LJ93(Potential):
 
         return (V, dV, ddV)
 
-class LJ93smooth(LJ93, SmoothPotential):
-    """ 9-3 Lennard-Jones potential with forces splined to zero from
-        the minimum of the potential using a fourth order spline. The 9-3
-        Lennard-Jones interaction potential is often used to model the interac-
-        tion between a continuous solid wall and the atoms/molecules of a li-
-        quid.
-
-        9-3 Lennard-Jones potential:
-        V_l (r) = ε[ 2/15 (σ/r)**9 - (σ/r)**3]
-
-        decoupled 9-3:
-        V_lγ (r) = V_l(r) - V_l(r_t) + γ
-
-        spline: (Δr = r-r_t)
-        V_s(Δr) = C0 - C1*Δr
-                  - 1/2*C2*Δr**2
-                  - 1/3*C3*Δr**3
-                  - 1/4*C4*Δr**4
-
-        The formulation allows to choose the contact stiffness (the original
-        repulsive LJ zone) independently from the work of adhesion (the energy
-        well). By default, the work of adhesion equals epsilon and the transi-
-        tion point r_t between LJ and spline is at the minimumm, however they
-        can be chosen freely.
-
-        The spline is chosen to guarantee continuity of the second derivative
-        of the potential, leading to the following conditions:
-        (1): V_s' (0)    =  V_lγ' (r_t)
-        (2): V_s''(0)    =  V_lγ''(r_t)
-        (3): V_s  (Δr_c) =  0, where Δr_c = r_c-r_t
-        (4): V_s' (Δr_c) =  0
-        (5): V_s''(Δr_c) =  0
-        (6): V_s  (Δr_m) = -γ, where Δr_m = r_min-r_t
-        The unknowns are C_i (i in {0,..4}) and r_t
+def LJ93smooth(epsilon, sigma, gamma=None, r_t=None,communicator=MPI.COMM_WORLD):
     """
-    name = 'lj9-3smooth'
+    Parameters:
+    -----------
+    epsilon: float
+        Lennard-Jones potential well ε (careful, not work of
+        adhesion in this formulation)
+    sigma: float
+        Lennard-Jones distance parameter σ
+    gamma: float (default ε)
+        Work of adhesion, defaults to ε
+    r_t: float (default r_min)
+        transition point, defaults to r_min
+    """
 
-    def __init__(self, epsilon, sigma, gamma=None, r_t=None,communicator=MPI.COMM_WORLD):
-        """
-        Keyword Arguments:
-        epsilon -- Lennard-Jones potential well ε (careful, not work of
-                   adhesion in this formulation)
-        sigma   -- Lennard-Jones distance parameter σ
-        gamma   -- (default ε) Work of adhesion, defaults to ε
-        r_t     -- (default r_min) transition point, defaults to r_min
-        """
-        LJ93.__init__(self, epsilon, sigma, None,communicator=communicator)
-        SmoothPotential.__init__(self, gamma, r_t)
-
-    def __getstate__(self):
-        state = LJ93.__getstate__(self), SmoothPotential.__getstate__(self)
-        return state
-
-    def __setstate__(self, state):
-        lj93state, smoothpotstate = state
-        LJ93.__setstate__(self, lj93state)
-        SmoothPotential.__setstate__(self, smoothpotstate)
-
-    def __repr__(self):
-        has_gamma = -self.gamma != self.naive_min
-        has_r_t = self.r_t != self.r_min
-        return ("Potential '{0.name}', ε = {0.eps}, σ = "
-                "{0.sig}{1}{2}").format(
-                    self,
-                    ", γ = {.gamma}".format(self) if has_gamma else "",  # nopep8
-                    ", r_t = {}".format(
-                        self.r_t if has_r_t else "r_min"))
-
-    @property
-    def r_infl(self):
-        """
-        convenience function returning the location of the potential's
-        inflection point
-        Depending on where the transition between LJ93 and spline has been made
-        this returns the inflection point of the spline or of the original LJ93
-        """
-        r_infl_poly = SmoothPotential.get_r_infl_spline(self)
-
-        if r_infl_poly is not None:
-            if r_infl_poly < self.r_t:
-                return super().r_infl 
-                # This is the old property implementation in the LJ93 Potential
-            else:
-                return r_infl_poly
-        else:
-            # The Spline wasn't determined already
-            return super().r_infl  
-            # This is the old property implementation in the LJ93 Potential
-
+    pot = SmoothPotential(LJ93(epsilon, sigma, None,
+                               communicator=communicator),
+                          gamma, r_t)
+    pot.name = 'lj9-3smooth'
+    return pot
 
 def LJ93smoothMin(epsilon, sigma, gamma=None, r_ti=None, r_t_ls=None,communicator=MPI.COMM_WORLD):
     """
