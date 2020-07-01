@@ -589,7 +589,7 @@ class FreeElasticHalfSpaceSystemTest(unittest.TestCase):
 
             ## 3. replicate surface
             radius = ref_data.Hertz
-            surface = make_sphere(radius, res, size)
+            surface = make_sphere(radius, res, size, kind="paraboloid")
 
             ## 4. Set up system:
             S = SmoothContactSystem(substrate, potential, surface)
