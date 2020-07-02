@@ -308,8 +308,8 @@ def nonequilibrium_elastic_energy(penetration, contact_radius):
 def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
     r"""
 
-    Returns the nondimensional energy release rate (with respect to the nondimensional area) times pi  # TODO: this is odd
-    ..math pi  \frac{\partial U_{el}}{\partial pi A^2} = \frac{3}{8} w_{ref} \frac{1}{A} (\Delta - A^2)^2
+    Returns the nondimensional energy release rate (with respect to the nondimensional area)
+    ..math \frac{\partial U_{el}}{\partial pi A^2} = \frac{3}{8 \pi} w_{ref} \frac{1}{A} (\Delta - A^2)^2
 
     be careful, this is
 
@@ -326,11 +326,11 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
     -------
 
     """
-    return 3 / 8 * (penetration - contact_radius**2)**2 / contact_radius
+    return 3 / 8 / np.pi * (penetration - contact_radius**2)**2 / contact_radius
 
 
 def stress_intensity_factor(contact_radius, penetration, der="0",
-                            radius=1, contact_modulus=1): # TODO: correct contact modulus
+                            radius=1, contact_modulus=3./4):
     r"""
 
     if R is not given, the length and the penetration
@@ -340,10 +340,10 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
     -----------
     a: contact radius
     d: penetration
-    der: {"0", "1_a"}
+    der: {"0", "1_a", "2_a"}
     R: default 1, optional
     radius of the sphere
-    Es: default 1, optional
+    Es: default 3/4, optional
     johnson's contact modulus
 
     Returns:
@@ -351,7 +351,7 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
     stress intensity factor K or it's first derivative according to the
     contact_radius
 
-    if R and Es are not given it is in units of Es \sqrt{R} or Es / \sqrt{R}
+    if R and Es are not given it is in units of 4 / 3 Es \sqrt{R} / R^{der}
     """
     a = contact_radius
     R = radius
@@ -366,9 +366,7 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
     elif der == "1_a":
         return 1 / 2 * a ** (-3/2) * Es * dc / np.sqrt(np.pi) + Es / np.sqrt(np.pi * a) * 2 * a / R
     elif der == "2_a":
-        return - 3 / 4 * a**(-5/2) * Es * dc / np.sqrt(np.pi) \
-               + 1 / 2 * a ** (-3/2) * Es * 2 * a / R / np.sqrt(np.pi) \
-               + Es / np.sqrt(np.pi * a ) / R
+        return - 3 / 4 * a**(-5/2) * Es * dc / np.sqrt(np.pi)
 
 
 def dispField(r, contact_radius, radius, contact_modulus, work_of_adhesion):
