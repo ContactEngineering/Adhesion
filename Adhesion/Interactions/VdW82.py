@@ -46,16 +46,15 @@ class VDW82(Potential):
     """
     name = 'v-d-Waals82'
 
-    def __init__(self, c_sr, hamaker, r_cut=float('inf'),communicator=MPI.COMM_WORLD):
+    def __init__(self, c_sr, hamaker, communicator=MPI.COMM_WORLD):
         """
         Keyword Arguments:
         c_sr            -- coefficient for repulsive part
         hamaker         -- Hamaker constant for substrate
-        r_cut           -- (default +∞) optional cutoff radius
         """
         self.c_sr = c_sr
         self.hamaker = hamaker
-        Potential.__init__(self, r_cut, communicator=communicator)
+        Potential.__init__(self, communicator=communicator)
 
     def __getstate__(self):
         state = super().__getstate__(), self.c_sr, self.hamaker
@@ -66,9 +65,9 @@ class VDW82(Potential):
         super().__setstate__(superstate)
 
     def __repr__(self, ):
-        return ("Potential '{0.name}': C_SR = {0.c_sr}, A_l = {0.hamaker}, "
-                "r_c = {1}").format(
-                    self, self.r_c if self.has_cutoff else '∞')  # nopep8
+        return ("Potential '{0.name}': C_SR = {0.c_sr}, "
+                "A_l = {0.hamaker}").format(
+                    self, )  # nopep8
 
     def naive_pot(self, r, potential=True, gradient=False, curvature=False, mask=(slice(None), slice(None))):
         """ Evaluates the potential and its derivatives without cutoffs or

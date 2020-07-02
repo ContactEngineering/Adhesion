@@ -1,6 +1,7 @@
 import scipy.optimize
 import numpy as np
-from Adhesion.Interactions.Potentials import ChildPotential
+from Adhesion.Interactions.Potentials import ChildPotential, Potential
+
 
 class LinearCorePotential(ChildPotential):
     """
@@ -133,6 +134,79 @@ class LinearCorePotential(ChildPotential):
         """
 
         return self.parent_potential.r_infl
+
+class CutoffPotential(ChildPotential):
+    """
+        sets the potential to 0 above the cutoff radius and shifts it up to
+        enforce continuity of the potential. This potential hence has a
+        discontinuity in the force
+    """
+    def __init__(self, parent_potential, cutoff_radius):
+        super().__init__(parent_potential)
+        self.cutoff_radius = cutoff_radius
+        self.potential_offset = \
+            self.parent_potential.evaluate(self.cutoff_radius)[0]
+
+    def __repr__(self):
+        return ("{0} -> CutoffPotential: cut-off radius = {1.cutoff_radius} "
+                "potential offset: {1.potential_offset}").format(
+            self.parent_potential.__repr__(), self)
+
+    def __getstate__(self):
+        state = (super().__getstate__(),
+                 self.potential_offset,
+                 self.cutoff_radius)
+        return state
+
+    def __setstate__(self, state):
+        superstate, self.potential_offset,  self.cutoff_radius  = state
+        super().__setstate__(superstate)
+
+    @property
+    def has_cutoff(self):
+        return True
+
+    @property
+    def r_min(self):
+        """
+        convenience function returning the location of the enery minimum
+        """
+        return self.parent_potential.r_min
+
+    @property
+    def r_infl(self):
+        """
+        convenience function returning the location of the potential's
+        inflection point (if applicable)
+        """
+
+        return self.parent_potential.r_infl
+
+    def _evaluate(self, gap, potential=True, gradient=False, curvature=False):
+        """Evaluates the potential and its derivatives
+        Keyword Arguments:
+        r          -- array of distances
+        pot        -- (default True) if true, returns potential energy
+        gradient     -- (default False) if true, returns gradient
+        curvature       -- (default False) if true, returns second derivative
+        """
+        # pylint: disable=bad-whitespace
+        # pylint: disable=arguments-differ
+
+        inside_mask = np.ma.filled(gap < self.cutoff_radius, fill_value=False)
+        V = np.zeros_like(gap) if potential else self.SliceableNone()
+        dV = np.zeros_like(gap) if gradient else self.SliceableNone()
+        ddV = np.zeros_like(gap) if curvature else self.SliceableNone()
+
+        V[inside_mask], dV[inside_mask], ddV[inside_mask] = \
+            self.parent_potential._evaluate(gap[inside_mask],
+                potential, gradient, curvature, mask=inside_mask)
+        if V[inside_mask] is not None:
+            V[inside_mask] -= self.potential_offset
+        return (V if potential else None,
+                dV if gradient else None,
+                ddV if curvature else None)
+
 
 class ParabolicCutoffPotential(ChildPotential):
     """
@@ -277,3 +351,11 @@ class ParabolicCutoffPotential(ChildPotential):
         return (V if potential else None,
                 dV if gradient else None,
                 ddV if curvature else None)
+
+    @property
+    def has_cutoff(self):
+        return True
+
+Potential.register_function("linearize_core", LinearCorePotential)
+Potential.register_function("apply_cutoff", CutoffPotential)
+Potential.register_function("apply_parabolic_cutoff", ParabolicCutoffPotential)

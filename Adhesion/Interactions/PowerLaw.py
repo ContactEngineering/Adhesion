@@ -16,7 +16,7 @@ class PowerLaw(Potential):
         gamma0 -- surface energy at perfect contact
         rho   -- attenuation length
         """
-        self.r_c = self.rho = cutoff_radius
+        self.cutoff_radius = self.rho = cutoff_radius
         self.gam = work_adhesion
         self.p = exponent
         SoftWall.__init__(self, communicator=communicator)
@@ -33,6 +33,10 @@ class PowerLaw(Potential):
     def __setstate__(self, state):
         superstate, self.p, self.rho, self.gam = state
         super().__setstate__(superstate)
+
+    @property
+    def has_cutoff(self):
+        return True
 
     @property
     def r_min(self):

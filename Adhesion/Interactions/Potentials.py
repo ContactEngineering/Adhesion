@@ -49,6 +49,7 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
         computed at any point in the problem from just the one-dimensional gap
         (h(x,y)-z(x,y)) at that point
     """
+    _functions={}
     name = "generic_potential"
 
     class PotentialError(Exception):
@@ -68,34 +69,40 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
         def __getitem__(self, index):
             pass
 
-    @abc.abstractmethod
-    def __init__(self, r_cut, communicator=MPI.COMM_WORLD):
-        super().__init__(communicator)
-        self.r_c = r_cut
-        if r_cut is not None:
-            self.has_cutoff = not math.isinf(self.r_c)
-        else:
-            self.has_cutoff = False
-        if self.has_cutoff:
-            self.offset = self.naive_pot(self.r_c)[0]
-        else:
-            self.offset = 0
+    @classmethod
+    def register_function(cls, name, function):
+        cls._functions.update({name: function})
 
+    def __getattr__(self, name):
+        if name in self._functions:
+            def func(*args, **kwargs):
+                return self._functions[name](self, *args, **kwargs)
+
+            func.__doc__ = self._functions[name].__doc__
+            return func
+        else:
+            raise AttributeError(
+                "Unkown attribute '{}' and no analysis or pipeline function "
+                "of this name registered (class {}). Available functions: {}"
+                .format(name, self.__class__.__name__,
+                        ', '.join(self._functions.keys())))
+
+    def __dir__(self):
+        return sorted(super().__dir__() + [*self._functions])
+
+    @abc.abstractmethod
+    def __init__(self, communicator=MPI.COMM_WORLD):
+        super().__init__(communicator)
         self.curvature = None
 
 
     @abc.abstractmethod
     def __repr__(self):
-        return ("Potential '{0.name}', cut-off radius r_cut = " +
-                "{0.r_c}").format(self)
+        return ("Potential '{0.name}'").format(self)
 
-    def __getstate__(self): #TODO: should the energy be serialized ?, I think not
-        state = super().__getstate__(), self.has_cutoff, self.offset,  self.r_c
-        return state
-
-    def __setstate__(self, state):
-        superstate, self.has_cutoff, self.offset,  self.r_c  = state
-        super().__setstate__(superstate)
+    @property
+    def has_cutoff(self):
+        return False
 
     def compute(self, gap, potential=True, gradient=False, curvature=False, area_scale=1.):
         # pylint: disable=arguments-differ
@@ -146,8 +153,8 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
                 area_scale * dV if gradient else None,
                 area_scale * ddV if curvature else None)
 
-
-    def _evaluate(self, r, potential=True, gradient=False, curvature=False):
+    def _evaluate(self, r, potential=True, gradient=False, curvature=False,
+                  mask=None):
         """Evaluates the potential and its derivatives
         Keyword Arguments:
         r          -- array of distances
@@ -157,19 +164,9 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=arguments-differ
-
-        inside_mask = np.ma.filled(r < self.r_c, fill_value=False)
-        V = np.zeros_like(r) if potential else self.SliceableNone()
-        dV = np.zeros_like(r) if gradient else self.SliceableNone()
-        ddV = np.zeros_like(r) if curvature else self.SliceableNone()
-
-        V[inside_mask], dV[inside_mask], ddV[inside_mask] = self.naive_pot(
-            r[inside_mask], potential, gradient, curvature, mask=inside_mask)
-        if V[inside_mask] is not None:
-            V[inside_mask] -= self.offset
-        return (V if potential else None,
-                dV if gradient else None,
-                ddV if curvature else None)
+        if mask is None:
+            mask = (slice(None),) * len(r.shape)
+        return self.naive_pot(r, potential, gradient, curvature, mask=mask)
 
     @abc.abstractproperty
     def r_min(self):

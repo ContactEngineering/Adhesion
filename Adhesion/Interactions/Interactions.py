@@ -38,7 +38,6 @@ class Interaction(object):
     # pylint: disable=too-few-public-methods
     pass
 
-
 class HardWall(Interaction):
     """base class for non-smooth contact mechanics"""
     # pylint: disable=too-few-public-methods

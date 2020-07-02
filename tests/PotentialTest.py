@@ -70,7 +70,7 @@ class PotentialTest(unittest.TestCase):
         """ compare lj93 to reference implementation
         """
         V, dV, ddV = LJ93(
-            self.eps, self.sig, self.rcut).evaluate(
+            self.eps, self.sig).apply_cutoff(self.rcut).evaluate(
                 self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJ_ref_V  (self.r, self.eps, self.sig, self.rcut)
         dV_ref  = - LJ_ref_dV (self.r, self.eps, self.sig, self.rcut)

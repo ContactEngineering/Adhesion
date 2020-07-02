@@ -37,7 +37,7 @@ class Exponential(Potential):
 
     name = "adh"
 
-    def __init__(self, gamma0, rho, r_cut=float('inf'), communicator=MPI.COMM_WORLD):
+    def __init__(self, gamma0, rho, communicator=MPI.COMM_WORLD):
         """
         Keyword Arguments:
         gamma0 -- surface energy at perfect contact
@@ -45,7 +45,7 @@ class Exponential(Potential):
         """
         self.rho = rho
         self.gam = gamma0
-        Potential.__init__(self, r_cut, communicator=communicator)
+        Potential.__init__(self, communicator=communicator)
 
 
     def __repr__(self, ):
@@ -140,7 +140,7 @@ class RepulsiveExponential(Potential):
 
     name = "adh"
 
-    def __init__(self, gamma_rep, rho_rep, gamma_att,rho_att,r_cut=float('inf'), communicator=MPI.COMM_WORLD):
+    def __init__(self, gamma_rep, rho_rep, gamma_att,rho_att, communicator=MPI.COMM_WORLD):
         """
         Keyword Arguments:
         gamma0 -- surface energy at perfect contact
@@ -150,7 +150,7 @@ class RepulsiveExponential(Potential):
         self.gam_att = gamma_att
         self.rho_rep = rho_rep
         self.gam_rep = gamma_rep
-        Potential.__init__(self,r_cut,communicator=communicator)
+        Potential.__init__(self, communicator=communicator)
 
 
     def __repr__(self, ):

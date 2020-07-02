@@ -49,7 +49,7 @@ class LJ93(Potential):
 
     name = "lj9-3"
 
-    def __init__(self, epsilon, sigma, r_cut=float('inf'),communicator=MPI.COMM_WORLD):
+    def __init__(self, epsilon, sigma, communicator=MPI.COMM_WORLD):
         """
         Keyword Arguments:
         epsilon -- Lennard-Jones potential well ε
@@ -58,7 +58,7 @@ class LJ93(Potential):
         """
         self.eps = float(epsilon)
         self.sig = float(sigma)
-        Potential.__init__(self, r_cut, communicator=communicator)
+        Potential.__init__(self, communicator=communicator)
 
     def __getstate__(self):
         state = super().__getstate__(), self.eps, self.sig
@@ -150,7 +150,7 @@ def LJ93smooth(epsilon, sigma, gamma=None, r_t=None,communicator=MPI.COMM_WORLD)
         transition point, defaults to r_min
     """
 
-    pot = SmoothPotential(LJ93(epsilon, sigma, None,
+    pot = SmoothPotential(LJ93(epsilon, sigma,
                                communicator=communicator),
                           gamma, r_t)
     pot.name = 'lj9-3smooth'

@@ -1,4 +1,4 @@
-from Adhesion.Interactions.Potentials import ChildPotential
+from Adhesion.Interactions.Potentials import ChildPotential, Potential
 
 import abc
 
@@ -541,3 +541,5 @@ class SmoothPotential(ChildPotential):
             err_str = ("Evaluation of spline for potential '{}' failed. Please"
                        " check whether the inputs make sense").format(self)
             raise self.PotentialError(err_str)
+
+Potential.register_function("apply_spline_cutoff", SmoothPotential)

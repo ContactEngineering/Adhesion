@@ -9,3 +9,7 @@ from .VdW82 import VDW82, VDW82smooth, VDW82smoothMin, VDW82SimpleSmooth, VDW82S
 from .Lj93 import LJ93, LJ93smooth, LJ93smoothMin, LJ93SimpleSmooth, LJ93SimpleSmoothMin
 from .PowerLaw import PowerLaw
 from .Exponential import Exponential, RepulsiveExponential
+
+# These imports are required to register the analysis functions!
+import Adhesion.Interactions.cutoffs
+import Adhesion.Interactions.SmoothPotential
