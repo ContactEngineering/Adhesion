@@ -34,11 +34,13 @@ from Adhesion.Interactions import LJ93
 from Adhesion.Interactions import LJ93smooth
 from Adhesion.Interactions import LJ93smoothMin
 from Adhesion.Interactions import LJ93SimpleSmooth
+from Adhesion.Interactions import LJ93SimpleSmoothMin
 
 from Adhesion.Interactions import VDW82
 from Adhesion.Interactions import VDW82smooth
 from Adhesion.Interactions import VDW82smoothMin
 from Adhesion.Interactions import VDW82SimpleSmooth
+from Adhesion.Interactions import VDW82SimpleSmoothMin
 from Adhesion.Interactions import LinearCorePotential
 
 from Adhesion.Interactions import Exponential
@@ -770,6 +772,7 @@ def test_lj93_masked(pot_class):
                         'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
                         'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
                         'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+                        'VDW82SimpleSmoothMin(c_sr, hamaker, VDW82(c_sr, hamaker).r_infl * 2, VDW82(c_sr, hamaker).r_min * 0.8)',
                         'RepulsiveExponential(1., 0.5, 1., 1.)',
                         'Exponential(sig, eps)',
                         'PowerLaw(sig, eps, 3)'
