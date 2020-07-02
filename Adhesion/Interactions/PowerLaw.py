@@ -46,7 +46,7 @@ class PowerLaw(Potential):
     def max_tensile(self):
         return - self.gam / self.rho * self.p
 
-    def naive_pot(self, r, pot=True, forces=False, curb=False, mask=(slice(None), slice(None))):
+    def naive_pot(self, r, potential=True, gradient=False, curvature=False, mask=(slice(None), slice(None))):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets. These have been collected in a single method to reuse the
             computated LJ terms for efficiency
@@ -78,11 +78,11 @@ class PowerLaw(Potential):
         gpm2 = g ** (p - 2)
         gpm1 = gpm2 * g
 
-        if pot:
+        if potential:
             V = - w * gpm1 * g
-        if forces:
+        if gradient:
             dV = p * w / rc * gpm1
-        if curb:
+        if curvature:
             ddV = - p * (p - 1) * w / rc ** 2 * gpm2
 
         return V, dV, ddV

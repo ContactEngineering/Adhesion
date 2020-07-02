@@ -107,7 +107,7 @@ class SystemTest(unittest.TestCase):
         gap = S.compute_gap(disp, offset)
 
         ## check subgradient of potential
-        V, dV, ddV = S.interaction.evaluate(gap, pot=True, forces=True)
+        V, dV, ddV = S.interaction.evaluate(gap, potential=True, gradient=True)
         f = V.sum()
         g = dV
         fun = lambda x: S.interaction.evaluate(x)[0].sum()
@@ -128,7 +128,7 @@ class SystemTest(unittest.TestCase):
                             "g":g*S.area_per_pt,
                             "a":approx_g*S.area_per_pt})
         ## check subgradient of substrate
-        V, dV = S.substrate.evaluate(disp, pot=True, forces=True)
+        V, dV = S.substrate.evaluate(disp, pot=True,forces=True)
         f = V.sum()
         g = -dV
         fun = lambda x: S.substrate.evaluate(x)[0].sum()

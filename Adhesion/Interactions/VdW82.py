@@ -70,7 +70,7 @@ class VDW82(Potential):
                 "r_c = {1}").format(
                     self, self.r_c if self.has_cutoff else '∞')  # nopep8
 
-    def naive_pot(self, r, pot=True, forces=False, curb=False, mask=(slice(None), slice(None))):
+    def naive_pot(self, r, potential=True, gradient=False, curvature=False, mask=(slice(None), slice(None))):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets. These have been collected in a single method to reuse the
             computated vdW terms for efficiency
@@ -103,14 +103,14 @@ class VDW82(Potential):
         a_pi = self.hamaker/np.pi if  np.isscalar(self.hamaker) \
                 else self.hamaker[mask] /np.pi
 
-        if pot:
+        if potential:
             V = r_2*(-a_pi/12 + c_sr_r6)
-        if forces or curb:
+        if gradient or curvature:
             r_3 = r_2/r
-        if forces:
+        if gradient:
             # Forces are the negative gradient
             dV = - r_3*(-a_pi/6 + 8*c_sr_r6)
-        if curb:
+        if curvature:
             ddV = r_3/r*(-a_pi/2 + 72*c_sr_r6)
         return (V, dV, ddV)
 

@@ -71,7 +71,7 @@ class PotentialTest(unittest.TestCase):
         """
         V, dV, ddV = LJ93(
             self.eps, self.sig, self.rcut).evaluate(
-                self.r, pot=True, forces=True, curb=True)
+                self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJ_ref_V  (self.r, self.eps, self.sig, self.rcut)
         dV_ref  = - LJ_ref_dV (self.r, self.eps, self.sig, self.rcut)
         ddV_ref = LJ_ref_ddV(self.r, self.eps, self.sig, self.rcut)
@@ -90,7 +90,7 @@ class PotentialTest(unittest.TestCase):
         rc1 = smooth_pot.r_t
         rc2 = smooth_pot.r_c
         V, dV, ddV = smooth_pot.evaluate(
-                self.r, pot=True, forces=True, curb=True)
+                self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJs_ref_V  (self.r, self.eps, self.sig, rc1, rc2)
         dV_ref  = LJs_ref_dV (self.r, self.eps, self.sig, rc1, rc2)
         ddV_ref = LJs_ref_ddV(self.r, self.eps, self.sig, rc1, rc2)
@@ -113,7 +113,7 @@ class PotentialTest(unittest.TestCase):
         rc1 = smooth_pot.r_t
         rc2 = smooth_pot.r_c
         V, dV, ddV = smooth_pot.evaluate(
-                self.r, pot=True, forces=True, curb=True)
+                self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJs_ref_V  (self.r, self.eps, self.sig, rc1, rc2)
         dV_ref  = LJs_ref_dV (self.r, self.eps, self.sig, rc1, rc2)
         ddV_ref = LJs_ref_ddV(self.r, self.eps, self.sig, rc1, rc2)
@@ -155,7 +155,7 @@ class PotentialTest(unittest.TestCase):
     def test_LJ_gradient(self):
         pot = LJ93(self.eps, self.sig, self.rcut)
         x = np.random.random(3)-.5+self.sig
-        V, g, ddV = pot.evaluate(x, forces=True)
+        V, g, ddV = pot.evaluate(x, gradient=True)
 
         delta = self.sig/1e5
         approx_g = Tools.evaluate_gradient(
@@ -173,7 +173,7 @@ class PotentialTest(unittest.TestCase):
     def test_LJsmooth_gradient(self):
         pot = LJ93smooth(self.eps, self.sig, self.gam)
         x = np.random.random(3)-.5+self.sig
-        V, dV, ddV = pot.evaluate(x, forces=True)
+        V, dV, ddV = pot.evaluate(x, gradient=True)
         f = V.sum()
         g = dV
 
@@ -195,7 +195,7 @@ class PotentialTest(unittest.TestCase):
     def test_single_point_eval(self):
         pot = LJ93(self.eps, self.sig, self.gam)
         r_m = pot.r_min
-        curb = pot.evaluate(r_m, pot=False, forces=False, curb=True)[2]
+        curvature = pot.evaluate(r_m, potential=False, gradient=False, curvature=True)[2]
 
     def test_ad_hoc(self):
         ## 'Potential 'lj9-3smooth', ε = 1.7294663266397667,
@@ -209,7 +209,7 @@ class PotentialTest(unittest.TestCase):
         rc1 = smooth_pot.r_t
         rc2 = smooth_pot.r_c
         V, dV, ddV = smooth_pot.evaluate(
-                self.r, pot=True, forces=True, curb=True)
+                self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJs_ref_V  (self.r, eps, sig, rc1, rc2)
         dV_ref  = LJs_ref_dV (self.r, eps, sig, rc1, rc2)
         ddV_ref = LJs_ref_ddV(self.r, eps, sig, rc1, rc2)
@@ -681,12 +681,13 @@ def test_deepcopy(pot_creation):
     copied_potential.compute(np.random.random((1, 4)))
     np.testing.assert_allclose(pot.energy, np.sum(refvals[0]))
     np.testing.assert_allclose(pot.gradient, refvals[1])
-    np.testing.assert_allclose(pot.curb, refvals[2])
+    np.testing.assert_allclose(pot.curvature, refvals[2])
 
     if hasattr(pot,
                "parent_potential"):  # assert parent potential has also been copied
         assert pot.parent_potential is not copied_potential.parent_potential
 
+@pytest.mark.skip("masked arrays are not supported anymore")
 @pytest.mark.parametrize("fill_value", [float("inf"), 1e20])
 @pytest.mark.parametrize("pot_creation", [
                         'LJ93(eps, sig)',
@@ -849,5 +850,6 @@ def test_work_range_array(pot_creation):
 
     # test evaluation
 
-    interaction.evaluate(np.random.uniform(0,2, size=x.shape),True, True, True, area_scale = 0.1)
+    interaction.evaluate(np.random.uniform(0, 2, size=x.shape), True, True,
+                         True)
 

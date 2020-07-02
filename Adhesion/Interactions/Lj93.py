@@ -94,7 +94,7 @@ class LJ93(Potential):
         """
         return self.sig
 
-    def naive_pot(self, r, pot=True, forces=False, curb=False, mask=None):
+    def naive_pot(self, r, potential=True, gradient=False, curvature=False, mask=None):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets. These have been collected in a single method to reuse the
             computated LJ terms for efficiency
@@ -123,13 +123,13 @@ class LJ93(Potential):
         sig_r3 = (self.sig/r)**3
         sig_r9 = sig_r3**3
 
-        if pot:
+        if potential:
             V = self.eps*(2./15*sig_r9 - sig_r3)
-        if forces or curb:
+        if gradient or curvature:
             eps_r = self.eps/r
-        if forces:
+        if gradient:
             dV = - eps_r*(6./5*sig_r9 - 3*sig_r3)
-        if curb:
+        if curvature:
             ddV = 12*eps_r/r*(sig_r9 - sig_r3)
 
 

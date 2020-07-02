@@ -81,7 +81,7 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
         else:
             self.offset = 0
 
-        self.curb = None
+        self.curvature = None
 
 
     @abc.abstractmethod
@@ -90,21 +90,21 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
                 "{0.r_c}").format(self)
 
     def __getstate__(self): #TODO: should the energy be serialized ?, I think not
-        state = super().__getstate__(), self.has_cutoff, self.offset,  self.r_c, self.curb
+        state = super().__getstate__(), self.has_cutoff, self.offset,  self.r_c
         return state
 
     def __setstate__(self, state):
-        superstate, self.has_cutoff, self.offset,  self.r_c, self.curb = state
+        superstate, self.has_cutoff, self.offset,  self.r_c  = state
         super().__setstate__(superstate)
 
-    def compute(self, gap, pot=True, forces=False, curb=False, area_scale=1.):
+    def compute(self, gap, potential=True, gradient=False, curvature=False, area_scale=1.):
         # pylint: disable=arguments-differ
-        energy, self.gradient, self.curb = self.evaluate(
-            gap, pot, forces, curb, area_scale)
-        self.energy = self.pnp.sum(energy) if pot else None
+        energy, self.gradient, self.curvature = self.evaluate(gap, potential, gradient,
+                                                         curvature, area_scale=area_scale)
+        self.energy = self.pnp.sum(energy) if potential else None
 
     @abc.abstractmethod
-    def naive_pot(self, r, pot=True, forces=False, curb=False):
+    def naive_pot(self, r, potential=True, gradient=False, curvature=False):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets.
             Keyword Arguments:
@@ -116,7 +116,8 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
         """
         raise NotImplementedError()
 
-    def evaluate(self, r, pot=True, forces=False, curb=False, area_scale=1.):
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False,
+                 area_scale=1.):
         """Evaluates the potential and its derivatives
         Parameters:
         -----------
@@ -134,55 +135,41 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
             area, so systems need to be able to scale their response for their
             nb_grid_pts)
         """
-        if np.isscalar(r):
-            r = np.asarray(r)
-        if r.shape == ():
-            r.shape = (1, )
+        if np.isscalar(gap):
+            gap = np.asarray(gap)
+        if gap.shape == ():
+            gap.shape = (1,)
 
-        # we use subok = False to ensure V will not be a masked array
-        V = np.zeros_like(r, subok=False) if pot else self.SliceableNone()
-        dV = np.zeros_like(r,
-                           subok=False) if forces else self.SliceableNone()
-        ddV = np.zeros_like(r,
-                            subok=False) if curb else self.SliceableNone()
+        V, dV, ddV = self._evaluate(gap, potential, gradient, curvature)
 
-        if np.ma.getmask(r) is not np.ma.nomask:
-            sl = np.logical_not(r.mask)
-            V[sl], dV[sl], ddV[sl] = self._evaluate( r[sl], pot, forces, curb)
-        else:
-            V, dV, ddV = self._evaluate( r, pot, forces,curb)
-
-        # note, if in future we want to return masked arrays we should
-        # set the fill_value to zero afterward
-
-        return (area_scale * V if pot else None,
-                area_scale * dV if forces else None,
-                area_scale * ddV if curb else None)
+        return (area_scale * V if potential else None,
+                area_scale * dV if gradient else None,
+                area_scale * ddV if curvature else None)
 
 
-    def _evaluate(self, r, pot=True, forces=False, curb=False):
+    def _evaluate(self, r, potential=True, gradient=False, curvature=False):
         """Evaluates the potential and its derivatives
         Keyword Arguments:
         r          -- array of distances
         pot        -- (default True) if true, returns potential energy
-        forces     -- (default False) if true, returns forces
-        curb       -- (default False) if true, returns second derivative
+        gradient     -- (default False) if true, returns gradient
+        curvature       -- (default False) if true, returns second derivative
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=arguments-differ
 
-        inside_slice = np.ma.filled(r < self.r_c, fill_value=False)
-        V = np.zeros_like(r) if pot else self.SliceableNone()
-        dV = np.zeros_like(r) if forces else self.SliceableNone()
-        ddV = np.zeros_like(r) if curb else self.SliceableNone()
+        inside_mask = np.ma.filled(r < self.r_c, fill_value=False)
+        V = np.zeros_like(r) if potential else self.SliceableNone()
+        dV = np.zeros_like(r) if gradient else self.SliceableNone()
+        ddV = np.zeros_like(r) if curvature else self.SliceableNone()
 
-        V[inside_slice], dV[inside_slice], ddV[inside_slice] = self.naive_pot(
-            r[inside_slice], pot, forces, curb, mask=inside_slice)
-        if V[inside_slice] is not None:
-            V[inside_slice] -= self.offset
-        return (V if pot else None,
-                dV if forces else None,
-                ddV if curb else None)
+        V[inside_mask], dV[inside_mask], ddV[inside_mask] = self.naive_pot(
+            r[inside_mask], potential, gradient, curvature, mask=inside_mask)
+        if V[inside_mask] is not None:
+            V[inside_mask] -= self.offset
+        return (V if potential else None,
+                dV if gradient else None,
+                ddV if curvature else None)
 
     @abc.abstractproperty
     def r_min(self):
@@ -204,7 +191,7 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
         """
         convenience function returning the value of the maximum stress (at r_infl)
         """
-        max_tensile=self.evaluate(self.r_infl, forces=True)[1]
+        max_tensile= self.evaluate(self.r_infl, gradient=True)[1]
         return max_tensile.item() if np.prod(max_tensile.shape) == 1 else max_tensile
 
     @property
@@ -244,7 +231,7 @@ class ChildPotential(Potential):
         superstate, self.parent_potential = state
         super().__setstate__(superstate)
 
-    def naive_pot(self, r, pot=True, forces=False, curb=False):
+    def naive_pot(self, r, potential=True, gradient=False, curvature=False):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets.
             Keyword Arguments:
@@ -254,7 +241,7 @@ class ChildPotential(Potential):
             curvature   -- (default False) if true, returns second derivative
 
         """
-        return self.parent_potential.naive_pot(r, pot, forces, curb)
+        return self.parent_potential.naive_pot(r, potential, gradient, curvature)
 
 
 

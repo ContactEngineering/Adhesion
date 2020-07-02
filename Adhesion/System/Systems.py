@@ -185,7 +185,7 @@ class SmoothContactSystem(SystemBase):
         # attention: the substrate may have a higher nb_grid_pts than the gap
         # and the interaction (e.g. FreeElasticHalfSpace)
         self.gap = self.compute_gap(disp, offset)
-        self.interaction.compute(self.gap, pot=pot, forces=forces, curb=False,
+        self.interaction.compute(self.gap, potential=pot, gradient=forces, curvature=False,
                                  area_scale=self.area_per_pt)
 
         self.substrate.compute(disp, pot, forces)
@@ -194,7 +194,7 @@ class SmoothContactSystem(SystemBase):
                        if pot else None)
         if forces:
             self.force = self.substrate.force.copy()
-            if self.dim == 1:
+            if self.dim == 1: # TODO: remove this if
                 self.force[self.comp_slice] += \
                   self.interaction.force#[self.comp_slice]  # nopep8
             else:

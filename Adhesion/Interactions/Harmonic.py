@@ -63,18 +63,18 @@ class Harmonic(Potential):
         """
         return None
 
-    def naive_pot(self, r, pot=True, forces=False, curb=False):
+    def naive_pot(self, r, potential=True, gradient=False, curvature=True):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets.
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=invalid-name
         V = dV = ddV = None
-        if pot:
+        if potential:
             V = 0.5*self.spring_constant*r**2
-        if forces:
+        if gradient:
             # Forces are the negative gradient
             dV = self.spring_constant*r
-        if curb:
+        if curvature:
             ddV = self.spring_constant
         return (V, dV, ddV)

@@ -120,31 +120,31 @@ class SoftWall(Interaction):
     def __setstate__(self, state):
         self.energy, self.gradient = state
 
-    def compute(self, gap, pot=True, gradients=False, area_scale=1.):
+    def compute(self, gap, potential=True, gradient=False, area_scale=1.):
         """
         computes and stores the interaction energy and/or gradients based
         on the
         as function of the gap
         Parameters:
         gap        -- array containing the point-wise gap values
-        pot        -- (default True) whether the energy should be evaluated
-        gradients     -- (default False) whether the gradients should be
+        potential        -- (default True) whether the energy should be evaluated
+        gradient     -- (default False) whether the gradients should be
         evaluated
         area_scale -- (default 1.) scale by this. (Interaction quantities are
                       supposed to be expressed per unit area, so systems need
                       to be able to scale their response for their nb_grid_pts))
         """
         energy, self.gradient = self.evaluate(
-            gap, pot, gradients, area_scale)
+            gap, potential=potential, gradient=gradient, area_scale=area_scale)
         self.energy = self.pnp.sum(energy)
 
-    def evaluate(self, gap, pot=True, gradients=False, area_scale=1.):
+    def evaluate(self, gap, potential=True, gradient=False, area_scale=1.):
         """
         computes and returns the interaction energy and/or forces based on the
         as fuction of the gap
         Parameters:
         gap        -- array containing the point-wise gap values
-        pot        -- (default True) whether the energy should be evaluated
+        potential        -- (default True) whether the energy should be evaluated
         forces     -- (default False) whether the forces should be evaluated
         area_scale -- (default 1.) scale by this. (Interaction quantities are
                       supposed to be expressed per unit area, so systems need

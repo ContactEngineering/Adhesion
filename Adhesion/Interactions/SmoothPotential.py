@@ -137,13 +137,13 @@ class SmoothPotential(ChildPotential):
         """
         return self.parent_potential.r_min
 
-    def _evaluate(self, r, pot=True, forces=False, curb=False):
+    def _evaluate(self, r, potential=True, gradient=False, curvature=False):
         """Evaluates the potential and its derivatives
         Keyword Arguments:
         r          -- array of distances
         pot        -- (default True) if true, returns potential energy
-        forces     -- (default False) if true, returns forces
-        curb       -- (default False) if true, returns second derivative
+        gradient     -- (default False) if true, returns gradient
+        curvature       -- (default False) if true, returns second derivative
         """
         # pylint: disable=bad-whitespace
         # pylint: disable=invalid-name
@@ -152,9 +152,9 @@ class SmoothPotential(ChildPotential):
         # nb_dim = len(r.shape)
         # if nb_dim == 0:
         #     r.shape = (1,)
-        V = np.zeros_like(r) if pot else self.SliceableNone()
-        dV = np.zeros_like(r) if forces else self.SliceableNone()
-        ddV = np.zeros_like(r) if curb else self.SliceableNone()
+        V = np.zeros_like(r) if potential else self.SliceableNone()
+        dV = np.zeros_like(r) if gradient else self.SliceableNone()
+        ddV = np.zeros_like(r) if curvature else self.SliceableNone()
 
         sl_inner = np.ma.filled(r < self.r_t, fill_value=False)
         sl_rest = np.logical_not(sl_inner)
@@ -162,45 +162,45 @@ class SmoothPotential(ChildPotential):
         if np.array_equal(sl_inner, np.array([True])):
             #            raise AssertionError(" I thought this code is never
             #            executed")
-            V, dV, ddV = self.parent_potential.naive_pot(r, pot, forces, curb)
+            V, dV, ddV = self.parent_potential.naive_pot(r, potential, gradient, curvature)
             V -= self.offset
-            return (V if pot else None,
-                    dV if forces else None,
-                    ddV if curb else None)
+            return (V if potential else None,
+                    dV if gradient else None,
+                    ddV if curvature else None)
         else:
             V[sl_inner], dV[sl_inner], ddV[sl_inner] = \
-                self.parent_potential.naive_pot(r[sl_inner], pot, forces, curb)
+                self.parent_potential.naive_pot(r[sl_inner], potential, gradient, curvature)
         V[sl_inner] -= self.offset
 
         sl_outer = np.logical_and(np.ma.filled(r < self.r_c, fill_value=False),
                                   sl_rest)
         # little hack to work around numpy bug
         if np.array_equal(sl_outer, np.array([True])):
-            V, dV, ddV = self.spline_pot(r, pot, forces, curb)
+            V, dV, ddV = self.spline_pot(r, potential, gradient, curvature)
         else:
             V[sl_outer], dV[sl_outer], ddV[sl_outer] = self.spline_pot(
-                r[sl_outer], pot, forces, curb)
+                r[sl_outer], potential, gradient, curvature)
 
-        return (V if pot else None,
-                dV if forces else None,
-                ddV if curb else None)
+        return (V if potential else None,
+                dV if gradient else None,
+                ddV if curvature else None)
 
-    def spline_pot(self, r, pot=True, forces=False, curb=False):
+    def spline_pot(self, r, potential=True, gradient=False, curvature=False):
         """ Evaluates the spline part and its derivatives of the potential.
         Keyword Arguments:
         r      -- array of distances
         pot    -- (default True) if true, returns potential energy
-        forces -- (default False) if true, returns forces
-        curb   -- (default False) if true, returns second derivative
+        gradient -- (default False) if true, returns gradient
+        curvature   -- (default False) if true, returns second derivative
         """
         # pylint: disable=invalid-name
         V = dV = ddV = None
         dr = r - self.r_c
-        if pot:
+        if potential:
             V = self.poly(dr)
-        if forces:
+        if gradient:
             dV = self.dpoly(dr)
-        if curb:
+        if curvature:
             ddV = self.ddpoly(dr)
         return (V, dV, ddV)
 
@@ -305,7 +305,7 @@ class SmoothPotential(ChildPotential):
                 by γ internally.
         """
         dummy, gradient_t, ddV_t = self.parent_potential.naive_pot(
-            self.r_t, pot=False, forces=True, curb=True)
+            self.r_t, potential=False, gradient=True, curvature=True)
         dV_t = gradient_t
 
         def spline(Δrt):
@@ -320,7 +320,7 @@ class SmoothPotential(ChildPotential):
 
         if self.r_t <= self.r_min:
             dummy, dummy, ddV_m = self.parent_potential.naive_pot(
-                self.r_min, pot=False, forces=False, curb=True)
+                self.r_min, potential=False, gradient=False, curvature=True)
 
             def inner_obj_fun(Δrt, gam_star):
                 " from SplineHelper.py"
@@ -485,7 +485,7 @@ class SmoothPotential(ChildPotential):
         # pylint: disable=invalid-name
         # known coeffs
         dummy, dV, ddV = self.parent_potential.naive_pot(
-            self.r_t, pot=False, forces=True, curb=True)
+            self.r_t, potential=False, gradient=True, curvature=True)
         C1 = self.coeffs[1] = -dV
         C2 = self.coeffs[2] = -ddV
         gam = -self.gamma
