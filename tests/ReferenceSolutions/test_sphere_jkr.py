@@ -86,7 +86,7 @@ def test_stress_intensity_factor_second_derivative():
                  + JKR.stress_intensity_factor(a[:-2], pen,)) / da ** 2
     dK_da2_analytical = JKR.stress_intensity_factor(contact_radius=am,
             penetration=pen, der="2_a")
-    if True:
+    if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
         ax.plot(am, dK_da2_num, "+", label="numerical")
