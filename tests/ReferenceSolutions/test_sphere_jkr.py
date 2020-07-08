@@ -27,16 +27,18 @@ def test_stress_intensity_factor_energy_release_rate():
         contact_radius=a
         )
 
-    if False:
+    if True:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
-        ax.plot(a, stress_intensity_factor ** 2 / (2 * e), "+",
-                label="$K^2 / (2 E^*)$")
-        ax.plot(a, en_release_rate, "x", label="energy release rate")
+        ax.plot(a, stress_intensity_factor, "+",
+                label="sif")
+        ax.plot(a, np.sqrt(en_release_rate * 2 * e), "x",
+                label=r"$\sqrt{2 E^*G }$")
+        ax.legend()
         plt.show()
 
-    np.testing.assert_allclose(stress_intensity_factor ** 2 / (2 * e),
-                               en_release_rate,
+    np.testing.assert_allclose(stress_intensity_factor,
+                               np.sqrt(en_release_rate * (2 * e)),
                                atol=1e-14, rtol=1e-10)
 
 
@@ -61,18 +63,19 @@ def test_stress_intensity_factor_derivative():
     da = a[1:] - a[:-1]
     dK_da_num = (JKR.stress_intensity_factor(a[1:], pen,)
                  - JKR.stress_intensity_factor(a[:-1], pen,)) / da
-    dK_da_analytical = JKR.stress_intensity_factor(contact_radius=am,
+    dK_da_analytical = JKR.stress_intensity_factor(
+            contact_radius=am,
             penetration=pen, der="1_a")
     if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
         ax.plot(am, dK_da_num, "+", label="numerical")
         ax.plot(am, dK_da_analytical, "o", mfc="none",
-            label="analytical")
+                label="analytical")
         plt.show()
 
     np.testing.assert_allclose(dK_da_analytical, dK_da_num,
-        atol=1e-14, rtol=1e-4)
+                               atol=1e-14, rtol=1e-4)
 
 
 def test_stress_intensity_factor_second_derivative():
@@ -82,17 +85,18 @@ def test_stress_intensity_factor_second_derivative():
     am = a[1:-1]
     da = a[1] - a[0]
     dK_da2_num = (JKR.stress_intensity_factor(a[2:], pen,)
-                 - 2 * JKR.stress_intensity_factor(a[1:-1], pen,)
-                 + JKR.stress_intensity_factor(a[:-2], pen,)) / da ** 2
-    dK_da2_analytical = JKR.stress_intensity_factor(contact_radius=am,
-            penetration=pen, der="2_a")
+                  - 2 * JKR.stress_intensity_factor(a[1:-1], pen,)
+                  + JKR.stress_intensity_factor(a[:-2], pen,)) / da ** 2
+    dK_da2_analytical = JKR.stress_intensity_factor(
+        contact_radius=am,
+        penetration=pen, der="2_a")
     if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
         ax.plot(am, dK_da2_num, "+", label="numerical")
         ax.plot(am, dK_da2_analytical, "o", mfc="none",
-            label="analytical")
+                label="analytical")
         plt.show()
 
     np.testing.assert_allclose(dK_da2_analytical, dK_da2_num,
-        atol=1e-6, rtol=1e-4)
+                               atol=1e-6, rtol=1e-4)
