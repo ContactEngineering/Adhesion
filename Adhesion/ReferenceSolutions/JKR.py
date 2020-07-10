@@ -117,7 +117,7 @@ def contact_radius(force=None,
         A *= fac
         B *= fac
 
-        return (A + B) ** (1. / 3), (A - B) ** (1. / 3)
+        return (A + B) ** (1. / 3)
 
     elif penetration is not None:
         # TODO: is this solvable symbolically ?
