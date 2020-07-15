@@ -12,6 +12,10 @@ def test_penetration_radius_inverse():
                ) < 1e-10
 
 
+def test_penetration_force():
+    JKR.penetration(force=0)
+
+
 def test_stress_intensity_factor_energy_release_rate():
     # tests that the implementation of the strss intensity factor and the
     # implementation of the energy release rate are equivalent
