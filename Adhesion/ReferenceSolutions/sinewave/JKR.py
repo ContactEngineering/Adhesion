@@ -146,3 +146,70 @@ def pressure(x, a, mean_pressure):
         - flatpunch_load * flatpunch_pressure(x, a)
 
 # TODO: K's: from the crack front repo
+
+
+def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):
+    r"""
+
+    Stress intensity factor at the crack front at `a_s`
+
+    partial derivatives are taken at constant mean pressure P
+
+    units for a_s and a_o: wavelength of the sinewave
+    units of pressure: westergaard full contact pressure pi E^* h / \lambda
+
+    returns the stress intensitifactor in units of :math:`\pi E^* h / \sqrt(\lambda)`
+    or it's partial derivative.
+
+    Notation for the derivative flag:
+    for example "1_a_s" returns the partial derivative according `a_s`, holding `a_o` and `P` constant
+
+    Parameters
+    ----------
+    a_s: float between 0 and 0.5 # TODO: or -0.5 and 0.5 ?
+        position of the (positive x) crack front at which the SIF is computed
+    a_o: float between 0 and 0.5
+        position of the (negative x) crack front opposite to where the SIF is computed
+    P:
+        mean pressure
+    der: string {"0", "1_a_s", "1_a_o"}
+        choose the partial derivative of K to be returned
+
+    References
+    ----------
+    Carbone, G. et al.
+    Journal of the Mechanics and Physics of Solids 52, 1267–1287 (2004)
+    DOI: 10.1016/j.jmps.2003.12.001
+    """
+
+    a = (a_s + a_o) / 2  # mean contact width
+    e = (a_s - a_o) / 2  # excenctricity
+
+    if der == "0":
+        return 1 / 2 * np.sqrt(1 / np.tan(np.pi * a)) * (
+                    np.cos(2 * np.pi * e) - np.cos(2 * np.pi * a_s) - 2 * P)
+    elif der == "1_a_s":
+        B = (np.cos(2 * np.pi * e) - np.cos(2 * np.pi * a_s) - 2 * P)
+        dB = 2 * np.pi * (
+                    np.sin(2 * np.pi * a_s) - 1 / 2 * np.sin(2 * np.pi * e))
+        dsqcotan = - np.pi / 4 * np.tan(np.pi * a) ** (-3 / 2) \
+            / np.cos(np.pi * a) ** 2
+        return (dsqcotan * B + np.tan(np.pi * a) ** (-1 / 2) * dB) * 1 / 2
+    elif der == "1_a_o":
+        B = (np.cos(2 * np.pi * e) - np.cos(2 * np.pi * a_s) - 2 * P)
+        dB = np.pi * np.sin(2 * np.pi * e)
+        dsqcotan = - np.pi / 4 * np.tan(np.pi * a) ** (-3 / 2) \
+            / np.cos(np.pi * a) ** 2
+        return (dsqcotan * B + np.tan(np.pi * a) ** (-1 / 2) * dB) * 1 / 2
+
+
+def stress_intensity_factor_symmetric(a, P, der="0"):
+    if der == "0":
+        return np.sqrt(np.cos(np.pi * a) / np.sin(np.pi * a)) * (
+                    1 - np.cos(2 * np.pi * a) - 2 * P) * 1 / 2
+    elif der == "1_a":
+        return np.pi / 2 * (
+            -1 / 2 / (np.tan(np.pi * a)) ** (3 / 2)
+            / np.cos(np.pi * a) ** 2 * (1 - np.cos(2 * np.pi * a) - 2 * P)
+            + 2 * np.sin(2 * np.pi * a)
+            / np.sqrt(np.tan(np.pi * a)))

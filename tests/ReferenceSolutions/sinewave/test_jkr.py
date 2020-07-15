@@ -18,3 +18,13 @@ def test_elastic_energy_vs_westergaard():
 
 
 # TODO: tests of the derivatives of JKRE
+
+
+def test_against_symmetric():
+    a = 0.2
+    P = 0.1
+    assert JKR.stress_intensity_factor_asymmetric(a, a, P=P) \
+           == JKR.stress_intensity_factor_symmetric(a, P, der="0")
+    assert JKR.stress_intensity_factor_asymmetric(a, a, P=P, der="1_a_o") \
+           + JKR.stress_intensity_factor_asymmetric(a, a, P=P, der="1_a_s") \
+           == JKR.stress_intensity_factor_symmetric(a, P, der="1_a")
