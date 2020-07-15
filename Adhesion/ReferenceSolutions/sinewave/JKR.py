@@ -25,7 +25,7 @@ TODO:
 """
 
 import numpy as np
-from numpy import sqrt, cos, tan, sin, pi, log
+from numpy import sqrt, cos, tan, sin, pi
 from ContactMechanics.ReferenceSolutions import Westergaard
 
 
@@ -53,7 +53,7 @@ def flatpunch_pressure(x, a):
     3.Zilberman, S. & Persson, B. N. J. Adhesion between elastic bodies with rough surfaces. Solid State Communications 123, 173–177 (2002).
 
 
-    """
+    """  # noqa: E501
     res = np.zeros_like(x)
 
     sl = abs((x + 1 / 2) % 1 - 1 / 2) < a
@@ -89,7 +89,7 @@ def mean_pressure(a, alpha, der="0"):
     if der == "0":
         return sin(pia) ** 2 - alpha * sqrt(tan(pia))
     elif der == "1":
-        return pi * (sin(2*pia) - alpha / cos(pia)**2 / 2 / sqrt(tan(pia)))
+        return pi * (sin(2 * pia) - alpha / cos(pia) ** 2 / 2 / sqrt(tan(pia)))
     elif der == "2":
         pia = pi * a
         return pi ** 2 * (2 * cos(2 * pia)
@@ -120,7 +120,7 @@ def mean_gap(a, alpha):
     >>> a = np.linspace(0, 0.5 )
     >>> ls = [ax.plot(a, mean_gap(a, alpha), alpha ) for alpha in (0.1,0.2,0.5)]
     >>> plt.show()
-    """
+    """  # noqa:  E501
     return cos(np.pi * a) ** 2 \
         + 2 * mean_pressure(a, alpha) * np.log(sin(np.pi * a))
 
@@ -144,8 +144,6 @@ def pressure(x, a, mean_pressure):
     flatpunch_load = sin(pi * a) ** 2 - mean_pressure
     return Westergaard._pressure(x, a) \
         - flatpunch_load * flatpunch_pressure(x, a)
-
-# TODO: K's: from the crack front repo
 
 
 def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):
@@ -180,18 +178,18 @@ def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):
     Carbone, G. et al.
     Journal of the Mechanics and Physics of Solids 52, 1267–1287 (2004)
     DOI: 10.1016/j.jmps.2003.12.001
-    """
+    """  # noqa:  E501
 
     a = (a_s + a_o) / 2  # mean contact width
     e = (a_s - a_o) / 2  # excenctricity
 
     if der == "0":
         return 1 / 2 * np.sqrt(1 / np.tan(np.pi * a)) * (
-                    np.cos(2 * np.pi * e) - np.cos(2 * np.pi * a_s) - 2 * P)
+                np.cos(2 * np.pi * e) - np.cos(2 * np.pi * a_s) - 2 * P)
     elif der == "1_a_s":
         B = (np.cos(2 * np.pi * e) - np.cos(2 * np.pi * a_s) - 2 * P)
         dB = 2 * np.pi * (
-                    np.sin(2 * np.pi * a_s) - 1 / 2 * np.sin(2 * np.pi * e))
+                np.sin(2 * np.pi * a_s) - 1 / 2 * np.sin(2 * np.pi * e))
         dsqcotan = - np.pi / 4 * np.tan(np.pi * a) ** (-3 / 2) \
             / np.cos(np.pi * a) ** 2
         return (dsqcotan * B + np.tan(np.pi * a) ** (-1 / 2) * dB) * 1 / 2
@@ -206,10 +204,10 @@ def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):
 def stress_intensity_factor_symmetric(a, P, der="0"):
     if der == "0":
         return np.sqrt(np.cos(np.pi * a) / np.sin(np.pi * a)) * (
-                    1 - np.cos(2 * np.pi * a) - 2 * P) * 1 / 2
+                1 - np.cos(2 * np.pi * a) - 2 * P) * 1 / 2
     elif der == "1_a":
         return np.pi / 2 * (
-            -1 / 2 / (np.tan(np.pi * a)) ** (3 / 2)
-            / np.cos(np.pi * a) ** 2 * (1 - np.cos(2 * np.pi * a) - 2 * P)
-            + 2 * np.sin(2 * np.pi * a)
-            / np.sqrt(np.tan(np.pi * a)))
+                -1 / 2 / (np.tan(np.pi * a)) ** (3 / 2)
+                / np.cos(np.pi * a) ** 2 * (1 - np.cos(2 * np.pi * a) - 2 * P)
+                + 2 * np.sin(2 * np.pi * a)
+                / np.sqrt(np.tan(np.pi * a)))
