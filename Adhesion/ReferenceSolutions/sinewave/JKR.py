@@ -25,7 +25,9 @@ TODO:
 """
 
 import numpy as np
-from numpy import sqrt, cos, tan, sin, pi
+from numpy import sqrt, cos, tan, sin, pi, log
+import scipy.optimize
+
 from ContactMechanics.ReferenceSolutions import Westergaard
 
 
@@ -99,6 +101,74 @@ def mean_pressure(a, alpha, der="0"):
         raise ValueError('derivative flag should be "0", "1", "2"')
 
 
+_mean_pressure = mean_pressure
+
+
+def _find_min_max_a(alpha):
+    """
+
+    Parameters
+    ----------
+    alpha
+
+    Returns
+    -------
+    """
+    a_upper = 0.3
+    a_lower = 0.2
+
+    def obj(a):
+        return _mean_pressure(a, alpha, der="2")
+
+    while obj(a_upper) > 0:
+        a_upper += (0.5 - a_upper) * 0.2
+
+    while obj(a_lower) < 0:
+        a_lower *= 0.5
+
+    a_inflexion = scipy.optimize.brentq(obj, a_lower, a_upper)
+
+    def obj(a):
+        return mean_pressure(a, alpha, der="1")
+
+    while obj(a_upper) > 0:
+        a_upper += (0.5 - a_upper) * 0.2
+    a_max = scipy.optimize.brentq(obj, a_inflexion, a_upper)
+
+    while obj(a_lower) > 0:
+        a_lower *= 0.5
+
+    a_min = scipy.optimize.brentq(obj, a_lower, a_inflexion)
+
+    return a_min, a_inflexion, a_max
+
+
+def contact_radius(mean_pressure, alpha):
+    """
+
+    Parameters
+    ----------
+    mean_pressure:
+        mean pressure in units of pi Es h/lambda
+    alpha: float
+        johnson parameter
+
+    Returns
+    -------
+    half the contact width
+
+    """
+    a_min, a_inflexion, a_max = _find_min_max_a(alpha)
+
+    if mean_pressure > _mean_pressure(a_max, alpha):
+        raise ValueError("Given load is bigger then the max possible value")
+    elif mean_pressure < _mean_pressure(a_min, alpha):
+        raise ValueError("Given load is smaller then the max possible value")
+
+    return scipy.optimize.brentq(
+        lambda a: _mean_pressure(a, alpha) - mean_pressure, a_min, a_max)
+
+
 def mean_gap(a, alpha):
     """
     from carbon mangialardi equation (39)
@@ -144,6 +214,25 @@ def pressure(x, a, mean_pressure):
     flatpunch_load = sin(pi * a) ** 2 - mean_pressure
     return Westergaard._pressure(x, a) \
         - flatpunch_load * flatpunch_pressure(x, a)
+
+
+def elastic_energy(a, load):
+    r"""
+     :math:`\frac{U - U_{flat}}{h p_{west} A}`
+
+
+    Parameters
+    ----------
+    load: in units of p_{west}
+    a: in units of the period lambda
+
+    Returns
+    -------
+    energy per unit area in units of $h p_{wfc}$
+
+
+    """
+    return - log(sin(pi * a)) * load ** 2 + (sin(pi * a) ** 4) / 4
 
 
 def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):

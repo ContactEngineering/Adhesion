@@ -10,6 +10,15 @@ pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
                                        "please execute with pytest")
 
 
+def test_find_min_max_a():
+    a_min, a_inflexion, a_max = JKR._find_min_max_a(0.1)
+
+
+def test_contact_radius_mean_pressure_inverse():
+    assert abs(JKR.contact_radius(JKR.mean_pressure(0.1, 0.2), 0.2) - 0.1) \
+           < 1e-5
+
+
 def test_elastic_energy_vs_westergaard():
     a = 0.2
     mean_pressure = JKR.mean_pressure(a, 0)
