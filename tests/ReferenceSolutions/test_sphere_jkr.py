@@ -13,11 +13,20 @@ def test_penetration_radius_inverse():
 
 
 def test_penetration_force():
-    JKR.penetration(force=0)
+    JKR.penetration(force=0) # TODO : accuracy
 
+@pytest.mark.parametrize("w", [1/np.pi, 2.])
+def test_force_consistency(w):
+    contact_radius = 3.
+
+    force_from_w = JKR.force(contact_radius=contact_radius, work_of_adhesion=w)
+    pen = JKR.penetration(contact_radius=contact_radius, work_of_adhesion=w)
+    force_r_pen = JKR.force(contact_radius=contact_radius, penetration=pen)
+
+    assert force_from_w == force_r_pen
 
 def test_stress_intensity_factor_energy_release_rate():
-    # tests that the implementation of the strss intensity factor and the
+    # tests that the implementation of the stress intensity factor and the
     # implementation of the energy release rate are equivalent
 
     e = 3 / 4  # contact modulus

@@ -191,7 +191,7 @@ def force(contact_radius=None,
           penetration=None,
           radius=1.,
           contact_modulus=3. / 4,
-          work_of_adhesion=1 / np.pi):
+          work_of_adhesion=None):
     """
     Parameters
     ----------
@@ -208,27 +208,56 @@ def force(contact_radius=None,
         (:math:`K = 4 / 3 E^*`)
     work_of_adhesion : float, optional
         Work of adhesion.
-    """
 
+    Usage:
+    ------
+    >>> JKR.force(contact_radius=2.)
+    >>> JKR.force(contact_radius=2., radius=1., contact_modulus=3./4,
+    ...           work_of_adhesion=1/np.pi)
+    >>> JKR.force(penetration=1.)
+    >>> JKR.force(penetration=1.,radius=1., contact_modulus=3./4,
+    ...           work_of_adhesion=1/np.pi)
+    >>> JKR.force(contact_radius=2., penetration=1.)
+    >>> JKR.force(contact_radius=2., penetration=1., radius=1.,
+    ...           contact_modulus=3./4,)
+
+    Note that in the last usage, both contact radius and penetration are given
+    instead of the work of adhesion
+
+    """
+    maugis_modulus = 4 * contact_modulus / 3
     if contact_radius is None and penetration is None:
         raise ValueError("either contact_radius or penetration "
                          "should be provided")
     elif contact_radius is not None and penetration is not None:
-        raise ValueError("only one of contact_radius or penetration "
-                         "should be provided")
+        if work_of_adhesion is not None:
+            raise ValueError("if both contact_radius and penetration are "
+                             "given, the work of adhesion will depend on them"
+                             "and can't be prescribed")
+        hertzian_force = contact_radius ** 3 * maugis_modulus / radius
+        hertzian_pen = contact_radius ** 2 / radius
 
-    if contact_radius is None:
-        contact_radius = _contact_radius_fun(penetration=penetration,
-                                             radius=radius,
-                                             contact_modulus=contact_modulus,
-                                             work_of_adhesion=work_of_adhesion)
+        flat_punch_pen = penetration - hertzian_pen
+        flat_punch_force = 2 * contact_radius * flat_punch_pen * contact_modulus
 
-    maugis_modulus = 4 * contact_modulus / 3
-    hertzian_force = contact_radius ** 3 * maugis_modulus / radius
-    # Force in the hertzian contact at the same radius
+        return hertzian_force + flat_punch_force
 
-    return hertzian_force \
-        - np.sqrt(6 * np.pi * work_of_adhesion * radius * hertzian_force)
+    else:
+        if work_of_adhesion is None:
+            work_of_adhesion = 1 / np.pi
+        if contact_radius is None:
+            contact_radius = _contact_radius_fun(
+                penetration=penetration,
+                radius=radius,
+                contact_modulus=contact_modulus,
+                work_of_adhesion=work_of_adhesion)
+
+
+        hertzian_force = contact_radius ** 3 * maugis_modulus / radius
+        # Force in the hertzian contact at the same radius
+
+        return hertzian_force \
+            - np.sqrt(6 * np.pi * work_of_adhesion * radius * hertzian_force)
 
 
 def penetration(contact_radius=None,
