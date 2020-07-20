@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 
-"""
+r"""
 
 JKR solutions for the indentation of an elastic halfspace by a paraboloid
 indenter.
@@ -48,7 +48,25 @@ If the parameters are not provided, the relations are nondimensional.
 The nondimensionalisation follows
 Maugis's book (p.290):
 
-    # TODO: put the Latex formulas of the nondimensionalisation here
+lengths in the vertical direction (penetration, heights, displacements, gaps),
+are in units of
+
+.. math ::
+
+    (\pi^2 w^2 R / K^2)^{1/3}
+
+lengths in the lateral direction (contact radius) are in units of
+
+.. math ::
+
+    (\pi w R^2 / K)^{1/3}
+
+forces are in unit of
+
+.. math ::
+
+    \pi w R
+
 
 """
 
