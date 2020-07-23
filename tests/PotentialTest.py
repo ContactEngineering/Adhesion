@@ -31,16 +31,7 @@ import unittest
 import numpy as np
 
 from Adhesion.Interactions import LJ93
-from Adhesion.Interactions import LJ93smooth
-from Adhesion.Interactions import LJ93smoothMin
-from Adhesion.Interactions import LJ93SimpleSmooth
-from Adhesion.Interactions import LJ93SimpleSmoothMin
-
 from Adhesion.Interactions import VDW82
-from Adhesion.Interactions import VDW82smooth
-from Adhesion.Interactions import VDW82smoothMin
-from Adhesion.Interactions import VDW82SimpleSmooth
-from Adhesion.Interactions import VDW82SimpleSmoothMin
 from Adhesion.Interactions import LinearCorePotential
 
 from Adhesion.Interactions import Exponential
@@ -88,7 +79,7 @@ class PotentialTest(unittest.TestCase):
     def test_LJsmoothReference(self):
         """ compare lj93smooth to reference implementation
         """
-        smooth_pot = LJ93smooth(self.eps, self.sig, self.gam)
+        smooth_pot = LJ93(self.eps, self.sig).spline_cutoff(self.gam)
         rc1 = smooth_pot.r_t
         rc2 = smooth_pot.r_c
         V, dV, ddV = smooth_pot.evaluate(
@@ -111,9 +102,12 @@ class PotentialTest(unittest.TestCase):
         """
         compare lj93smoothmin to reference implementation (where it applies).
         """
-        smooth_pot = LJ93smoothMin(self.eps, self.sig, self.gam)
-        rc1 = smooth_pot.r_t
-        rc2 = smooth_pot.r_c
+        smooth_pot = LJ93(self.eps, self.sig
+                          ).spline_cutoff(self.gam
+                                          ).linearize_core()
+        # cutoff radii of the splice cutoff
+        rc1 = smooth_pot.parent_potential.r_t
+        rc2 = smooth_pot.parent_potential.r_c
         V, dV, ddV = smooth_pot.evaluate(
                 self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJs_ref_V  (self.r, self.eps, self.sig, rc1, rc2)
@@ -148,14 +142,15 @@ class PotentialTest(unittest.TestCase):
 #         plt.grid(True)
 #         plt.show()
 
-    def test_LJsmoothSanity(self):
-        """ make sure LJsmooth rejects common bad input
+    def test_spline_cutoff_sanity(self):
+        """ make sure spline_cutoff rejects common bad input
         """
-        self.assertRaises(SmoothPotential.PotentialError, LJ93smooth,
-                          self.eps, self.sig, -self.gam)
+        self.assertRaises(SmoothPotential.PotentialError,
+                          LJ93(self.eps, self.sig).spline_cutoff,
+                          -self.gam)
 
     def test_LJ_gradient(self):
-        pot = LJ93(self.eps, self.sig, self.rcut)
+        pot = LJ93(self.eps, self.sig).cutoff(self.rcut)
         x = np.random.random(3)-.5+self.sig
         V, g, ddV = pot.evaluate(x, gradient=True)
 
@@ -173,8 +168,8 @@ class PotentialTest(unittest.TestCase):
         self.assertTrue(error < tol, ", ".join(msg))
 
     def test_LJsmooth_gradient(self):
-        pot = LJ93smooth(self.eps, self.sig, self.gam)
-        x = np.random.random(3)-.5+self.sig
+        pot = LJ93(self.eps, self.sig).spline_cutoff(self.gam)
+        x = np.random.random(3) - .5 + self.sig
         V, dV, ddV = pot.evaluate(x, gradient=True)
         f = V.sum()
         g = dV
@@ -206,7 +201,7 @@ class PotentialTest(unittest.TestCase):
         eps = 1.7294663266397667
         sig = 3.253732668164946
         gam = 5.845648523044794
-        smooth_pot = LJ93smooth(eps, sig, gam)
+        smooth_pot = LJ93(eps, sig).spline_cutoff(gam)
 
         rc1 = smooth_pot.r_t
         rc2 = smooth_pot.r_c
@@ -235,8 +230,8 @@ class PotentialTest(unittest.TestCase):
         vdw = VDW82(c_sr, hamaker)
         r_min = vdw.r_min
         V_min, dV_min, ddV_min = vdw.evaluate(r_min, True, True, True)
-        vdws = VDW82smooth(c_sr, hamaker, r_t=2.5)
-        vdwm = VDW82smoothMin(c_sr, hamaker, r_ti=1.95)
+        vdws = VDW82(c_sr, hamaker).spline_cutoff(r_t=2.5)
+        vdwm = VDW82(c_sr, hamaker).spline_cutoff().linearize_core(r_ti=1.95)
         r = np.arange(0.5, 2.01, .005)*r_min
 
 
@@ -265,8 +260,8 @@ class PotentialTest(unittest.TestCase):
         c_sr = 2.1e-78
         hamaker = 68.1e-21
         pots = (("vdW", VDW82(c_sr, hamaker)),
-                ("smooth", VDW82smooth(c_sr, hamaker)),
-                ("min", VDW82smoothMin(c_sr, hamaker)))
+                ("smooth", VDW82(c_sr, hamaker).spline_cutoff()),
+                ("min", VDW82(c_sr, hamaker).spline_cutoff().linearize_core()))
 
         # import matplotlib.pyplot as plt
         # plt.figure()
@@ -285,7 +280,7 @@ class PotentialTest(unittest.TestCase):
     def test_SimpleSmoothLJ(self):
         eps = 1.7294663266397667
         sig = 3.253732668164946
-        pot = LJ93SimpleSmooth(eps, sig, 3*sig)
+        pot = LJ93(eps, sig).parabolic_cutoff(3*sig)
 
         # import matplotlib.pyplot as plt
         # plt.figure()
@@ -303,7 +298,7 @@ class PotentialTest(unittest.TestCase):
         hamaker = 68.1e-21
         c_sr = 2.1e-78*1e-6
         r_c = 10e-10
-        pot = VDW82SimpleSmooth(c_sr, hamaker, 10e-10)
+        pot = VDW82(c_sr, hamaker).parabolic_cutoff(10e-10)
 
         # import matplotlib.pyplot as plt
         # r = np.linspace(pot.r_min*.7, pot.r_c*1.1, 1000)
@@ -419,17 +414,17 @@ class PotentialTest(unittest.TestCase):
 
         refpot = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2)
 
-        smoothpot=VDW82SimpleSmooth(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2, r_c= r_c)
+        smoothpot = refpot.parabolic_cutoff(r_c=r_c)
 
         pot = LinearCorePotential(smoothpot, r_ti=r_ti)
 
-        assert pot.r_c==smoothpot.r_c, "{0.r_c}{1.r_c}"
-        assert pot.r_infl==smoothpot.r_infl
-        assert pot.r_min==smoothpot.r_min
+        # assert pot.r_c == smoothpot.r_c, "{0.r_c}{1.r_c}"
+        assert pot.r_infl == smoothpot.r_infl
+        assert pot.r_min == smoothpot.r_min
 
         z = [0.8 * r_ti, r_ti, 1.5 * r_ti, r_c, 1.1 * r_c]
         for zi in z:
-            if zi >= r_ti :
+            if zi >= r_ti:
                 np.testing.assert_allclose(
                     np.array(pot.evaluate(zi, True, True, True,)).reshape(-1),
                     np.array(smoothpot.evaluate(zi, True, True, True,)).reshape(-1))
@@ -576,22 +571,25 @@ import pytest
     "pot_creation",
     [
         "LJ93(eps, sig)",
-        # "LJ93SimpleSmooth(eps, sig, 3*sig)",
-        "LJ93smooth(eps, sig)",
-        "LJ93smoothMin(eps, sig)",
-        "LJ93smooth(eps,  sig, r_t='inflection')",
-        "LJ93smoothMin(eps, sig, r_t_ls='inflection')",
-        "LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)",
-        "LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)",
+        'LJ93(eps, sig)',
+        # 'LJ93(eps, sig).parabolic_cutoff(3*sig)', # TODO: issue #5
+        'LJ93(eps, sig).spline_cutoff()',
+        'LJ93(eps, sig).spline_cutoff().linearize_core()',
+        'LJ93(eps,  sig).spline_cutoff(r_t="inflection")',
+        'LJ93(eps, sig).spline_cutoff(r_t="inflection").linearize_core()',
+        'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05)',
+        'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05).linearize_core()',
+        'LJ93(eps, sig).spline_cutoff(LJ93(eps, sig).r_infl * 2).linearize_core(LJ93(eps, sig).r_min * 0.8)',
+        'VDW82(c_sr, hamaker)',
+        'VDW82(c_sr,  hamaker).spline_cutoff()',
+        'VDW82(c_sr,  hamaker).spline_cutoff().linearize_core()',
+        'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection")',
+        'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection").linearize_core()',
+        'VDW82(c_sr,  hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
+        #'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)', # TODO: issue #5
+        #'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',# TODO: issue #5
+        'RepulsiveExponential(1., 0.5, 1., 1.)',
         "VDW82(c_sr, hamaker)",
-        "VDW82smooth(c_sr,  hamaker)",
-        "VDW82smoothMin(c_sr,  hamaker)",
-        "VDW82smooth(c_sr,  hamaker, r_t='inflection')",
-        "VDW82smoothMin(c_sr,  hamaker, r_t_ls='inflection')",
-        "VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)",
-        "VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)", # noqa E501
-        # "VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)", # noqa E501 # TODO: issue #5
-        "RepulsiveExponential(2, 0.1, 0.1, 1)"
         ]
     )
 def test_rinfl(pot_creation):
@@ -613,25 +611,27 @@ def test_rinfl(pot_creation):
 
 @pytest.mark.parametrize(
     "pot_creation", [
-        'LJ93(eps, sig)',
-        'LJ93SimpleSmooth(eps, sig, 3*sig)',
-        'LJ93smooth(eps, sig)',
-        'LJ93smoothMin(eps, sig)',
-        'LJ93smooth(eps,  sig, r_t="inflection")',
-        'LJ93smoothMin(eps, sig, r_t_ls="inflection")',
-        'LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)',
-        'LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)',
-        'VDW82(c_sr, hamaker)',
-        'VDW82smooth(c_sr,  hamaker)',
-        'VDW82smoothMin(c_sr,  hamaker)',
-        'VDW82smooth(c_sr,  hamaker, r_t="inflection")',
-        'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
-        'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-        'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)', # noqa E501
-        'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)', # noqa E501
-        'RepulsiveExponential(1., 0.5, 1., 1.)',
-        'Exponential(sig, eps)',
-        'PowerLaw(sig, eps, 3)'
+'LJ93(eps, sig)',
+'LJ93(eps, sig).parabolic_cutoff(3*sig)',
+'LJ93(eps, sig).spline_cutoff()',
+'LJ93(eps, sig).spline_cutoff().linearize_core()',
+'LJ93(eps,  sig).spline_cutoff(r_t="inflection")',
+'LJ93(eps, sig).spline_cutoff(r_t="inflection").linearize_core()',
+'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05)',
+'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05).linearize_core()',
+'LJ93(eps, sig).spline_cutoff(LJ93(eps, sig).r_infl * 2).linearize_core(LJ93(eps, sig).r_min * 0.8)',
+'VDW82(c_sr, hamaker)',
+'VDW82(c_sr, hamaker).spline_cutoff()',
+'VDW82(c_sr, hamaker).spline_cutoff().linearize_core()',
+'VDW82(c_sr, hamaker).spline_cutoff(r_t="inflection")',
+'VDW82(c_sr, hamaker).spline_cutoff(r_t="inflection").linearize_core()',
+'VDW82(c_sr, hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
+'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',
+'RepulsiveExponential(1., 0.5, 1., 1.)',
+'Exponential(sig, eps)',
+'PowerLaw(sig, eps, 3)',
+'RepulsiveExponential(1., 0.5, 1., 1.)',
         ])
 def test_deepcopy(pot_creation):
     w = 3
@@ -683,23 +683,22 @@ def test_deepcopy(pot_creation):
 
 @pytest.mark.parametrize("pot_creation", [
                         'LJ93(eps, sig)',
-                        'LJ93SimpleSmooth(eps, sig, 3*sig)',
-                        'LJ93smooth(eps, sig)',
-                        'LJ93smoothMin(eps, sig)',
-                        'LJ93smooth(eps,  sig, r_t="inflection")',
-                        'LJ93smoothMin(eps, sig, r_t_ls="inflection")',
-                        'LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93SimpleSmoothMin(eps, sig, LJ93(eps, sig).r_infl * 2,  LJ93(eps, sig).r_min * 0.8)',
+                        'LJ93(eps, sig).parabolic_cutoff(3*sig)',
+                        'LJ93(eps, sig).spline_cutoff()',
+                        'LJ93(eps, sig).spline_cutoff().linearize_core()',
+                        'LJ93(eps,  sig).spline_cutoff(r_t="inflection")',
+                        'LJ93(eps, sig).spline_cutoff(r_t="inflection").linearize_core()',
+                        'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05)',
+                        'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05).linearize_core()',
+                        'LJ93(eps, sig).spline_cutoff(LJ93(eps, sig).r_infl * 2).linearize_core(LJ93(eps, sig).r_min * 0.8)',
                         'VDW82(c_sr, hamaker)',
-                        'VDW82smooth(c_sr,  hamaker)',
-                        'VDW82smoothMin(c_sr,  hamaker)',
-                        'VDW82smooth(c_sr,  hamaker, r_t="inflection")',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
-                        'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
-                        'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
-                        'VDW82SimpleSmoothMin(c_sr, hamaker, VDW82(c_sr, hamaker).r_infl * 2, VDW82(c_sr, hamaker).r_min * 0.8)',
+                        'VDW82(c_sr,  hamaker).spline_cutoff()',
+                        'VDW82(c_sr,  hamaker).spline_cutoff().linearize_core()',
+                        'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection")',
+                        'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection").linearize_core()',
+                        'VDW82(c_sr,  hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
+                        'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+                        'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',
                         'RepulsiveExponential(1., 0.5, 1., 1.)',
                         'Exponential(sig, eps)',
                         'PowerLaw(sig, eps, 3)'
@@ -713,7 +712,7 @@ def test_max_tensile(pot_creation):
     hamaker = 68.1e-21
 
     pot = eval(pot_creation)
-    en1=np.isscalar(pot.max_tensile)
+    en1 = np.isscalar(pot.max_tensile)
 
     # print("{}".format(en1))
 

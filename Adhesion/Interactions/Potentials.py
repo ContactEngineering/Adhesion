@@ -164,12 +164,6 @@ class ChildPotential(Potential):
         self.pnp = parent_potential.pnp
         self.communicator = parent_potential.communicator
 
-    def __getattr__(self, item):
-        if item[:2] == "__" and item[-2:] == "__":
-            raise AttributeError
-        else:
-            return getattr(self.parent_potential, item)
-
     def __getstate__(self):
         state = super().__getstate__(), self.parent_potential
         return state

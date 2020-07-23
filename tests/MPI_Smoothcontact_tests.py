@@ -34,7 +34,7 @@ from NuMPI.Tools.Reduction import Reduction
 import Adhesion.ReferenceSolutions.MaugisDugdale as MD
 from ContactMechanics import FreeFFTElasticHalfSpace
 from SurfaceTopography import make_sphere
-from Adhesion.Interactions import VDW82smoothMin
+from Adhesion.Interactions import VDW82
 from Adhesion.System import SmoothContactSystem
 
 _toplot = True
@@ -74,7 +74,8 @@ def test_smoothsphere(maxcomm, fftengine_type): # TODO problem: difficult to com
     pnp =Reduction(comm=comm)
 
     # the "Min" part of the potential (linear for small z) is needed for the LBFGS without bounds
-    inter = VDW82smoothMin(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2, gamma=w, communicator=comm)
+    inter = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2
+                  ).spline_cutoff(gamma=w).linearize_core()
 
     # Parallel SurfaceTopography Patch
 

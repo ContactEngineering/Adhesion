@@ -29,7 +29,7 @@ from SurfaceTopography import Topography
 
 from NuMPI.Optimization import LBFGS
 from NuMPI.Tools.Reduction import Reduction
-from Adhesion.Interactions import VDW82smoothMin
+from Adhesion.Interactions import VDW82
 from Adhesion.System import SmoothContactSystem
 
 _toplot=False
@@ -47,7 +47,9 @@ def test_wavy(comm):
 
     pnp = Reduction(comm=comm)
 
-    inter = VDW82smoothMin(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2, gamma=w,communicator=comm)
+    inter = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2
+                  ).spline_cutoff(gamma=w
+                                  ).linearize_core()
 
     # Parallel SurfaceTopography Patch
 

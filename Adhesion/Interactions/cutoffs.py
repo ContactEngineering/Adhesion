@@ -31,7 +31,7 @@ class LinearCorePotential(ChildPotential):
 
         if hardness is not None:
             def f(r):
-                pot, grad, curvature =  self.parent_potential.evaluate(r,
+                pot, grad, curvature = self.parent_potential.evaluate(r,
                 gradient=True, curvature=True)
                 return (- grad - hardness)
 
@@ -251,7 +251,7 @@ class ParabolicCutoffPotential(ChildPotential):
         super().__setstate__(superstate)
 
     def __repr__(self):
-        return "{0} -> ParabolaCutoffPotential: r_c = {1.r_c}".format(self.parent_potential.__repr__(),self)
+        return "{0} -> ParabolicCutoffPotential: r_c = {1.r_c}".format(self.parent_potential.__repr__(),self)
 
     def precompute_min(self):
         """
@@ -275,7 +275,7 @@ class ParabolicCutoffPotential(ChildPotential):
         computes r_infl
         """
         result = scipy.optimize.fminbound(
-            func=lambda r: self.evaluate(r, False, True, False)[1],
+            func=lambda r: self.parent_potential.evaluate(r, False, True, False)[1],
             x1=0.01*self.r_c,
             x2=self.r_c,
             disp=1,

@@ -67,13 +67,15 @@ class SystemTest(unittest.TestCase):
         self.sig = 3+np.random.rand()
         self.gam = (5+np.random.rand())
         self.rcut = 2.5*self.sig+np.random.rand()
-        self.smooth = Contact.LJ93smoothMin(self.eps, self.sig, self.gam)
+        self.smooth = Contact.LJ93(self.eps, self.sig
+                                   ).spline_cutoff(self.gam
+                                                   ).linearize_core()
 
         self.sphere = make_sphere(self.radius, self.res,
                                                     self.physical_sizes)
 
     def test_DecoratedTopography(self):
-        top= self.sphere.detrend()
+        top = self.sphere.detrend()
         make_system(substrate="periodic",
                     interaction="hardwall",
                     young=1.,
@@ -385,7 +387,7 @@ class FreeElasticHalfSpaceSystemTest(unittest.TestCase):
         self.sig = 3+np.random.rand()
         self.gam = (5+np.random.rand())
         self.rcut = 2.5*self.sig+np.random.rand()
-        self.smooth = Contact.LJ93smooth(self.eps, self.sig, self.gam)
+        self.smooth = Contact.LJ93(self.eps, self.sig).spline_cutoff(self.gam)
 
         self.sphere = make_sphere(self.radius, self.res, self.physical_sizes)
 
@@ -449,7 +451,7 @@ class FreeElasticHalfSpaceSystemTest(unittest.TestCase):
         # pycontact doesn't store gamma (work of adhesion) in the nc file, but
         # the computed rc1, which I can test for consistency
         gamma = 0.001
-        potential = Contact.LJ93smooth(eps, sig, gamma)
+        potential = Contact.LJ93(eps, sig).spline_cutoff(gamma)
         error = abs(potential.r_c- ref_data.lj_rc2)
         self.assertTrue(
             error < tol,
@@ -556,9 +558,9 @@ class FreeElasticHalfSpaceSystemTest(unittest.TestCase):
 
     def test_size_insensitivity(self):
         tol = 1e-6
-        ref_fpath = os.path.join(BASEDIR,'ref_smooth_sphere.nc')
+        ref_fpath = os.path.join(BASEDIR, 'ref_smooth_sphere.nc')
         out_fpath = os.path.join(BASEDIR, 'ref_smooth_sphere.out')
-        ref_data =  Dataset(ref_fpath, mode='r', format='NETCDF4')
+        ref_data = Dataset(ref_fpath, mode='r', format='NETCDF4')
         with open(out_fpath) as fh:
             fh.__next__()
             fh.__next__()
@@ -569,7 +571,7 @@ class FreeElasticHalfSpaceSystemTest(unittest.TestCase):
         # pycontact doesn't store gamma (work of adhesion) in the nc file, but
         # the computed rc1, which I can test for consistency
         gamma = 0.001
-        potential = Contact.LJ93smooth(eps, sig, gamma)
+        potential = Contact.LJ93(eps, sig).spline_cutoff(gamma)
         error = abs(potential.r_c- ref_data.lj_rc2)
         self.assertTrue(
             error < tol,
@@ -599,7 +601,7 @@ class FreeElasticHalfSpaceSystemTest(unittest.TestCase):
             fun = S.objective(offset, gradient=True)
             disp = np.zeros(np.prod(res)*4)
             result = minimize(fun, disp, jac=True,
-                              method = 'L-BFGS-B', options=options)
+                              method='L-BFGS-B', options=options)
             normalforce[i] = S.interaction_force.sum()
             error = abs(normalforce-normalforce.mean()).mean()
         self.assertTrue(error < tol, "error = {:.15g} > tol = {}, N = {}".format(

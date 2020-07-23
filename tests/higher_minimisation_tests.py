@@ -34,7 +34,7 @@ import math
 
 from ContactMechanics import make_system
 from SurfaceTopography import make_sphere
-from Adhesion.Interactions import LJ93smoothMin as LJ_pot
+from Adhesion.Interactions import LJ93
 from ContactMechanics import FreeFFTElasticHalfSpace as Substrate
 
 
@@ -53,7 +53,7 @@ class PulloffTest(unittest.TestCase):
 
         sigma = radius/10
         epsilon = sigma * young/100
-        self.pot = LJ_pot(epsilon, sigma)
+        self.pot = LJ93(epsilon, sigma).spline_cutoff().linearize_core()
 
 
     def tst_FirstContactThenOffset(self):

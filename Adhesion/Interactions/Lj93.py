@@ -70,9 +70,7 @@ class LJ93(Potential):
 
 
     def __repr__(self, ):
-        return ("Potential '{0.name}': ε = {0.eps}, σ = {0.sig}, "
-                "r_c = {1}").format(
-                    self, self.r_c if self.has_cutoff else '∞')  # nopep8
+        return ("Potential '{0.name}': ε = {0.eps}, σ = {0.sig}").format(self)
 
     @property
     def r_min(self):
@@ -133,58 +131,3 @@ class LJ93(Potential):
 
 
         return (V, dV, ddV)
-
-def LJ93smooth(epsilon, sigma, gamma=None, r_t=None,communicator=MPI.COMM_WORLD):
-    """
-    Parameters:
-    -----------
-    epsilon: float
-        Lennard-Jones potential well ε (careful, not work of
-        adhesion in this formulation)
-    sigma: float
-        Lennard-Jones distance parameter σ
-    gamma: float (default ε)
-        Work of adhesion, defaults to ε
-    r_t: float (default r_min)
-        transition point, defaults to r_min
-    """
-
-    pot = SmoothPotential(LJ93(epsilon, sigma,
-                               communicator=communicator),
-                          gamma, r_t)
-    pot.name = 'lj9-3smooth'
-    return pot
-
-def LJ93smoothMin(epsilon, sigma, gamma=None, r_ti=None, r_t_ls=None,communicator=MPI.COMM_WORLD):
-    """
-    When starting from a bad guess, or with a bad optimizer, sometimes
-    optimisations that include potentials with a singularity at the origin
-    fail, because the optimizer chooses a bad step direction and length and
-    falls into non-physical territory. This class tries to remedy this by
-    replacing the singular repulsive part around zero by a linear function.
-
-    Keyword Arguments:
-        epsilon -- Lennard-Jones potential well ε (careful, not work of
-                   adhesion in this formulation)
-        sigma   -- Lennard-Jones distance parameter σ
-        gamma   -- (default ε) Work of adhesion, defaults to ε
-        r_ti    -- (default r_min/2) transition point between linear function
-                   and lj, defaults to r_min
-        r_t_ls  -- (default r_min) transition point between lj and spline,
-                    defaults to r_min
-    """
-    return LinearCorePotential(LJ93smooth(epsilon, sigma, gamma, r_t_ls, communicator=communicator), r_ti)
-
-def LJ93SimpleSmooth(epsilon, sigma, r_c, communicator=MPI.COMM_WORLD):
-    """Uses the ParabolicCutoffPotential smoothing in combination with LJ93
-
-        Keyword Arguments:
-        epsilon -- Lennard-Jones potential well ε (careful, not work of
-                   adhesion in this formulation)
-        sigma   -- Lennard-Jones distance parameter σ
-        r_c     -- emposed cutoff radius
-    """
-    return ParabolicCutoffPotential(LJ93(epsilon, sigma, communicator=communicator), r_c)
-
-def LJ93SimpleSmoothMin(epsilon, sigma, r_c, r_ti, communicator=MPI.COMM_WORLD):
-    return LinearCorePotential(LJ93SimpleSmooth(epsilon, sigma, r_c, communicator=communicator), r_ti=r_ti)

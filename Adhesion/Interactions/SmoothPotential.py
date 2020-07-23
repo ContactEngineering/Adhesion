@@ -60,7 +60,6 @@ class SmoothPotential(ChildPotential):
             of pontential) can also be 'inflection' to transition at the
             inflection point
         """
-        # pylint: disable=super-init-not-called
         super().__init__(parent_potential)
         self.gamma = gamma if gamma is not None \
             else -self.parent_potential.v_min
@@ -542,4 +541,4 @@ class SmoothPotential(ChildPotential):
                        " check whether the inputs make sense").format(self)
             raise self.PotentialError(err_str)
 
-Potential.register_function("apply_spline_cutoff", SmoothPotential)
+Potential.register_function("spline_cutoff", SmoothPotential)
