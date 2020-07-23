@@ -30,8 +30,11 @@ class PowerLaw(Potential):
         SoftWall.__init__(self, communicator=communicator)
 
     def __repr__(self, ):
-        return ("Potential '{0.name}': gam = {0.gam},"
-                "rho = {0.rho}").format(self)
+        return (
+                "Potential '{0.name}': "
+                "work_of_adhesion = {0.work_of_adhesion},"
+                "cutoff_radius = {0.cutoff_radius}, exponent = {0.exponent}"
+                ).format(self)
 
     def __getstate__(self):
         state = super().__getstate__(), self.exponent, self.rho, self.work_of_adhesion
