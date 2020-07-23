@@ -35,7 +35,7 @@ class Exponential(Potential):
     """ V(g) = -gamma0*e^(-g(r)/rho)
     """
 
-    name = "adh"
+    name = "exp"
 
     def __init__(self, gamma0, rho, communicator=MPI.COMM_WORLD):
         """
@@ -72,28 +72,29 @@ class Exponential(Potential):
     def max_tensile(self):
         return - self.gam / self.rho
 
-    def naive_pot(self,
-                  r,
+    def evaluate(self,
+                  gap,
                   potential=True,
                   gradient=False,
                   curvature=False,
-                  mask=(slice(None), slice(None))):
+                  mask=None):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets. These have been collected in a single method to reuse the
             computated LJ terms for efficiency
             V(g) = -gamma0*e^(-g(r)/rho)
             V'(g) = (gamma0/rho)*e^(-g(r)/rho)
-            V''(g) = -(gamma0/r_ho^2)*e^(-g(r)/rho)
+            V''(g) = -(gamma0/rho^2)*e^(-g(r)/rho)
 
             Keyword Arguments:
-            r      -- array of distances
+            gap      -- array of distances
             potential    -- (default True) if true, returns potential energy
             gradient -- (default False) if true, returns gradient
             curvature   -- (default False) if true, returns second derivative
         """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=invalid-name
 
+        r = np.asarray(gap)
+        if mask is None:
+            mask = (slice(None),) * len(r.shape)
         rho = self.rho if np.isscalar(self.rho) else self.rho[mask]
         g = -r/ rho
 
@@ -138,7 +139,7 @@ class RepulsiveExponential(Potential):
     """ V(g) = -gamma_{rep}*e^(-r/rho_{rep}) -gamma_{att}*e^(-r/rho_{att})
     """
 
-    name = "adh"
+    name = "repulsive_exp"
 
     def __init__(self, gamma_rep, rho_rep, gamma_att,rho_att, communicator=MPI.COMM_WORLD):
         """
@@ -178,10 +179,10 @@ class RepulsiveExponential(Potential):
         return np.log(self.gam_rep / self.gam_att * self.rho_att**2 / self.rho_rep**2) \
                / (1 / self.rho_rep - 1 / self.rho_att)
 
-    def naive_pot(self, r,pot=True,gradient=False,curvature=False,
+    def evaluate(self, r, pot=True, gradient=False, curvature=False,
                   mask=(slice(None), slice(None))):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets. These have been collected in a single method to reuse the
+        """ Evaluates the potential and its derivatives.
+            These have been collected in a single method to reuse the
             computated LJ terms for efficiency
             V(g) = -gamma0*e^(-g(r)/rho)
             V'(g) = (gamma0/rho)*e^(-g(r)/rho)
@@ -193,8 +194,6 @@ class RepulsiveExponential(Potential):
             gradient -- (default False) if true, returns gradient
             curvature   -- (default False) if true, returns second derivative
         """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=invalid-name
         if np.isscalar(self.rho_att):
             rho_att = self.rho_att
         else:

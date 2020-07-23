@@ -62,7 +62,8 @@ class SmoothPotential(ChildPotential):
         """
         # pylint: disable=super-init-not-called
         super().__init__(parent_potential)
-        self.gamma = gamma if gamma is not None else -self.naive_min
+        self.gamma = gamma if gamma is not None \
+            else -self.parent_potential.v_min
         # Warning: this assumes that the minimum of the potential is a negative
         # value. This will fail curiously if you use this class to implement a
         # potential with a positive minimum
@@ -137,7 +138,7 @@ class SmoothPotential(ChildPotential):
         """
         return self.parent_potential.r_min
 
-    def _evaluate(self, r, potential=True, gradient=False, curvature=False):
+    def evaluate(self, r, potential=True, gradient=False, curvature=False):
         """Evaluates the potential and its derivatives
         Keyword Arguments:
         r          -- array of distances
@@ -145,13 +146,12 @@ class SmoothPotential(ChildPotential):
         gradient     -- (default False) if true, returns gradient
         curvature       -- (default False) if true, returns second derivative
         """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=invalid-name
         # if np.isscalar(r):
         #     r = np.asarray(r)
         # nb_dim = len(r.shape)
         # if nb_dim == 0:
         #     r.shape = (1,)
+        r = np.asarray(r)
         V = np.zeros_like(r) if potential else self.SliceableNone()
         dV = np.zeros_like(r) if gradient else self.SliceableNone()
         ddV = np.zeros_like(r) if curvature else self.SliceableNone()
@@ -162,14 +162,14 @@ class SmoothPotential(ChildPotential):
         if np.array_equal(sl_inner, np.array([True])):
             #            raise AssertionError(" I thought this code is never
             #            executed")
-            V, dV, ddV = self.parent_potential.naive_pot(r, potential, gradient, curvature)
+            V, dV, ddV = self.parent_potential.evaluate(r, potential, gradient, curvature)
             V -= self.offset
             return (V if potential else None,
                     dV if gradient else None,
                     ddV if curvature else None)
         else:
             V[sl_inner], dV[sl_inner], ddV[sl_inner] = \
-                self.parent_potential.naive_pot(r[sl_inner], potential, gradient, curvature)
+                self.parent_potential.evaluate(r[sl_inner], potential, gradient, curvature)
         V[sl_inner] -= self.offset
 
         sl_outer = np.logical_and(np.ma.filled(r < self.r_c, fill_value=False),
@@ -304,7 +304,7 @@ class SmoothPotential(ChildPotential):
         xtol -- (default 1e-10) tolerance for numerical solution. Is scaled
                 by γ internally.
         """
-        dummy, gradient_t, ddV_t = self.parent_potential.naive_pot(
+        dummy, gradient_t, ddV_t = self.parent_potential.evaluate(
             self.r_t, potential=False, gradient=True, curvature=True)
         dV_t = gradient_t
 
@@ -319,7 +319,7 @@ class SmoothPotential(ChildPotential):
             return np.poly1d(polycoeffs)
 
         if self.r_t <= self.r_min:
-            dummy, dummy, ddV_m = self.parent_potential.naive_pot(
+            dummy, dummy, ddV_m = self.parent_potential.evaluate(
                 self.r_min, potential=False, gradient=False, curvature=True)
 
             def inner_obj_fun(Δrt, gam_star):
@@ -354,9 +354,9 @@ class SmoothPotential(ChildPotential):
                 nonlocal Δrt
                 if sol.success:
                     Δrt = sol.x.item()
-                    offset = self.naive_pot(self.r_t)[0] - \
+                    offset = self.parent_potential.evaluate(self.r_t)[0] - \
                              np.array(spline(Δrt)(Δrt))
-                    error = self.naive_pot(self.r_min)[0] - offset + self.gamma
+                    error = self.parent_potential.evaluate(self.r_min)[0] - offset + self.gamma
 
                     return error
                 else:
@@ -379,7 +379,7 @@ class SmoothPotential(ChildPotential):
                            "sense").format(self)
                 raise self.PotentialError(err_str)
         else:
-            V_m_t = self.parent_potential.naive_pot(
+            V_m_t = self.parent_potential.evaluate(
                 np.array([self.r_t, self.r_min]))[0]
             Δgamma = V_m_t[0] - V_m_t[1]
             dgam = (Δgamma - self.gamma)
@@ -399,7 +399,7 @@ class SmoothPotential(ChildPotential):
         self.dpoly = np.polyder(self.poly)
         self.ddpoly = np.polyder(self.dpoly)
         self.offset = -(self.spline_pot(self.r_t)[0] -
-                        self.naive_pot(self.r_t)[0])
+                        self.parent_potential.evaluate(self.r_t)[0])
 
     def eval_poly_and_cutoff_legacy(self, xtol=1e-10):
         """ Seems to be a bad method, do not use in general, will likely
@@ -484,7 +484,7 @@ class SmoothPotential(ChildPotential):
         # pylint: disable=bad-continuation
         # pylint: disable=invalid-name
         # known coeffs
-        dummy, dV, ddV = self.parent_potential.naive_pot(
+        dummy, dV, ddV = self.parent_potential.evaluate(
             self.r_t, potential=False, gradient=True, curvature=True)
         C1 = self.coeffs[1] = -dV
         C2 = self.coeffs[2] = -ddV
@@ -536,7 +536,7 @@ class SmoothPotential(ChildPotential):
             self.dpoly = np.polyder(self.poly)
             self.ddpoly = np.polyder(self.dpoly)
             self.offset = -(self.spline_pot(self.r_t)[0] -
-                            self.naive_pot(self.r_t)[0])
+                            self.parent_potential.evaluate(self.r_t)[0])
         else:
             err_str = ("Evaluation of spline for potential '{}' failed. Please"
                        " check whether the inputs make sense").format(self)

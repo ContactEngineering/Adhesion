@@ -272,7 +272,7 @@ class SystemTest(unittest.TestCase):
         print(res.message)
 
         rep_force = np.where(
-            S.interaction.force > 0, S.interaction.force, 0
+            S.interaction_force > 0, S.interaction_force, 0
             )
         alt_rep_force = -np.where(
             S.substrate.force < 0, S.substrate.force, 0
@@ -283,7 +283,7 @@ class SystemTest(unittest.TestCase):
 
         ## import matplotlib.pyplot as plt
         ## fig = plt.figure()
-        ## CS = plt.contourf(S.interaction.force)
+        ## CS = plt.contourf(S.interaction_force)
         ## plt.colorbar(CS)
         ## plt.title("interaction")
         ## fig = plt.figure()
@@ -521,7 +521,7 @@ class FreeElasticHalfSpaceSystemTest(unittest.TestCase):
         ## plt.colorbar(CS)
         ## plt.title("substrate")
         ## fig = plt.figure()
-        ## CS = plt.contourf(S.interaction.force[:32, :32])
+        ## CS = plt.contourf(S.interaction_force[:32, :32])
         ## plt.colorbar(CS)
         ## plt.title("interaction")
         ## plt.show()
@@ -545,7 +545,7 @@ class FreeElasticHalfSpaceSystemTest(unittest.TestCase):
             ("resulting normal forces differ: error = {} > tol = {}, "
              "ref_force_n = {}, my_force_n = {}\nOptimResult was {}\nelast energy = {}\ninteraction_force = {}\nsubstrate_force = {}\n System type = '{}'").format(
                  error, ftol, ref_N, S.compute_normal_force(), result,
-                 S.substrate.energy, S.interaction.force.sum(),
+                 S.substrate.energy, S.interaction_force.sum(),
                  S.substrate.force.sum(), type(S)))
         error = Tools.mean_err(
             disp, result.x.reshape(S.substrate.nb_domain_grid_pts))
@@ -600,7 +600,7 @@ class FreeElasticHalfSpaceSystemTest(unittest.TestCase):
             disp = np.zeros(np.prod(res)*4)
             result = minimize(fun, disp, jac=True,
                               method = 'L-BFGS-B', options=options)
-            normalforce[i] = S.interaction.force.sum()
+            normalforce[i] = S.interaction_force.sum()
             error = abs(normalforce-normalforce.mean()).mean()
         self.assertTrue(error < tol, "error = {:.15g} > tol = {}, N = {}".format(
             error, tol, normalforce))

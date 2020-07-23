@@ -139,10 +139,10 @@ class FastSmoothContactSystem(SmoothContactSystem):
         """
         is_ok = True
         if self.dim == 2:
-            is_ok &= (self.interaction.force[:, 0] == 0.).all()
-            is_ok &= (self.interaction.force[:, -1] == 0.).all()
-            is_ok &= (self.interaction.force[0, :] == 0.).all()
-            is_ok &= (self.interaction.force[-1, :] == 0.).all()
+            is_ok &= (self.interaction_force[:, 0] == 0.).all()
+            is_ok &= (self.interaction_force[:, -1] == 0.).all()
+            is_ok &= (self.interaction_force[0, :] == 0.).all()
+            is_ok &= (self.interaction_force[-1, :] == 0.).all()
         if not is_ok:
             self.deproxified()
             raise self.FreeBoundaryError(
@@ -162,10 +162,10 @@ class FastSmoothContactSystem(SmoothContactSystem):
             # Sometimes, the Topograsphy.__h is a masked array, where the masked values represent infinite heights
             # At this points there is no interaction
 
-            is_ok &= np.ma.filled(self.babushka.interaction.force[:, 0] == 0.,True).all()
-            is_ok &= np.ma.filled(self.babushka.interaction.force[:, -1] == 0.,True).all()
-            is_ok &= np.ma.filled(self.babushka.interaction.force[0, :] == 0.,True).all()
-            is_ok &= np.ma.filled(self.babushka.interaction.force[-1, :] == 0.,True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[:, 0] == 0.,True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[:, -1] == 0.,True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[0, :] == 0.,True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[-1, :] == 0.,True).all()
             
         if not is_ok:
             self.deproxified()
@@ -265,7 +265,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
             sm_substrate, copy.deepcopy(self.interaction), sm_surface)
 
     def compute_normal_force(self):
-        return self.babushka.interaction.force.sum()
+        return self.babushka.interaction_force.sum()
 
     def callback(self, force=False):
         return self.babushka.callback(force=force)
@@ -281,18 +281,18 @@ class FastSmoothContactSystem(SmoothContactSystem):
         """
         self.substrate.force = self._get_full_array(
             self.babushka.substrate.force)
-        self.interaction.force = self._get_full_array(
-            self.babushka.interaction.force)
+        self.interaction_force = self._get_full_array(
+            self.babushka.interaction_force)
         self.energy = self.babushka.energy
         self.interaction.energy = self.babushka.interaction.energy
         self.substrate.energy = self.babushka.substrate.energy
 
         self.force = self.substrate.force.copy()
         if self.dim == 1:
-            self.force[:self.nb_grid_pts[0]] -= self.interaction.force
+            self.force[:self.nb_grid_pts[0]] -= self.interaction_force
         else:
             self.force[:self.nb_grid_pts[0], :self.nb_grid_pts[1]] -= \
-              self.interaction.force   # nopep8
+              self.interaction_force   # nopep8
         self.disp = self.substrate.evaluate_disp(self.substrate.force)
         return self.energy, self.force, self.disp
 

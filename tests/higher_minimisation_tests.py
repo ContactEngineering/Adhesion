@@ -78,7 +78,7 @@ class PulloffTest(unittest.TestCase):
                 disp0 = system.disp
                 return system.compute_normal_force()
             diagnostic = "offset = {}, r_c = {}, mean(f_pot) = {}".format(
-                offset, self.pot.r_c, system.interaction.force.mean())
+                offset, self.pot.r_c, system.interaction_force.mean())
             gap = system.compute_gap(system.disp, offset)
             diagnostic += ", gap: (min, max) = ({}, {})".format(gap.min(), gap.max())
             diagnostic += ", disp: (min, max) = ({}, {})".format(system.disp.min(), system.disp.max())

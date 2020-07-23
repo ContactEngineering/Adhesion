@@ -69,7 +69,7 @@ class Dugdale(HardWall):
     def length(self):
         return self._length
 
-    def compute(self, gap, tol=0.):
+    def evaluate(self, gap, tol=0.):
         return np.where(gap < self._length,
                         self._stress*np.ones_like(gap),
                         np.zeros_like(gap))
@@ -78,8 +78,6 @@ class Dugdale(HardWall):
 class SoftWall(Interaction):
     """base class for smooth contact mechanics"""
     def __init__(self, communicator=MPI.COMM_WORLD):
-        self.energy = None
-        self.gradient = None
         self.communicator = communicator
         self.pnp = Reduction(communicator)
 
@@ -119,36 +117,16 @@ class SoftWall(Interaction):
     def __setstate__(self, state):
         self.energy, self.gradient = state
 
-    def compute(self, gap, potential=True, gradient=False, area_scale=1.):
-        """
-        computes and stores the interaction energy and/or gradients based
-        on the
-        as function of the gap
-        Parameters:
-        gap        -- array containing the point-wise gap values
-        potential        -- (default True) whether the energy should be evaluated
-        gradient     -- (default False) whether the gradients should be
-        evaluated
-        area_scale -- (default 1.) scale by this. (Interaction quantities are
-                      supposed to be expressed per unit area, so systems need
-                      to be able to scale their response for their nb_grid_pts))
-        """
-        energy, self.gradient = self.evaluate(
-            gap, potential=potential, gradient=gradient, area_scale=area_scale)
-        self.energy = self.pnp.sum(energy)
-
-    def evaluate(self, gap, potential=True, gradient=False, area_scale=1.):
+    def evaluate(self, gap, potential=True, gradient=False):
         """
         computes and returns the interaction energy and/or forces based on the
         as fuction of the gap
         Parameters:
         gap        -- array containing the point-wise gap values
         potential        -- (default True) whether the energy should be evaluated
-        forces     -- (default False) whether the forces should be evaluated
-        area_scale -- (default 1.) scale by this. (Interaction quantities are
-                      supposed to be expressed per unit area, so systems need
-                      to be able to scale their response for their nb_grid_pts))
+        gradient     -- (default False) whether the gradient should be evaluated
         """
+        r = np.asarray(gap)
         raise NotImplementedError()
 
     @property

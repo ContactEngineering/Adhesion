@@ -40,8 +40,6 @@ from NuMPI import MPI
 from .Interactions import SoftWall
 
 
-# TODO: This should probably be moved together with Interactions
-
 class Potential(SoftWall, metaclass=abc.ABCMeta):
     """ Describes the minimum interface to interaction potentials for
         Adhesion. These potentials are purely 1D, which allows for a few
@@ -104,31 +102,13 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
     def has_cutoff(self):
         return False
 
-    def compute(self, gap, potential=True, gradient=False, curvature=False, area_scale=1.):
-        # pylint: disable=arguments-differ
-        energy, self.gradient, self.curvature = self.evaluate(gap, potential, gradient,
-                                                         curvature, area_scale=area_scale)
-        self.energy = self.pnp.sum(energy) if potential else None
-
-    @abc.abstractmethod
-    def naive_pot(self, r, potential=True, gradient=False, curvature=False):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets.
-            Keyword Arguments:
-            r      -- array of distances
-            potential    -- (default True) if true, returns potential energy
-            gradient -- (default False) if true, returns gradient
-            curvature   -- (default False) if true, returns second derivative
-
-        """
-        raise NotImplementedError()
-
     def evaluate(self, gap, potential=True, gradient=False, curvature=False,
-                 area_scale=1.):
+                 mask=None):
         """Evaluates the potential and its derivatives
+
         Parameters:
         -----------
-        r:
+        gap:
             array of distances between the two surfaces
         potential: bool (default True)
             if true, returns potential energy
@@ -136,42 +116,16 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
             if true, returns gradient
         curvature: bool, (default False)
             if true, returns second derivative
-        area_scale: float (default 1.)
-            scale by this.
-            (Interaction quantities are supposed to be expressed per unit
-            area, so systems need to be able to scale their response for their
-            nb_grid_pts)
+        mask: boolean array, optional
+            potential is only evaluated on gap[mask]
+            this property is used by the child potential
         """
-        if np.isscalar(gap):
-            gap = np.asarray(gap)
-        if gap.shape == ():
-            gap.shape = (1,)
-
-        V, dV, ddV = self._evaluate(gap, potential, gradient, curvature)
-
-        return (area_scale * V if potential else None,
-                area_scale * dV if gradient else None,
-                area_scale * ddV if curvature else None)
-
-    def _evaluate(self, r, potential=True, gradient=False, curvature=False,
-                  mask=None):
-        """Evaluates the potential and its derivatives
-        Keyword Arguments:
-        r          -- array of distances
-        pot        -- (default True) if true, returns potential energy
-        gradient     -- (default False) if true, returns gradient
-        curvature       -- (default False) if true, returns second derivative
-        """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=arguments-differ
-        if mask is None:
-            mask = (slice(None),) * len(r.shape)
-        return self.naive_pot(r, potential, gradient, curvature, mask=mask)
+        raise NotImplementedError
 
     @abc.abstractproperty
     def r_min(self):
         """
-        convenience function returning the location of the enery minimum
+        convenience function returning the location of the energy minimum
         """
         raise NotImplementedError()
 
@@ -186,24 +140,23 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
     @property
     def max_tensile(self):
         """
-        convenience function returning the value of the maximum stress (at r_infl)
+        convenience function returning the value of the maximum stress
+        (at r_infl)
         """
-        max_tensile= self.evaluate(self.r_infl, gradient=True)[1]
-        return max_tensile.item() if np.prod(max_tensile.shape) == 1 else max_tensile
+        max_tensile = self.evaluate(self.r_infl, gradient=True)[1]
+        return max_tensile.item() if np.prod(max_tensile.shape) == 1 \
+            else max_tensile
 
     @property
     def v_min(self):
-        """ convenience function returning the energy minimum
+        """ convenience function returning the value of the energy minimum
         """
         return float(self.evaluate(self.r_min)[0])
 
     @property
-    def naive_min(self):
-        """ convenience function returning the energy minimum of the bare
-           potential
+    def ancestor_potential(self):
+        return self
 
-        """
-        return self.naive_pot(self.r_min)[0]
 
 class ChildPotential(Potential):
     def __init__(self, parent_potential):
@@ -212,10 +165,7 @@ class ChildPotential(Potential):
         self.communicator = parent_potential.communicator
 
     def __getattr__(self, item):
-        #print("looking up item {} in {}".format(item, self.parent_potential))
-        #print(self.parent_potential)
-        if item[:2]=="__" and item[-2:]=="__":
-            #print("not allow to lookup")
+        if item[:2] == "__" and item[-2:] == "__":
             raise AttributeError
         else:
             return getattr(self.parent_potential, item)
@@ -228,17 +178,7 @@ class ChildPotential(Potential):
         superstate, self.parent_potential = state
         super().__setstate__(superstate)
 
-    def naive_pot(self, r, potential=True, gradient=False, curvature=False):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets.
-            Keyword Arguments:
-            r      -- array of distances
-            potential    -- (default True) if true, returns potential energy
-            gradient -- (default False) if true, returns gradient
-            curvature   -- (default False) if true, returns second derivative
-
-        """
-        return self.parent_potential.naive_pot(r, potential, gradient, curvature)
-
-
+    @property
+    def ancestor_potential(self):
+        return self.parent_potential.ancestor_potential
 

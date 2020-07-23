@@ -62,14 +62,16 @@ class LinearCorePotential(ChildPotential):
 
     def compute_linear_part(self):
         " evaluates the two coefficients of the linear part of the potential"
-        f_val, f_prime, dummy = self.parent_potential.evaluate(self.r_ti, True,
-                                                               True)
+        f_val, f_prime, dummy = self.parent_potential.evaluate(
+            self.r_ti,
+            True,
+            True)
         return np.poly1d((float(f_prime), f_val - f_prime*self.r_ti))
 
     def __repr__(self):
         return "{0} -> LinearCorePotential: r_ti = {1.r_ti}".format(self.parent_potential.__repr__(),self)
 
-    def _evaluate(self, r, potential=True, gradient=False, curvature=False, mask=None):
+    def evaluate(self, r, potential=True, gradient=False, curvature=False, mask=None):
         """Evaluates the potential and its derivatives
         Keyword Arguments:
         r          -- array of distances
@@ -77,9 +79,7 @@ class LinearCorePotential(ChildPotential):
         gradient     -- (default False) if true, returns gradient
         curvature       -- (default False) if true, returns second derivative
         """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=invalid-name
-
+        r = np.asarray(r)
         nb_dim = len(r.shape)
         if nb_dim == 0:
             r.shape = (1,)
@@ -100,7 +100,7 @@ class LinearCorePotential(ChildPotential):
             V[sl_core], dV[sl_core], ddV[sl_core] = \
                 self.lin_pot(r[sl_core], potential, gradient, curvature)
             V[sl_rest], dV[sl_rest], ddV[sl_rest] = \
-                self.parent_potential._evaluate(r[sl_rest], potential, gradient, curvature)
+                self.parent_potential.evaluate(r[sl_rest], potential, gradient, curvature)
 
         return (V if potential else None,
                 dV if gradient else None,
@@ -182,24 +182,30 @@ class CutoffPotential(ChildPotential):
 
         return self.parent_potential.r_infl
 
-    def _evaluate(self, gap, potential=True, gradient=False, curvature=False):
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False,
+                 mask=None):
         """Evaluates the potential and its derivatives
-        Keyword Arguments:
-        r          -- array of distances
-        pot        -- (default True) if true, returns potential energy
-        gradient     -- (default False) if true, returns gradient
-        curvature       -- (default False) if true, returns second derivative
+        Parameters:
+        -----------
+        gap:
+            array of distances
+        pot: bool, True
+            if true, returns potential energy
+        gradient: bool,  False
+            if true, returns gradient
+        curvature bool, False
+            if true, returns second derivative
         """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=arguments-differ
 
         inside_mask = np.ma.filled(gap < self.cutoff_radius, fill_value=False)
+        if mask is not None:
+            inside_mask = np.logical_and(inside_mask, mask)
         V = np.zeros_like(gap) if potential else self.SliceableNone()
         dV = np.zeros_like(gap) if gradient else self.SliceableNone()
         ddV = np.zeros_like(gap) if curvature else self.SliceableNone()
 
         V[inside_mask], dV[inside_mask], ddV[inside_mask] = \
-            self.parent_potential._evaluate(gap[inside_mask],
+            self.parent_potential.evaluate(gap[inside_mask],
                 potential, gradient, curvature, mask=inside_mask)
         if V[inside_mask] is not None:
             V[inside_mask] -= self.potential_offset
@@ -303,7 +309,7 @@ class ParabolicCutoffPotential(ChildPotential):
         """
         ΔV, forces, ΔddV = [-float(dummy)
                             for dummy
-                            in self.naive_pot(
+                            in self.parent_potential.evaluate(
                                 self.r_c, potential=True,
                                 gradient=True,
                                 curvature=True)]
@@ -314,16 +320,16 @@ class ParabolicCutoffPotential(ChildPotential):
         self.dpoly = np.polyder(self.poly)
         self.ddpoly = np.polyder(self.dpoly)
 
-    def _evaluate(self, r, potential=True, gradient=False, curvature=False):
-        """
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False):
+        r"""
         Evaluates the potential and its derivatives
         Keyword Arguments:
-        r          -- array of distances
+        gap          -- array of distances
         pot        -- (default True) if true, returns potential energy
         gradient     -- (default False) if true, returns gradient
         curvature       -- (default False) if true, returns second derivative
         """
-
+        r = np.asarray(gap)
         V = np.zeros_like(r) if potential else self.SliceableNone()
         dV = np.zeros_like(r) if gradient else self.SliceableNone()
         ddV = np.zeros_like(r) if curvature else self.SliceableNone()
@@ -332,7 +338,7 @@ class ParabolicCutoffPotential(ChildPotential):
 
         def adjust_pot(r):
             " shifts potentials, if an offset has been set"
-            V, dV, ddV = self.naive_pot(r, potential, gradient, curvature)
+            V, dV, ddV = self.parent_potential.evaluate(r, potential, gradient, curvature)
             for val, cond, fun, sgn in zip(  # pylint: disable=W0612
                     (V, dV, ddV),
                     (potential, -gradient, curvature),
@@ -357,5 +363,5 @@ class ParabolicCutoffPotential(ChildPotential):
         return True
 
 Potential.register_function("linearize_core", LinearCorePotential)
-Potential.register_function("apply_cutoff", CutoffPotential)
-Potential.register_function("apply_parabolic_cutoff", ParabolicCutoffPotential)
+Potential.register_function("cutoff", CutoffPotential)
+Potential.register_function("parabolic_cutoff", ParabolicCutoffPotential)

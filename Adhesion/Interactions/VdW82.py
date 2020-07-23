@@ -69,10 +69,11 @@ class VDW82(Potential):
                 "A_l = {0.hamaker}").format(
                     self, )  # nopep8
 
-    def naive_pot(self, r, potential=True, gradient=False, curvature=False, mask=(slice(None), slice(None))):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets. These have been collected in a single method to reuse the
-            computated vdW terms for efficiency
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False,
+                 mask=(slice(None), slice(None))):
+        """ Evaluates the potential and its derivatives.
+            These have been collected in a single method to reuse the
+            computed vdW terms for efficiency
 
                            A      C_sr
             vdW(r)  = - ─────── + ────
@@ -90,11 +91,12 @@ class VDW82(Potential):
                         2⋅r ⋅π     r
             Parameters:
             -------------
-            r: array of distances
+            gap: array of distances
             potential    -- (default True) if true, returns potential energy
             gradient -- (default False) if true, returns gradient
             curvature   -- (default False) if true, returns second derivative
         """
+        r = np.asarray(gap)
         V = dV = ddV = None
         r_2 = r**-2
         c_sr_r6 = self.c_sr*r_2**3 if  np.isscalar(self.c_sr) \

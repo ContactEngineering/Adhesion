@@ -107,8 +107,8 @@ def test_minimization_simplesmoothmin(young, r_c):
         fig, ax = plt.subplots()
 
         # ax.pcolormesh(result.x.reshape(substrate.computational_nb_grid_pts))
-        ax.pcolormesh(S.interaction.force)
-        #    np.savetxt("{}_forces.txt".format(pot_class.__name__), S.interaction.force)
+        ax.pcolormesh(S.interaction_force)
+        #    np.savetxt("{}_forces.txt".format(pot_class.__name__), S.interaction_force)
         ax.set_xlabel("x")
         ax.set_ylabel("")
         ax.grid(True)
@@ -182,8 +182,8 @@ def test_minimization(pot_class, young, base_res):
         fig, ax = plt.subplots()
 
         # ax.pcolormesh(result.x.reshape(substrate.computational_nb_grid_pts))
-        ax.pcolormesh(S.interaction.force)
-        np.savetxt("{}_forces.txt".format(pot_class.__name__), S.interaction.force)
+        ax.pcolormesh(S.interaction_force)
+        np.savetxt("{}_forces.txt".format(pot_class.__name__), S.interaction_force)
         ax.set_xlabel("x")
         ax.set_ylabel("")
         ax.grid(True)
@@ -292,7 +292,7 @@ class FastSystemTest(unittest.TestCase):
             gap[np.isinf(gap)] = self.min_pot.r_c
 
             print('r_min = {}'.format(self.min_pot.r_min))
-            return S.interaction.force, disp, gap, S.compute_normal_force()
+            return S.interaction_force, disp, gap, S.compute_normal_force()
 
         def timer(fun, *args):
             start = time.perf_counter()
@@ -334,7 +334,7 @@ class FastSystemTest(unittest.TestCase):
             gap = S.compute_gap(S.disp, offset)
             gap[np.isinf(gap)] = self.min_pot.r_c
 
-            return S.interaction.force, S.disp, gap, S.compute_normal_force()
+            return S.interaction_force, S.disp, gap, S.compute_normal_force()
 
         def timer(fun, *args):
             start = time.perf_counter()

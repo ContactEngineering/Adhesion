@@ -63,12 +63,10 @@ class Harmonic(Potential):
         """
         return None
 
-    def naive_pot(self, r, potential=True, gradient=False, curvature=True):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets.
+    def evaluate(self, r, potential=True, gradient=False, curvature=True,):
+        """ Evaluates the potential and its derivatives
         """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=invalid-name
+
         V = dV = ddV = None
         if potential:
             V = 0.5*self.spring_constant*r**2

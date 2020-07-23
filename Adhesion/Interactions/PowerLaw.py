@@ -5,33 +5,40 @@ from Adhesion.Interactions import Potential, SoftWall
 
 
 class PowerLaw(Potential):
-    """ V(g) = -gamma0*e^(-g(r)/rho)
+    r""" Polynomial interaction whiches value, first and second derivatives are
+    0 at the cutoff radius
+
+    .. math ::
+
+         (r < r_c) \ (1 - r / r_c)^p
+
+    With the exponent :math:`p >= 3`
     """
 
     name = "PowerLaw"
 
-    def __init__(self, work_adhesion, cutoff_radius, exponent=3, communicator=MPI.COMM_WORLD):
+    def __init__(self, work_of_adhesion, cutoff_radius, exponent=3,
+                 communicator=MPI.COMM_WORLD):
         """
         Keyword Arguments:
         gamma0 -- surface energy at perfect contact
         rho   -- attenuation length
         """
         self.cutoff_radius = self.rho = cutoff_radius
-        self.gam = work_adhesion
-        self.p = exponent
+        self.work_of_adhesion = work_of_adhesion
+        self.exponent = exponent
         SoftWall.__init__(self, communicator=communicator)
-        self.offset = 0  # cutoff is intrinsic to the potential so that there is no offset needed.
 
     def __repr__(self, ):
         return ("Potential '{0.name}': gam = {0.gam},"
                 "rho = {0.rho}").format(self)
 
     def __getstate__(self):
-        state = super().__getstate__(), self.p, self.rho, self.gam
+        state = super().__getstate__(), self.exponent, self.rho, self.work_of_adhesion
         return state
 
     def __setstate__(self, state):
-        superstate, self.p, self.rho, self.gam = state
+        superstate, self.exponent, self.rho, self.work_of_adhesion = state
         super().__setstate__(superstate)
 
     @property
@@ -48,19 +55,15 @@ class PowerLaw(Potential):
 
     @property
     def max_tensile(self):
-        return - self.gam / self.rho * self.p
+        return - self.work_of_adhesion / self.rho * self.exponent
 
-    def naive_pot(self, r, potential=True, gradient=False, curvature=False, mask=(slice(None), slice(None))):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets. These have been collected in a single method to reuse the
-            computated LJ terms for efficiency
-            V(g) = -gamma0*e^(-g(r)/rho)
-            V'(g) = (gamma0/rho)*e^(-g(r)/rho)
-            V''(g) = -(gamma0/r_ho^2)*e^(-g(r)/rho)
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False,
+                 mask=None):
+        """ Evaluates the potential and its derivatives
 
             Parameters:
             -----------
-            r:
+            gap:
                 array of distances between the two surfaces
             potential: bool (default True)
                 if true, returns potential energy
@@ -69,12 +72,13 @@ class PowerLaw(Potential):
             curvature: bool, (default False)
                 if true, returns second derivative
         """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=invalid-name
-
-        w = self.gam if np.isscalar(self.gam) else self.gam[mask]
+        r = np.asarray(gap)
+        if mask is None:
+            mask = (slice(None), ) * len(r.shape)
+        w = self.work_of_adhesion if np.isscalar(self.work_of_adhesion) \
+            else self.work_of_adhesion[mask]
         rc = self.rho if np.isscalar(self.rho) else self.rho[mask]
-        p = self.p
+        p = self.exponent
 
         g = (1 - r / rc)
         V = dV = ddV = None

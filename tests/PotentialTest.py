@@ -72,7 +72,7 @@ class PotentialTest(unittest.TestCase):
         """ compare lj93 to reference implementation
         """
         V, dV, ddV = LJ93(
-            self.eps, self.sig).apply_cutoff(self.rcut).evaluate(
+            self.eps, self.sig).cutoff(self.rcut).evaluate(
                 self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJ_ref_V  (self.r, self.eps, self.sig, self.rcut)
         dV_ref  = - LJ_ref_dV (self.r, self.eps, self.sig, self.rcut)
@@ -353,16 +353,16 @@ class PotentialTest(unittest.TestCase):
 
         refpot = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2)
 
-
         pot = LinearCorePotential(refpot, r_ti =r_ti)
         z = [0.8*r_ti,r_ti,1.5*r_ti]
         for zi in z:
+            zi = np.array(zi)
             np.testing.assert_allclose(
-                pot.naive_pot(zi, True, True, True),
-                np.array(refpot.evaluate(zi, True, True, True, area_scale=1.)).reshape(-1))
+                np.array(pot.ancestor_potential.evaluate(zi, True, True, True)),
+                np.array(refpot.evaluate(zi, True, True, True,)))
             if zi >= r_ti:
-                np.testing.assert_allclose(pot.evaluate(zi, True, True,True, area_scale=4.),
-                                           refpot.evaluate(zi, True, True,True, area_scale=4.))
+                np.testing.assert_allclose(pot.evaluate(zi, True, True,True, ),
+                                           refpot.evaluate(zi, True, True,True,))
 
         "".format(LinearCorePotential)
         if False:
@@ -431,10 +431,10 @@ class PotentialTest(unittest.TestCase):
         for zi in z:
             if zi >= r_ti :
                 np.testing.assert_allclose(
-                    pot.evaluate(zi, True, True, True, area_scale=4.),
-                    smoothpot.evaluate(zi, True, True, True, area_scale=4.))
+                    np.array(pot.evaluate(zi, True, True, True,)).reshape(-1),
+                    np.array(smoothpot.evaluate(zi, True, True, True,)).reshape(-1))
             if zi >= r_c:
-                assert pot.evaluate(zi, True, True, True, area_scale=4.) == (0, 0, 0), "Potential nonzero outside of cutoff"
+                assert pot.evaluate(zi, True, True, True,) == (0, 0, 0), "Potential nonzero outside of cutoff"
 
         if False:
             import matplotlib.pyplot as plt
@@ -451,7 +451,7 @@ class PotentialTest(unittest.TestCase):
     def test_Exponential(self):
         r = np.linspace(-10, 10, 1001)
         pot = Exponential(1.0, 1.0)
-        V, dV, ddV = pot.naive_pot(r)
+        V, dV, ddV = pot.evaluate(r)
         self.assertTrue((V<0.0).all())
         self.assertTrue((dV>0.0).all())
         self.assertTrue((ddV<0.0).all())
@@ -468,7 +468,7 @@ class PotentialTest(unittest.TestCase):
         for i, n in enumerate(ns):
             r = np.linspace(-.1, 10, n + 1)
             pot = RepulsiveExponential(0.5, 0.5, 1.3, 1.)
-            V, dV, ddV = pot.naive_pot(r)
+            V, dV, ddV = pot.evaluate(r)
             dV_num = np.diff(V) / np.diff(r)
             ddV_num = np.diff(dV_num) / (r[1] - r[0])
             errordV[i] = abs((dV[:-1] + dV[1:]) / 2 - dV_num).max()
@@ -676,83 +676,10 @@ def test_deepcopy(pot_creation):
         copied_potential.evaluate(z, True, True, True),
         pot.evaluate(z, True, True, True))
 
-    # assert the cached values (energy, force and curvature were also deepcopied)
-    # and so computing with the new instance of the potential does'nt influence the original one
-    refvals = pot.evaluate(z, True, True, True)
-    pot.compute(z, True, True, True)
-    copied_potential.compute(np.random.random((1, 4)))
-    np.testing.assert_allclose(pot.energy, np.sum(refvals[0]))
-    np.testing.assert_allclose(pot.gradient, refvals[1])
-    np.testing.assert_allclose(pot.curvature, refvals[2])
-
     if hasattr(pot,
                "parent_potential"):  # assert parent potential has also been copied
         assert pot.parent_potential is not copied_potential.parent_potential
 
-@pytest.mark.skip("masked arrays are not supported anymore")
-@pytest.mark.parametrize("fill_value", [float("inf"), 1e20])
-@pytest.mark.parametrize("pot_creation", [
-                        'LJ93(eps, sig)',
-                        'LJ93SimpleSmooth(eps, sig, 3*sig)',
-                        'LJ93smooth(eps, sig)',
-                        'LJ93smoothMin(eps, sig)',
-                        'LJ93smooth(eps,  sig, r_t="inflection")',
-                        'LJ93smoothMin(eps, sig, r_t_ls="inflection")',
-                        'LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93SimpleSmoothMin(eps, sig, LJ93(eps, sig).r_infl * 2,  LJ93(eps, sig).r_min * 0.8)',
-                        'VDW82(c_sr, hamaker)',
-                        'VDW82smooth(c_sr,  hamaker)',
-                        'VDW82smoothMin(c_sr,  hamaker)',
-                        'VDW82smooth(c_sr,  hamaker, r_t="inflection")',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
-                        'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
-                        'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
-                        'RepulsiveExponential(1., 0.5, 1., 1.)',
-                        'Exponential(sig, eps)',
-                        'PowerLaw(sig, eps, 3)'
-                         ])
-def test_masked_arrays(pot_creation, fill_value):
-    eps = 1.7294663266397667
-    sig = 3.253732668164946
-
-    c_sr = 2.1e-78
-    hamaker = 68.1e-21
-    pot=eval(pot_creation)
-
-    shape= (2,3)
-    h = np.random.random(shape)*10
-    mask= [[True, False, True], [False, True, False]]
-    hma = np.ma.masked_array(h, mask, fill_value=fill_value)
-
-    V, dV, ddV = pot.evaluate(hma, True, True, True)
-    #print(V)
-    #print(np.asarray(V))
-    assert (np.asarray(V[hma.mask])== 0.).all()
-    assert (np.asarray(dV[hma.mask]) == 0.).all()
-    assert (np.asarray(ddV[hma.mask])== 0.).all()
-
-
-@pytest.mark.parametrize("pot_class",[LJ93smooth, LJ93smoothMin])
-def test_lj93_masked(pot_class):
-    eps = 1
-    sig = 2
-    gam = 5
-    pot = pot_class(eps, sig, gam)
-
-    z = np.array([0.5,1,2,3,4])
-    pot.compute(z, True, True)
-    en1 = pot.energy
-    #print(en1)
-
-    z = np.ma.masked_array([0.5,0.7, 1, 2, 3, 4],mask=[0,1,0,0,0,0])
-    pot.compute(z, True, True)
-    en2=pot.energy
-    #print("{}".format(en1))
-    #print("{}".format(en2))
-
-    assert en1 == en2
 
 @pytest.mark.parametrize("pot_creation", [
                         'LJ93(eps, sig)',
@@ -835,7 +762,7 @@ def test_max_tensile_array(pot_creation):
 def test_work_range_array(pot_creation):
     "tests that it is possible to change interaction range and work of adhesion at the same time"
 
-    x = np.linspace(0,1)
+    x = np.linspace(0, 1)
     dw = 0.5
     work_fluctuation = dw * np.cos(np.pi * x)
     work_factor = 1 + work_fluctuation

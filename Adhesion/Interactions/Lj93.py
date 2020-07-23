@@ -47,7 +47,7 @@ class LJ93(Potential):
         V_lc (r) = V_l (r) - V_l (r_c)
     """
 
-    name = "lj9-3"
+    name = "lj-93"
 
     def __init__(self, epsilon, sigma, communicator=MPI.COMM_WORLD):
         """
@@ -94,7 +94,7 @@ class LJ93(Potential):
         """
         return self.sig
 
-    def naive_pot(self, r, potential=True, gradient=False, curvature=False, mask=None):
+    def evaluate(self, r, potential=True, gradient=False, curvature=False, mask=None):
         """ Evaluates the potential and its derivatives without cutoffs or
             offsets. These have been collected in a single method to reuse the
             computated LJ terms for efficiency
@@ -116,9 +116,8 @@ class LJ93(Potential):
                          ⎜     5      11 ⎟
                          ⎝    r      r   ⎠
         """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=invalid-name
-
+        r = np.asarray(r)
+        
         V = dV = ddV = None
         sig_r3 = (self.sig/r)**3
         sig_r9 = sig_r3**3
