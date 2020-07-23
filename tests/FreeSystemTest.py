@@ -72,7 +72,7 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
                               standoff=1000)
 
     substrate = ContactMechanics.FreeFFTElasticHalfSpace(
-        res, young, size, fft="numpy")
+        res, young, size)
 
     pot = Contact.LJ93(eps, sig
                        ).linearize_core(r_ti=0.5).parabolic_cutoff(r_c=r_c)
