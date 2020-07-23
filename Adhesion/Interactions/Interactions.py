@@ -129,8 +129,3 @@ class SoftWall(Interaction):
         r = np.asarray(gap)
         raise NotImplementedError()
 
-    @property
-    def force(self):
-        if self.gradient is not None:
-            return - self.gradient
-        return None
