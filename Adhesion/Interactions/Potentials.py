@@ -108,15 +108,15 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
 
         Parameters:
         -----------
-        gap:
+        gap: array_like of float
             array of distances between the two surfaces
-        potential: bool (default True)
-            if true, returns potential energy
-        gradient: bool, (default False)
-            if true, returns gradient
-        curvature: bool, (default False)
-            if true, returns second derivative
-        mask: boolean array, optional
+        potential: bool, optional
+            if true, returns potential energy (default True)
+        gradient: bool, optional
+            if true, returns gradient (default False)
+        curvature: bool, optional
+            if true, returns second derivative (default False)
+        mask: nd_array of bool, optional
             potential is only evaluated on gap[mask]
             this property is used by the child potential
         """
@@ -141,7 +141,7 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
     def max_tensile(self):
         """
         convenience function returning the value of the maximum stress
-        (at r_infl)
+        (i.e. the value of the gradient at the inflexion point pot.r_infl)
         """
         max_tensile = self.evaluate(self.r_infl, gradient=True)[1]
         return max_tensile.item() if np.prod(max_tensile.shape) == 1 \
