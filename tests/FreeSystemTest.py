@@ -99,7 +99,8 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
                    gtol=1e-5 *
                         max(abs(pot.max_tensile),
                             2 * young / np.pi * np.sqrt((pot.r_min + offset) / radius)) # max pressure in the hertzian contact
-                        * S.area_per_pt)
+                        * S.area_per_pt,
+                   maxcor=3)
     disp = S.shape_minimisation_input(
         np.zeros(substrate.nb_domain_grid_pts))
 
