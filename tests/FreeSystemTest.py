@@ -75,9 +75,9 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
         res, young, size)
 
     pot = Contact.LJ93(eps, sig
-                       ).linearize_core(r_ti=0.5).parabolic_cutoff(r_c=r_c)
+                       ).parabolic_cutoff(r_c).linearize_core(0.5)
 
-    if False:
+    if True:
         import matplotlib.pyplot as plt
         fig, (axp, axf) = plt.subplots(1, 2)
 
@@ -92,10 +92,14 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
                             surface)
 
     # print("testing: {}, rc = {}, offset= {}".format(pot.__class__, S.interaction.r_c, S.interaction.offset))
-    offset = .8 * S.interaction.r_c
+    offset = .8 * S.interaction.parent_potential.r_c
     fun = S.objective(offset, gradient=True)
 
-    options = dict(ftol=2.220446049250313e-09, gtol=1e-5)
+    options = dict(ftol=0,
+                   gtol=1e-5 *
+                        max(abs(pot.max_tensile),
+                            2 * young / np.pi * np.sqrt((pot.r_min + offset) / radius)) # max pressure in the hertzian contact
+                        * S.area_per_pt)
     disp = S.shape_minimisation_input(
         np.zeros(substrate.nb_domain_grid_pts))
 
@@ -103,21 +107,23 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
     bnds = tuple(zip(lbounds.tolist(), [None for i in range(len(lbounds))]))
     result = minimize(fun, disp, jac=True,
                       method='L-BFGS-B', options=options)  # , bounds=bnds)
-    if False:
+    if True:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
 
         # ax.pcolormesh(result.x.reshape(substrate.computational_nb_grid_pts))
-        ax.pcolormesh(S.interaction_force)
+        plt.colorbar(ax.pcolormesh(S.interaction_force))
         #    np.savetxt("{}_forces.txt".format(pot_class.__name__), S.interaction_force)
         ax.set_xlabel("x")
         ax.set_ylabel("")
         ax.grid(True)
         ax.legend()
+        ax.set_title("Es={}, r_c={}".format(young, r_c))
 
         fig.tight_layout()
-        plt.show(block=True)
+        # plt.show(block=True)
     assert result.success, "{}".format(result)
+    assert result.message == b'CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL'
 
 # # TODO
 # @pytest.mark.skip(reason="Strange problem see issue #139 work on this in the mufft branch")
