@@ -782,3 +782,68 @@ def test_work_range_array(pot_creation):
     interaction.evaluate(np.random.uniform(0, 2, size=x.shape), True, True,
                          True)
 
+
+
+@pytest.mark.parametrize("cutoff_procedure", [
+"pot",
+"pot.parabolic_cutoff(r_c)",
+"pot.parabolic_cutoff(r_c).linearize_core(r_t_lin)",
+"pot.linearize_core(r_t_lin).parabolic_cutoff(r_c)",
+"pot.linearize_core(r_t_lin)",
+])
+def test_cutoff_gradient(cutoff_procedure):
+    eps = 1.
+    sig = 1.
+
+    r_t_lin = 0.5
+    r_c = 1.5
+
+    pot = LJ93(eps, sig)
+    cutoffpot = eval(cutoff_procedure)
+
+    import scipy.optimize as opt
+
+    for x0 in [0.9 * r_c, 0.999 * r_c, r_c, 1.1 * r_c]:
+        assert opt.check_grad(lambda x: cutoffpot.evaluate(x)[0], lambda x: cutoffpot.evaluate(x, True, True)[1], x0 ) < 1e-8, "eval at {}".format(x0)
+        assert opt.check_grad(lambda x: cutoffpot.evaluate(x, True, True)[1], lambda x: cutoffpot.evaluate(x, True, True, True)[2], x0 ) < 1e-8, "eval at {}".format(x0)
+
+    #opt.approx_fprime()
+
+def test_parabolic_cutoff():
+    _plot = True
+    eps = 1.
+    sig = 1.
+
+    r_t_lin = 0.5
+    r_c = 1.5
+
+    pot = LJ93(eps, sig)
+    cutoff_pot = pot.parabolic_cutoff(r_c)
+    z = np.linspace(0.9 * r_c, 1.01 * r_c, 100)
+    ratio = cutoff_pot.evaluate(z)[0] / pot.evaluate(z)[0]
+    assert ((ratio[1:] - ratio[:-1]) <= 0).all()
+    if _plot:
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots()
+        ax.plot(ratio)
+        plt.show()
+
+    z = np.linspace(0.9 * r_c, 1.01 * r_c, 100)
+
+    ratio = abs(cutoff_pot.evaluate(z, True, True)[1] / pot.evaluate(z, True, True)[1])
+    assert ((ratio[1:] - ratio[:-1]) <= 0).all()
+
+    if _plot:
+        fig, ax = plt.subplots()
+        ax.plot(ratio,)
+        plt.show()
+
+        z = np.linspace(0.9 * r_c, 1.01 * r_c, 100)
+
+    ratio = abs(cutoff_pot.evaluate(z, True, True, True)[2] / pot.evaluate(z, True, True, True)[2])
+    assert ((ratio[1:] - ratio[:-1]) <= 0).all()
+
+    if _plot:
+        fig, ax = plt.subplots()
+        ax.plot(ratio,)
+        plt.show()

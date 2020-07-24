@@ -10,7 +10,5 @@ sphinx>=1.8.2
 NuMPI>=0.1.1
 pytest>=4
 setuptools_scm>=3.5.0
-muFFT>=0.9.1
 git+https://github.com/pastewka/runtests.git#egg=runtests
-git+https://github.com/ComputationalMechanics/SurfaceTopography.git
 git+https://github.com/ComputationalMechanics/ContactMechanics.git
