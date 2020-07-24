@@ -231,7 +231,7 @@ class ParabolicCutoffPotential(ChildPotential):
         self.r_c = r_c
 
         self.poly = None
-        self.compute_poly()
+        self._compute_poly()
         self._r_min = self.precompute_min()
         self._r_infl = self.precompute_infl()
 
@@ -303,7 +303,7 @@ class ParabolicCutoffPotential(ChildPotential):
         """
         return self._r_infl
 
-    def compute_poly(self):
+    def _compute_poly(self):
         """
         computes the coefficients of the corrective parabola
         """
