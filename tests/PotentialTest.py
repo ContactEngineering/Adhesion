@@ -791,7 +791,7 @@ def test_work_range_array(pot_creation):
 "pot.linearize_core(r_t_lin).parabolic_cutoff(r_c)",
 "pot.linearize_core(r_t_lin)",
 ])
-def test_cutoff_gradient(cutoff_procedure):
+def test_cutoff_derivatives(cutoff_procedure):
     eps = 1.
     sig = 1.
 
@@ -803,11 +803,17 @@ def test_cutoff_gradient(cutoff_procedure):
 
     import scipy.optimize as opt
 
-    for x0 in [0.9 * r_c, 0.999 * r_c, r_c, 1.1 * r_c]:
-        assert opt.check_grad(lambda x: cutoffpot.evaluate(x)[0], lambda x: cutoffpot.evaluate(x, True, True)[1], x0 ) < 1e-8, "eval at {}".format(x0)
-        assert opt.check_grad(lambda x: cutoffpot.evaluate(x, True, True)[1], lambda x: cutoffpot.evaluate(x, True, True, True)[2], x0 ) < 1e-8, "eval at {}".format(x0)
+    for x0 in [1., 1.1, 0.9 * r_c, 0.999 * r_c, r_c, 1.1 * r_c]:
+        eps = 1e-8
+        # forward finite differece wrt x0, or central fintite differences wrt x0+eps / 2
+        numder = opt.approx_fprime(x0, lambda x: cutoffpot.evaluate(x)[0],  eps)
+        analder = cutoffpot.evaluate(x0+eps / 2, True, True)[1]
 
-    #opt.approx_fprime()
+        assert abs(numder - analder) < 1e-7
+
+        numder = opt.approx_fprime(x0, lambda x: cutoffpot.evaluate(x, True, True)[1],  eps)
+        analder = cutoffpot.evaluate(x0 + eps / 2, True, True, True)[2]
+        assert abs(numder - analder) < 1e-7
 
 def test_parabolic_cutoff():
     _plot = True
