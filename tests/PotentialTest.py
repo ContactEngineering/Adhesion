@@ -801,17 +801,18 @@ def test_cutoff_derivatives(cutoff_procedure):
     pot = LJ93(eps, sig)
     cutoffpot = eval(cutoff_procedure)
 
-    import scipy.optimize as opt
+    def approx_fprime(x0, fun, eps):
+        return (fun(x0 + eps) - fun(x0)) / eps
 
     for x0 in [1., 1.1, 0.9 * r_c, 0.999 * r_c, r_c, 1.1 * r_c]:
         eps = 1e-8
         # forward finite differece wrt x0, or central fintite differences wrt x0+eps / 2
-        numder = opt.approx_fprime(x0, lambda x: cutoffpot.evaluate(x)[0],  eps)
+        numder = approx_fprime(x0, lambda x: cutoffpot.evaluate(x)[0],  eps)
         analder = cutoffpot.evaluate(x0+eps / 2, True, True)[1]
 
         assert abs(numder - analder) < 1e-7
 
-        numder = opt.approx_fprime(x0, lambda x: cutoffpot.evaluate(x, True, True)[1],  eps)
+        numder = approx_fprime(x0, lambda x: cutoffpot.evaluate(x, True, True)[1],  eps)
         analder = cutoffpot.evaluate(x0 + eps / 2, True, True, True)[2]
         assert abs(numder - analder) < 1e-7
 
