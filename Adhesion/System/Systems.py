@@ -41,15 +41,17 @@ class SmoothContactSystem(SystemBase):
     """
     def __init__(self, substrate, interaction, surface):
         """ Represents a contact problem
-        Keyword Arguments:
-        substrate   -- An instance of HalfSpace. Defines the solid mechanics in
-                       the substrate
-        interaction -- An instance of Interaction. Defines the contact
-                       formulation. If this computes interaction energies,
-                       forces etc, these are supposed to be expressed per unit
-                       area in whatever units you use. The conversion is
-                       performed by the system
-        surface     -- An instance of SurfaceTopography, defines the profile.
+        Parameters
+        ----------
+        substrate: An instance of HalfSpace.
+            Defines the solid mechanics in the substrate
+        interaction: Adhesion.Interactions.SoftWall
+            Defines the contact formulation.
+            If this computes interaction energies, forces etc,
+            these are supposed to be expressed per unit area in whatever units
+             you use. The conversion is performed by the system
+        surface: SurfaceTopography.Topography
+            Defines the profile.
         """
         if surface.has_undefined_data:
             raise ValueError("The topography you provided contains undefined "
@@ -69,7 +71,6 @@ class SmoothContactSystem(SystemBase):
 
     @property
     def nb_grid_pts(self):
-        # pylint: disable=missing-docstring
         return self.surface.nb_grid_pts
 
     @staticmethod
@@ -183,6 +184,22 @@ class SmoothContactSystem(SystemBase):
         """
         Compute the energies and forces in the system for a given displacement
         field
+
+        Parameters:
+        -----------
+        disp: ndarray
+            displacement field, in the shape of
+            system.substrate.nb_subdomain_grid_pts
+        offset: float
+            determines indentation depth,
+            constant value added to the heights (system.topography)
+        pot: bool, optional
+            Wether to evaluate the energy, default True
+        forces: bool, optional
+            Wether to evaluate the forces, default False
+        logger: ContactMechanics.Tools.Logger
+            informations of current state of the system will be passed to
+            logger at every evaluation
         """
         # attention: the substrate may have a higher nb_grid_pts than the gap
         # and the interaction (e.g. FreeElasticHalfSpace)
@@ -219,21 +236,38 @@ class SmoothContactSystem(SystemBase):
 
     def objective(self, offset, disp0=None, gradient=False, disp_scale=1.,
                   logger=None):
-        """
+        r"""
         This helper method exposes a scipy.optimize-friendly interface to the
         evaluate() method. Use this for optimization purposes, it makes sure
         that the shape of disp is maintained and lets you set the offset and
         'forces' flag without using scipy's cumbersome argument passing
         interface. Returns a function of only disp
-        Keyword Arguments:
-        offset     -- determines indentation depth
-        disp0      -- unused variable, present only for interface compatibility
-                      with inheriting classes
-        gradient   -- (default False) whether the gradient is supposed to be
-                      used
-        disp_scale -- (default 1.) allows to specify a scaling of the
-                      dislacement before evaluation.
-        logger     -- (default None) log information at every iteration.
+
+        Parameters:
+        -----------
+        disp0: ndarray
+            unused variable, present only for interface compatibility
+            with inheriting classes
+        offset: float
+            determines indentation depth,
+            constant value added to the heights (system.topography)
+        gradient: bool, optional
+            Wether to evaluate the gradient, default False
+        disp_scale: float
+            (default 1.) allows to specify a scaling of the
+            dislacement before evaluation.
+        logger: ContactMechanics.Tools.Logger
+            informations of current state of the system will be passed to
+            logger at every evaluation
+
+        Returns:
+            function(disp)
+                Parameters:
+                disp: an nd_array of shape
+                      system.substrate.nb_subdomain_grid_pts
+                      displacements
+                Returns:
+                    energy or energy, gradient
         """
         dummy = disp0
         res = self.substrate.nb_subdomain_grid_pts
@@ -263,8 +297,11 @@ class SmoothContactSystem(SystemBase):
         Simple callback function that can be handed over to scipy's minimize to
         get updates during minimisation
         Parameters:
-        force -- (default False) whether to include the norm of the force
-                 vector in the update message
+        ----------
+        force: bool, optional
+            whether to include the norm of the force
+            vector in the update message
+            (default False)
         """
         counter = 0
         if force:
