@@ -275,7 +275,7 @@ class ParabolicCutoffPotential(ChildPotential):
         computes r_infl
         """
         result = scipy.optimize.fminbound(
-            func=lambda r: self.parent_potential.evaluate(r, False, True, False)[1],
+            func=lambda r: self.evaluate(r, False, True, False)[1],
             x1=0.01*self.r_c,
             x2=self.r_c,
             disp=1,
@@ -307,13 +307,13 @@ class ParabolicCutoffPotential(ChildPotential):
         """
         computes the coefficients of the corrective parabola
         """
-        ΔV, forces, ΔddV = [-float(dummy)
+        ΔV, ΔdV, ΔddV = [-float(dummy)
                             for dummy
                             in self.parent_potential.evaluate(
                                 self.r_c, potential=True,
                                 gradient=True,
                                 curvature=True)]
-        ΔdV = -forces - ΔddV*self.r_c # TODO: plus or minus here ?
+        ΔdV =  ΔdV - ΔddV*self.r_c # TODO: plus or minus here ?
         ΔV -= ΔddV/2*self.r_c**2 + ΔdV*self.r_c
 
         self.poly = np.poly1d([ΔddV/2, ΔdV, ΔV])
@@ -339,13 +339,12 @@ class ParabolicCutoffPotential(ChildPotential):
         def adjust_pot(r):
             " shifts potentials, if an offset has been set"
             V, dV, ddV = self.parent_potential.evaluate(r, potential, gradient, curvature)
-            for val, cond, fun, sgn in zip(  # pylint: disable=W0612
+            for val, cond, fun in zip(  # pylint: disable=W0612
                     (V, dV, ddV),
-                    (potential, -gradient, curvature),
-                    (self.poly, self.dpoly, self.ddpoly),
-                    (1., -1., 1.)):
+                    (potential, gradient, curvature),
+                    (self.poly, self.dpoly, self.ddpoly)):
                 if cond:
-                    val += sgn*fun(r)
+                    val += fun(r)
             return V, dV, ddV
 
         if np.array_equal(sl_in_range, np.array([True])):
