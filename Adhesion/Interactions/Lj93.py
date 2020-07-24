@@ -41,20 +41,38 @@ class LJ93(Potential):
         9-3 Lennard-Jones potential:
         V_l (r) = ε[ 2/15 (σ/r)**9 - (σ/r)**3]
 
-        When used with a cutoff radius, the potential is shifted in order to
-        guarantee continuity of forces
 
-        V_lc (r) = V_l (r) - V_l (r_c)
+                         ⎛   3       9⎞
+                         ⎜  σ     2⋅σ ⎟
+            V_l(r) =   ε⋅⎜- ── + ─────⎟
+                         ⎜   3       9⎟
+                         ⎝  r    15⋅r ⎠
+
+                         ⎛   3       9⎞
+                         ⎜3⋅σ     6⋅σ ⎟
+            V_l'(r) =  ε⋅⎜──── - ─────⎟
+                         ⎜  4       10⎟
+                         ⎝ r     5⋅r  ⎠
+
+                         ⎛      3       9⎞
+                         ⎜  12⋅σ    12⋅σ ⎟
+            V_l''(r) = ε⋅⎜- ───── + ─────⎟
+                         ⎜     5      11 ⎟
+                         ⎝    r      r   ⎠
+
     """
 
     name = "lj-93"
 
     def __init__(self, epsilon, sigma, communicator=MPI.COMM_WORLD):
         """
-        Keyword Arguments:
-        epsilon -- Lennard-Jones potential well ε
-        sigma   -- Lennard-Jones distance parameter σ
-        r_cut   -- (default i) optional cutoff radius
+        Parameters:
+        -----------
+        epsilon: float
+            Lennard-Jones potential well ε
+        sigma: float
+            Lennard-Jones distance parameter σ
+        communicator: not used
         """
         self.eps = float(epsilon)
         self.sig = float(sigma)
@@ -93,27 +111,6 @@ class LJ93(Potential):
         return self.sig
 
     def evaluate(self, r, potential=True, gradient=False, curvature=False, mask=None):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets. These have been collected in a single method to reuse the
-            computated LJ terms for efficiency
-                         ⎛   3       9⎞
-                         ⎜  σ     2⋅σ ⎟
-            V_l(r) =   ε⋅⎜- ── + ─────⎟
-                         ⎜   3       9⎟
-                         ⎝  r    15⋅r ⎠
-
-                         ⎛   3       9⎞
-                         ⎜3⋅σ     6⋅σ ⎟
-            V_l'(r) =  ε⋅⎜──── - ─────⎟
-                         ⎜  4       10⎟
-                         ⎝ r     5⋅r  ⎠
-
-                         ⎛      3       9⎞
-                         ⎜  12⋅σ    12⋅σ ⎟
-            V_l''(r) = ε⋅⎜- ───── + ─────⎟
-                         ⎜     5      11 ⎟
-                         ⎝    r      r   ⎠
-        """
         r = np.asarray(r)
         
         V = dV = ddV = None
