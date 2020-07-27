@@ -116,7 +116,7 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
             if true, returns gradient (default False)
         curvature: bool, optional
             if true, returns second derivative (default False)
-        mask: nd_array of bool, optional
+        mask: ndarray of bool, optional
             potential is only evaluated on gap[mask]
             this property is used by the child potential
         """

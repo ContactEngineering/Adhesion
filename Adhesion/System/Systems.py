@@ -263,8 +263,8 @@ class SmoothContactSystem(SystemBase):
         Returns:
             function(disp)
                 Parameters:
-                disp: an nd_array of shape
-                      system.substrate.nb_subdomain_grid_pts
+                disp: an ndarray of shape
+                      `system.substrate.nb_subdomain_grid_pts`
                       displacements
                 Returns:
                     energy or energy, gradient

@@ -42,7 +42,7 @@ class SmoothPotential(ChildPotential):
 
     With r_o = r_c, all coefficients C_i can be eliminated and a good initial
     guess for the remaining scalar nonlinear equation can be computed. see
-    eval_poly_and_cutoff
+    _eval_poly_and_cutoff
     """
 
     def __init__(self, parent_potential, gamma=None, r_t=None):
@@ -80,7 +80,7 @@ class SmoothPotential(ChildPotential):
         self.poly = None
         self.dpoly = None
         self.ddpoly = None
-        self.eval_poly_and_cutoff()
+        self._eval_poly_and_cutoff()
 
     def __getstate__(self):
         state = super().__getstate__(), self.gamma, self.r_t, self.coeffs, \
@@ -138,13 +138,6 @@ class SmoothPotential(ChildPotential):
         return self.parent_potential.r_min
 
     def evaluate(self, r, potential=True, gradient=False, curvature=False):
-        """Evaluates the potential and its derivatives
-        Keyword Arguments:
-        r          -- array of distances
-        pot        -- (default True) if true, returns potential energy
-        gradient     -- (default False) if true, returns gradient
-        curvature       -- (default False) if true, returns second derivative
-        """
         # if np.isscalar(r):
         #     r = np.asarray(r)
         # nb_dim = len(r.shape)
@@ -175,24 +168,29 @@ class SmoothPotential(ChildPotential):
                                   sl_rest)
         # little hack to work around numpy bug
         if np.array_equal(sl_outer, np.array([True])):
-            V, dV, ddV = self.spline_pot(r, potential, gradient, curvature)
+            V, dV, ddV = self._spline_pot(r, potential, gradient, curvature)
         else:
-            V[sl_outer], dV[sl_outer], ddV[sl_outer] = self.spline_pot(
+            V[sl_outer], dV[sl_outer], ddV[sl_outer] = self._spline_pot(
                 r[sl_outer], potential, gradient, curvature)
 
         return (V if potential else None,
                 dV if gradient else None,
                 ddV if curvature else None)
 
-    def spline_pot(self, r, potential=True, gradient=False, curvature=False):
+    def _spline_pot(self, r, potential=True, gradient=False, curvature=False):
         """ Evaluates the spline part and its derivatives of the potential.
-        Keyword Arguments:
-        r      -- array of distances
-        pot    -- (default True) if true, returns potential energy
-        gradient -- (default False) if true, returns gradient
-        curvature   -- (default False) if true, returns second derivative
+        Parameters:
+        -----------
+        gap: array_like of float
+            array of distances between the two surfaces
+        potential: bool, optional
+            if true, returns potential energy (default True)
+        gradient: bool, optional
+            if true, returns gradient (default False)
+        curvature: bool, optional
+            if true, returns second derivative (default False)
         """
-        # pylint: disable=invalid-name
+
         V = dV = ddV = None
         dr = r - self.r_c
         if potential:
@@ -203,7 +201,7 @@ class SmoothPotential(ChildPotential):
             ddV = self.ddpoly(dr)
         return (V, dV, ddV)
 
-    def eval_poly_and_cutoff(self, xtol=1e-10):
+    def _eval_poly_and_cutoff(self, xtol=1e-10):
         """
         Computes the coefficients C_i of the spline and the cutoff radius r_c
         based on the work of adhesion γ and the slope V'(r_t) and curvature
@@ -397,10 +395,10 @@ class SmoothPotential(ChildPotential):
         self.poly = spline(Δrt)
         self.dpoly = np.polyder(self.poly)
         self.ddpoly = np.polyder(self.dpoly)
-        self.offset = -(self.spline_pot(self.r_t)[0] -
+        self.offset = -(self._spline_pot(self.r_t)[0] -
                         self.parent_potential.evaluate(self.r_t)[0])
 
-    def eval_poly_and_cutoff_legacy(self, xtol=1e-10):
+    def __eval_poly_and_cutoff_legacy(self, xtol=1e-10):
         """ Seems to be a bad method, do not use in general, will likely
             disappear.
 
@@ -534,7 +532,7 @@ class SmoothPotential(ChildPotential):
             self.poly = np.poly1d(polycoeffs)
             self.dpoly = np.polyder(self.poly)
             self.ddpoly = np.polyder(self.dpoly)
-            self.offset = -(self.spline_pot(self.r_t)[0] -
+            self.offset = -(self._spline_pot(self.r_t)[0] -
                             self.parent_potential.evaluate(self.r_t)[0])
         else:
             err_str = ("Evaluation of spline for potential '{}' failed. Please"

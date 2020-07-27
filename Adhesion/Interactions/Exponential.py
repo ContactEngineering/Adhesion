@@ -33,15 +33,22 @@ from NuMPI import MPI
 
 class Exponential(Potential):
     """ V(g) = -gamma0*e^(-g(r)/rho)
+
+            V(g) = -gamma0*e^(-g(r)/rho)
+            V'(g) = (gamma0/rho)*e^(-g(r)/rho)
+            V''(g) = -(gamma0/rho^2)*e^(-g(r)/rho)
     """
 
     name = "exp"
 
     def __init__(self, gamma0, rho, communicator=MPI.COMM_WORLD):
-        """
-        Keyword Arguments:
-        gamma0 -- surface energy at perfect contact
-        rho   -- attenuation length
+        r"""
+        Parameters:
+        -----------
+        gamma0: float or ndarray
+            surface energy at perfect contact
+        rho: float or ndarray
+            attenuation length
         """
         self.rho = rho
         self.gam = gamma0
@@ -78,19 +85,6 @@ class Exponential(Potential):
                   gradient=False,
                   curvature=False,
                   mask=None):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets. These have been collected in a single method to reuse the
-            computated LJ terms for efficiency
-            V(g) = -gamma0*e^(-g(r)/rho)
-            V'(g) = (gamma0/rho)*e^(-g(r)/rho)
-            V''(g) = -(gamma0/rho^2)*e^(-g(r)/rho)
-
-            Keyword Arguments:
-            gap      -- array of distances
-            potential    -- (default True) if true, returns potential energy
-            gradient -- (default False) if true, returns gradient
-            curvature   -- (default False) if true, returns second derivative
-        """
 
         r = np.asarray(gap)
         if mask is None:
@@ -136,17 +130,25 @@ class Exponential(Potential):
 
 
 class RepulsiveExponential(Potential):
-    """ V(g) = -gamma_{rep}*e^(-r/rho_{rep}) -gamma_{att}*e^(-r/rho_{att})
+    """ V(g) = -gamma_{rep}*e^(-r/rho_{rep}) - gamma_{att}*e^(-r/rho_{att})
     """
 
     name = "repulsive_exp"
 
-    def __init__(self, gamma_rep, rho_rep, gamma_att,rho_att, communicator=MPI.COMM_WORLD):
+    def __init__(self, gamma_rep, rho_rep, gamma_att, rho_att, communicator=MPI.COMM_WORLD):
         """
-        Keyword Arguments:
-        gamma0 -- surface energy at perfect contact
-        rho   -- attenuation length
+        Parameters:
+        -----------
+        gamma_rep: array_like
+            prefactor of the repulsive exponential
+        rho_rep: float or ndarray
+            attenuation length of the repulsive exponential
+        gamma_att: array_like
+            prefactor of the attractive exponential
+        rho_att: float or ndarray
+            attenuation length of the attractive exponential
         """
+
         self.rho_att = rho_att
         self.gam_att = gamma_att
         self.rho_rep = rho_rep
@@ -181,19 +183,7 @@ class RepulsiveExponential(Potential):
 
     def evaluate(self, r, pot=True, gradient=False, curvature=False,
                   mask=(slice(None), slice(None))):
-        """ Evaluates the potential and its derivatives.
-            These have been collected in a single method to reuse the
-            computated LJ terms for efficiency
-            V(g) = -gamma0*e^(-g(r)/rho)
-            V'(g) = (gamma0/rho)*e^(-g(r)/rho)
-            V''(g) = -(gamma0/r_ho^2)*e^(-g(r)/rho)
 
-            Keyword Arguments:
-            r      -- array of distances
-            potential    -- (default True) if true, returns potential energy
-            gradient -- (default False) if true, returns gradient
-            curvature   -- (default False) if true, returns second derivative
-        """
         if np.isscalar(self.rho_att):
             rho_att = self.rho_att
         else:

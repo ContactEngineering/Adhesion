@@ -40,10 +40,12 @@ class Harmonic(Potential):
 
     name = "harmonic"
 
-    def __init__(self, spring_constant,communicator=MPI.COMM_WORLD):
+    def __init__(self, spring_constant, communicator=MPI.COMM_WORLD):
         """
-        Keyword Arguments:
-        spring_constant -- Spring constant k
+        Parameters:
+        -----------
+        spring_constant: float
+            Spring constant k
         """
         self.spring_constant = spring_constant
         Potential.__init__(self, 0,communicator=communicator)
@@ -64,8 +66,6 @@ class Harmonic(Potential):
         return None
 
     def evaluate(self, r, potential=True, gradient=False, curvature=True,):
-        """ Evaluates the potential and its derivatives
-        """
 
         V = dV = ddV = None
         if potential:

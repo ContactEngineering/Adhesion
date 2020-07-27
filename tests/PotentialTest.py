@@ -817,7 +817,7 @@ def test_cutoff_derivatives(cutoff_procedure):
         assert abs(numder - analder) < 1e-7
 
 def test_parabolic_cutoff():
-    _plot = True
+    _plot = False
     eps = 1.
     sig = 1.
 

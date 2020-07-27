@@ -43,6 +43,24 @@ class VDW82(Potential):
     (like Lennard-Jones). The potential uses the formulation of Lessel et al.
     2013 (http://dx.doi.org/10.1103/PhysRevLett.111.035502). However, the oxide
     layer is supposed do be thick
+
+
+                           A      C_sr
+            vdW(r)  = - ─────── + ────
+                            2       8
+                        12⋅r ⋅π    r
+
+                        A      8⋅C_sr
+            vdW'(r) = ────── - ──────
+                         3        9
+                      6⋅r ⋅π     r
+
+                          A      72⋅C_sr
+            vdW"(r) = - ────── + ───────
+                           4        10
+                        2⋅r ⋅π     r
+
+
     """
     name = 'v-d-Waals82'
 
@@ -71,31 +89,6 @@ class VDW82(Potential):
 
     def evaluate(self, gap, potential=True, gradient=False, curvature=False,
                  mask=(slice(None), slice(None))):
-        """ Evaluates the potential and its derivatives.
-            These have been collected in a single method to reuse the
-            computed vdW terms for efficiency
-
-                           A      C_sr
-            vdW(r)  = - ─────── + ────
-                            2       8
-                        12⋅r ⋅π    r
-
-                        A      8⋅C_sr
-            vdW'(r) = ────── - ──────
-                         3        9
-                      6⋅r ⋅π     r
-
-                          A      72⋅C_sr
-            vdW"(r) = - ────── + ───────
-                           4        10
-                        2⋅r ⋅π     r
-            Parameters:
-            -------------
-            gap: array of distances
-            potential    -- (default True) if true, returns potential energy
-            gradient -- (default False) if true, returns gradient
-            curvature   -- (default False) if true, returns second derivative
-        """
         r = np.asarray(gap)
         V = dV = ddV = None
         r_2 = r**-2

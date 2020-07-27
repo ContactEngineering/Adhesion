@@ -20,9 +20,12 @@ class PowerLaw(Potential):
     def __init__(self, work_of_adhesion, cutoff_radius, exponent=3,
                  communicator=MPI.COMM_WORLD):
         """
-        Keyword Arguments:
-        gamma0 -- surface energy at perfect contact
-        rho   -- attenuation length
+        Parameters:
+        -----------
+        work_of_adhesion: float or ndarray
+            surface energy at perfect contact
+        cutoff_radius: float or ndarray
+            distance at which the potential has decayed to 0
         """
         self.cutoff_radius = self.rho = cutoff_radius
         self.work_of_adhesion = work_of_adhesion

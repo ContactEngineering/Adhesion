@@ -42,7 +42,7 @@ class LinearCorePotential(ChildPotential):
             self.r_ti = scipy.optimize.newton(f, parent_potential.r_min, fprime)
         else:
             self.r_ti = r_ti if r_ti is not None else parent_potential.r_min/2
-        self.lin_part = self.compute_linear_part()
+        self.lin_part = self._compute_linear_part()
 
     def __getstate__(self):
         """ is called and the returned object is pickled as the contents for
@@ -59,8 +59,7 @@ class LinearCorePotential(ChildPotential):
         superstate, self.r_ti, self.lin_part = state
         super().__setstate__(superstate)
 
-
-    def compute_linear_part(self):
+    def _compute_linear_part(self):
         " evaluates the two coefficients of the linear part of the potential"
         f_val, f_prime, dummy = self.parent_potential.evaluate(
             self.r_ti,
@@ -72,13 +71,7 @@ class LinearCorePotential(ChildPotential):
         return "{0} -> LinearCorePotential: r_ti = {1.r_ti}".format(self.parent_potential.__repr__(),self)
 
     def evaluate(self, r, potential=True, gradient=False, curvature=False, mask=None):
-        """Evaluates the potential and its derivatives
-        Keyword Arguments:
-        r          -- array of distances
-        pot        -- (default True) if true, returns potential energy
-        gradient     -- (default False) if true, returns gradient
-        curvature       -- (default False) if true, returns second derivative
-        """
+
         r = np.asarray(r)
         nb_dim = len(r.shape)
         if nb_dim == 0:
@@ -94,11 +87,11 @@ class LinearCorePotential(ChildPotential):
 
         # little hack to work around numpy bug
         if np.array_equal(sl_core, np.array([True])):
-            V, dV, ddV = self.lin_pot(r, potential, gradient, curvature)
+            V, dV, ddV = self._lin_pot(r, potential, gradient, curvature)
             #raise AssertionError(" I thought this code is never executed")
         else:
             V[sl_core], dV[sl_core], ddV[sl_core] = \
-                self.lin_pot(r[sl_core], potential, gradient, curvature)
+                self._lin_pot(r[sl_core], potential, gradient, curvature)
             V[sl_rest], dV[sl_rest], ddV[sl_rest] = \
                 self.parent_potential.evaluate(r[sl_rest], potential, gradient, curvature)
 
@@ -107,7 +100,7 @@ class LinearCorePotential(ChildPotential):
                 ddV if curvature else None)
 
 
-    def lin_pot(self, r, pot=True, gradient=False, curvature=False):
+    def _lin_pot(self, r, pot=True, gradient=False, curvature=False):
         """ Evaluates the linear part and its derivatives of the potential.
         Keyword Arguments:
         r      -- array of distances
@@ -126,6 +119,7 @@ class LinearCorePotential(ChildPotential):
         convenience function returning the location of the enery minimum
         """
         return self.parent_potential.r_min
+
     @property
     def r_infl(self):
         """
@@ -142,6 +136,14 @@ class CutoffPotential(ChildPotential):
         discontinuity in the force
     """
     def __init__(self, parent_potential, cutoff_radius):
+        """
+        Parameters
+        ----------
+        parent_potential: `Adhesion.Interactions.Potential`
+            potential on which to apply the cutoff
+        cutoff_radius: float
+            distance above which the potential is set to 0
+        """
         super().__init__(parent_potential)
         self.cutoff_radius = cutoff_radius
         self.potential_offset = \
@@ -184,18 +186,6 @@ class CutoffPotential(ChildPotential):
 
     def evaluate(self, gap, potential=True, gradient=False, curvature=False,
                  mask=None):
-        """Evaluates the potential and its derivatives
-        Parameters:
-        -----------
-        gap:
-            array of distances
-        pot: bool, True
-            if true, returns potential energy
-        gradient: bool,  False
-            if true, returns gradient
-        curvature bool, False
-            if true, returns second derivative
-        """
 
         inside_mask = np.ma.filled(gap < self.cutoff_radius, fill_value=False)
         if mask is not None:
@@ -224,16 +214,18 @@ class ParabolicCutoffPotential(ChildPotential):
 
     def __init__(self, parent_potential, r_c):
         """
-        Keyword Arguments:
-        r_c -- user-defined cut-off radius
+        Parameters:
+        -----------
+        r_c: float
+            cut-off radius
         """
         super().__init__(parent_potential)
         self.r_c = r_c
 
         self.poly = None
         self._compute_poly()
-        self._r_min = self.precompute_min()
-        self._r_infl = self.precompute_infl()
+        self._r_min = self._precompute_min()
+        self._r_infl = self._precompute_infl()
 
     def __getstate__(self):
         """ is called and the returned object is pickled as the contents for
@@ -253,7 +245,7 @@ class ParabolicCutoffPotential(ChildPotential):
     def __repr__(self):
         return "{0} -> ParabolicCutoffPotential: r_c = {1.r_c}".format(self.parent_potential.__repr__(),self)
 
-    def precompute_min(self):
+    def _precompute_min(self):
         """
         computes r_min
         """
@@ -270,7 +262,7 @@ class ParabolicCutoffPotential(ChildPotential):
                  "This was the full minimisation result: {}").format(result))
         return float(result[0])
 
-    def precompute_infl(self):
+    def _precompute_infl(self):
         """
         computes r_infl
         """
@@ -313,7 +305,7 @@ class ParabolicCutoffPotential(ChildPotential):
                                 self.r_c, potential=True,
                                 gradient=True,
                                 curvature=True)]
-        ΔdV =  ΔdV - ΔddV*self.r_c # TODO: plus or minus here ?
+        ΔdV =  ΔdV - ΔddV*self.r_c
         ΔV -= ΔddV/2*self.r_c**2 + ΔdV*self.r_c
 
         self.poly = np.poly1d([ΔddV/2, ΔdV, ΔV])
@@ -321,14 +313,7 @@ class ParabolicCutoffPotential(ChildPotential):
         self.ddpoly = np.polyder(self.dpoly)
 
     def evaluate(self, gap, potential=True, gradient=False, curvature=False):
-        r"""
-        Evaluates the potential and its derivatives
-        Keyword Arguments:
-        gap          -- array of distances
-        pot        -- (default True) if true, returns potential energy
-        gradient     -- (default False) if true, returns gradient
-        curvature       -- (default False) if true, returns second derivative
-        """
+
         r = np.asarray(gap)
         V = np.zeros_like(r) if potential else self.SliceableNone()
         dV = np.zeros_like(r) if gradient else self.SliceableNone()

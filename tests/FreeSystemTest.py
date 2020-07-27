@@ -77,7 +77,7 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
     pot = Contact.LJ93(eps, sig
                        ).parabolic_cutoff(r_c).linearize_core(0.5)
 
-    if True:
+    if False:
         import matplotlib.pyplot as plt
         fig, (axp, axf) = plt.subplots(1, 2)
 
@@ -108,7 +108,7 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
     bnds = tuple(zip(lbounds.tolist(), [None for i in range(len(lbounds))]))
     result = minimize(fun, disp, jac=True,
                       method='L-BFGS-B', options=options)  # , bounds=bnds)
-    if True:
+    if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
 
