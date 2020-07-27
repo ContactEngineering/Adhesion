@@ -15,18 +15,19 @@ class LinearCorePotential(ChildPotential):
     """
     def __init__(self, parent_potential, r_ti=None, hardness=None):
         """
+
+        Either the cutoff radius or the hardness (- the gradient at the cutoff)
+        should be provided
+
         Parameters:
         -----------
-        r_ti: (default r_min/2) transition point between linear function
+        r_ti: float, optional
+            (default r_min/2) transition point between linear function
                    and lj, defaults to r_min
-        hardness:
-        maximum repulsive stress.
+        hardness: float, optional
+            maximum repulsive stress.
         r_ti is choosen so that the maximum repulsive stress is hardness
         """
-        # pylint: disable=super-init-not-called
-        # not calling the superclass's __init__ because this is used in diamond
-        # inheritance and I do not want to have to worry about python's method
-        # nb_grid_pts order
         super().__init__(parent_potential)
 
         if hardness is not None:
