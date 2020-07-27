@@ -65,19 +65,6 @@ class PowerLaw(Potential):
 
     def evaluate(self, gap, potential=True, gradient=False, curvature=False,
                  mask=None):
-        """ Evaluates the potential and its derivatives
-
-            Parameters:
-            -----------
-            gap:
-                array of distances between the two surfaces
-            potential: bool (default True)
-                if true, returns potential energy
-            gradient: bool, (default False)
-                if true, returns gradient
-            curvature: bool, (default False)
-                if true, returns second derivative
-        """
         r = np.asarray(gap)
         if mask is None:
             mask = (slice(None), ) * len(r.shape)
