@@ -54,8 +54,10 @@ class LinearCorePotential(ChildPotential):
 
     def __setstate__(self, state):
         """ Upon unpickling, it is called with the unpickled state
-        Keyword Arguments:
-        state -- result of __getstate__
+        Parameters:
+        -----------
+        state:
+            result of __getstate__
         """
         superstate, self.r_ti, self.lin_part = state
         super().__setstate__(superstate)

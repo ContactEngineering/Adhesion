@@ -5,7 +5,7 @@ from Adhesion.Interactions import Potential, SoftWall
 
 
 class PowerLaw(Potential):
-    r""" Polynomial interaction whiches value, first and second derivatives are
+    r""" Polynomial interaction wiches value, first and second derivatives are
     0 at the cutoff radius
 
     .. math ::

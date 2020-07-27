@@ -297,9 +297,11 @@ class SmoothPotential(ChildPotential):
         solve the problem numerically.
 
 
-        Keyword Arguments:
-        xtol -- (default 1e-10) tolerance for numerical solution. Is scaled
-                by γ internally.
+        Parameters:
+        -----------
+        xtol: float, optional
+             tolerance for numerical solution. Is scaled
+             by γ internally. (default 1e-10)
         """
         dummy, gradient_t, ddV_t = self.parent_potential.evaluate(
             self.r_t, potential=False, gradient=True, curvature=True)
@@ -472,9 +474,11 @@ class SmoothPotential(ChildPotential):
 
             with x = [C₀  C₃  C₄  Δrc]
 
-        Keyword Arguments:
-        xtol -- tolerance for numerical solution. Is multiplied by ε
-                internally.
+        Parameters:
+        -----------
+        xtol: float, optional
+            tolerance for numerical solution. Is multiplied by ε
+            internally.
 
         """
         # pylint: disable=bad-whitespace

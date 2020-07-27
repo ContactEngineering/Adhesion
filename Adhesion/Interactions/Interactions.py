@@ -46,9 +46,12 @@ class HardWall(Interaction):
 
     def compute(self, gap, tol=0.):
         """
-        Keyword Arguments:
-        gap -- array containing the point-wise gap values
-        tol -- tolerance for determining whether the gap is closed
+        Parameters:
+        -----------
+        gap: array_like
+            array containing the point-wise gap values
+        tol: float, optional
+            tolerance for determining whether the gap is closed, default 0.
         """
         self.penetration = np.where(gap < tol, -gap, 0)
 

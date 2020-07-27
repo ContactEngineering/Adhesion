@@ -253,9 +253,11 @@ class SmoothContactSystem(SystemBase):
             constant value added to the heights (system.topography)
         gradient: bool, optional
             Wether to evaluate the gradient, default False
-        disp_scale: float
+        disp_scale : float, optional
             (default 1.) allows to specify a scaling of the
-            dislacement before evaluation.
+            dislacement before evaluation. This can be necessary when
+            using dumb minimizers with hardcoded convergence criteria
+            such as scipy's L-BFGS-B.
         logger: ContactMechanics.Tools.Logger
             informations of current state of the system will be passed to
             logger at every evaluation

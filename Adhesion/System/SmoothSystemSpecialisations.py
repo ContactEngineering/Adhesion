@@ -79,17 +79,19 @@ class FastSmoothContactSystem(SmoothContactSystem):
 
     def __init__(self, substrate, interaction, surface, margin=4):
         """ Represents a contact problem
-        Keyword Arguments:
-        substrate   -- An instance of HalfSpace. Defines the solid mechanics in
-                       the substrate
-        interaction -- An instance of Interaction. Defines the contact
-                       formulation. If this computes interaction energies,
-                       forces etc, these are supposed to be expressed per unit
-                       area in whatever units you use. The conversion is
-                       performed by the system
-        surface     -- An instance of SurfaceTopography, defines the profile.
-        margin      -- (default 4) safety margin (in pixels) around the initial
-                       contact area bounding box
+        Parameters:
+        -----------
+        substrate: An instance of HalfSpace.
+            Defines the solid mechanics in the substrate
+        interaction: An instance of Interaction.
+            Defines the contact
+            formulation. If this computes interaction energies,
+            forces etc, these are supposed to be expressed per unit
+            area in whatever units you use. The conversion is
+            performed by the system
+        surface:     An instance of SurfaceTopography, defines the profile.
+        margin:      (default 4) safety margin (in pixels) around the initial
+                     contact area bounding box
         """
         super().__init__(substrate, interaction, surface)
         # create empty encapsulated system
@@ -199,16 +201,20 @@ class FastSmoothContactSystem(SmoothContactSystem):
         Needs an initial guess for the displacement field in order to estimate
         the contact area. returns both the objective and the adapted ininial
         guess as a tuple
-        Keyword Arguments:
-        offset     -- determines indentation depth
-        gradient   -- (default False) whether the gradient is supposed to be
-                      used
-        disp0      -- (default zero) initial guess for displacement field. If
-                      not chosen appropriately, results may be unreliable.
-        disp_scale -- (default 1.) allows to specify a scaling of the
-                      dislacement before evaluation. This can be necessary when
-                      using dumb minimizers with hardcoded convergence criteria
-                      such as scipy's L-BFGS-B.
+        Parameters:
+        -----------
+        offset: float
+            determines indentation depth
+        gradient: bool, optional
+            whether the gradient is supposed to be used (default False)
+        disp0: ndarray of float, optional
+            initial guess for displacement field. If
+            not chosen appropriately, results may be unreliable. (default zero)
+        disp_scale : float, optional
+            (default 1.) allows to specify a scaling of the
+            dislacement before evaluation. This can be necessary when
+            using dumb minimizers with hardcoded convergence criteria
+            such as scipy's L-BFGS-B.
         """
         self.create_babushka(offset, disp0, disp_scale)
         return self.babushka.objective(offset, gradient, disp_scale)
