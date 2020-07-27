@@ -66,9 +66,12 @@ class VDW82(Potential):
 
     def __init__(self, c_sr, hamaker, communicator=MPI.COMM_WORLD):
         """
-        Keyword Arguments:
-        c_sr            -- coefficient for repulsive part
-        hamaker         -- Hamaker constant for substrate
+        Parameters:
+        -----------
+        c_sr: float
+            coefficient for repulsive part
+        hamaker: float
+            Hamaker constant for substrate
         """
         self.c_sr = c_sr
         self.hamaker = hamaker
