@@ -70,9 +70,9 @@ class LinearCorePotential(ChildPotential):
     def __repr__(self):
         return "{0} -> LinearCorePotential: r_ti = {1.r_ti}".format(self.parent_potential.__repr__(),self)
 
-    def evaluate(self, r, potential=True, gradient=False, curvature=False, mask=None):
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False, mask=None):
 
-        r = np.asarray(r)
+        r = np.asarray(gap)
         nb_dim = len(r.shape)
         if nb_dim == 0:
             r.shape = (1,)
@@ -100,15 +100,20 @@ class LinearCorePotential(ChildPotential):
                 ddV if curvature else None)
 
 
-    def _lin_pot(self, r, pot=True, gradient=False, curvature=False):
+    def _lin_pot(self, gap, pot=True, gradient=False, curvature=False):
         """ Evaluates the linear part and its derivatives of the potential.
-        Keyword Arguments:
-        r      -- array of distances
-        pot    -- (default True) if true, returns potential energy
-        gradient -- (default False) if true, returns gradient
-        curvature   -- (default False) if true, returns second derivative
+        Parameters:
+        -----------
+        gap: array_like of float
+            array of distances between the two surfaces
+        potential: bool, optional
+            if true, returns potential energy (default True)
+        gradient: bool, optional
+            if true, returns gradient (default False)
+        curvature: bool, optional
+            if true, returns second derivative (default False)
         """
-        V = None if pot is False else self.lin_part(r)
+        V = None if pot is False else self.lin_part(gap)
         dV = None if gradient is False else self.lin_part[1]
         ddV = None if curvature is False else 0.
         return V, dV, ddV

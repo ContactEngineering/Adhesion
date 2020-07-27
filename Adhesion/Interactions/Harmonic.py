@@ -65,14 +65,14 @@ class Harmonic(Potential):
         """
         return None
 
-    def evaluate(self, r, potential=True, gradient=False, curvature=True,):
+    def evaluate(self, gap, potential=True, gradient=False, curvature=True,):
 
         V = dV = ddV = None
         if potential:
-            V = 0.5*self.spring_constant*r**2
+            V = 0.5*self.spring_constant * gap ** 2
         if gradient:
             # Forces are the negative gradient
-            dV = self.spring_constant*r
+            dV = self.spring_constant * gap
         if curvature:
             ddV = self.spring_constant
         return (V, dV, ddV)

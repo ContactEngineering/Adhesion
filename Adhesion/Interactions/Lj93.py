@@ -109,8 +109,8 @@ class LJ93(Potential):
         """
         return self.sig
 
-    def evaluate(self, r, potential=True, gradient=False, curvature=False, mask=None):
-        r = np.asarray(r)
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False, mask=None):
+        r = np.asarray(gap)
         
         V = dV = ddV = None
         sig_r3 = (self.sig/r)**3

@@ -137,13 +137,13 @@ class SmoothPotential(ChildPotential):
         """
         return self.parent_potential.r_min
 
-    def evaluate(self, r, potential=True, gradient=False, curvature=False):
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False):
         # if np.isscalar(r):
         #     r = np.asarray(r)
         # nb_dim = len(r.shape)
         # if nb_dim == 0:
         #     r.shape = (1,)
-        r = np.asarray(r)
+        r = np.asarray(gap)
         V = np.zeros_like(r) if potential else self.SliceableNone()
         dV = np.zeros_like(r) if gradient else self.SliceableNone()
         ddV = np.zeros_like(r) if curvature else self.SliceableNone()
