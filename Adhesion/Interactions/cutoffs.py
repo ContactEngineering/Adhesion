@@ -1,9 +1,9 @@
 import scipy.optimize
 import numpy as np
-from Adhesion.Interactions.Potentials import ChildPotential, Potential
+from Adhesion.Interactions.Potentials import DecoratedPotential, Potential
 
 
-class LinearCorePotential(ChildPotential):
+class LinearCorePotential(DecoratedPotential):
     """
     Replaces the singular repulsive part of potentials by a linear part. This
     makes potentials maximally robust for the use with very bad initial
@@ -137,7 +137,7 @@ class LinearCorePotential(ChildPotential):
 
         return self.parent_potential.r_infl
 
-class CutoffPotential(ChildPotential):
+class CutoffPotential(DecoratedPotential):
     """
         sets the potential to 0 above the cutoff radius and shifts it up to
         enforce continuity of the potential. This potential hence has a
@@ -212,7 +212,7 @@ class CutoffPotential(ChildPotential):
                 ddV if curvature else None)
 
 
-class ParabolicCutoffPotential(ChildPotential):
+class ParabolicCutoffPotential(DecoratedPotential):
     """
         Implements a very simple smoothing of a potential, by complementing the
         functional form of the potential with a parabola that brings to zero the

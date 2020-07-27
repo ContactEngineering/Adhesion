@@ -158,7 +158,7 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
         return self
 
 
-class ChildPotential(Potential):
+class DecoratedPotential(Potential):
     def __init__(self, parent_potential):
         self.parent_potential = parent_potential
         self.pnp = parent_potential.pnp

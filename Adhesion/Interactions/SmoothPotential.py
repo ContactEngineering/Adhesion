@@ -1,4 +1,4 @@
-from Adhesion.Interactions.Potentials import ChildPotential, Potential
+from Adhesion.Interactions.Potentials import DecoratedPotential, Potential
 
 import abc
 
@@ -6,7 +6,7 @@ import numpy as np
 import scipy.optimize
 
 
-class SmoothPotential(ChildPotential):
+class SmoothPotential(DecoratedPotential):
     """
     implements the splining of the potential tail using a fourth order
     polynomial than reaches zero within a finite cutoff radius
