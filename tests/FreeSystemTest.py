@@ -206,7 +206,7 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
 #     assert result.success, "{}".format(result)
 
 
-@pytest.fixture(params=range(100))
+@pytest.fixture(params=range(50))
 def self(request):
     np.random.seed(request.param)
 

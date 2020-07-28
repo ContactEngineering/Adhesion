@@ -52,7 +52,7 @@ pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size()> 1,
 
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
 
-@pytest.fixture(params=range(100))
+@pytest.fixture(params=range(50))
 def self(request):
     np.random.seed(request.param)
     self.physical_sizes = (7.5+5*rand(), 7.5+5*rand())
