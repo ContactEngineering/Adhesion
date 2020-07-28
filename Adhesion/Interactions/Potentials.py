@@ -153,9 +153,8 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
         """
         return float(self.evaluate(self.r_min)[0])
 
-    @property
-    def ancestor_potential(self):
-        return self
+    def pipeline(self):
+        return [self]
 
 
 class DecoratedPotential(Potential):
@@ -172,7 +171,6 @@ class DecoratedPotential(Potential):
         superstate, self.parent_potential = state
         super().__setstate__(superstate)
 
-    @property
-    def ancestor_potential(self):
-        return self.parent_potential.ancestor_potential
+    def pipeline(self):
+        return self.parent_potential.pipeline() + [self]
 

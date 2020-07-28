@@ -353,7 +353,7 @@ class PotentialTest(unittest.TestCase):
         for zi in z:
             zi = np.array(zi)
             np.testing.assert_allclose(
-                np.array(pot.ancestor_potential.evaluate(zi, True, True, True)),
+                np.array(pot.pipeline()[0].evaluate(zi, True, True, True)),
                 np.array(refpot.evaluate(zi, True, True, True,)))
             if zi >= r_ti:
                 np.testing.assert_allclose(pot.evaluate(zi, True, True,True, ),
@@ -961,3 +961,11 @@ def test_smooth_potential_energy():
     ax.plot(z[1:-1], abs(num_curb))
     ax.set_yscale("log")
     plt.show()
+
+
+def test_pipeline():
+    pot1 = LJ93(1., 1.)
+    pot2 = pot1.linearize_core()
+    p = pot2.pipeline()
+    assert isinstance(p[0], LJ93)
+    assert isinstance(p[1], LinearCorePotential)
