@@ -71,9 +71,12 @@ class SmoothPotential(DecoratedPotential):
                 ("γ should be a positive value."
                  "you specified and γ = {}.").format(
                     self.gamma))  # nopep8
-
-        if r_t == 'inflection':
-            r_t = self.r_infl
+        if isinstance(r_t, str):
+            if r_t == 'inflection':
+                r_t = self.r_infl
+            else:
+                raise ValueError("only 'inflection' "
+                                 "is allowed as string input")
         self.r_t = r_t if r_t is not None else self.r_min
         # coefficients of the spline
         self.coeffs = np.zeros(5)
