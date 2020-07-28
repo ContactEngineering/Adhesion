@@ -372,40 +372,6 @@ class PotentialTest(unittest.TestCase):
                 ax[2].plot(z,c)
             fig.savefig("test_LinearCorePotential.png")
 
-    def test_LinearCorePotential_hardness(self):
-
-        w = 1
-        z0 = 1
-        hardness = 5.
-
-        refpot = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2)
-
-        pot = LinearCorePotential(refpot, hardness=hardness)
-
-        r_ti = pot.r_ti
-
-        assert abs( - pot.evaluate(r_ti, True, True)[1] -hardness) < 1e-10
-        #           The gradient is minus the force
-        "".format(LinearCorePotential)
-        if False:
-            import matplotlib.pyplot as plt
-            import subprocess
-            fig, ax = plt.subplots(3)
-
-            z =np.linspace(0.9*r_ti,2*z0)
-            for poti in [refpot, pot]:
-                p,f,c = poti.evaluate(z, True, True, True)
-                ax[0].plot(z,p)
-                ax[1].plot(z,f)
-                ax[2].plot(z,c)
-            for a in ax:
-                a.axvline(r_ti)
-                a.axvline(r_ti)
-                a.grid()
-
-            fig.savefig("test_LinearCorePotential_hardness.png")
-            subprocess.call("open test_LinearCorePotential_hardness.png", shell=True)
-
     def test_LinearCoreSimpleSmoothPotential(self):
         w = 3
         z0 = 0.5
@@ -565,6 +531,67 @@ class PotentialTest(unittest.TestCase):
 
 
 import pytest
+
+@pytest.mark.parametrize(
+    "pot_creation",
+    [
+        "LJ93(eps, sig)",
+        # 'LJ93(eps, sig).parabolic_cutoff(3*sig)', # TODO: issue #5
+        'LJ93(eps, sig).spline_cutoff()',
+        'LJ93(eps,  sig).spline_cutoff(r_t="inflection")',
+        'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05)',
+        'VDW82(c_sr,  hamaker).spline_cutoff()',
+        'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection")',
+        'VDW82(c_sr,  hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
+        #'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)', # TODO: issue #5
+        #'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',# TODO: issue #5
+        "VDW82(c_sr, hamaker)",
+        ]
+    )
+def test_linearize_core_isinstance(pot_creation):
+    eps = 1.7294663266397667
+    sig = 3.253732668164946
+
+    c_sr = 2.1e-78
+    hamaker = 68.1e-21
+
+    basepot = eval(pot_creation)
+    linpot = basepot.linearize_core()
+    assert isinstance(linpot, LinearCorePotential)
+
+
+def test_LinearCorePotential_hardness():
+
+    w = 1
+    z0 = 1
+    hardness = 5.
+
+    refpot = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2)
+    pot = refpot.linearize_core(hardness=hardness)
+
+    r_ti = pot.r_ti
+
+    assert abs( - pot.evaluate(r_ti, True, True)[1] -hardness) < 1e-10
+    #           The gradient is minus the force
+    "".format(LinearCorePotential)
+    if False:
+        import matplotlib.pyplot as plt
+        import subprocess
+        fig, ax = plt.subplots(3)
+
+        z =np.linspace(0.9*r_ti,2*z0)
+        for poti in [refpot, pot]:
+            p,f,c = poti.evaluate(z, True, True, True)
+            ax[0].plot(z,p)
+            ax[1].plot(z,f)
+            ax[2].plot(z,c)
+        for a in ax:
+            a.axvline(r_ti)
+            a.axvline(r_ti)
+            a.grid()
+
+        fig.savefig("test_LinearCorePotential_hardness.png")
+        subprocess.call("open test_LinearCorePotential_hardness.png", shell=True)
 
 
 @pytest.mark.parametrize(
@@ -816,6 +843,45 @@ def test_cutoff_derivatives(cutoff_procedure):
         analder = cutoffpot.evaluate(x0 + eps / 2, True, True, True)[2]
         assert abs(numder - analder) < 1e-7
 
+@pytest.mark.parametrize("r_t", [None, "inflection"])
+def test_spline_cutoff_derivatives(r_t):
+    eps = 1.
+    sig = 1.
+
+    r_t_lin = 0.5
+    r_c = 1.5
+
+    pot = LJ93(eps, sig)
+    cutoffpot = pot.spline_cutoff(r_t=r_t)
+
+    def approx_fprime(x0, fun, eps):
+        return (fun(x0 + eps) - fun(x0)) / eps
+
+    for x0 in [1., 1.1,
+               0.9 * cutoffpot.r_min,
+               0.999 * cutoffpot.r_min,
+               cutoffpot.r_min,
+               1.1 * cutoffpot.r_min,
+               0.9 * cutoffpot.r_infl,
+               0.999 * cutoffpot.r_infl,
+               cutoffpot.r_infl,
+               1.1 * cutoffpot.r_infl,
+               0.9 * cutoffpot.r_c,
+               0.999 * cutoffpot.r_c,
+               cutoffpot.r_c,
+               1.1 * cutoffpot.r_c,
+               ]:
+        eps = 1e-8
+        # forward finite differece wrt x0, or central fintite differences wrt x0+eps / 2
+        numder = approx_fprime(x0, lambda x: cutoffpot.evaluate(x)[0],  eps)
+        analder = cutoffpot.evaluate(x0+eps / 2, True, True)[1]
+
+        assert abs(numder - analder) < 1e-5
+
+        numder = approx_fprime(x0, lambda x: cutoffpot.evaluate(x, True, True)[1],  eps)
+        analder = cutoffpot.evaluate(x0 + eps / 2, True, True, True)[2]
+        assert abs(numder - analder) < 1e-5
+
 def test_parabolic_cutoff():
     _plot = False
     eps = 1.
@@ -854,3 +920,44 @@ def test_parabolic_cutoff():
         fig, ax = plt.subplots()
         ax.plot(ratio,)
         plt.show()
+
+@pytest.mark.skip("just plotting")
+def test_smooth_potential_energy():
+    eps = 1.703
+    sigma = 3.633
+    gam = 5.606
+
+    pot = LJ93(eps, sigma).spline_cutoff(gam)
+    z = np.linspace(2., 8, 5000)
+    zm = (z[1:] + z[:-1])/2
+    num_der = (pot.evaluate(z[1:])[0] - pot.evaluate(z[:-1])[0]) / (z[1:] - z[:-1])
+    exact_der = pot.evaluate(zm, True, True)[1]
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots()
+
+    ax.axvline(pot.r_min,c ="k")
+    ax.axvline(pot.r_c,c ="k")
+
+    ax.plot(zm, abs(num_der - exact_der) )
+    ax.set_yscale("log")
+
+    pot = LJ93(eps, sigma)
+    z = np.linspace(2., 8, 5000)
+    zm = (z[1:] + z[:-1])/2
+    num_der = (pot.evaluate(z[1:])[0] - pot.evaluate(z[:-1])[0]) / (z[1:] - z[:-1])
+    exact_der = pot.evaluate(zm, True, True)[1]
+    import matplotlib.pyplot as plt
+
+    ax.plot(zm, abs(num_der - exact_der) )
+    ax.set_yscale("log")
+    plt.show()
+
+    fig, ax = plt.subplots()
+    pot = LJ93(eps, sigma).spline_cutoff(gam)
+    z = np.linspace(2., 8, 5000)
+
+    num_curb = (pot.evaluate(z[2:])[0] - 2 * pot.evaluate(z[1:-1])[0] + pot.evaluate(z[:-2])[0]) / ((z[2:] - z[:-2]) / 2 )**2
+    #exact_der = pot.evaluate(zm, True, True)[1]
+    ax.plot(z[1:-1], abs(num_curb))
+    ax.set_yscale("log")
+    plt.show()
