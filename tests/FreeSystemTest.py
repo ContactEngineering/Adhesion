@@ -252,10 +252,8 @@ def test_unconfirmed_minimization(self):
     result_grad = minimize(fun_jac, disp.reshape(-1), jac=True)
     duration_g = time.perf_counter()-start
     info.append("using gradient:")
-    info.append("solved in {} seconds using {} fevals and {} jevals".format(
-        duration_g, result_grad.nfev, result_grad.njev))
-
-    final_energy = fun(result_grad.x)
+    info.append("solved in {} seconds using {} fevals".format(
+        duration_g, result_grad.nfev))
 
     start = time.perf_counter()
     result_simple = minimize(fun, disp,)
