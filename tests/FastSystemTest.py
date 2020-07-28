@@ -17,6 +17,8 @@ from Adhesion.System import FastSmoothContactSystem
 from Adhesion.System import make_system
 from SurfaceTopography import make_sphere
 
+pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+                                reason="tests only serial funcionalities, please execute with pytest")
 
 pytestmark = pytest.mark.skip(reason="no support for FastSystem for the moment")
 
