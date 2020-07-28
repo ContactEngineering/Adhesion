@@ -52,256 +52,254 @@ pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size()> 1,
 
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
 
-class SystemTest(unittest.TestCase):
-    def setUp(self):
-        self.physical_sizes = (7.5+5*rand(), 7.5+5*rand())
-        self.radius = 100
-        base_res = 16
-        self.res = (base_res, base_res)
-        self.young = 3+2*random()
+@pytest.fixture(params=[0, 1, 2, 38, 100])
+def self(request):
+    np.random.seed(request.param)
+    self.physical_sizes = (7.5+5*rand(), 7.5+5*rand())
+    self.radius = 100
+    base_res = 16
+    self.res = (base_res, base_res)
+    self.young = 3+2*random()
 
-        self.substrate = Solid.PeriodicFFTElasticHalfSpace(self.res, self.young,
-                                                           self.physical_sizes)
+    self.substrate = Solid.PeriodicFFTElasticHalfSpace(self.res, self.young,
+                                                       self.physical_sizes)
 
-        self.eps = 1+np.random.rand()
-        self.sig = 3+np.random.rand()
-        self.gam = (5+np.random.rand())
-        self.rcut = 2.5*self.sig+np.random.rand()
-        self.smooth = Contact.LJ93(self.eps, self.sig
-                                   ).spline_cutoff(self.gam
-                                                   ).linearize_core()
+    self.eps = 1+np.random.rand()
+    self.sig = 3+np.random.rand()
+    self.gam = (5+np.random.rand())
+    self.rcut = 2.5*self.sig+np.random.rand()
+    self.smooth = Contact.LJ93(self.eps, self.sig
+                               ).spline_cutoff(self.gam
+                                               ).linearize_core()
 
-        self.sphere = make_sphere(self.radius, self.res,
+    self.sphere = make_sphere(self.radius, self.res,
+                                                self.physical_sizes)
+    return self
+
+def test_DecoratedTopography(self):
+    top = self.sphere.detrend()
+    make_system(substrate="periodic",
+                interaction="hardwall",
+                young=1.,
+                surface=top
+                )
+
+def test_RejectInconsistentSizes(self):
+    incompat_res = tuple((2*r for r in self.res))
+    incompat_sphere = make_sphere(self.radius, incompat_res,
                                                     self.physical_sizes)
+    with pytest.raises(IncompatibleResolutionError):
+        make_system(self.substrate, self.smooth, incompat_sphere,
+                    system_class=SmoothContactSystem)
 
-    def test_DecoratedTopography(self):
-        top = self.sphere.detrend()
-        make_system(substrate="periodic",
-                    interaction="hardwall",
-                    young=1.,
-                    surface=top
-                    )
+def test_SmoothContact(self):
+    S = SmoothContactSystem(self.substrate, self.smooth, self.sphere)
+    offset = self.sig
+    disp = np.zeros(self.res)
+    pot, forces = S.evaluate(disp, offset, forces = True)
 
-    def test_RejectInconsistentSizes(self):
-        incompat_res = tuple((2*r for r in self.res))
-        incompat_sphere = make_sphere(self.radius, incompat_res,
-                                                        self.physical_sizes)
-        with self.assertRaises(IncompatibleResolutionError):
-            make_system(self.substrate, self.smooth, incompat_sphere,
-                        system_class=SmoothContactSystem)
+def test_SystemGradient(self):
+    res = self.res##[0]
+    size = [r*1.28 for r in self.res]##[0]
+    substrate = Solid.PeriodicFFTElasticHalfSpace(res, 25 * self.young,
+                                                  size)
+    sphere = make_sphere(self.radius, res, size)
+    S = SmoothContactSystem(substrate, self.smooth, sphere)
+    disp = random(res)*self.sig/10
+    disp -= disp.mean()
+    offset = -self.sig
+    gap = S.compute_gap(disp, offset)
 
-    def test_SmoothContact(self):
-        S = SmoothContactSystem(self.substrate, self.smooth, self.sphere)
-        offset = self.sig
-        disp = np.zeros(self.res)
-        pot, forces = S.evaluate(disp, offset, forces = True)
+    ## check subgradient of potential
+    V, dV, ddV = S.interaction.evaluate(gap, potential=True, gradient=True)
+    f = V.sum()
+    g = dV
+    fun = lambda x: S.interaction.evaluate(x)[0].sum()
+    approx_g = Tools.evaluate_gradient(
+        fun, gap, self.sig/1e5)
 
-    def test_SystemGradient(self):
-        res = self.res##[0]
-        size = [r*1.28 for r in self.res]##[0]
-        substrate = Solid.PeriodicFFTElasticHalfSpace(res, 25 * self.young,
-                                                      size)
-        sphere = make_sphere(self.radius, res, size)
-        S = SmoothContactSystem(substrate, self.smooth, sphere)
-        disp = random(res)*self.sig/10
-        disp -= disp.mean()
-        offset = -self.sig
-        gap = S.compute_gap(disp, offset)
+    tol = 1e-8
+    error = Tools.mean_err(g, approx_g)
+    msg = ["interaction: "]
+    msg.append("f = {}".format(f))
+    msg.append("g = {}".format(g))
+    msg.append('approx = {}'.format(approx_g))
+    msg.append("g/approx = {}".format(g/approx_g))
+    msg.append("error = {}".format(error))
+    msg.append("tol = {}".format(tol))
+    assert error < tol, ", ".join(msg)
+    interaction = dict({"e":f*S.area_per_pt,
+                        "g":g*S.area_per_pt,
+                        "a":approx_g*S.area_per_pt})
+    ## check subgradient of substrate
+    V, dV = S.substrate.evaluate(disp, pot=True,forces=True)
+    f = V.sum()
+    g = -dV
+    fun = lambda x: S.substrate.evaluate(x)[0].sum()
+    approx_g = Tools.evaluate_gradient(
+        fun, disp, self.sig/1e5)
 
-        ## check subgradient of potential
-        V, dV, ddV = S.interaction.evaluate(gap, potential=True, gradient=True)
-        f = V.sum()
-        g = dV
-        fun = lambda x: S.interaction.evaluate(x)[0].sum()
-        approx_g = Tools.evaluate_gradient(
-            fun, gap, self.sig/1e5)
+    tol = 1e-8
+    error = Tools.mean_err(g, approx_g)
+    msg = ["substrate: "]
+    msg.append("f = {}".format(f))
+    msg.append("g = {}".format(g))
+    msg.append('approx = {}'.format(approx_g))
+    msg.append("error = {}".format(error))
+    msg.append("tol = {}".format(tol))
+    assert error < tol, ", ".join(msg)
+    substrate = dict({"e":f,
+                      "g":g,
+                      "a":approx_g})
 
-        tol = 1e-8
-        error = Tools.mean_err(g, approx_g)
-        msg = ["interaction: "]
-        msg.append("f = {}".format(f))
-        msg.append("g = {}".format(g))
-        msg.append('approx = {}'.format(approx_g))
-        msg.append("g/approx = {}".format(g/approx_g))
-        msg.append("error = {}".format(error))
-        msg.append("tol = {}".format(tol))
-        self.assertTrue(error < tol, ", ".join(msg))
-        interaction = dict({"e":f*S.area_per_pt,
-                            "g":g*S.area_per_pt,
-                            "a":approx_g*S.area_per_pt})
-        ## check subgradient of substrate
-        V, dV = S.substrate.evaluate(disp, pot=True,forces=True)
-        f = V.sum()
-        g = -dV
-        fun = lambda x: S.substrate.evaluate(x)[0].sum()
-        approx_g = Tools.evaluate_gradient(
-            fun, disp, self.sig/1e5)
+    V, dV = S.evaluate(disp, offset, forces=True)
+    f = V
+    g = -dV
+    approx_g = Tools.evaluate_gradient(S.objective(offset), disp, 1e-5)
+    approx_g2 = Tools.evaluate_gradient(
+        lambda x: S.objective(offset, gradient=True)(x)[0], disp, 1e-5)
+    tol = 1e-6
 
-        tol = 1e-8
-        error = Tools.mean_err(g, approx_g)
-        msg = ["substrate: "]
-        msg.append("f = {}".format(f))
-        msg.append("g = {}".format(g))
-        msg.append('approx = {}'.format(approx_g))
-        msg.append("error = {}".format(error))
-        msg.append("tol = {}".format(tol))
-        self.assertTrue(error < tol, ", ".join(msg))
-        substrate = dict({"e":f,
-                          "g":g,
-                          "a":approx_g})
-
-        V, dV = S.evaluate(disp, offset, forces=True)
-        f = V
-        g = -dV
-        approx_g = Tools.evaluate_gradient(S.objective(offset), disp, 1e-5)
-        approx_g2 = Tools.evaluate_gradient(
-            lambda x: S.objective(offset, gradient=True)(x)[0], disp, 1e-5)
-        tol = 1e-6
-        self.assertTrue(
-            Tools.mean_err(approx_g2, approx_g) < tol,
-            "approx_g  = {}\napprox_g2 = {}\nerror = {}, tol = {}".format(
-                approx_g, approx_g2, Tools.mean_err(approx_g2, approx_g),
-                tol))
+    assert Tools.mean_err(approx_g2, approx_g) < tol, \
+        "approx_g  = {}\napprox_g2 = {}\nerror = {}, tol = {}".format(
+            approx_g, approx_g2, Tools.mean_err(approx_g2, approx_g),
+            tol)
 
 
-        i, s = interaction, substrate
-        f_combo = i['e'] + s['e']
-        error = abs(f_combo-V)
+    i, s = interaction, substrate
+    f_combo = i['e'] + s['e']
+    error = abs(f_combo-V)
 
-        self.assertTrue(
-            error < tol,
-            "f_combo = {}, f = {}, error = {}, tol = {}".format(
-                f_combo, V, error, tol))
-
-
-        g_combo = i['g'] + s['g']
-        error = Tools.mean_err(g_combo, g)
-        self.assertTrue(
-            error < tol,
-            "g_combo = {}, g = {}, error = {}, tol = {}, g/g_combo = {}".format(
-                g_combo, g, error, tol, g/g_combo))
-
-        approx_g_combo = i['a'] + s['a']
-        error = Tools.mean_err(approx_g_combo, approx_g)
-        self.assertTrue(
-            error < tol,
-            "approx_g_combo = {}, approx_g = {}, error = {}, tol = {}".format(
-                approx_g_combo, approx_g, error, tol))
-
-        error = Tools.mean_err(g, approx_g)
-        msg = []
-        msg.append("f = {}".format(f))
-        msg.append("g = {}".format(g))
-        msg.append('approx = {}'.format(approx_g))
-        msg.append("error = {}".format(error))
-        msg.append("tol = {}".format(tol))
-        self.assertTrue(error < tol, ", ".join(msg))
+    assert error < tol, \
+        "f_combo = {}, f = {}, error = {}, tol = {}".format(
+            f_combo, V, error, tol)
 
 
-    def test_unconfirmed_minimization(self):
-        ## this merely makes sure that the code doesn't throw exceptions
-        ## the plausibility of the result is not verified
-        res = self.res[0]
-        size = self.physical_sizes[0]
-        substrate = Solid.PeriodicFFTElasticHalfSpace(res, 25 * self.young,
-                                                      self.physical_sizes[0])
-        sphere = make_sphere(self.radius, res, size)
-        S = SmoothContactSystem(substrate, self.smooth, sphere)
-        offset = self.sig
-        disp = np.zeros(res)
+    g_combo = i['g'] + s['g']
+    error = Tools.mean_err(g_combo, g)
+    assert error < tol, \
+        "g_combo = {}, g = {}, error = {}, tol = {}, g/g_combo = {}".format(
+        g_combo, g, error, tol, g / g_combo)
 
-        fun_jac = S.objective(offset, gradient=True)
-        fun     = S.objective(offset, gradient=False)
+    approx_g_combo = i['a'] + s['a']
+    error = Tools.mean_err(approx_g_combo, approx_g)
+    assert error < tol, \
+        "approx_g_combo = {}, approx_g = {}, error = {}, tol = {}".format(
+            approx_g_combo, approx_g, error, tol)
 
-        info =[]
-        start = time.perf_counter()
-        result_grad = minimize(fun_jac, disp.reshape(-1), jac=True)
-        duration_g = time.perf_counter()-start
-        info.append("using gradient:")
-        info.append("solved in {} seconds using {} fevals and {} jevals".format(
-            duration_g, result_grad.nfev, result_grad.njev))
-
-        start = time.perf_counter()
-        result_simple = minimize(fun, disp)
-        duration_w = time.perf_counter()-start
-        info.append("without gradient:")
-        info.append("solved in {} seconds using {} fevals".format(
-            duration_w, result_simple.nfev))
-
-        info.append("speedup (timewise) was {}".format(duration_w/duration_g))
-
-        print('\n'.join(info))
+    error = Tools.mean_err(g, approx_g)
+    msg = []
+    msg.append("f = {}".format(f))
+    msg.append("g = {}".format(g))
+    msg.append('approx = {}'.format(approx_g))
+    msg.append("error = {}".format(error))
+    msg.append("tol = {}".format(tol))
+    assert error < tol, ", ".join(msg)
 
 
-        message = ("Success with gradient: {0.success}, message was '{0.message"
-                   "}',\nSuccess without: {1.success}, message was '{1.message}"
-                   "'").format(result_grad, result_simple)
-        self.assertTrue(result_grad.success and result_simple.success,
-                        message)
+def test_unconfirmed_minimization(self):
+    ## this merely makes sure that the code doesn't throw exceptions
+    ## the plausibility of the result is not verified
+    res = self.res[0]
+    size = self.physical_sizes[0]
+    substrate = Solid.PeriodicFFTElasticHalfSpace(res, 25 * self.young,
+                                                  self.physical_sizes[0])
+    sphere = make_sphere(self.radius, res, size)
+    S = SmoothContactSystem(substrate, self.smooth, sphere)
+    offset = self.sig
+    disp = np.zeros(res)
 
-    def test_minimize_proxy(self):
-        res = self.res
-        size = self.physical_sizes
-        substrate = Solid.PeriodicFFTElasticHalfSpace(res, 25 * self.young,
-                                                      self.physical_sizes[0])
-        sphere = make_sphere(self.radius, res, size)
-        S = SmoothContactSystem(substrate, self.smooth, sphere)
-        offset = self.sig
-        nb_scales = 5
-        n_iter = np.zeros(nb_scales, dtype=int)
-        n_force = np.zeros(nb_scales, dtype=float)
-        for i in range(nb_scales):
-            scale = 10**(i-2)
-            res = S.minimize_proxy(offset, disp_scale=scale, tol = 1e-40,
-                                   gradient=True, callback=True)
-            print(res.message)
-            n_iter[i] = res.nit
-            n_force[i] = S.compute_normal_force()
-        print("N_iter = ", n_iter)
-        print("N_force = ", n_force)
+    fun_jac = S.objective(offset, gradient=True)
+    fun     = S.objective(offset, gradient=False)
 
-    def test_minimize_proxy_tol(self):
-        res = self.res
-        size = self.physical_sizes
-        substrate = Solid.PeriodicFFTElasticHalfSpace(res, 25 * self.young,
-                                                      self.physical_sizes[0])
-        sphere = make_sphere(self.radius, res, size)
-        S = SmoothContactSystem(substrate, self.smooth, sphere)
-        offset = self.sig
+    info =[]
+    start = time.perf_counter()
+    result_grad = minimize(fun_jac, disp.reshape(-1), jac=True)
+    duration_g = time.perf_counter()-start
+    info.append("using gradient:")
+    info.append("solved in {} seconds using {} fevals and {} jevals".format(
+        duration_g, result_grad.nfev, result_grad.njev))
 
-        res = S.minimize_proxy(offset, tol = 1e-20,
+    start = time.perf_counter()
+    result_simple = minimize(fun, disp)
+    duration_w = time.perf_counter()-start
+    info.append("without gradient:")
+    info.append("solved in {} seconds using {} fevals".format(
+        duration_w, result_simple.nfev))
+
+    info.append("speedup (timewise) was {}".format(duration_w/duration_g))
+
+    print('\n'.join(info))
+
+
+    message = ("Success with gradient: {0.success}, message was '{0.message"
+               "}',\nSuccess without: {1.success}, message was '{1.message}"
+               "'").format(result_grad, result_simple)
+    assert result_grad.success and result_simple.success, message
+
+def test_minimize_proxy(self):
+    res = self.res
+    size = self.physical_sizes
+    substrate = Solid.PeriodicFFTElasticHalfSpace(res, 25 * self.young,
+                                                  self.physical_sizes[0])
+    sphere = make_sphere(self.radius, res, size)
+    S = SmoothContactSystem(substrate, self.smooth, sphere)
+    offset = self.sig
+    nb_scales = 5
+    n_iter = np.zeros(nb_scales, dtype=int)
+    n_force = np.zeros(nb_scales, dtype=float)
+    for i in range(nb_scales):
+        scale = 10**(i-2)
+        res = S.minimize_proxy(offset, disp_scale=scale, tol = 1e-40,
                                gradient=True, callback=True)
         print(res.message)
+        n_iter[i] = res.nit
+        n_force[i] = S.compute_normal_force()
+    print("N_iter = ", n_iter)
+    print("N_force = ", n_force)
 
-        rep_force = np.where(
-            S.interaction_force > 0, S.interaction_force, 0
-            )
-        alt_rep_force = -np.where(
-            S.substrate.force < 0, S.substrate.force, 0
-            )
+def test_minimize_proxy_tol(self):
+    res = self.res
+    size = self.physical_sizes
+    substrate = Solid.PeriodicFFTElasticHalfSpace(res, 25 * self.young,
+                                                  self.physical_sizes[0])
+    sphere = make_sphere(self.radius, res, size)
+    S = SmoothContactSystem(substrate, self.smooth, sphere)
+    offset = self.sig
 
-        error = Tools.mean_err(rep_force, alt_rep_force)
+    res = S.minimize_proxy(offset, tol = 1e-20,
+                           gradient=True, callback=True)
+    print(res.message)
+
+    rep_force = np.where(
+        S.interaction_force > 0, S.interaction_force, 0
+        )
+    alt_rep_force = -np.where(
+        S.substrate.force < 0, S.substrate.force, 0
+        )
+
+    error = Tools.mean_err(rep_force, alt_rep_force)
 
 
-        ## import matplotlib.pyplot as plt
-        ## fig = plt.figure()
-        ## CS = plt.contourf(S.interaction_force)
-        ## plt.colorbar(CS)
-        ## plt.title("interaction")
-        ## fig = plt.figure()
-        ## CS = plt.contourf(S.substrate.force)
-        ## plt.colorbar(CS)
-        ## plt.title("substrate")
-        ## plt.show()
+    ## import matplotlib.pyplot as plt
+    ## fig = plt.figure()
+    ## CS = plt.contourf(S.interaction_force)
+    ## plt.colorbar(CS)
+    ## plt.title("interaction")
+    ## fig = plt.figure()
+    ## CS = plt.contourf(S.substrate.force)
+    ## plt.colorbar(CS)
+    ## plt.title("substrate")
+    ## plt.show()
 
-        self.assertTrue(error < 1e-5, "error = {}".format(error))
+    assert error < 1e-5, "error = {}".format(error)
 
-        error = rep_force.sum() - S.compute_repulsive_force()
-        self.assertTrue(error < 1e-5, "error = {}".format(error))
+    error = rep_force.sum() - S.compute_repulsive_force()
+    assert error < 1e-5, "error = {}".format(error)
 
-        error = (rep_force.sum() + S.compute_attractive_force() -
-                 S.compute_normal_force())
-        self.assertTrue(error < 1e-5, "error = {}".format(error))
+    error = (rep_force.sum() + S.compute_attractive_force() -
+             S.compute_normal_force())
+    assert error < 1e-5, "error = {}".format(error)
 
 
 def test_LBFGSB_Hertz():
