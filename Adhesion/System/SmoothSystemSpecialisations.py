@@ -79,17 +79,19 @@ class FastSmoothContactSystem(SmoothContactSystem):
 
     def __init__(self, substrate, interaction, surface, margin=4):
         """ Represents a contact problem
-        Keyword Arguments:
-        substrate   -- An instance of HalfSpace. Defines the solid mechanics in
-                       the substrate
-        interaction -- An instance of Interaction. Defines the contact
-                       formulation. If this computes interaction energies,
-                       forces etc, these are supposed to be expressed per unit
-                       area in whatever units you use. The conversion is
-                       performed by the system
-        surface     -- An instance of SurfaceTopography, defines the profile.
-        margin      -- (default 4) safety margin (in pixels) around the initial
-                       contact area bounding box
+        Parameters:
+        -----------
+        substrate: An instance of HalfSpace.
+            Defines the solid mechanics in the substrate
+        interaction: An instance of Interaction.
+            Defines the contact
+            formulation. If this computes interaction energies,
+            forces etc, these are supposed to be expressed per unit
+            area in whatever units you use. The conversion is
+            performed by the system
+        surface:     An instance of SurfaceTopography, defines the profile.
+        margin:      (default 4) safety margin (in pixels) around the initial
+                     contact area bounding box
         """
         super().__init__(substrate, interaction, surface)
         # create empty encapsulated system
@@ -139,10 +141,10 @@ class FastSmoothContactSystem(SmoothContactSystem):
         """
         is_ok = True
         if self.dim == 2:
-            is_ok &= (self.interaction.force[:, 0] == 0.).all()
-            is_ok &= (self.interaction.force[:, -1] == 0.).all()
-            is_ok &= (self.interaction.force[0, :] == 0.).all()
-            is_ok &= (self.interaction.force[-1, :] == 0.).all()
+            is_ok &= (self.interaction_force[:, 0] == 0.).all()
+            is_ok &= (self.interaction_force[:, -1] == 0.).all()
+            is_ok &= (self.interaction_force[0, :] == 0.).all()
+            is_ok &= (self.interaction_force[-1, :] == 0.).all()
         if not is_ok:
             self.deproxified()
             raise self.FreeBoundaryError(
@@ -162,10 +164,10 @@ class FastSmoothContactSystem(SmoothContactSystem):
             # Sometimes, the Topograsphy.__h is a masked array, where the masked values represent infinite heights
             # At this points there is no interaction
 
-            is_ok &= np.ma.filled(self.babushka.interaction.force[:, 0] == 0.,True).all()
-            is_ok &= np.ma.filled(self.babushka.interaction.force[:, -1] == 0.,True).all()
-            is_ok &= np.ma.filled(self.babushka.interaction.force[0, :] == 0.,True).all()
-            is_ok &= np.ma.filled(self.babushka.interaction.force[-1, :] == 0.,True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[:, 0] == 0.,True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[:, -1] == 0.,True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[0, :] == 0.,True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[-1, :] == 0.,True).all()
             
         if not is_ok:
             self.deproxified()
@@ -199,16 +201,20 @@ class FastSmoothContactSystem(SmoothContactSystem):
         Needs an initial guess for the displacement field in order to estimate
         the contact area. returns both the objective and the adapted ininial
         guess as a tuple
-        Keyword Arguments:
-        offset     -- determines indentation depth
-        gradient   -- (default False) whether the gradient is supposed to be
-                      used
-        disp0      -- (default zero) initial guess for displacement field. If
-                      not chosen appropriately, results may be unreliable.
-        disp_scale -- (default 1.) allows to specify a scaling of the
-                      dislacement before evaluation. This can be necessary when
-                      using dumb minimizers with hardcoded convergence criteria
-                      such as scipy's L-BFGS-B.
+        Parameters:
+        -----------
+        offset: float
+            determines indentation depth
+        gradient: bool, optional
+            whether the gradient is supposed to be used (default False)
+        disp0: ndarray of float, optional
+            initial guess for displacement field. If
+            not chosen appropriately, results may be unreliable. (default zero)
+        disp_scale : float, optional
+            (default 1.) allows to specify a scaling of the
+            dislacement before evaluation. This can be necessary when
+            using dumb minimizers with hardcoded convergence criteria
+            such as scipy's L-BFGS-B.
         """
         self.create_babushka(offset, disp0, disp_scale)
         return self.babushka.objective(offset, gradient, disp_scale)
@@ -265,7 +271,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
             sm_substrate, copy.deepcopy(self.interaction), sm_surface)
 
     def compute_normal_force(self):
-        return self.babushka.interaction.force.sum()
+        return self.babushka.interaction_force.sum()
 
     def callback(self, force=False):
         return self.babushka.callback(force=force)
@@ -281,18 +287,18 @@ class FastSmoothContactSystem(SmoothContactSystem):
         """
         self.substrate.force = self._get_full_array(
             self.babushka.substrate.force)
-        self.interaction.force = self._get_full_array(
-            self.babushka.interaction.force)
+        self.interaction_force = self._get_full_array(
+            self.babushka.interaction_force)
         self.energy = self.babushka.energy
         self.interaction.energy = self.babushka.interaction.energy
         self.substrate.energy = self.babushka.substrate.energy
 
         self.force = self.substrate.force.copy()
         if self.dim == 1:
-            self.force[:self.nb_grid_pts[0]] -= self.interaction.force
+            self.force[:self.nb_grid_pts[0]] -= self.interaction_force
         else:
             self.force[:self.nb_grid_pts[0], :self.nb_grid_pts[1]] -= \
-              self.interaction.force   # nopep8
+              self.interaction_force   # nopep8
         self.disp = self.substrate.evaluate_disp(self.substrate.force)
         return self.energy, self.force, self.disp
 

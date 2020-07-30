@@ -38,12 +38,14 @@ class Harmonic(Potential):
         V (r) = 1/2 k r**2 for r < 0
     """
 
-    name = "lj9-3"
+    name = "harmonic"
 
-    def __init__(self, spring_constant,communicator=MPI.COMM_WORLD):
+    def __init__(self, spring_constant, communicator=MPI.COMM_WORLD):
         """
-        Keyword Arguments:
-        spring_constant -- Spring constant k
+        Parameters:
+        -----------
+        spring_constant: float
+            Spring constant k
         """
         self.spring_constant = spring_constant
         Potential.__init__(self, 0,communicator=communicator)
@@ -63,18 +65,14 @@ class Harmonic(Potential):
         """
         return None
 
-    def naive_pot(self, r, pot=True, forces=False, curb=False):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets.
-        """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=invalid-name
+    def evaluate(self, gap, potential=True, gradient=False, curvature=True,):
+
         V = dV = ddV = None
-        if pot:
-            V = 0.5*self.spring_constant*r**2
-        if forces:
+        if potential:
+            V = 0.5*self.spring_constant * gap ** 2
+        if gradient:
             # Forces are the negative gradient
-            dV = -self.spring_constant*r
-        if curb:
+            dV = self.spring_constant * gap
+        if curvature:
             ddV = self.spring_constant
         return (V, dV, ddV)

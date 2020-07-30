@@ -45,7 +45,7 @@ def fun_gen_parabola(scale):
 
 def fun_gen_lj(scale):
     def objective(x):
-        v, dv, dummy = pot.evaluate(scale*x, pot=True, forces=True, curb=False)
+        v, dv, dummy = pot.evaluate(scale * x, potential=True)
         return np.array(v), np.array(-dv)
     return objective
 

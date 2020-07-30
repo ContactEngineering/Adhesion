@@ -34,7 +34,7 @@ import math
 
 from ContactMechanics import make_system
 from SurfaceTopography import make_sphere
-from Adhesion.Interactions import LJ93smoothMin as LJ_pot
+from Adhesion.Interactions import LJ93
 from ContactMechanics import FreeFFTElasticHalfSpace as Substrate
 
 
@@ -53,7 +53,7 @@ class PulloffTest(unittest.TestCase):
 
         sigma = radius/10
         epsilon = sigma * young/100
-        self.pot = LJ_pot(epsilon, sigma)
+        self.pot = LJ93(epsilon, sigma).spline_cutoff().linearize_core()
 
 
     def tst_FirstContactThenOffset(self):
@@ -78,7 +78,7 @@ class PulloffTest(unittest.TestCase):
                 disp0 = system.disp
                 return system.compute_normal_force()
             diagnostic = "offset = {}, r_c = {}, mean(f_pot) = {}".format(
-                offset, self.pot.r_c, system.interaction.force.mean())
+                offset, self.pot.r_c, system.interaction_force.mean())
             gap = system.compute_gap(system.disp, offset)
             diagnostic += ", gap: (min, max) = ({}, {})".format(gap.min(), gap.max())
             diagnostic += ", disp: (min, max) = ({}, {})".format(system.disp.min(), system.disp.max())

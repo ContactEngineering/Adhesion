@@ -52,6 +52,8 @@ setup(
     install_requires=[
         'numpy>=1.11.0',
         'NuMPI',
-        'muFFT'
+        'muFFT',
+        'SurfaceTopography',
+        'ContactMechanics',
     ]
 )

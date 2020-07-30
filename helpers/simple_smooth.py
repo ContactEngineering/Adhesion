@@ -40,10 +40,10 @@ pot = VDW82(c_sr, hamaker)
 r_c = 5e-10
 r = np.linspace(.7*pot.r_min, 2*r_c, 1000)
 
-V, forces, ddV = pot.evaluate(r, pot=True, forces=True, curb=True)
+V, forces, ddV = pot.evaluate(r, potential=True, gradient=True, curvature=True)
 dV = -forces
 
-deltaV, forces, deltaddV = [-float(bla) for bla in pot.evaluate(r_c, pot=True, forces=True, curb=True)]
+deltaV, forces, deltaddV = [-float(bla) for bla in pot.evaluate(r_c, potential=True, gradient=True, curvature=True)]
 deltadV = -forces
 
 deltadV -= deltaddV*r_c

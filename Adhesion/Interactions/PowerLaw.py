@@ -5,36 +5,51 @@ from Adhesion.Interactions import Potential, SoftWall
 
 
 class PowerLaw(Potential):
-    """ V(g) = -gamma0*e^(-g(r)/rho)
+    r""" Polynomial interaction wiches value, first and second derivatives are
+    0 at the cutoff radius
+
+    .. math ::
+
+         (r < r_c) \ (1 - r / r_c)^p
+
+    With the exponent :math:`p >= 3`
     """
 
     name = "PowerLaw"
 
-    def __init__(self, work_adhesion, cutoff_radius, exponent=3, communicator=MPI.COMM_WORLD):
+    def __init__(self, work_of_adhesion, cutoff_radius, exponent=3,
+                 communicator=MPI.COMM_WORLD):
         """
-        Keyword Arguments:
-        gamma0 -- surface energy at perfect contact
-        rho   -- attenuation length
+        Parameters:
+        -----------
+        work_of_adhesion: float or ndarray
+            surface energy at perfect contact
+        cutoff_radius: float or ndarray
+            distance at which the potential has decayed to 0
         """
-        self.r_c = self.rho = cutoff_radius
-        self.gam = work_adhesion
-        self.p = exponent
+        self.cutoff_radius = self.rho = cutoff_radius
+        self.work_of_adhesion = work_of_adhesion
+        self.exponent = exponent
         SoftWall.__init__(self, communicator=communicator)
-        self.offset = 0  # cutoff is intrinsic to the potential so that there is no offset needed.
 
     def __repr__(self, ):
-        # TODO
-        return ("Potential '{0.name}': eps = {0.eps}, sig = {0.sig},"
-                "rho = {1}").format(
-            self.gam, self.rho if self.has_cutoff else 'None')
+        return (
+                "Potential '{0.name}': "
+                "work_of_adhesion = {0.work_of_adhesion},"
+                "cutoff_radius = {0.cutoff_radius}, exponent = {0.exponent}"
+                ).format(self)
 
     def __getstate__(self):
-        state = super().__getstate__(), self.p, self.rho, self.gam
+        state = super().__getstate__(), self.exponent, self.rho, self.work_of_adhesion
         return state
 
     def __setstate__(self, state):
-        superstate, self.p, self.rho, self.gam = state
+        superstate, self.exponent, self.rho, self.work_of_adhesion = state
         super().__setstate__(superstate)
+
+    @property
+    def has_cutoff(self):
+        return True
 
     @property
     def r_min(self):
@@ -46,28 +61,17 @@ class PowerLaw(Potential):
 
     @property
     def max_tensile(self):
-        return - self.gam / self.rho * self.p
+        return - self.work_of_adhesion / self.rho * self.exponent
 
-    def naive_pot(self, r, pot=True, forces=False, curb=False, mask=(slice(None), slice(None))):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets. These have been collected in a single method to reuse the
-            computated LJ terms for efficiency
-            V(g) = -gamma0*e^(-g(r)/rho)
-            V'(g) = (gamma0/rho)*e^(-g(r)/rho)
-            V''(g) = -(gamma0/r_ho^2)*e^(-g(r)/rho)
-
-            Keyword Arguments:
-            r      -- array of distances
-            pot    -- (default True) if true, returns potential energy
-            forces -- (default False) if true, returns forces
-            curb   -- (default False) if true, returns second derivative
-        """
-        # pylint: disable=bad-whitespace
-        # pylint: disable=invalid-name
-
-        w = self.gam if np.isscalar(self.gam) else self.gam[mask]
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False,
+                 mask=None):
+        r = np.asarray(gap)
+        if mask is None:
+            mask = (slice(None), ) * len(r.shape)
+        w = self.work_of_adhesion if np.isscalar(self.work_of_adhesion) \
+            else self.work_of_adhesion[mask]
         rc = self.rho if np.isscalar(self.rho) else self.rho[mask]
-        p = self.p
+        p = self.exponent
 
         g = (1 - r / rc)
         V = dV = ddV = None
@@ -75,11 +79,11 @@ class PowerLaw(Potential):
         gpm2 = g ** (p - 2)
         gpm1 = gpm2 * g
 
-        if pot:
+        if potential:
             V = - w * gpm1 * g
-        if forces:
-            dV = - p * w / rc * gpm1
-        if curb:
+        if gradient:
+            dV = p * w / rc * gpm1
+        if curvature:
             ddV = - p * (p - 1) * w / rc ** 2 * gpm2
 
         return V, dV, ddV

@@ -43,37 +43,7 @@ class VDW82(Potential):
     (like Lennard-Jones). The potential uses the formulation of Lessel et al.
     2013 (http://dx.doi.org/10.1103/PhysRevLett.111.035502). However, the oxide
     layer is supposed do be thick
-    """
-    name = 'v-d-Waals82'
 
-    def __init__(self, c_sr, hamaker, r_cut=float('inf'),communicator=MPI.COMM_WORLD):
-        """
-        Keyword Arguments:
-        c_sr            -- coefficient for repulsive part
-        hamaker         -- Hamaker constant for substrate
-        r_cut           -- (default +∞) optional cutoff radius
-        """
-        self.c_sr = c_sr
-        self.hamaker = hamaker
-        Potential.__init__(self, r_cut, communicator=communicator)
-
-    def __getstate__(self):
-        state = super().__getstate__(), self.c_sr, self.hamaker
-        return state
-
-    def __setstate__(self, state):
-        superstate, self.c_sr, self.hamaker = state
-        super().__setstate__(superstate)
-
-    def __repr__(self, ):
-        return ("Potential '{0.name}': C_SR = {0.c_sr}, A_l = {0.hamaker}, "
-                "r_c = {1}").format(
-                    self, self.r_c if self.has_cutoff else '∞')  # nopep8
-
-    def naive_pot(self, r, pot=True, forces=False, curb=False, mask=(slice(None), slice(None))):
-        """ Evaluates the potential and its derivatives without cutoffs or
-            offsets. These have been collected in a single method to reuse the
-            computated vdW terms for efficiency
 
                            A      C_sr
             vdW(r)  = - ─────── + ────
@@ -89,12 +59,40 @@ class VDW82(Potential):
             vdW"(r) = - ────── + ───────
                            4        10
                         2⋅r ⋅π     r
-            Keyword Arguments:
-            r      -- array of distances
-            pot    -- (default True) if true, returns potential energy
-            forces -- (default False) if true, returns forces
-            curb   -- (default False) if true, returns second derivative
+
+
+    """
+    name = 'v-d-Waals82'
+
+    def __init__(self, c_sr, hamaker, communicator=MPI.COMM_WORLD):
         """
+        Parameters:
+        -----------
+        c_sr: float
+            coefficient for repulsive part
+        hamaker: float
+            Hamaker constant for substrate
+        """
+        self.c_sr = c_sr
+        self.hamaker = hamaker
+        Potential.__init__(self, communicator=communicator)
+
+    def __getstate__(self):
+        state = super().__getstate__(), self.c_sr, self.hamaker
+        return state
+
+    def __setstate__(self, state):
+        superstate, self.c_sr, self.hamaker = state
+        super().__setstate__(superstate)
+
+    def __repr__(self, ):
+        return ("Potential '{0.name}': C_SR = {0.c_sr}, "
+                "A_l = {0.hamaker}").format(
+                    self, )  # nopep8
+
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False,
+                 mask=(slice(None), slice(None))):
+        r = np.asarray(gap)
         V = dV = ddV = None
         r_2 = r**-2
         c_sr_r6 = self.c_sr*r_2**3 if  np.isscalar(self.c_sr) \
@@ -102,14 +100,14 @@ class VDW82(Potential):
         a_pi = self.hamaker/np.pi if  np.isscalar(self.hamaker) \
                 else self.hamaker[mask] /np.pi
 
-        if pot:
+        if potential:
             V = r_2*(-a_pi/12 + c_sr_r6)
-        if forces or curb:
+        if gradient or curvature:
             r_3 = r_2/r
-        if forces:
+        if gradient:
             # Forces are the negative gradient
-            dV = r_3*(-a_pi/6 + 8*c_sr_r6)
-        if curb:
+            dV = - r_3*(-a_pi/6 + 8*c_sr_r6)
+        if curvature:
             ddV = r_3/r*(-a_pi/2 + 72*c_sr_r6)
         return (V, dV, ddV)
 
@@ -133,89 +131,8 @@ class VDW82(Potential):
         r_infl = ╲╱ 12 ⋅6 ╱  ──────
                         ╲╱     A
         """
-        return (144*np.pi * self.c_sr / self.hamaker)**(1./6.)
+        return (144 * np.pi * self.c_sr / self.hamaker) ** (1. / 6.)
 
-
-class VDW82smooth(VDW82, SmoothPotential):
-    """
-    Van der Waals potential with a smoothly finite tail, see docstring of
-    SmoothPotential
-    """
-    name = 'vdw82smooth'
-
-    def __init__(self, c_sr, hamaker, gamma=None, r_t=None,communicator=MPI.COMM_WORLD):
-        """
-        Keyword Arguments:
-        c_sr    -- coefficient for repulsive part
-        hamaker -- Hamaker constant for substrate
-        gamma   -- (default ε) Work of adhesion, defaults to ε
-        r_t     -- (default r_min) transition point, defaults to r_min
-        """
-        VDW82.__init__(self, c_sr, hamaker,communicator=communicator)
-        SmoothPotential.__init__(self, gamma, r_t)
-
-    def __repr__(self):
-        has_gamma = -self.gamma != self.naive_min
-        has_r_t = self.r_t != self.r_min
-        return ("Potential '{0.name}', C_sr = {0.c_sr}, Hamaker = "
-                "{0.hamaker}{1}{2}").format(
-                    self,
-                    ", γ = {.gamma}".format(self) if has_gamma else "",
-                    ", r_t = {}".format(
-                        self.r_t if has_r_t else "r_min"))  # nopep8
-
-    @property
-    def r_infl(self):
-        """
-        convenience function returning the location of the potential's
-        inflection point
-        Depending on where the transition between VDW82 and spline has been made
-        this returns the inflection point of the spline or of the original 
-        VDW82 Potential
-        """
-        r_infl_poly = SmoothPotential.get_r_infl_spline(self)
-        if r_infl_poly is not None:
-            if r_infl_poly < self.r_t:
-                return super().r_infl
-                # This is the old property implementation in the VDW82 Potential
-            else:
-                return r_infl_poly
-        else:
-            # The Spline wasn't determined already
-            return super().r_infl
-            # This is the old property implementation in the VDW82 Potential
-
-def VDW82smoothMin(c_sr, hamaker, gamma=None, r_ti=None, r_t_ls=None, communicator=MPI.COMM_WORLD):
-    """
-    When starting from a bad guess, or with a bad optimizer, sometimes
-    optimisations that include potentials with a singularity at the origin
-    fail, because the optimizer chooses a bad step direction and length and
-    falls into non-physical territory. This class tries to remedy this by
-    replacing the singular repulsive part around zero by a linear function.
-
-    Keyword Arguments:
-    c_sr    -- coefficient for repulsive part
-    hamaker -- Hamaker constant for substrate
-    gamma   -- (default ε) Work of adhesion, defaults to ε
-    r_ti    -- (default r_min/2) transition point between linear function
-               and lj, defaults to r_min
-    r_t_ls  -- (default r_min) transition point between lj and spline,
-                defaults to r_min
-    """
-    return LinearCorePotential(VDW82smooth(c_sr, hamaker, gamma, r_t_ls, communicator=communicator), r_ti)
-
-def VDW82SimpleSmooth(c_sr, hamaker, r_c, communicator=MPI.COMM_WORLD):
-    """Uses the ParabolaCutoffPotential smoothing in combination with VDW82
-
-        Keyword Arguments:
-        c_sr    -- coefficient for repulsive part
-        hamaker -- Hamaker constant for substrate
-        r_c     -- emposed cutoff radius
-    """
-    return ParabolicCutoffPotential(VDW82(c_sr, hamaker, communicator=communicator), r_c)
-
-def VDW82SimpleSmoothMin(c_sr, hamaker, r_c, r_ti, communicator=MPI.COMM_WORLD):
-    return LinearCorePotential(VDW82SimpleSmooth(c_sr, hamaker, r_c, communicator=communicator), r_ti=r_ti)
 
 def Lj82(w, z0, **kwargs):
     return VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2, **kwargs)
