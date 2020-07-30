@@ -183,7 +183,7 @@ def mean_gap(a, alpha):
 
     h is half the peak to valley distance
 
-    Demo
+    Examples
     --------
     >>> import matplotlib.pyplot as plt
     >>> fig, ax = plt.subplots()

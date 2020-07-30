@@ -24,7 +24,7 @@
 
 # coding: utf-8
 
-## Testing the Augmented Lagrangian of PyCo
+## Testing the Augmented Lagrangian of Adhesion
 
 # The implementation of the augmented Lagrangian in Tools follows closely the description of the `LANCELOT` algorithm described in Bierlaire (2006)
 

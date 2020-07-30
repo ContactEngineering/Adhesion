@@ -27,46 +27,55 @@ r"""
 JKR solutions for the indentation of an elastic halfspace by a paraboloid
 indenter.
 
+Physical quantities:
+--------------------
+
 The parameters of the system are:
 
-radius : float, optional
-    Sphere (actually paraboloid) radius.
-contact_modulus : float, optional
-    Contact modulus: :math:`E^* = E/(1-\nu**2)`
-    with Young's modulus E and Poisson number :math:`\nu`.
-    The default value is so that Maugis's contact Modulus is one
-    (:math:`K = 4 / 3 E^*`)
-work_of_adhesion : float, optional
-    Work of adhesion.
+- radius : float, optional
+      Sphere (actually paraboloid) radius.
+- contact_modulus : float, optional
+      Contact modulus: :math:`E^* = E/(1-\nu^2)`
+      with Young's modulus E and Poisson number :math:`\nu`.
+      The default value is so that Maugis's contact Modulus is one
+      (:math:`K = 4 / 3 E^*`)
+- work_of_adhesion : float, optional
+      Work of adhesion.
 
 This module provides implementations of the formulas relating the rigid body
-penetration (`penetration`), the indentation force (`force`) and the radius
-of the contact disk (`contact_radius`).
+penetration (:code:`penetration`), the indentation force (:code:`force`)
+and the radius of the contact disk (:code:`contact_radius`).
 
 If the parameters are not provided, the relations are nondimensional.
+
+Nondimensional units
+--------------------
 
 The nondimensionalisation follows
 Maugis's book (p.290):
 
-lengths in the vertical direction (penetration, heights, displacements, gaps),
-are in units of
+- lengths in the vertical direction (penetration, heights, displacements, gaps),
+   are in units of
 
 .. math ::
 
     (\pi^2 w^2 R / K^2)^{1/3}
 
-lengths in the lateral direction (contact radius) are in units of
+- lengths in the lateral direction (contact radius) are in units of
 
 .. math ::
 
     (\pi w R^2 / K)^{1/3}
 
-forces are in unit of
+- forces are in unit of
 
 .. math ::
 
     \pi w R
 
+
+Function reference:
+===================
 
 """
 
@@ -112,7 +121,7 @@ def contact_radius(force=None,
     radius : float, optional
         Sphere (actually paraboloid) radius.
     contact_modulus : float, optional
-        Contact modulus: :math:`E^* = E/(1-\nu**2)`
+        Contact modulus: :math:`E^* = E/(1-\nu^2)`
         with Young's modulus E and Poisson number :math:`\nu`.
         The default value is so that Maugis's contact Modulus is one
         (:math:`K = 4 / 3 E^*`)
@@ -210,7 +219,7 @@ def force(contact_radius=None,
           radius=1.,
           contact_modulus=3. / 4,
           work_of_adhesion=None):
-    """
+    r"""
     Parameters
     ----------
     contact_radius : float or array of floats, optional
@@ -227,8 +236,8 @@ def force(contact_radius=None,
     work_of_adhesion : float, optional
         Work of adhesion.
 
-    Usage:
-    ------
+    Examples
+    --------
     >>> JKR.force(contact_radius=2.)
     >>> JKR.force(contact_radius=2., radius=1., contact_modulus=3./4,
     ...           work_of_adhesion=1/np.pi)
@@ -283,8 +292,8 @@ def penetration(contact_radius=None,
                 radius=1.,
                 contact_modulus=3. / 4,
                 work_of_adhesion=1 / np.pi):
-    """
-        Parameters
+    r"""
+    Parameters
     ----------
     contact_radius : float or array of floats, optional
         Normal force.
@@ -330,8 +339,10 @@ def equilibrium_elastic_energy(contact_radius):
 def nonequilibrium_elastic_energy(penetration, contact_radius):
     r"""
 
-    Returns
-    ..math:: \frac{U_el}{\pi w R (\pi^2 w^2 R / K^2)^{1/3}} = \frac{3}{4} A\left(\Delta - \frac{A^2}{3}\right)^2 + \frac{A^5}{15}
+    .. math::
+
+        \frac{U_{el}}{\pi w R (\pi^2 w^2 R / K^2)^{1/3}}
+        = \frac{3}{4} A \left(\Delta - \frac{A^2}{3}\right)^2 + \frac{A^5}{15}
 
     For the units, see maugis p.290
 
@@ -355,12 +366,17 @@ def nonequilibrium_elastic_energy(penetration, contact_radius):
 def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
     r"""
 
-    Returns the nondimensional energy release rate (with respect to the nondimensional area)
-    ..math \frac{\partial U_{el}}{\partial pi A^2} = \frac{3}{8 \pi} w_{ref} \frac{1}{A} (\Delta - A^2)^2
+    Returns the nondimensional energy release rate
+    (with respect to the nondimensional area)
+
+    .. math ::
+          \frac{\partial U_{el}}{\partial pi A^2}
+          = \frac{3}{8 \pi} w_{ref} \frac{1}{A} (\Delta - A^2)^2
 
     be careful, this is
 
-    Here :math:`\tilde U_{el} = \frac{U_el}{\pi w R (\pi^2 w^2 R / K^2)^{1/3}}` is the nondimensionalized elastic energy
+    Here :math:`\tilde U_{el} = \frac{U_{el}}{\pi w R (\pi^2 w^2 R / K^2)^{1/3}}`
+    is the nondimensionalized elastic energy
 
     For the units, see maugis p.290
 
@@ -383,8 +399,8 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
     if R is not given, the length and the penetration
     are epressed in units of R
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     a: contact radius
     d: penetration
     der: {"0", "1_a", "2_a"}
@@ -393,8 +409,8 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
     Es: default 3/4, optional
     johnson's contact modulus
 
-    Returns:
-    --------
+    Returns
+    -------
     stress intensity factor K or it's first derivative according to the
     contact_radius
 
@@ -416,20 +432,24 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
         return - 3 / 4 * a**(-5/2) * Es * dc / np.sqrt(np.pi)
 
 
-def dispField(r, contact_radius, radius, contact_modulus, work_of_adhesion):
-    """
+def displacement_field(r, contact_radius, radius, contact_modulus, work_of_adhesion):
+    r"""
+    a function of the distance from the contact center giving the displacement
+
     Parameters
     ----------
     contact_radius : contact radius
     radius : float
         Sphere radius.
     contact_modulus : float
-        Contact modulus: Es = E/(1-nu**2) with Young's modulus E and Poisson
-        number nu.
+        Contact modulus: :math:`E^* = E/(1-\nu^2)` with Young's modulus E and Poisson
+        number :math:`\nu`.
     work_of_adhesion : float
         Work of adhesion.
-
-    return a function of the distance from the contact center giving the displacement
+    Returns
+    -------
+    ndarray
+        displacements
     """
     R = radius
     a = contact_radius
@@ -460,9 +480,9 @@ def deformed_profile(r, contact_radius, radius, contact_modulus,
                      work_of_adhesion):
     return 1 / (2 * radius) * r ** 2 \
            - penetration(radius, contact_modulus, work_of_adhesion) \
-           + dispField(r,
-                       contact_radius, radius, contact_modulus,
-                       work_of_adhesion)
+           + displacement_field(r,
+                                contact_radius, radius, contact_modulus,
+                                work_of_adhesion)
 
 
 def stress_distribution(r, contact_radius, radius, contact_modulus,

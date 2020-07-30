@@ -1,4 +1,6 @@
 Testing
 =======
 
-Run `python3 setup.py test` in the main source directory to run the automated tests.
+Works the same way then in`ContactMechanics <https://computationalmechanics.github.io/ContactMechanics/testing.html>`
+
+
