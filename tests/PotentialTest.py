@@ -31,18 +31,14 @@ import unittest
 import numpy as np
 
 from Adhesion.Interactions import LJ93
-from Adhesion.Interactions import LJ93smooth
-from Adhesion.Interactions import LJ93smoothMin
-from Adhesion.Interactions import LJ93SimpleSmooth
-
 from Adhesion.Interactions import VDW82
-from Adhesion.Interactions import VDW82smooth
-from Adhesion.Interactions import VDW82smoothMin
-from Adhesion.Interactions import VDW82SimpleSmooth
 from Adhesion.Interactions import LinearCorePotential
 
 from Adhesion.Interactions import Exponential
 from Adhesion.Interactions import RepulsiveExponential
+from Adhesion.Interactions import PowerLaw
+from Adhesion.Interactions import SmoothPotential
+
 import ContactMechanics.Tools as Tools
 
 from tests.lj93_ref_potential import V as LJ_ref_V, dV as LJ_ref_dV, d2V as LJ_ref_ddV
@@ -67,10 +63,10 @@ class PotentialTest(unittest.TestCase):
         """ compare lj93 to reference implementation
         """
         V, dV, ddV = LJ93(
-            self.eps, self.sig, self.rcut).evaluate(
-                self.r, pot=True, forces=True, curb=True)
+            self.eps, self.sig).cutoff(self.rcut).evaluate(
+                self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJ_ref_V  (self.r, self.eps, self.sig, self.rcut)
-        dV_ref  = LJ_ref_dV (self.r, self.eps, self.sig, self.rcut)
+        dV_ref  = - LJ_ref_dV (self.r, self.eps, self.sig, self.rcut)
         ddV_ref = LJ_ref_ddV(self.r, self.eps, self.sig, self.rcut)
 
         err_V   = ((  V -  V_ref)**2).sum()
@@ -83,13 +79,13 @@ class PotentialTest(unittest.TestCase):
     def test_LJsmoothReference(self):
         """ compare lj93smooth to reference implementation
         """
-        smooth_pot = LJ93smooth(self.eps, self.sig, self.gam)
+        smooth_pot = LJ93(self.eps, self.sig).spline_cutoff(self.gam)
         rc1 = smooth_pot.r_t
         rc2 = smooth_pot.r_c
         V, dV, ddV = smooth_pot.evaluate(
-                self.r, pot=True, forces=True, curb=True)
+                self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJs_ref_V  (self.r, self.eps, self.sig, rc1, rc2)
-        dV_ref  = -LJs_ref_dV (self.r, self.eps, self.sig, rc1, rc2)
+        dV_ref  = LJs_ref_dV (self.r, self.eps, self.sig, rc1, rc2)
         ddV_ref = LJs_ref_ddV(self.r, self.eps, self.sig, rc1, rc2)
 
         err_V   = ((  V-  V_ref)**2).sum()
@@ -106,13 +102,16 @@ class PotentialTest(unittest.TestCase):
         """
         compare lj93smoothmin to reference implementation (where it applies).
         """
-        smooth_pot = LJ93smoothMin(self.eps, self.sig, self.gam)
-        rc1 = smooth_pot.r_t
-        rc2 = smooth_pot.r_c
+        smooth_pot = LJ93(self.eps, self.sig
+                          ).spline_cutoff(self.gam
+                                          ).linearize_core()
+        # cutoff radii of the splice cutoff
+        rc1 = smooth_pot.parent_potential.r_t
+        rc2 = smooth_pot.parent_potential.r_c
         V, dV, ddV = smooth_pot.evaluate(
-                self.r, pot=True, forces=True, curb=True)
+                self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJs_ref_V  (self.r, self.eps, self.sig, rc1, rc2)
-        dV_ref  = -LJs_ref_dV (self.r, self.eps, self.sig, rc1, rc2)
+        dV_ref  = LJs_ref_dV (self.r, self.eps, self.sig, rc1, rc2)
         ddV_ref = LJs_ref_ddV(self.r, self.eps, self.sig, rc1, rc2)
 
         err_V   = ((  V-  V_ref)**2).sum()
@@ -143,17 +142,17 @@ class PotentialTest(unittest.TestCase):
 #         plt.grid(True)
 #         plt.show()
 
-    def test_LJsmoothSanity(self):
-        """ make sure LJsmooth rejects common bad input
+    def test_spline_cutoff_sanity(self):
+        """ make sure spline_cutoff rejects common bad input
         """
-        self.assertRaises(LJ93smooth.PotentialError, LJ93smooth,
-                          self.eps, self.sig, -self.gam)
+        self.assertRaises(SmoothPotential.PotentialError,
+                          LJ93(self.eps, self.sig).spline_cutoff,
+                          -self.gam)
 
     def test_LJ_gradient(self):
-        pot = LJ93(self.eps, self.sig, self.rcut)
+        pot = LJ93(self.eps, self.sig).cutoff(self.rcut)
         x = np.random.random(3)-.5+self.sig
-        V, f, ddV = pot.evaluate(x, forces=True)
-        g = -f
+        V, g, ddV = pot.evaluate(x, gradient=True)
 
         delta = self.sig/1e5
         approx_g = Tools.evaluate_gradient(
@@ -162,7 +161,6 @@ class PotentialTest(unittest.TestCase):
         tol = 1e-8
         error = Tools.mean_err(g, approx_g)
         msg = []
-        msg.append("f = {}".format(f))
         msg.append("g = {}".format(g))
         msg.append('approx = {}'.format(approx_g))
         msg.append("error = {}".format(error))
@@ -170,11 +168,11 @@ class PotentialTest(unittest.TestCase):
         self.assertTrue(error < tol, ", ".join(msg))
 
     def test_LJsmooth_gradient(self):
-        pot = LJ93smooth(self.eps, self.sig, self.gam)
-        x = np.random.random(3)-.5+self.sig
-        V, dV, ddV = pot.evaluate(x, forces=True)
+        pot = LJ93(self.eps, self.sig).spline_cutoff(self.gam)
+        x = np.random.random(3) - .5 + self.sig
+        V, dV, ddV = pot.evaluate(x, gradient=True)
         f = V.sum()
-        g = -dV
+        g = dV
 
         delta = self.sig/1e5
         approx_g = Tools.evaluate_gradient(
@@ -194,7 +192,7 @@ class PotentialTest(unittest.TestCase):
     def test_single_point_eval(self):
         pot = LJ93(self.eps, self.sig, self.gam)
         r_m = pot.r_min
-        curb = pot.evaluate(r_m, pot=False, forces=False, curb=True)[2]
+        curvature = pot.evaluate(r_m, potential=False, gradient=False, curvature=True)[2]
 
     def test_ad_hoc(self):
         ## 'Potential 'lj9-3smooth', ε = 1.7294663266397667,
@@ -203,14 +201,14 @@ class PotentialTest(unittest.TestCase):
         eps = 1.7294663266397667
         sig = 3.253732668164946
         gam = 5.845648523044794
-        smooth_pot = LJ93smooth(eps, sig, gam)
+        smooth_pot = LJ93(eps, sig).spline_cutoff(gam)
 
         rc1 = smooth_pot.r_t
         rc2 = smooth_pot.r_c
         V, dV, ddV = smooth_pot.evaluate(
-                self.r, pot=True, forces=True, curb=True)
+                self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJs_ref_V  (self.r, eps, sig, rc1, rc2)
-        dV_ref  = -LJs_ref_dV (self.r, eps, sig, rc1, rc2)
+        dV_ref  = LJs_ref_dV (self.r, eps, sig, rc1, rc2)
         ddV_ref = LJs_ref_ddV(self.r, eps, sig, rc1, rc2)
 
         err_V   = ((  V-  V_ref)**2).sum()
@@ -232,8 +230,8 @@ class PotentialTest(unittest.TestCase):
         vdw = VDW82(c_sr, hamaker)
         r_min = vdw.r_min
         V_min, dV_min, ddV_min = vdw.evaluate(r_min, True, True, True)
-        vdws = VDW82smooth(c_sr, hamaker, r_t=2.5)
-        vdwm = VDW82smoothMin(c_sr, hamaker, r_ti=1.95)
+        vdws = VDW82(c_sr, hamaker).spline_cutoff(r_t=2.5)
+        vdwm = VDW82(c_sr, hamaker).spline_cutoff().linearize_core(r_ti=1.95)
         r = np.arange(0.5, 2.01, .005)*r_min
 
 
@@ -262,8 +260,8 @@ class PotentialTest(unittest.TestCase):
         c_sr = 2.1e-78
         hamaker = 68.1e-21
         pots = (("vdW", VDW82(c_sr, hamaker)),
-                ("smooth", VDW82smooth(c_sr, hamaker)),
-                ("min", VDW82smoothMin(c_sr, hamaker)))
+                ("smooth", VDW82(c_sr, hamaker).spline_cutoff()),
+                ("min", VDW82(c_sr, hamaker).spline_cutoff().linearize_core()))
 
         # import matplotlib.pyplot as plt
         # plt.figure()
@@ -282,7 +280,7 @@ class PotentialTest(unittest.TestCase):
     def test_SimpleSmoothLJ(self):
         eps = 1.7294663266397667
         sig = 3.253732668164946
-        pot = LJ93SimpleSmooth(eps, sig, 3*sig)
+        pot = LJ93(eps, sig).parabolic_cutoff(3*sig)
 
         # import matplotlib.pyplot as plt
         # plt.figure()
@@ -300,7 +298,7 @@ class PotentialTest(unittest.TestCase):
         hamaker = 68.1e-21
         c_sr = 2.1e-78*1e-6
         r_c = 10e-10
-        pot = VDW82SimpleSmooth(c_sr, hamaker, 10e-10)
+        pot = VDW82(c_sr, hamaker).parabolic_cutoff(10e-10)
 
         # import matplotlib.pyplot as plt
         # r = np.linspace(pot.r_min*.7, pot.r_c*1.1, 1000)
@@ -350,16 +348,16 @@ class PotentialTest(unittest.TestCase):
 
         refpot = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2)
 
-
         pot = LinearCorePotential(refpot, r_ti =r_ti)
         z = [0.8*r_ti,r_ti,1.5*r_ti]
         for zi in z:
+            zi = np.array(zi)
             np.testing.assert_allclose(
-                pot.naive_pot(zi, True, True, True),
-                np.array(refpot.evaluate(zi, True, True, True, area_scale=1.)).reshape(-1))
+                np.array(pot.pipeline()[0].evaluate(zi, True, True, True)),
+                np.array(refpot.evaluate(zi, True, True, True,)))
             if zi >= r_ti:
-                np.testing.assert_allclose(pot.evaluate(zi, True, True,True, area_scale=4.),
-                                           refpot.evaluate(zi, True, True,True, area_scale=4.))
+                np.testing.assert_allclose(pot.evaluate(zi, True, True,True, ),
+                                           refpot.evaluate(zi, True, True,True,))
 
         "".format(LinearCorePotential)
         if False:
@@ -374,40 +372,6 @@ class PotentialTest(unittest.TestCase):
                 ax[2].plot(z,c)
             fig.savefig("test_LinearCorePotential.png")
 
-    def test_LinearCorePotential_hardness(self):
-
-        w = 1
-        z0 = 1
-        hardness = 5.
-
-        refpot = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2)
-
-        pot = LinearCorePotential(refpot, hardness=hardness)
-
-        r_ti = pot.r_ti
-
-        assert abs(pot.evaluate(r_ti, True, True)[1] -hardness) < 1e-10
-
-        "".format(LinearCorePotential)
-        if False:
-            import matplotlib.pyplot as plt
-            import subprocess
-            fig, ax = plt.subplots(3)
-
-            z =np.linspace(0.9*r_ti,2*z0)
-            for poti in [refpot, pot]:
-                p,f,c = poti.evaluate(z, True, True, True)
-                ax[0].plot(z,p)
-                ax[1].plot(z,f)
-                ax[2].plot(z,c)
-            for a in ax:
-                a.axvline(r_ti)
-                a.axvline(r_ti)
-                a.grid()
-
-            fig.savefig("test_LinearCorePotential_hardness.png")
-            subprocess.call("open test_LinearCorePotential_hardness.png", shell=True)
-
     def test_LinearCoreSimpleSmoothPotential(self):
         w = 3
         z0 = 0.5
@@ -416,22 +380,22 @@ class PotentialTest(unittest.TestCase):
 
         refpot = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2)
 
-        smoothpot=VDW82SimpleSmooth(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2, r_c= r_c)
+        smoothpot = refpot.parabolic_cutoff(r_c=r_c)
 
         pot = LinearCorePotential(smoothpot, r_ti=r_ti)
 
-        assert pot.r_c==smoothpot.r_c, "{0.r_c}{1.r_c}"
-        assert pot.r_infl==smoothpot.r_infl
-        assert pot.r_min==smoothpot.r_min
+        # assert pot.r_c == smoothpot.r_c, "{0.r_c}{1.r_c}"
+        assert pot.r_infl == smoothpot.r_infl
+        assert pot.r_min == smoothpot.r_min
 
         z = [0.8 * r_ti, r_ti, 1.5 * r_ti, r_c, 1.1 * r_c]
         for zi in z:
-            if zi >= r_ti :
+            if zi >= r_ti:
                 np.testing.assert_allclose(
-                    pot.evaluate(zi, True, True, True, area_scale=4.),
-                    smoothpot.evaluate(zi, True, True, True, area_scale=4.))
+                    np.array(pot.evaluate(zi, True, True, True,)).reshape(-1),
+                    np.array(smoothpot.evaluate(zi, True, True, True,)).reshape(-1))
             if zi >= r_c:
-                assert pot.evaluate(zi, True, True, True, area_scale=4.) == (0, 0, 0), "Potential nonzero outside of cutoff"
+                assert pot.evaluate(zi, True, True, True,) == (0, 0, 0), "Potential nonzero outside of cutoff"
 
         if False:
             import matplotlib.pyplot as plt
@@ -448,13 +412,13 @@ class PotentialTest(unittest.TestCase):
     def test_Exponential(self):
         r = np.linspace(-10, 10, 1001)
         pot = Exponential(1.0, 1.0)
-        V, dV, ddV = pot.naive_pot(r)
+        V, dV, ddV = pot.evaluate(r)
         self.assertTrue((V<0.0).all())
-        self.assertTrue((dV<0.0).all())
+        self.assertTrue((dV>0.0).all())
         self.assertTrue((ddV<0.0).all())
         dV_num = np.diff(V)/np.diff(r)
         ddV_num = np.diff(dV_num)/(r[1]-r[0])
-        self.assertLess(abs((dV[:-1]+dV[1:])/2+dV_num).max(), 1e-4)
+        self.assertLess(abs((dV[:-1]+dV[1:])/2-dV_num).max(), 1e-4)
         self.assertLess(abs(ddV[1:-1]-ddV_num).max(), 1e-2)
 
     def test_RepulsiveExponential(self):
@@ -465,10 +429,10 @@ class PotentialTest(unittest.TestCase):
         for i, n in enumerate(ns):
             r = np.linspace(-.1, 10, n + 1)
             pot = RepulsiveExponential(0.5, 0.5, 1.3, 1.)
-            V, dV, ddV = pot.naive_pot(r)
+            V, dV, ddV = pot.evaluate(r)
             dV_num = np.diff(V) / np.diff(r)
             ddV_num = np.diff(dV_num) / (r[1] - r[0])
-            errordV[i] = abs((dV[:-1] + dV[1:]) / 2 + dV_num).max()
+            errordV[i] = abs((dV[:-1] + dV[1:]) / 2 - dV_num).max()
             errorddV[i] = abs(ddV[1:-1] - ddV_num).max()
 
         if False:
@@ -496,49 +460,6 @@ class PotentialTest(unittest.TestCase):
             plt.show(block=True)
         assert (errordV < 10).all()
         assert (errorddV < 10).all()
-
-
-    def test_rinfl(self):
-        """
-        Test if the inflection point calculated analyticaly is really a 
-        signum change of the second dericative
-        """
-
-        eps = 1.7294663266397667
-        sig = 3.253732668164946
-
-        c_sr = 2.1e-78
-        hamaker = 68.1e-21
-
-        all_ok = True
-        msg = []
-        for pot in [
-            LJ93(eps, sig),
-            LJ93SimpleSmooth(eps, sig, 3*sig),
-            LJ93smooth(eps, sig),
-            LJ93smoothMin(eps, sig),
-            LJ93smooth(eps,  sig, r_t="inflection"),
-            LJ93smoothMin(eps, sig, r_t_ls="inflection"),
-            LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05),
-            LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05),
-            VDW82(c_sr, hamaker),
-            VDW82smooth(c_sr,  hamaker),
-            VDW82smoothMin(c_sr,  hamaker),
-            VDW82smooth(c_sr,  hamaker, r_t="inflection"),
-            VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection"),
-            VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05),
-            VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05),
-            VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2),
-            RepulsiveExponential(2, 0.1, 0.1, 1)
-                    ]:
-            
-            ok = (pot.evaluate(pot.r_infl * (1-1e-4), True, True, True)[2]
-                  * pot.evaluate(pot.r_infl * (1+1e-4), True, True, True)[2] < 0)
-            all_ok &= ok
-            msg.append("{} \n {} ".format(pot, ok))
-
-        self.assertTrue(all_ok, "\n"+"\n\n".join(msg))
-
 
 # TODO: is there a smart way to do regression tests ?
     # def test_lj93smoothmin_regression(self):
@@ -611,27 +532,134 @@ class PotentialTest(unittest.TestCase):
 
 import pytest
 
-@pytest.mark.parametrize("pot_creation", [
-                        'LJ93(eps, sig)',
-                        'LJ93SimpleSmooth(eps, sig, 3*sig)',
-                        'LJ93smooth(eps, sig)',
-                        'LJ93smoothMin(eps, sig)',
-                        'LJ93smooth(eps,  sig, r_t="inflection")',
-                        'LJ93smoothMin(eps, sig, r_t_ls="inflection")',
-                        'LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)',
-                        'VDW82(c_sr, hamaker)',
-                        'VDW82smooth(c_sr,  hamaker)',
-                        'VDW82smoothMin(c_sr,  hamaker)',
-                        'VDW82smooth(c_sr,  hamaker, r_t="inflection")',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
-                        'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
-                        'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
-                        'RepulsiveExponential(1., 0.5, 1., 1.)',
-                        'Exponential(sig, eps)',
-                        'PowerLaw(sig, eps, 3)'
-                         ])
+@pytest.mark.parametrize(
+    "pot_creation",
+    [
+        "LJ93(eps, sig)",
+        # 'LJ93(eps, sig).parabolic_cutoff(3*sig)', # TODO: issue #5
+        'LJ93(eps, sig).spline_cutoff()',
+        'LJ93(eps,  sig).spline_cutoff(r_t="inflection")',
+        'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05)',
+        'VDW82(c_sr,  hamaker).spline_cutoff()',
+        'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection")',
+        'VDW82(c_sr,  hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
+        #'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)', # TODO: issue #5
+        #'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',# TODO: issue #5
+        "VDW82(c_sr, hamaker)",
+        ]
+    )
+def test_linearize_core_isinstance(pot_creation):
+    eps = 1.7294663266397667
+    sig = 3.253732668164946
+
+    c_sr = 2.1e-78
+    hamaker = 68.1e-21
+
+    basepot = eval(pot_creation)
+    linpot = basepot.linearize_core()
+    assert isinstance(linpot, LinearCorePotential)
+
+
+def test_LinearCorePotential_hardness():
+
+    w = 1
+    z0 = 1
+    hardness = 5.
+
+    refpot = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2)
+    pot = refpot.linearize_core(hardness=hardness)
+
+    r_ti = pot.r_ti
+
+    assert abs( - pot.evaluate(r_ti, True, True)[1] -hardness) < 1e-10
+    #           The gradient is minus the force
+    "".format(LinearCorePotential)
+    if False:
+        import matplotlib.pyplot as plt
+        import subprocess
+        fig, ax = plt.subplots(3)
+
+        z =np.linspace(0.9*r_ti,2*z0)
+        for poti in [refpot, pot]:
+            p,f,c = poti.evaluate(z, True, True, True)
+            ax[0].plot(z,p)
+            ax[1].plot(z,f)
+            ax[2].plot(z,c)
+        for a in ax:
+            a.axvline(r_ti)
+            a.axvline(r_ti)
+            a.grid()
+
+        fig.savefig("test_LinearCorePotential_hardness.png")
+        subprocess.call("open test_LinearCorePotential_hardness.png", shell=True)
+
+
+@pytest.mark.parametrize(
+    "pot_creation",
+    [
+        "LJ93(eps, sig)",
+        'LJ93(eps, sig)',
+        # 'LJ93(eps, sig).parabolic_cutoff(3*sig)', # TODO: issue #5
+        'LJ93(eps, sig).spline_cutoff()',
+        'LJ93(eps, sig).spline_cutoff().linearize_core()',
+        'LJ93(eps,  sig).spline_cutoff(r_t="inflection")',
+        'LJ93(eps, sig).spline_cutoff(r_t="inflection").linearize_core()',
+        'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05)',
+        'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05).linearize_core()',
+        'LJ93(eps, sig).spline_cutoff(LJ93(eps, sig).r_infl * 2).linearize_core(LJ93(eps, sig).r_min * 0.8)',
+        'VDW82(c_sr, hamaker)',
+        'VDW82(c_sr,  hamaker).spline_cutoff()',
+        'VDW82(c_sr,  hamaker).spline_cutoff().linearize_core()',
+        'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection")',
+        'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection").linearize_core()',
+        'VDW82(c_sr,  hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
+        #'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)', # TODO: issue #5
+        #'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',# TODO: issue #5
+        'RepulsiveExponential(1., 0.5, 1., 1.)',
+        "VDW82(c_sr, hamaker)",
+        ]
+    )
+def test_rinfl(pot_creation):
+    """
+    Test if the inflection point calculated analyticaly is really a
+    signum change of the second dericative
+    """
+
+    eps = 1.7294663266397667
+    sig = 3.253732668164946
+
+    c_sr = 2.1e-78
+    hamaker = 68.1e-21
+    pot = eval(pot_creation)
+    # tests wether the
+    assert (pot.evaluate(pot.r_infl * (1 - 1e-4), True, True, True)[2]
+            * pot.evaluate(pot.r_infl * (1 + 1e-4), True, True, True)[2] < 0)
+
+
+@pytest.mark.parametrize(
+    "pot_creation", [
+'LJ93(eps, sig)',
+'LJ93(eps, sig).parabolic_cutoff(3*sig)',
+'LJ93(eps, sig).spline_cutoff()',
+'LJ93(eps, sig).spline_cutoff().linearize_core()',
+'LJ93(eps,  sig).spline_cutoff(r_t="inflection")',
+'LJ93(eps, sig).spline_cutoff(r_t="inflection").linearize_core()',
+'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05)',
+'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05).linearize_core()',
+'LJ93(eps, sig).spline_cutoff(LJ93(eps, sig).r_infl * 2).linearize_core(LJ93(eps, sig).r_min * 0.8)',
+'VDW82(c_sr, hamaker)',
+'VDW82(c_sr, hamaker).spline_cutoff()',
+'VDW82(c_sr, hamaker).spline_cutoff().linearize_core()',
+'VDW82(c_sr, hamaker).spline_cutoff(r_t="inflection")',
+'VDW82(c_sr, hamaker).spline_cutoff(r_t="inflection").linearize_core()',
+'VDW82(c_sr, hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
+'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',
+'RepulsiveExponential(1., 0.5, 1., 1.)',
+'Exponential(sig, eps)',
+'PowerLaw(sig, eps, 3)',
+'RepulsiveExponential(1., 0.5, 1., 1.)',
+        ])
 def test_deepcopy(pot_creation):
     w = 3
     z0 = 0.5
@@ -650,16 +678,19 @@ def test_deepcopy(pot_creation):
     pot = eval(pot_creation)
     copied_potential = copy.deepcopy(pot)
 
-    z = np.array([
-        pot.r_min * 1e-4,
-        pot.r_min * (1 - 1e-4),
-        pot.r_min * (1 + 1e-4),
-        pot.r_infl * (1 - 1e-4),
-        pot.r_infl * (1 + 1e-4),
-        pot.r_infl * 1e3,
-        pot.r_infl * 1e3,
-        pot.r_infl * 1e3
-    ])
+    if pot.r_min is not None:
+        z = np.array([
+            pot.r_min * 1e-4,
+            pot.r_min * (1 - 1e-4),
+            pot.r_min * (1 + 1e-4),
+            pot.r_infl * (1 - 1e-4),
+            pot.r_infl * (1 + 1e-4),
+            pot.r_infl * 1e3,
+            pot.r_infl * 1e3,
+            pot.r_infl * 1e3
+        ])
+    else:
+        z = np.linspace(0, 3)
     mask = np.zeros_like(z)
     mask[-2:] = True
     z = np.ma.masked_array(z, mask=mask)
@@ -672,101 +703,31 @@ def test_deepcopy(pot_creation):
         copied_potential.evaluate(z, True, True, True),
         pot.evaluate(z, True, True, True))
 
-    # assert the cached values (energy, force and curvature were also deepcopied)
-    # and so computing with the new instance of the potential does'nt influence the original one
-    refvals = pot.evaluate(z, True, True, True)
-    pot.compute(z, True, True, True)
-    copied_potential.compute(np.random.random((1, 4)))
-    np.testing.assert_allclose(pot.energy, np.sum(refvals[0]))
-    np.testing.assert_allclose(pot.force, refvals[1])
-    np.testing.assert_allclose(pot.curb, refvals[2])
-
     if hasattr(pot,
                "parent_potential"):  # assert parent potential has also been copied
         assert pot.parent_potential is not copied_potential.parent_potential
 
-@pytest.mark.parametrize("fill_value", [float("inf"), 1e20])
-@pytest.mark.parametrize("pot_creation", [
-                        'LJ93(eps, sig)',
-                        'LJ93SimpleSmooth(eps, sig, 3*sig)',
-                        'LJ93smooth(eps, sig)',
-                        'LJ93smoothMin(eps, sig)',
-                        'LJ93smooth(eps,  sig, r_t="inflection")',
-                        'LJ93smoothMin(eps, sig, r_t_ls="inflection")',
-                        'LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93SimpleSmoothMin(eps, sig, LJ93(eps, sig).r_infl * 2,  LJ93(eps, sig).r_min * 0.8)',
-                        'VDW82(c_sr, hamaker)',
-                        'VDW82smooth(c_sr,  hamaker)',
-                        'VDW82smoothMin(c_sr,  hamaker)',
-                        'VDW82smooth(c_sr,  hamaker, r_t="inflection")',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
-                        'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
-                        'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
-                        'RepulsiveExponential(1., 0.5, 1., 1.)',
-                        'PowerLaw(sig, eps, 3)'
-                         ])
-def test_masked_arrays(pot_creation, fill_value):
-    eps = 1.7294663266397667
-    sig = 3.253732668164946
-
-    c_sr = 2.1e-78
-    hamaker = 68.1e-21
-    pot=eval(pot_creation)
-
-    shape= (2,3)
-    h = np.random.random(shape)*10
-    mask= [[True, False, True], [False, True, False]]
-    hma = np.ma.masked_array(h, mask, fill_value=fill_value)
-
-    V, dV, ddV = pot.evaluate(hma, True, True, True)
-    #print(V)
-    #print(np.asarray(V))
-    assert (np.asarray(V[hma.mask])== 0.).all()
-    assert (np.asarray(dV[hma.mask]) == 0.).all()
-    assert (np.asarray(ddV[hma.mask])== 0.).all()
-
-
-@pytest.mark.parametrize("pot_class",[LJ93smooth, LJ93smoothMin])
-def test_lj93_masked(pot_class):
-    eps = 1
-    sig = 2
-    gam = 5
-    pot = pot_class(eps, sig, gam)
-
-    z = np.array([0.5,1,2,3,4])
-    pot.compute(z, True, True)
-    en1 = pot.energy
-    #print(en1)
-
-    z = np.ma.masked_array([0.5,0.7, 1, 2, 3, 4],mask=[0,1,0,0,0,0])
-    pot.compute(z, True, True)
-    en2=pot.energy
-    #print("{}".format(en1))
-    #print("{}".format(en2))
-
-    assert en1 == en2
 
 @pytest.mark.parametrize("pot_creation", [
                         'LJ93(eps, sig)',
-                        'LJ93SimpleSmooth(eps, sig, 3*sig)',
-                        'LJ93smooth(eps, sig)',
-                        'LJ93smoothMin(eps, sig)',
-                        'LJ93smooth(eps,  sig, r_t="inflection")',
-                        'LJ93smoothMin(eps, sig, r_t_ls="inflection")',
-                        'LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93SimpleSmoothMin(eps, sig, LJ93(eps, sig).r_infl * 2,  LJ93(eps, sig).r_min * 0.8)',
+                        'LJ93(eps, sig).parabolic_cutoff(3*sig)',
+                        'LJ93(eps, sig).spline_cutoff()',
+                        'LJ93(eps, sig).spline_cutoff().linearize_core()',
+                        'LJ93(eps,  sig).spline_cutoff(r_t="inflection")',
+                        'LJ93(eps, sig).spline_cutoff(r_t="inflection").linearize_core()',
+                        'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05)',
+                        'LJ93(eps, sig).spline_cutoff(r_t=LJ93(eps, sig).r_infl*1.05).linearize_core()',
+                        'LJ93(eps, sig).spline_cutoff(LJ93(eps, sig).r_infl * 2).linearize_core(LJ93(eps, sig).r_min * 0.8)',
                         'VDW82(c_sr, hamaker)',
-                        'VDW82smooth(c_sr,  hamaker)',
-                        'VDW82smoothMin(c_sr,  hamaker)',
-                        'VDW82smooth(c_sr,  hamaker, r_t="inflection")',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
-                        'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
-                        'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+                        'VDW82(c_sr,  hamaker).spline_cutoff()',
+                        'VDW82(c_sr,  hamaker).spline_cutoff().linearize_core()',
+                        'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection")',
+                        'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection").linearize_core()',
+                        'VDW82(c_sr,  hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
+                        'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+                        'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',
                         'RepulsiveExponential(1., 0.5, 1., 1.)',
+                        'Exponential(sig, eps)',
                         'PowerLaw(sig, eps, 3)'
                          ])
 def test_max_tensile(pot_creation):
@@ -778,32 +739,34 @@ def test_max_tensile(pot_creation):
     hamaker = 68.1e-21
 
     pot = eval(pot_creation)
-    en1=np.isscalar(pot.max_tensile)
+    en1 = np.isscalar(pot.max_tensile)
 
     # print("{}".format(en1))
 
     assert en1
 
 @pytest.mark.parametrize("pot_creation", [
-                        'LJ93(eps, sig)',
-                        'LJ93SimpleSmooth(eps, sig, 3*sig)',
-                        'LJ93smooth(eps, sig)',
-                        'LJ93smoothMin(eps, sig)',
-                        'LJ93smooth(eps,  sig, r_t="inflection")',
-                        'LJ93smoothMin(eps, sig, r_t_ls="inflection")',
-                        'LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)',
-                        'LJ93SimpleSmoothMin(eps, sig, LJ93(eps, sig).r_infl * 2,  LJ93(eps, sig).r_min * 0.8)',
-                        'Lj82(w, z0)',
-                        'VDW82(c_sr, hamaker)',
-                        'VDW82smooth(c_sr,  hamaker)',
-                        'VDW82smoothMin(c_sr,  hamaker)',
-                        'VDW82smooth(c_sr,  hamaker, r_t="inflection")',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
-                        'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-                        'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
-                        'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
-                        'RepulsiveExponential(1., 0.5, 1., 1.)',
+                        # Not supported on the Lennard Jones potentials, see issue 6
+                        #'LJ93(eps, sig)',
+                        #'LJ93SimpleSmooth(eps, sig, 3*sig)',
+                        #'LJ93smooth(eps, sig)',
+                        #'LJ93smoothMin(eps, sig)',
+                        #'LJ93smooth(eps,  sig, r_t="inflection")',
+                        #'LJ93smoothMin(eps, sig, r_t_ls="inflection")',
+                        #'LJ93smooth(eps,  sig, r_t=LJ93(eps, sig).r_infl*1.05)',
+                        #'LJ93smoothMin(eps,  sig, r_t_ls=LJ93(eps, sig).r_infl*1.05)',
+                        #'LJ93SimpleSmoothMin(eps, sig, LJ93(eps, sig).r_infl * 2,  LJ93(eps, sig).r_min * 0.8)',
+                        #'Lj82(w, z0)',
+                        #'VDW82(c_sr, hamaker)',
+                        #'VDW82smooth(c_sr,  hamaker)',
+                        #'VDW82smoothMin(c_sr,  hamaker)',
+                        #'VDW82smooth(c_sr,  hamaker, r_t="inflection")',
+                        #'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
+                        #'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
+                        #'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
+                        #'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+                        'RepulsiveExponential(0.5 * sig, 0.5* eps , sig, eps)',
+                        'Exponential(sig, eps)',
                         'PowerLaw(sig, eps, 3)'
                          ])
 def test_max_tensile_array(pot_creation):
@@ -812,8 +775,8 @@ def test_max_tensile_array(pot_creation):
     z0=eps
     w = sig
 
-    c_sr = w * z0 ** 8 / 3
-    hamaker =  16 * np.pi * w * z0 ** 2
+    # c_sr = w * z0 ** 8 / 3
+    # hamaker =  16 * np.pi * w * z0 ** 2
     pot = eval(pot_creation)
 
     assert pot.max_tensile.shape == sig.shape
@@ -825,7 +788,7 @@ def test_max_tensile_array(pot_creation):
 def test_work_range_array(pot_creation):
     "tests that it is possible to change interaction range and work of adhesion at the same time"
 
-    x = np.linspace(0,1)
+    x = np.linspace(0, 1)
     dw = 0.5
     work_fluctuation = dw * np.cos(np.pi * x)
     work_factor = 1 + work_fluctuation
@@ -843,5 +806,166 @@ def test_work_range_array(pot_creation):
 
     # test evaluation
 
-    interaction.evaluate(np.random.uniform(0,2, size=x.shape),True, True, True, area_scale = 0.1)
+    interaction.evaluate(np.random.uniform(0, 2, size=x.shape), True, True,
+                         True)
 
+
+
+@pytest.mark.parametrize("cutoff_procedure", [
+"pot",
+"pot.parabolic_cutoff(r_c)",
+"pot.parabolic_cutoff(r_c).linearize_core(r_t_lin)",
+"pot.linearize_core(r_t_lin).parabolic_cutoff(r_c)",
+"pot.linearize_core(r_t_lin)",
+])
+def test_cutoff_derivatives(cutoff_procedure):
+    eps = 1.
+    sig = 1.
+
+    r_t_lin = 0.5
+    r_c = 1.5
+
+    pot = LJ93(eps, sig)
+    cutoffpot = eval(cutoff_procedure)
+
+    def approx_fprime(x0, fun, eps):
+        return (fun(x0 + eps) - fun(x0)) / eps
+
+    for x0 in [1., 1.1, 0.9 * r_c, 0.999 * r_c, r_c, 1.1 * r_c]:
+        eps = 1e-8
+        # forward finite differece wrt x0, or central fintite differences wrt x0+eps / 2
+        numder = approx_fprime(x0, lambda x: cutoffpot.evaluate(x)[0],  eps)
+        analder = cutoffpot.evaluate(x0+eps / 2, True, True)[1]
+
+        assert abs(numder - analder) < 1e-7
+
+        numder = approx_fprime(x0, lambda x: cutoffpot.evaluate(x, True, True)[1],  eps)
+        analder = cutoffpot.evaluate(x0 + eps / 2, True, True, True)[2]
+        assert abs(numder - analder) < 1e-7
+
+@pytest.mark.parametrize("r_t", [None, "inflection"])
+def test_spline_cutoff_derivatives(r_t):
+    eps = 1.
+    sig = 1.
+
+    r_t_lin = 0.5
+    r_c = 1.5
+
+    pot = LJ93(eps, sig)
+    cutoffpot = pot.spline_cutoff(r_t=r_t)
+
+    def approx_fprime(x0, fun, eps):
+        return (fun(x0 + eps) - fun(x0)) / eps
+
+    for x0 in [1., 1.1,
+               0.9 * cutoffpot.r_min,
+               0.999 * cutoffpot.r_min,
+               cutoffpot.r_min,
+               1.1 * cutoffpot.r_min,
+               0.9 * cutoffpot.r_infl,
+               0.999 * cutoffpot.r_infl,
+               cutoffpot.r_infl,
+               1.1 * cutoffpot.r_infl,
+               0.9 * cutoffpot.r_c,
+               0.999 * cutoffpot.r_c,
+               cutoffpot.r_c,
+               1.1 * cutoffpot.r_c,
+               ]:
+        eps = 1e-8
+        # forward finite differece wrt x0, or central fintite differences wrt x0+eps / 2
+        numder = approx_fprime(x0, lambda x: cutoffpot.evaluate(x)[0],  eps)
+        analder = cutoffpot.evaluate(x0+eps / 2, True, True)[1]
+
+        assert abs(numder - analder) < 1e-5
+
+        numder = approx_fprime(x0, lambda x: cutoffpot.evaluate(x, True, True)[1],  eps)
+        analder = cutoffpot.evaluate(x0 + eps / 2, True, True, True)[2]
+        assert abs(numder - analder) < 1e-5
+
+def test_parabolic_cutoff():
+    _plot = False
+    eps = 1.
+    sig = 1.
+
+    r_t_lin = 0.5
+    r_c = 1.5
+
+    pot = LJ93(eps, sig)
+    cutoff_pot = pot.parabolic_cutoff(r_c)
+    z = np.linspace(0.9 * r_c, 1.01 * r_c, 100)
+    ratio = cutoff_pot.evaluate(z)[0] / pot.evaluate(z)[0]
+    assert ((ratio[1:] - ratio[:-1]) <= 0).all()
+    if _plot:
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots()
+        ax.plot(ratio)
+        plt.show()
+
+    z = np.linspace(0.9 * r_c, 1.01 * r_c, 100)
+
+    ratio = abs(cutoff_pot.evaluate(z, True, True)[1] / pot.evaluate(z, True, True)[1])
+    assert ((ratio[1:] - ratio[:-1]) <= 0).all()
+
+    if _plot:
+        fig, ax = plt.subplots()
+        ax.plot(ratio,)
+        plt.show()
+
+        z = np.linspace(0.9 * r_c, 1.01 * r_c, 100)
+
+    ratio = abs(cutoff_pot.evaluate(z, True, True, True)[2] / pot.evaluate(z, True, True, True)[2])
+    assert ((ratio[1:] - ratio[:-1]) <= 0).all()
+
+    if _plot:
+        fig, ax = plt.subplots()
+        ax.plot(ratio,)
+        plt.show()
+
+@pytest.mark.skip("just plotting")
+def test_smooth_potential_energy():
+    eps = 1.703
+    sigma = 3.633
+    gam = 5.606
+
+    pot = LJ93(eps, sigma).spline_cutoff(gam)
+    z = np.linspace(2., 8, 5000)
+    zm = (z[1:] + z[:-1])/2
+    num_der = (pot.evaluate(z[1:])[0] - pot.evaluate(z[:-1])[0]) / (z[1:] - z[:-1])
+    exact_der = pot.evaluate(zm, True, True)[1]
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots()
+
+    ax.axvline(pot.r_min,c ="k")
+    ax.axvline(pot.r_c,c ="k")
+
+    ax.plot(zm, abs(num_der - exact_der) )
+    ax.set_yscale("log")
+
+    pot = LJ93(eps, sigma)
+    z = np.linspace(2., 8, 5000)
+    zm = (z[1:] + z[:-1])/2
+    num_der = (pot.evaluate(z[1:])[0] - pot.evaluate(z[:-1])[0]) / (z[1:] - z[:-1])
+    exact_der = pot.evaluate(zm, True, True)[1]
+    import matplotlib.pyplot as plt
+
+    ax.plot(zm, abs(num_der - exact_der) )
+    ax.set_yscale("log")
+    plt.show()
+
+    fig, ax = plt.subplots()
+    pot = LJ93(eps, sigma).spline_cutoff(gam)
+    z = np.linspace(2., 8, 5000)
+
+    num_curb = (pot.evaluate(z[2:])[0] - 2 * pot.evaluate(z[1:-1])[0] + pot.evaluate(z[:-2])[0]) / ((z[2:] - z[:-2]) / 2 )**2
+    #exact_der = pot.evaluate(zm, True, True)[1]
+    ax.plot(z[1:-1], abs(num_curb))
+    ax.set_yscale("log")
+    plt.show()
+
+
+def test_pipeline():
+    pot1 = LJ93(1., 1.)
+    pot2 = pot1.linearize_core()
+    p = pot2.pipeline()
+    assert isinstance(p[0], LJ93)
+    assert isinstance(p[1], LinearCorePotential)

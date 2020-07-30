@@ -51,7 +51,7 @@ size = (base_size, base_size)
 c_sr = 2.1e-78*1e-6
 hamaker = 68.1e-21
 r_cut = 5e-10
-pot = VdwPot(c_sr, hamaker, r_c=r_cut)
+pot = VdwPot(c_sr, hamaker).apply_cutoff(r_cut)
 
 fig, ax1 = plt.subplots()
 ax2 = ax1.twinx()

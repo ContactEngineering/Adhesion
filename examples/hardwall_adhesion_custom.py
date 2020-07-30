@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 
-from Adhesion import Exponential
-from muFFT import NCStructuredGrid
+from Adhesion.Interactions import Exponential
+from muFFT.NetCDF import NCStructuredGrid
 
-from ContactMechanics.Tools import Logger
-from Adhesion import BoundedSmoothContactSystem
+from ContactMechanics.Tools.Logger import Logger
+from Adhesion.System import BoundedSmoothContactSystem
 import time
 import datetime
 from SurfaceTopography import make_sphere

@@ -38,7 +38,8 @@ class PlasticSmoothContactSystem(SmoothContactSystem):
     """
 
     def __init__(self, substrate, interaction, surface):
-        plastic_interaction = Adhesion.LinearCorePotential(interaction,
+        plastic_interaction = Adhesion.Interactions.LinearCorePotential(
+        interaction,
                                                            hardness=surface.hardness)
         super().__init__(substrate, plastic_interaction, surface)
 
