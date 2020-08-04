@@ -13,9 +13,10 @@ def test_penetration_radius_inverse():
 
 
 def test_penetration_force():
-    JKR.penetration(force=0) # TODO : accuracy
+    JKR.penetration(force=0)  # TODO : accuracy
 
-@pytest.mark.parametrize("w", [1/np.pi, 2.])
+
+@pytest.mark.parametrize("w", [1 / np.pi, 2.])
 def test_force_consistency(w):
     contact_radius = 3.
 
@@ -24,6 +25,7 @@ def test_force_consistency(w):
     force_r_pen = JKR.force(contact_radius=contact_radius, penetration=pen)
 
     assert force_from_w == force_r_pen
+
 
 def test_stress_intensity_factor_energy_release_rate():
     # tests that the implementation of the stress intensity factor and the
@@ -40,7 +42,7 @@ def test_stress_intensity_factor_energy_release_rate():
         contact_radius=a
         )
 
-    if True:
+    if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
         ax.plot(a, stress_intensity_factor, "+",
@@ -60,12 +62,39 @@ def test_stress_intensity_factor_energy_release_rate():
 @pytest.mark.parametrize("penetration", (0.1, 1.))
 def test_stress_intensity_factor_hertzian(radius, contact_modulus,
                                           penetration):
+    """
+    asserts the stress intensity factor is 0 for the hertzian contact radius
+    """
     hertzian_radius = np.sqrt(radius * penetration)
     assert abs(
         JKR.stress_intensity_factor(contact_radius=hertzian_radius,
                                     penetration=penetration,
                                     radius=radius,
                                     contact_modulus=contact_modulus)) < 1e-15
+
+
+@pytest.mark.parametrize("work_of_adhesion", (1 / np.pi, 10.))
+@pytest.mark.parametrize("radius", (0.1, 1.))
+@pytest.mark.parametrize("contact_modulus", (3 / 4, 1.))
+@pytest.mark.parametrize("penetration", (0.1, 1.))
+def test_stress_intensity_factor_JKR_radius(radius, contact_modulus,
+                                            penetration, work_of_adhesion):
+    """
+    asserts the stress intensity factor and the jkr radius calculation are
+    consistent
+    """
+    contact_radius = JKR.contact_radius(penetration=penetration,
+                                        radius=radius,
+                                        contact_modulus=contact_modulus,
+                                        work_of_adhesion=work_of_adhesion,
+                                        )
+
+    sif = JKR.stress_intensity_factor(contact_radius=contact_radius,
+                                      penetration=penetration,
+                                      radius=radius,
+                                      contact_modulus=contact_modulus)
+    sif_ref = np.sqrt(work_of_adhesion * 2 * contact_modulus)
+    assert abs(sif - sif_ref) / sif_ref < 1e-10
 
 
 def test_stress_intensity_factor_derivative():
