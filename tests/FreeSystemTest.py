@@ -95,8 +95,8 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
                             pot,
                             surface)
 
-    # print("testing: {}, rc = {}, offset= {}".format(pot.__class__, S.interaction.r_c, S.interaction.offset))
-    offset = .8 * S.interaction.parent_potential.r_c
+    # print("testing: {}, rc = {}, offset= {}".format(pot.__class__, S.interaction.cutoff_radius, S.interaction.offset))
+    offset = .8 * S.interaction.parent_potential.cutoff_radius
     fun = S.objective(offset, gradient=True)
 
     options = dict(ftol=0,
@@ -123,7 +123,7 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
         ax.set_ylabel("")
         ax.grid(True)
         ax.legend()
-        ax.set_title("Es={}, r_c={}".format(young, r_c))
+        ax.set_title("Es={}, cutoff_radius={}".format(young, r_c))
 
         fig.tight_layout()
         # plt.show(block=True)
@@ -157,7 +157,7 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
 #     if pot_class == Contact.VDW82smoothMin:
 #         pot = pot_class(gam * eps ** 8 / 3, 16 * np.pi * gam * eps ** 2, gamma=gam)
 #     elif pot_class == Contact.LJ93SimpleSmoothMin:
-#         pot = pot_class(eps, sig, r_c=10., r_ti=0.5)
+#         pot = pot_class(eps, sig, cutoff_radius=10., r_ti=0.5)
 #     else:
 #         pot = pot_class(eps, sig, gam, )
 #     if hasattr(pot, "r_ti"):
@@ -177,8 +177,8 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
 #                             pot,
 #                             surface)
 #
-#     print("testing: {}, rc = {}, offset= {}".format(pot.__class__, S.interaction.r_c, S.interaction.offset))
-#     offset = .8 * S.interaction.r_c
+#     print("testing: {}, rc = {}, offset= {}".format(pot.__class__, S.interaction.cutoff_radius, S.interaction.offset))
+#     offset = .8 * S.interaction.cutoff_radius
 #     fun = S.objective(offset, gradient=True)
 #
 #     options = dict(ftol=1e-18, gtol=1e-10)
@@ -287,11 +287,11 @@ def test_comparison_pycontact(self):
     # the computed rc1, which I can test for consistency
     gamma = 0.001
     potential = Contact.LJ93(eps, sig).spline_cutoff(gamma)
-    error = abs(potential.r_c- ref_data.lj_rc2)
+    error = abs(potential.cutoff_radius - ref_data.lj_rc2)
     assert error < tol, \
         ("computation of lj93smooth cut-off radius differs from pycontact "
          "reference: PyCo: {}, pycontact: {}, error: {}, tol: "
-        "{}").format(potential.r_c, ref_data.lj_rc2, error, tol)
+        "{}").format(potential.cutoff_radius, ref_data.lj_rc2, error, tol)
     ## 2. replicate substrate
     res = (ref_data.size//2, ref_data.size//2)
 
@@ -311,7 +311,7 @@ def test_comparison_pycontact(self):
 
     ref_profile = np.array(
         ref_data.variables['h']+ref_data.variables['avgh'][0])[:32, :32]
-    offset = -.8*potential.r_c
+    offset = -.8*potential.cutoff_radius
     gap = S.compute_gap(np.zeros(substrate.nb_domain_grid_pts), offset)
     diff = ref_profile-gap
     # pycontact centres spheres at (n + 0.5, m + 0.5). need to correct for test
@@ -404,11 +404,11 @@ def test_size_insensitivity(self):
     # the computed rc1, which I can test for consistency
     gamma = 0.001
     potential = Contact.LJ93(eps, sig).spline_cutoff(gamma)
-    error = abs(potential.r_c- ref_data.lj_rc2)
+    error = abs(potential.cutoff_radius - ref_data.lj_rc2)
     assert error < tol, \
         ("computation of lj93smooth cut-off radius differs from pycontact "
          "reference: PyCo: {}, pycontact: {}, error: {}, tol: "
-        "{}").format(potential.r_c, ref_data.lj_rc2, error, tol)
+        "{}").format(potential.cutoff_radius, ref_data.lj_rc2, error, tol)
     nb_compars = 3
     normalforce = np.zeros(nb_compars)
     options = dict(ftol = 1e-12, gtol = 1e-10)
@@ -428,7 +428,7 @@ def test_size_insensitivity(self):
         S = SmoothContactSystem(substrate, potential, surface)
         # pycontact does not save the offset in the nc, so this one has to be
         # taken on faith
-        offset = -.8*potential.r_c
+        offset = -.8*potential.cutoff_radius
         fun = S.objective(offset, gradient=True)
         disp = np.zeros(np.prod(res)*4)
         result = minimize(fun, disp, jac=True,

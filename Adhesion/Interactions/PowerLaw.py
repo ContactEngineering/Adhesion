@@ -10,7 +10,7 @@ class PowerLaw(Potential):
 
     .. math ::
 
-         (r < r_c) \ (1 - r / r_c)^p
+         (r < cutoff_radius) \ (1 - r / cutoff_radius)^p
 
     With the exponent :math:`p >= 3`
     """
@@ -80,10 +80,10 @@ class PowerLaw(Potential):
         gpm1 = gpm2 * g
 
         if potential:
-            V = - w * gpm1 * g
+            V = np.where(g > 0, - w * gpm1 * g, 0)
         if gradient:
-            dV = p * w / rc * gpm1
+            dV = np.where(g > 0, p * w / rc * gpm1, 0)
         if curvature:
-            ddV = - p * (p - 1) * w / rc ** 2 * gpm2
+            ddV = np.where(g > 0, - p * (p - 1) * w / rc ** 2 * gpm2, 0)
 
         return V, dV, ddV

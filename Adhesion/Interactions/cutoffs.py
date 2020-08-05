@@ -217,18 +217,18 @@ class ParabolicCutoffPotential(DecoratedPotential):
         Implements a very simple smoothing of a potential, by complementing the
         functional form of the potential with a parabola that brings to zero the
         potential's zeroth, first and second derivative at an imposed (and freely
-        chosen) cut_off radius r_c
+        chosen) cut_off radius cutoff_radius
     """
 
-    def __init__(self, parent_potential, r_c):
+    def __init__(self, parent_potential, cutoff_radius):
         """
         Parameters:
         -----------
-        r_c: float
+        cutoff_radius: float
             cut-off radius
         """
         super().__init__(parent_potential)
-        self.r_c = r_c
+        self.cutoff_radius = cutoff_radius
 
         self.poly = None
         self._compute_poly()
@@ -239,7 +239,7 @@ class ParabolicCutoffPotential(DecoratedPotential):
         """ is called and the returned object is pickled as the contents for
             the instance
         """
-        state = super().__getstate__(), self.r_c ,self.poly,self.dpoly, self.ddpoly, self._r_min, self._r_infl
+        state = super().__getstate__(), self.cutoff_radius , self.poly, self.dpoly, self.ddpoly, self._r_min, self._r_infl
         return state
 
     def __setstate__(self, state):
@@ -247,21 +247,23 @@ class ParabolicCutoffPotential(DecoratedPotential):
         Keyword Arguments:
         state -- result of __getstate__
         """
-        superstate, self.r_c ,self.poly,self.dpoly, self.ddpoly, self._r_min, self._r_infl= state
+        superstate, self.cutoff_radius , self.poly, self.dpoly, self.ddpoly, self._r_min, self._r_infl= state
         super().__setstate__(superstate)
 
     def __repr__(self):
-        return "{0} -> ParabolicCutoffPotential: r_c = {1.r_c}".format(self.parent_potential.__repr__(),self)
+        return "{0} -> ParabolicCutoffPotential: " \
+        "cutoff_radius = {1.cutoff_radius}".format(
+        self.parent_potential.__repr__(),self)
 
     def _precompute_min(self):
         """
         computes r_min
         """
         result = scipy.optimize.fminbound(func=lambda r: self.evaluate(r)[0],
-                                          x1=0.01*self.r_c,
-                                          x2=self.r_c,
+                                          x1=0.01*self.cutoff_radius,
+                                          x2=self.cutoff_radius,
                                           disp=1,
-                                          xtol=1e-5*self.r_c,
+                                          xtol=1e-5*self.cutoff_radius,
                                           full_output=True)
         error = result[2]
         if error:
@@ -276,10 +278,10 @@ class ParabolicCutoffPotential(DecoratedPotential):
         """
         result = scipy.optimize.fminbound(
             func=lambda r: self.evaluate(r, False, True, False)[1],
-            x1=0.01*self.r_c,
-            x2=self.r_c,
+            x1=0.01*self.cutoff_radius,
+            x2=self.cutoff_radius,
             disp=1,
-            xtol=1e-5*self.r_c,
+            xtol=1e-5*self.cutoff_radius,
             full_output=True)
         error = result[2]
         if error:
@@ -310,11 +312,11 @@ class ParabolicCutoffPotential(DecoratedPotential):
         ΔV, ΔdV, ΔddV = [-float(dummy)
                             for dummy
                             in self.parent_potential.evaluate(
-                                self.r_c, potential=True,
+                                self.cutoff_radius, potential=True,
                                 gradient=True,
                                 curvature=True)]
-        ΔdV =  ΔdV - ΔddV*self.r_c
-        ΔV -= ΔddV/2*self.r_c**2 + ΔdV*self.r_c
+        ΔdV =  ΔdV - ΔddV*self.cutoff_radius
+        ΔV -= ΔddV / 2 * self.cutoff_radius ** 2 + ΔdV * self.cutoff_radius
 
         self.poly = np.poly1d([ΔddV/2, ΔdV, ΔV])
         self.dpoly = np.polyder(self.poly)
@@ -327,7 +329,7 @@ class ParabolicCutoffPotential(DecoratedPotential):
         dV = np.zeros_like(r) if gradient else self.SliceableNone()
         ddV = np.zeros_like(r) if curvature else self.SliceableNone()
 
-        sl_in_range = np.ma.filled(r < self.r_c, fill_value=False)
+        sl_in_range = np.ma.filled(r < self.cutoff_radius, fill_value=False)
 
         def adjust_pot(r):
             " shifts potentials, if an offset has been set"

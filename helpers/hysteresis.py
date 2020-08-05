@@ -62,7 +62,7 @@ for base_res in (32, 64, 128, 256, 512):
 
     surface = make_sphere(radius, res, size, standoff=float('inf'))
     system = make_system(substrate, pot, surface)
-    offset = pot.r_c
+    offset = pot.cutoff_radius
     step = pot.r_min*.01
     pullof_forces = list()
     offsets = list()

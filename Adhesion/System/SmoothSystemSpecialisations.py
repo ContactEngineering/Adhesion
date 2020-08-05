@@ -230,7 +230,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
         if disp0 is None:
             disp0 = np.zeros(self.substrate.nb_domain_grid_pts)
         gap = self.compute_gap(disp_scale*disp0, offset)
-        contact = np.argwhere(gap < self.interaction.r_c)
+        contact = np.argwhere(gap < self.interaction.cutoff_radius)
         if contact.size == 0:
             contact = np.array(
                 np.unravel_index(

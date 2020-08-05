@@ -58,7 +58,7 @@ class PulloffTest(unittest.TestCase):
 
     def tst_FirstContactThenOffset(self):
         system = make_system(self.substrate, self.pot, self.surface)
-        offset0 = .5*self.pot.r_min + .5*self.pot.r_c
+        offset0 = .5*self.pot.r_min + .5*self.pot.cutoff_radius
         disp0 = np.zeros(self.substrate.nb_domain_grid_pts)
 
         def obj_fun(offset):
@@ -77,8 +77,8 @@ class PulloffTest(unittest.TestCase):
             if result.success:
                 disp0 = system.disp
                 return system.compute_normal_force()
-            diagnostic = "offset = {}, r_c = {}, mean(f_pot) = {}".format(
-                offset, self.pot.r_c, system.interaction_force.mean())
+            diagnostic = "offset = {}, cutoff_radius = {}, mean(f_pot) = {}".format(
+                offset, self.pot.cutoff_radius, system.interaction_force.mean())
             gap = system.compute_gap(system.disp, offset)
             diagnostic += ", gap: (min, max) = ({}, {})".format(gap.min(), gap.max())
             diagnostic += ", disp: (min, max) = ({}, {})".format(system.disp.min(), system.disp.max())
@@ -100,14 +100,14 @@ class PulloffTest(unittest.TestCase):
 
     def tst_FirstOffsetThenContact(self):
         system = make_system(self.substrate, self.pot, self.surface)
-        offset0 = .5*self.pot.r_min + .5*self.pot.r_c
+        offset0 = .5*self.pot.r_min + .5*self.pot.cutoff_radius
         disp0 = np.zeros(self.substrate.nb_domain_grid_pts)
 
         def minimize_force(offset0, const_disp):
             system.create_babushka(offset0, const_disp)
             min_gap = system.compute_gap(const_disp, 0).min()
             # bounds insure non-penetration and non-separation
-            bounds = ((-min_gap, .99*self.pot.r_c-min_gap), )
+            bounds = ((-min_gap, .99 * self.pot.cutoff_radius - min_gap),)
             def obj(offset):
                 babushka_disp = system._get_babushka_array(const_disp)
                 system.babushka.evaluate(babushka_disp, offset,
@@ -120,7 +120,7 @@ class PulloffTest(unittest.TestCase):
             raise Exception(str(result))
         result = minimize_force(offset0, disp0)
 
-        r_range = self.pot.r_c-self.pot.r_min
+        r_range = self.pot.cutoff_radius - self.pot.r_min
         tol = r_range*1e-8
         delta_offset = tol+1.
         max_iter = 100
@@ -144,5 +144,5 @@ class PulloffTest(unittest.TestCase):
             print(message)
 
         raise Exception("Done! force = {}, offset = {} (offset_max = {}),\nresult = {}".format(
-            pulloff_force, offset, self.pot.r_c, result))
+            pulloff_force, offset, self.pot.cutoff_radius, result))
 
