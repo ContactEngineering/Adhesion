@@ -63,7 +63,7 @@ for base_res in (32, 64, 128, 256, 512):
 
     surface = make_sphere(radius, res, size, standoff=float('inf'))
     system = make_system(substrate, pot, surface)
-    offset = pot.r_c*.4
+    offset = pot.cutoff_radius * .4
     step = pot.r_min*.01
     pullof_forces = list()
     offsets = list()
@@ -81,7 +81,7 @@ for base_res in (32, 64, 128, 256, 512):
             loc_offset += step
             yield loc_offset
         #while force < 0.:
-        while offset < pot.r_c*.4:
+        while offset < pot.cutoff_radius*.4:
             loc_offset += step
             yield loc_offset
 

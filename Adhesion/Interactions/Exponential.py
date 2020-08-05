@@ -160,7 +160,7 @@ class RepulsiveExponential(Potential):
         return ("Potential '{0.name}': gamma_rep = {0.gam_rep}, "
                 "rho_rep = {0.rho_rep}, gamma_att = {0.gam_att}, "
                 "rho_att = {0.rho_att},"
-                "r_c = {1}").format(
+                "cutoff_radius = {1}").format(
                     self, self.r_c if self.has_cutoff else 'None')
 
     def __getstate__(self):

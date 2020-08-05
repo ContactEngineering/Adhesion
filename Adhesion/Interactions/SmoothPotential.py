@@ -30,17 +30,17 @@ class SmoothPotential(DecoratedPotential):
     of the potential, leading to the following conditions:
     (1): V_s' (Δr_t)    =  V_lγ' (r_t)
     (2): V_s''(Δr_t)    =  V_lγ''(r_t)
-    (3): V_s  (Δr_c) =  0, where Δr_c = r_c-r_o
+    (3): V_s  (Δr_c) =  0, where Δr_c = cutoff_radius-r_o
     (4): V_s' (Δr_c) =  0
     (5): V_s''(Δr_c) =  0
     (6): V_s  (Δr_m) = -γ, where Δr_m = r_min-r_o
-    The unknowns are C_i (i in {0,..4}) and r_c
+    The unknowns are C_i (i in {0,..4}) and cutoff_radius
     r_o is the origin for the spline, which can be chosen freely. The original
     choice was r_o = r_t, but it turned out to be a bad choice, leading to a
     system of nonlinear equation in which only two of the six unknowns can be
     eliminated.
 
-    With r_o = r_c, all coefficients C_i can be eliminated and a good initial
+    With r_o = cutoff_radius, all coefficients C_i can be eliminated and a good initial
     guess for the remaining scalar nonlinear equation can be computed. see
     _eval_poly_and_cutoff
     """
@@ -87,12 +87,12 @@ class SmoothPotential(DecoratedPotential):
 
     def __getstate__(self):
         state = super().__getstate__(), self.gamma, self.r_t, self.coeffs, \
-        self.poly, self.dpoly, self.ddpoly, self.r_c, self.offset
+                self.poly, self.dpoly, self.ddpoly, self.cutoff_radius, self.offset
         return state
 
     def __setstate__(self, state):
         superstate, self.gamma, self.r_t, self.coeffs, self.poly, \
-        self.dpoly, self.ddpoly, self.r_c, self.offset = state
+        self.dpoly, self.ddpoly, self.cutoff_radius, self.offset = state
         super().__setstate__(superstate)
 
     def __repr__(self):
@@ -107,7 +107,7 @@ class SmoothPotential(DecoratedPotential):
         if hasattr(self, "poly") and self.poly is not None:
             C4 = self.poly.coeffs[0]
             C3 = self.poly.coeffs[1]
-            return self.r_c - 0.5 * C3 / C4
+            return self.cutoff_radius - 0.5 * C3 / C4
         else:
             return None
 
@@ -167,7 +167,7 @@ class SmoothPotential(DecoratedPotential):
                 self.parent_potential.evaluate(r[sl_inner], potential, gradient, curvature)
         V[sl_inner] -= self.offset
 
-        sl_outer = np.logical_and(np.ma.filled(r < self.r_c, fill_value=False),
+        sl_outer = np.logical_and(np.ma.filled(r < self.cutoff_radius, fill_value=False),
                                   sl_rest)
         # little hack to work around numpy bug
         if np.array_equal(sl_outer, np.array([True])):
@@ -195,7 +195,7 @@ class SmoothPotential(DecoratedPotential):
         """
 
         V = dV = ddV = None
-        dr = r - self.r_c
+        dr = r - self.cutoff_radius
         if potential:
             V = self.poly(dr)
         if gradient:
@@ -206,7 +206,7 @@ class SmoothPotential(DecoratedPotential):
 
     def _eval_poly_and_cutoff(self, xtol=1e-10):
         """
-        Computes the coefficients C_i of the spline and the cutoff radius r_c
+        Computes the coefficients C_i of the spline and the cutoff radius cutoff_radius
         based on the work of adhesion γ and the slope V'(r_t) and curvature
         V"(r_t) at the transition point. The calculations leading to the
         formulation I use here are done symbolically in SplineHelper.py. Check
@@ -228,14 +228,14 @@ class SmoothPotential(DecoratedPotential):
         By applying the following boundary conditions
         (1): V_s'(Δr_t)    =  V_lγ'(r_t)
         (2): V_s"(Δr_t)    =  V_lγ"(r_t)
-        (3): V_s (Δr_c) =  0, where Δr_c = r_c-r_o
+        (3): V_s (Δr_c) =  0, where Δr_c = cutoff_radius-r_o
         (4): V_s'(Δr_c) =  0
         (5): V_s"(Δr_c) =  0
         (6): V_s (Δr_m) = -γ, where Δr_m = r_min-r_o,           if r_t < r_m
              V_s (Δr_t) = -γ + Δγ, where Δγ = V_lγ(r_t) - V_lγ(r_m) else
 
-        The unknowns are C_i (i in {0,..4}) and r_c
-        and choosing the origin of the spline r_o at the cut-off r_c, the
+        The unknowns are C_i (i in {0,..4}) and cutoff_radius
+        and choosing the origin of the spline r_o at the cut-off cutoff_radius, the
         coefficients C_i can be determined explicitly (see SplineHelper.py):
 
         C₀: 0, C₁: 0, C₂: 0,
@@ -244,7 +244,7 @@ class SmoothPotential(DecoratedPotential):
         C₃: ────────────────────────, C₄: ───────────────────────
                             2                            3
                          Δrt                          Δrt
-        The remaining unknown is Δr_t (our proxy for r_c) but that equation has
+        The remaining unknown is Δr_t (our proxy for cutoff_radius) but that equation has
         no analytical solution (I think), except for r_t = r_m. The equation
         is:
                                                4
@@ -396,7 +396,7 @@ class SmoothPotential(DecoratedPotential):
                 derivative = 2 * dgam ** 2 / (3 * dV_t ** 3)
                 Δrt = val + derivative * ddV_t
 
-        self.r_c = self.r_t - Δrt
+        self.cutoff_radius = self.r_t - Δrt
         self.poly = spline(Δrt)
         self.dpoly = np.polyder(self.poly)
         self.ddpoly = np.polyder(self.dpoly)
@@ -526,8 +526,8 @@ class SmoothPotential(DecoratedPotential):
         options = dict(xtol=-gam * xtol)
         sol = scipy.optimize.root(obj_fun, x0, jac=jacobian, options=options)
         if sol.success:
-            self.coeffs[0], self.coeffs[3], self.coeffs[4], self.r_c = sol.x
-            self.r_c += self.r_t
+            self.coeffs[0], self.coeffs[3], self.coeffs[4], self.cutoff_radius = sol.x
+            self.cutoff_radius += self.r_t
             # !!WARNING!! poly is 'backwards': poly = [C4, C3, C2, C1, C0] and
             # all coeffs except C0 have the wrong sign, furthermore they are
             # divided by their order
