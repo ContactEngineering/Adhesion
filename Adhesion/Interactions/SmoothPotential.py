@@ -87,12 +87,12 @@ class SmoothPotential(DecoratedPotential):
 
     def __getstate__(self):
         state = super().__getstate__(), self.gamma, self.r_t, self.coeffs, \
-        self.poly, self.dpoly, self.ddpoly, self.r_c, self.offset
+                self.poly, self.dpoly, self.ddpoly, self.cutoff_radius, self.offset
         return state
 
     def __setstate__(self, state):
         superstate, self.gamma, self.r_t, self.coeffs, self.poly, \
-        self.dpoly, self.ddpoly, self.r_c, self.offset = state
+        self.dpoly, self.ddpoly, self.cutoff_radius, self.offset = state
         super().__setstate__(superstate)
 
     def __repr__(self):
@@ -107,7 +107,7 @@ class SmoothPotential(DecoratedPotential):
         if hasattr(self, "poly") and self.poly is not None:
             C4 = self.poly.coeffs[0]
             C3 = self.poly.coeffs[1]
-            return self.r_c - 0.5 * C3 / C4
+            return self.cutoff_radius - 0.5 * C3 / C4
         else:
             return None
 
@@ -167,7 +167,7 @@ class SmoothPotential(DecoratedPotential):
                 self.parent_potential.evaluate(r[sl_inner], potential, gradient, curvature)
         V[sl_inner] -= self.offset
 
-        sl_outer = np.logical_and(np.ma.filled(r < self.r_c, fill_value=False),
+        sl_outer = np.logical_and(np.ma.filled(r < self.cutoff_radius, fill_value=False),
                                   sl_rest)
         # little hack to work around numpy bug
         if np.array_equal(sl_outer, np.array([True])):
@@ -195,7 +195,7 @@ class SmoothPotential(DecoratedPotential):
         """
 
         V = dV = ddV = None
-        dr = r - self.r_c
+        dr = r - self.cutoff_radius
         if potential:
             V = self.poly(dr)
         if gradient:
@@ -396,7 +396,7 @@ class SmoothPotential(DecoratedPotential):
                 derivative = 2 * dgam ** 2 / (3 * dV_t ** 3)
                 Δrt = val + derivative * ddV_t
 
-        self.r_c = self.r_t - Δrt
+        self.cutoff_radius = self.r_t - Δrt
         self.poly = spline(Δrt)
         self.dpoly = np.polyder(self.poly)
         self.ddpoly = np.polyder(self.dpoly)
@@ -526,8 +526,8 @@ class SmoothPotential(DecoratedPotential):
         options = dict(xtol=-gam * xtol)
         sol = scipy.optimize.root(obj_fun, x0, jac=jacobian, options=options)
         if sol.success:
-            self.coeffs[0], self.coeffs[3], self.coeffs[4], self.r_c = sol.x
-            self.r_c += self.r_t
+            self.coeffs[0], self.coeffs[3], self.coeffs[4], self.cutoff_radius = sol.x
+            self.cutoff_radius += self.r_t
             # !!WARNING!! poly is 'backwards': poly = [C4, C3, C2, C1, C0] and
             # all coeffs except C0 have the wrong sign, furthermore they are
             # divided by their order

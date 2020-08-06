@@ -81,7 +81,7 @@ class PotentialTest(unittest.TestCase):
         """
         smooth_pot = LJ93(self.eps, self.sig).spline_cutoff(self.gam)
         rc1 = smooth_pot.r_t
-        rc2 = smooth_pot.r_c
+        rc2 = smooth_pot.cutoff_radius
         V, dV, ddV = smooth_pot.evaluate(
                 self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJs_ref_V  (self.r, self.eps, self.sig, rc1, rc2)
@@ -107,7 +107,7 @@ class PotentialTest(unittest.TestCase):
                                           ).linearize_core()
         # cutoff radii of the splice cutoff
         rc1 = smooth_pot.parent_potential.r_t
-        rc2 = smooth_pot.parent_potential.r_c
+        rc2 = smooth_pot.parent_potential.cutoff_radius
         V, dV, ddV = smooth_pot.evaluate(
                 self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJs_ref_V  (self.r, self.eps, self.sig, rc1, rc2)
@@ -204,7 +204,7 @@ class PotentialTest(unittest.TestCase):
         smooth_pot = LJ93(eps, sig).spline_cutoff(gam)
 
         rc1 = smooth_pot.r_t
-        rc2 = smooth_pot.r_c
+        rc2 = smooth_pot.cutoff_radius
         V, dV, ddV = smooth_pot.evaluate(
                 self.r, potential=True, gradient=True, curvature=True)
         V_ref   = LJs_ref_V  (self.r, eps, sig, rc1, rc2)
@@ -284,10 +284,10 @@ class PotentialTest(unittest.TestCase):
 
         # import matplotlib.pyplot as plt
         # plt.figure()
-        # r = np.linspace(pot.r_min*.7, pot.r_c*1.1, 100)
+        # r = np.linspace(pot.r_min*.7, pot.cutoff_radius*1.1, 100)
         # p = pot.evaluate(r)[0]
         # plt.plot(r, p)
-        # pois = [pot.r_c, pot.r_min]
+        # pois = [pot.cutoff_radius, pot.r_min]
         # plt.scatter(pois, pot.evaluate(pois)[0])
         # plt.ylim(bottom=1.1*p.min(), top=-.3*p.min())
         # plt.grid(True)
@@ -301,7 +301,7 @@ class PotentialTest(unittest.TestCase):
         pot = VDW82(c_sr, hamaker).parabolic_cutoff(10e-10)
 
         # import matplotlib.pyplot as plt
-        # r = np.linspace(pot.r_min*.7, pot.r_c*1.1, 1000)
+        # r = np.linspace(pot.r_min*.7, pot.cutoff_radius*1.1, 1000)
         # ps = pot.evaluate(r, pot=True, forces=True)
         #
         # for i, name in enumerate(('potential', 'force')):
@@ -309,7 +309,7 @@ class PotentialTest(unittest.TestCase):
         #     p = ps[i]
         #     plt.plot(r, p, label=name)
         #
-        #     pois = [pot.r_c, pot.r_min]
+        #     pois = [pot.cutoff_radius, pot.r_min]
         #     plt.scatter(pois, pot.evaluate(pois, pot=True, forces=True)[i])
         #     plt.ylim(bottom=1.1*p.min(), top=-.3*p.min())
         #     plt.grid(True)
@@ -321,12 +321,12 @@ class PotentialTest(unittest.TestCase):
 #    def test_VDW82SimpleSmoothMin(self):
 #        hamaker = 68.1e-21
 #        c_sr = 2.1e-78 * 1e-6
-#        r_c = 10e-10
+#        cutoff_radius = 10e-10
 #        potref = VDW82SimpleSmooth(c_sr, hamaker, 10e-10)
-#        pot = VDW82SimpleSmoothMin(c_sr, hamaker, r_ti = potref.r_min / 2, r_c= 10e-10)
+#        pot = VDW82SimpleSmoothMin(c_sr, hamaker, r_ti = potref.r_min / 2, cutoff_radius= 10e-10)
 
         # import matplotlib.pyplot as plt
-        # r = np.linspace(pot.r_min*.7, pot.r_c*1.1, 1000)
+        # r = np.linspace(pot.r_min*.7, pot.cutoff_radius*1.1, 1000)
         # ps = pot.evaluate(r, pot=True, forces=True)
         #
         # for i, name in enumerate(('potential', 'force')):
@@ -334,7 +334,7 @@ class PotentialTest(unittest.TestCase):
         #     p = ps[i]
         #     plt.plot(r, p, label=name)
         #
-        #     pois = [pot.r_c, pot.r_min]
+        #     pois = [pot.cutoff_radius, pot.r_min]
         #     plt.scatter(pois, pot.evaluate(pois, pot=True, forces=True)[i])
         #     plt.ylim(bottom=1.1*p.min(), top=-.3*p.min())
         #     plt.grid(True)
@@ -380,11 +380,11 @@ class PotentialTest(unittest.TestCase):
 
         refpot = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2)
 
-        smoothpot = refpot.parabolic_cutoff(r_c=r_c)
+        smoothpot = refpot.parabolic_cutoff(cutoff_radius=r_c)
 
         pot = LinearCorePotential(smoothpot, r_ti=r_ti)
 
-        # assert pot.r_c == smoothpot.r_c, "{0.r_c}{1.r_c}"
+        # assert pot.cutoff_radius == smoothpot.cutoff_radius, "{0.cutoff_radius}{1.cutoff_radius}"
         assert pot.r_infl == smoothpot.r_infl
         assert pot.r_min == smoothpot.r_min
 
@@ -493,7 +493,7 @@ class PotentialTest(unittest.TestCase):
     #         z[11] = old.r_infl
     #         z[12] = old.r_t
     #         z[13] = old.r_ti
-    #         z[14] = old.r_c
+    #         z[14] = old.cutoff_radius
     #
     #         Vnew, dVnew, ddVnew = new.evaluate(z, True, True, True, area_scale=1.5)
     #         Vold, dVold, ddVold = old.evaluate(z, True, True, True, area_scale=1.5)
@@ -543,7 +543,7 @@ import pytest
         'VDW82(c_sr,  hamaker).spline_cutoff()',
         'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection")',
         'VDW82(c_sr,  hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-        #'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)', # TODO: issue #5
+        #'VDW82(c_sr, hamaker).parabolic_cutoff(cutoff_radius=VDW82(c_sr, hamaker).r_infl * 2)', # TODO: issue #5
         #'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',# TODO: issue #5
         "VDW82(c_sr, hamaker)",
         ]
@@ -613,7 +613,7 @@ def test_LinearCorePotential_hardness():
         'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection")',
         'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection").linearize_core()',
         'VDW82(c_sr,  hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-        #'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)', # TODO: issue #5
+        #'VDW82(c_sr, hamaker).parabolic_cutoff(cutoff_radius=VDW82(c_sr, hamaker).r_infl * 2)', # TODO: issue #5
         #'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',# TODO: issue #5
         'RepulsiveExponential(1., 0.5, 1., 1.)',
         "VDW82(c_sr, hamaker)",
@@ -653,7 +653,7 @@ def test_rinfl(pot_creation):
 'VDW82(c_sr, hamaker).spline_cutoff(r_t="inflection")',
 'VDW82(c_sr, hamaker).spline_cutoff(r_t="inflection").linearize_core()',
 'VDW82(c_sr, hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+'VDW82(c_sr, hamaker).parabolic_cutoff(cutoff_radius=VDW82(c_sr, hamaker).r_infl * 2)',
 'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',
 'RepulsiveExponential(1., 0.5, 1., 1.)',
 'Exponential(sig, eps)',
@@ -724,7 +724,7 @@ def test_deepcopy(pot_creation):
                         'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection")',
                         'VDW82(c_sr,  hamaker).spline_cutoff(r_t="inflection").linearize_core()',
                         'VDW82(c_sr,  hamaker).spline_cutoff(r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
-                        'VDW82(c_sr, hamaker).parabolic_cutoff(r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+                        'VDW82(c_sr, hamaker).parabolic_cutoff(cutoff_radius=VDW82(c_sr, hamaker).r_infl * 2)',
                         'VDW82(c_sr, hamaker).parabolic_cutoff(VDW82(c_sr, hamaker).r_infl * 2).linearize_core(VDW82(c_sr, hamaker).r_min * 0.8)',
                         'RepulsiveExponential(1., 0.5, 1., 1.)',
                         'Exponential(sig, eps)',
@@ -764,7 +764,7 @@ def test_max_tensile(pot_creation):
                         #'VDW82smoothMin(c_sr,  hamaker, r_t_ls="inflection")',
                         #'VDW82smooth(c_sr,  hamaker, r_t=VDW82(c_sr, hamaker).r_infl * 1.05)',
                         #'VDW82smoothMin(c_sr,  hamaker, r_t_ls=VDW82(c_sr, hamaker).r_infl*1.05)',
-                        #'VDW82SimpleSmooth(c_sr, hamaker, r_c=VDW82(c_sr, hamaker).r_infl * 2)',
+                        #'VDW82SimpleSmooth(c_sr, hamaker, cutoff_radius=VDW82(c_sr, hamaker).r_infl * 2)',
                         'RepulsiveExponential(0.5 * sig, 0.5* eps , sig, eps)',
                         'Exponential(sig, eps)',
                         'PowerLaw(sig, eps, 3)'
@@ -813,9 +813,9 @@ def test_work_range_array(pot_creation):
 
 @pytest.mark.parametrize("cutoff_procedure", [
 "pot",
-"pot.parabolic_cutoff(r_c)",
-"pot.parabolic_cutoff(r_c).linearize_core(r_t_lin)",
-"pot.linearize_core(r_t_lin).parabolic_cutoff(r_c)",
+"pot.parabolic_cutoff(cutoff_radius)",
+"pot.parabolic_cutoff(cutoff_radius).linearize_core(r_t_lin)",
+"pot.linearize_core(r_t_lin).parabolic_cutoff(cutoff_radius)",
 "pot.linearize_core(r_t_lin)",
 ])
 def test_cutoff_derivatives(cutoff_procedure):
@@ -823,7 +823,7 @@ def test_cutoff_derivatives(cutoff_procedure):
     sig = 1.
 
     r_t_lin = 0.5
-    r_c = 1.5
+    cutoff_radius = 1.5
 
     pot = LJ93(eps, sig)
     cutoffpot = eval(cutoff_procedure)
@@ -831,7 +831,7 @@ def test_cutoff_derivatives(cutoff_procedure):
     def approx_fprime(x0, fun, eps):
         return (fun(x0 + eps) - fun(x0)) / eps
 
-    for x0 in [1., 1.1, 0.9 * r_c, 0.999 * r_c, r_c, 1.1 * r_c]:
+    for x0 in [1., 1.1, 0.9 * cutoff_radius, 0.999 * cutoff_radius, cutoff_radius, 1.1 * cutoff_radius]:
         eps = 1e-8
         # forward finite differece wrt x0, or central fintite differences wrt x0+eps / 2
         numder = approx_fprime(x0, lambda x: cutoffpot.evaluate(x)[0],  eps)
@@ -866,10 +866,10 @@ def test_spline_cutoff_derivatives(r_t):
                0.999 * cutoffpot.r_infl,
                cutoffpot.r_infl,
                1.1 * cutoffpot.r_infl,
-               0.9 * cutoffpot.r_c,
-               0.999 * cutoffpot.r_c,
-               cutoffpot.r_c,
-               1.1 * cutoffpot.r_c,
+               0.9 * cutoffpot.cutoff_radius,
+               0.999 * cutoffpot.cutoff_radius,
+               cutoffpot.cutoff_radius,
+               1.1 * cutoffpot.cutoff_radius,
                ]:
         eps = 1e-8
         # forward finite differece wrt x0, or central fintite differences wrt x0+eps / 2
@@ -936,7 +936,7 @@ def test_smooth_potential_energy():
     fig, ax = plt.subplots()
 
     ax.axvline(pot.r_min,c ="k")
-    ax.axvline(pot.r_c,c ="k")
+    ax.axvline(pot.cutoff_radius, c ="k")
 
     ax.plot(zm, abs(num_der - exact_der) )
     ax.set_yscale("log")
@@ -969,3 +969,13 @@ def test_pipeline():
     p = pot2.pipeline()
     assert isinstance(p[0], LJ93)
     assert isinstance(p[1], LinearCorePotential)
+
+
+@pytest.mark.parametrize("pot",
+                         [
+                             PowerLaw(1., 1.), # has intrinsically a cutoff
+                             LJ93(1., 1., ).parabolic_cutoff(2.),
+                             LJ93(1., 1., ).spline_cutoff(2.)
+                             ])
+def test_cutoffs(pot):
+    assert (np.array(pot.evaluate(2 * pot.cutoff_radius, True, True, True)) == 0).all()

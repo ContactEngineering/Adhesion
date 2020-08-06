@@ -71,7 +71,7 @@ def test_FastSmoothContactSystem(self):
     S = FastSmoothContactSystem(self.substrate,
                                 self.interaction,
                                 self.surface)
-    fun = S.objective(.95 * self.interaction.r_c)
+    fun = S.objective(.95 * self.interaction.cutoff_radius)
     print(fun(np.zeros(S.babushka.substrate.nb_domain_grid_pts)))
 
 def test_SystemFactory(self):
@@ -87,7 +87,7 @@ def test_babushka_translations(self):
     S = FastSmoothContactSystem(self.substrate,
                                 self.interaction,
                                 self.surface)
-    fun = S.objective(.95 * self.interaction.r_c)
+    fun = S.objective(.95 * self.interaction.cutoff_radius)
 
 def test_equivalence(self):
     tol = 1e-6
@@ -102,7 +102,7 @@ def test_equivalence(self):
         S = system(self.substrate,
                    self.min_pot,
                    self.surface)
-        offset = .8 * S.interaction.r_c
+        offset = .8 * S.interaction.cutoff_radius
         fun = S.objective(offset, gradient=True)
 
         options = dict(ftol=1e-18, gtol=1e-10)
@@ -118,7 +118,7 @@ def test_equivalence(self):
         else:
             disp = S.shape_minimisation_output(result.x)
         gap = S.compute_gap(disp, offset)
-        gap[np.isinf(gap)] = self.min_pot.r_c
+        gap[np.isinf(gap)] = self.min_pot.cutoff_radius
 
         print('r_min = {}'.format(self.min_pot.r_min))
         return S.interaction_force, disp, gap, S.compute_normal_force()
@@ -156,12 +156,12 @@ def test_minimize_proxy(self):
         S = system(self.substrate,
                    self.min_pot,
                    self.surface)
-        offset = .8 * S.interaction.r_c
+        offset = .8 * S.interaction.cutoff_radius
         options = dict(ftol=1e-18, gtol=1e-10)
         result = S.minimize_proxy(offset, options=options)
 
         gap = S.compute_gap(S.disp, offset)
-        gap[np.isinf(gap)] = self.min_pot.r_c
+        gap[np.isinf(gap)] = self.min_pot.cutoff_radius
 
         return S.interaction_force, S.disp, gap, S.compute_normal_force()
 
@@ -194,7 +194,7 @@ def test_babuschka_eval(self):
     S = FastSmoothContactSystem(self.substrate,
                                 self.min_pot,
                                 self.surface)
-    offset = .8 * S.interaction.r_c
+    offset = .8 * S.interaction.cutoff_radius
     S.create_babushka(offset)
     S.babushka.evaluate(
         np.zeros(S.babushka.substrate.nb_domain_grid_pts), offset,
@@ -249,7 +249,7 @@ def test_unit_neutrality(self):
             eps[i], sig[i], gam[i])
         surface = make_sphere(radius[i], res, size[i], standoff=float(sig[i] * 1000))
         systems.append(make_system(substrate, interaction, surface, system_class=SmoothContactSystem))
-        offsets.append(.8 * systems[i].interaction.r_c)
+        offsets.append(.8 * systems[i].interaction.cutoff_radius)
 
     gaps = list()
     for i in range(2):
@@ -340,7 +340,7 @@ def test_BabushkaBoundaryError(self):
         substrate = ContactMechanics.FreeFFTElasticHalfSpace(surface.nb_grid_pts, young, surface.physical_sizes)
         system = FastSmoothContactSystem(substrate, interaction, surface, margin=4)
 
-        start_disp = - interaction.r_c + 1e-10
+        start_disp = - interaction.cutoff_radius + 1e-10
         load_history = np.concatenate((
             np.array((start_disp,)),
             np.arange(-1.63, -1.6, 2e-3),
