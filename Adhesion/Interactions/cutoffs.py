@@ -217,7 +217,7 @@ class ParabolicCutoffPotential(DecoratedPotential):
         Implements a very simple smoothing of a potential, by complementing the
         functional form of the potential with a parabola that brings to zero the
         potential's zeroth, first and second derivative at an imposed (and freely
-        chosen) cut_off radius cutoff_radius
+        chosen) cut_off radius r_c
     """
 
     def __init__(self, parent_potential, cutoff_radius):
@@ -225,7 +225,7 @@ class ParabolicCutoffPotential(DecoratedPotential):
         Parameters:
         -----------
         cutoff_radius: float
-            cut-off radius
+            cut-off radius :math:`r_c`
         """
         super().__init__(parent_potential)
         self.cutoff_radius = cutoff_radius

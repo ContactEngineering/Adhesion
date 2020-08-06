@@ -6,11 +6,11 @@ from Adhesion.Interactions import Potential, SoftWall
 
 class PowerLaw(Potential):
     r""" Polynomial interaction wiches value, first and second derivatives are
-    0 at the cutoff radius
+    0 at the cutoff radius :math:`r_c`
 
     .. math ::
 
-         (r < cutoff_radius) \ (1 - r / cutoff_radius)^p
+         (r < r_c) \ (1 - r / r_c)^p
 
     With the exponent :math:`p >= 3`
     """
@@ -25,7 +25,7 @@ class PowerLaw(Potential):
         work_of_adhesion: float or ndarray
             surface energy at perfect contact
         cutoff_radius: float or ndarray
-            distance at which the potential has decayed to 0
+            distance :math:`r_c` at which the potential has decayed to 0
         """
         self.cutoff_radius = self.rho = cutoff_radius
         self.work_of_adhesion = work_of_adhesion

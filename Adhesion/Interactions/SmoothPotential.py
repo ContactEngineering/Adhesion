@@ -30,17 +30,17 @@ class SmoothPotential(DecoratedPotential):
     of the potential, leading to the following conditions:
     (1): V_s' (Δr_t)    =  V_lγ' (r_t)
     (2): V_s''(Δr_t)    =  V_lγ''(r_t)
-    (3): V_s  (Δr_c) =  0, where Δr_c = cutoff_radius-r_o
+    (3): V_s  (Δr_c) =  0, where Δr_c = r_c-r_o
     (4): V_s' (Δr_c) =  0
     (5): V_s''(Δr_c) =  0
     (6): V_s  (Δr_m) = -γ, where Δr_m = r_min-r_o
-    The unknowns are C_i (i in {0,..4}) and cutoff_radius
+    The unknowns are C_i (i in {0,..4}) and r_c
     r_o is the origin for the spline, which can be chosen freely. The original
     choice was r_o = r_t, but it turned out to be a bad choice, leading to a
     system of nonlinear equation in which only two of the six unknowns can be
     eliminated.
 
-    With r_o = cutoff_radius, all coefficients C_i can be eliminated and a good initial
+    With r_o = r_c, all coefficients C_i can be eliminated and a good initial
     guess for the remaining scalar nonlinear equation can be computed. see
     _eval_poly_and_cutoff
     """
@@ -206,7 +206,7 @@ class SmoothPotential(DecoratedPotential):
 
     def _eval_poly_and_cutoff(self, xtol=1e-10):
         """
-        Computes the coefficients C_i of the spline and the cutoff radius cutoff_radius
+        Computes the coefficients C_i of the spline and the cutoff radius r_c
         based on the work of adhesion γ and the slope V'(r_t) and curvature
         V"(r_t) at the transition point. The calculations leading to the
         formulation I use here are done symbolically in SplineHelper.py. Check
@@ -228,14 +228,14 @@ class SmoothPotential(DecoratedPotential):
         By applying the following boundary conditions
         (1): V_s'(Δr_t)    =  V_lγ'(r_t)
         (2): V_s"(Δr_t)    =  V_lγ"(r_t)
-        (3): V_s (Δr_c) =  0, where Δr_c = cutoff_radius-r_o
+        (3): V_s (Δr_c) =  0, where Δr_c = r_c-r_o
         (4): V_s'(Δr_c) =  0
         (5): V_s"(Δr_c) =  0
         (6): V_s (Δr_m) = -γ, where Δr_m = r_min-r_o,           if r_t < r_m
              V_s (Δr_t) = -γ + Δγ, where Δγ = V_lγ(r_t) - V_lγ(r_m) else
 
-        The unknowns are C_i (i in {0,..4}) and cutoff_radius
-        and choosing the origin of the spline r_o at the cut-off cutoff_radius, the
+        The unknowns are C_i (i in {0,..4}) and r_c
+        and choosing the origin of the spline r_o at the cut-off r_c, the
         coefficients C_i can be determined explicitly (see SplineHelper.py):
 
         C₀: 0, C₁: 0, C₂: 0,
@@ -244,7 +244,7 @@ class SmoothPotential(DecoratedPotential):
         C₃: ────────────────────────, C₄: ───────────────────────
                             2                            3
                          Δrt                          Δrt
-        The remaining unknown is Δr_t (our proxy for cutoff_radius) but that equation has
+        The remaining unknown is Δr_t (our proxy for r_c) but that equation has
         no analytical solution (I think), except for r_t = r_m. The equation
         is:
                                                4
