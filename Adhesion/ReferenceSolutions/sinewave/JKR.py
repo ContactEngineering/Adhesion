@@ -23,7 +23,7 @@ The geometry of the sinusoidal indenter is
 
 .. math ::
 
-   2 h sin^2(pi a / \lambda )
+   2\ h\ sin^2(\pi\ a\ / \lambda )
 
 - :math:`\lambda`: wavelength of the sinusoidal indenter
 - :math:`h`: half peak to tale distance
@@ -97,7 +97,7 @@ def flatpunch_pressure(x, a):
 
 def mean_pressure(a, alpha, der="0"):
     r"""
-    mean pressure in units of pi Es h/lambda
+    mean pressure in units of :math:`\pi E^* h/ \lambda`
 
     and it's derivatives
 
@@ -175,12 +175,12 @@ def _find_min_max_a(alpha):
 
 
 def contact_radius(mean_pressure, alpha):
-    """
+    r"""
 
     Parameters
     ----------
     mean_pressure:
-        mean pressure in units of pi Es h/lambda
+        mean pressure in units of :math:`\pi Es h/\lambda`
     alpha: float
         johnson parameter
 
@@ -201,16 +201,19 @@ def contact_radius(mean_pressure, alpha):
 
 
 def mean_gap(a, alpha):
-    """
+    r"""
     from carbon mangialardi equation (39)
+    
     Parameters
     ----------
-    a: half contact width in units of lambda
-    alpha:
+    a: float
+      half contact width in units of lambda
+    alpha: float 
+     Johnson Parameter
 
     Returns
     -------
-    mean gap in units of h  # TODO: 2h or h !!!!!!!!
+    mean gap in units of :math:`h`
 
     h is half the peak to valley distance
 
@@ -219,7 +222,10 @@ def mean_gap(a, alpha):
     >>> import matplotlib.pyplot as plt
     >>> fig, ax = plt.subplots()
     >>> a = np.linspace(0, 0.5 )
-    >>> ls = [ax.plot(a, mean_gap(a, alpha), alpha ) for alpha in (0.1,0.2,0.5)]
+    >>> ls = [ax.plot(a, mean_gap(a, alpha), label="{}".format(alpha) ) for alpha in (0., 0.1,0.2,0.5)]
+    >>> leg = ax.legend()
+    >>> _ = ax.set_xlabel(r"contact radius $a$ ($\lambda$)");
+    >>> _ = ax.set_ylabel(r"mean gap ($h$)");
     >>> plt.show()
     """  # noqa:  E501
     return cos(np.pi * a) ** 2 \
@@ -231,9 +237,9 @@ def pressure(x, a, mean_pressure):
     Parameters
     ----------
     x:
-        position in units of the period \lambda
+        position in units of the period :math:`\lambda`
     a:
-        half contact width in units of the period \lambda
+        half contact width in units of the period :math:`\lambda`
     mean_pressure:
         externally applied mean pressure in units of
         the westergaard full contact pressure pi E^* h / lambda
@@ -247,15 +253,15 @@ def pressure(x, a, mean_pressure):
         - flatpunch_load * flatpunch_pressure(x, a)
 
 
-def elastic_energy(a, load):
+def elastic_energy(a, mean_pressure):
     r"""
-     :math:`\frac{U - U_{flat}}{h p_{west} A}`
+     :math:`\frac{U - U_{flat}}{h p_{wfc} A}`
 
 
     Parameters
     ----------
-    load: in units of p_{west}
-    a: in units of the period lambda
+    mean_pressure: in units of :math:`p_{wfc}`
+    a: in units of the period :math:`\lambda`
 
     Returns
     -------
@@ -263,7 +269,7 @@ def elastic_energy(a, load):
 
 
     """
-    return - log(sin(pi * a)) * load ** 2 + (sin(pi * a) ** 4) / 4
+    return - log(sin(pi * a)) * mean_pressure ** 2 + (sin(pi * a) ** 4) / 4
 
 
 def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):
@@ -276,7 +282,7 @@ def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):
     units for a_s and a_o: wavelength of the sinewave
     units of pressure: westergaard full contact pressure :math:`\pi E^* h / \lambda`
 
-    returns the stress intensitifactor in units of :math:`\pi E^* h / \sqrt(\lambda)`
+    returns the stress intensity factor in units of :math:`\pi E^* h / \sqrt(\lambda)`
     or it's partial derivative.
 
     Notation for the derivative flag:
