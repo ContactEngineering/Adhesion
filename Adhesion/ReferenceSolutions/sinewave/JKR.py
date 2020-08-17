@@ -16,10 +16,41 @@ Journal of the Mechanics and Physics of Solids 52, 1267–1287 (2004)
 DOI: 10.1016/j.jmps.2003.12.001
 
 
-Nommenclature:
---------------
+Physical quantities:
+--------------------
 
-TODO:
+The geometry of the sinusoidal indenter is
+
+.. math ::
+
+   2 h sin^2(pi a / \lambda )
+
+- :math:`\lambda`: wavelength of the sinusoidal indenter
+- :math:`h`: half peak to tale distance
+
+- :math:`E^*`: contact modulus
+
+
+Nondimensional units
+--------------------
+
+- lateral lengths are in unit of :math:`\lambda`
+- vertical lengths and displacements are in unit of :math:`h` (or :math:`2 h `)
+- Pressures are in units of :math:`p_{wfc} = \pi E^* h/\lambda` the amplitude
+of the sinusoidal pressures in the full contact.
+
+- Johnson Parameter :math:`\alpha`.
+It is a nondimensional stress intensity factor
+
+.. math ::
+
+    \alpha = \frac{\sqrt{2}}{\pi} \frac{\lambda}{h} \sqrt{\frac{w}{E^* \lambda}}
+
+or
+
+.. math ::
+
+    \alpha^2  = \frac{w}{h p_{wfc}} \frac{2}{\pi}
 
 
 """
@@ -32,7 +63,7 @@ from ContactMechanics.ReferenceSolutions import Westergaard
 
 
 def flatpunch_pressure(x, a):
-    """
+    r"""
     solution by koiter
 
     "Flat punch" solution (uniform deformation on periodic strides)
@@ -243,7 +274,7 @@ def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):
     partial derivatives are taken at constant mean pressure P
 
     units for a_s and a_o: wavelength of the sinewave
-    units of pressure: westergaard full contact pressure pi E^* h / \lambda
+    units of pressure: westergaard full contact pressure :math:`\pi E^* h / \lambda`
 
     returns the stress intensitifactor in units of :math:`\pi E^* h / \sqrt(\lambda)`
     or it's partial derivative.
@@ -253,7 +284,7 @@ def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):
 
     Parameters
     ----------
-    a_s: float between 0 and 0.5 # TODO: or -0.5 and 0.5 ?
+    a_s: float between 0 and 0.5
         position of the (positive x) crack front at which the SIF is computed
     a_o: float between 0 and 0.5
         position of the (negative x) crack front opposite to where the SIF is computed
