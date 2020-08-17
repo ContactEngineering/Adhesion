@@ -26,12 +26,25 @@ def test_elastic_energy_vs_westergaard():
 
     assert Westergaard.elastic_energy(mean_pressure) == jkr_energy
 
-@pytest.mark.parametrize("mean_pressure", [.1 , .8])
-def test_SIF_westergaard(mean_pressure):
+
+@pytest.mark.parametrize("mean_pressure", [.1, .8])
+def test_sif_westergaard(mean_pressure):
     "assert the SIF is 0 when the contact radius is the westergaard solution"
     west_rad = 1 / np.pi * np.arcsin(np.sqrt(mean_pressure))
-    sif = JKR.stress_intensity_factor_asymmetric(west_rad, west_rad, mean_pressure)
+    sif = JKR.stress_intensity_factor_asymmetric(west_rad, west_rad,
+                                                 mean_pressure)
     assert abs(sif) < 1e-12
+
+
+@pytest.mark.parametrize("contact_radius, mean_pressure",
+                         [(.1, -0.2), (.4, 0.6)])
+def test_sif_contact_radius_roundtrip(contact_radius, mean_pressure):
+    sif = JKR.stress_intensity_factor_asymmetric(contact_radius,
+                                                 contact_radius, mean_pressure)
+    alpha = sif
+
+    assert abs(JKR.contact_radius(mean_pressure, alpha) - contact_radius
+               ) < 1e-12
 
 
 def test_SIF_asymmetric_against_symmetric():

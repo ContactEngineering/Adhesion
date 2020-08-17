@@ -40,18 +40,24 @@ Nondimensional units
 of the sinusoidal pressures in the full contact.
 
 - Johnson Parameter :math:`\alpha`.
-It is a nondimensional stress intensity factor
 
 .. math ::
 
     \alpha = \frac{\sqrt{2}}{\pi} \frac{\lambda}{h} \sqrt{\frac{w}{E^* \lambda}}
 
-or
+
+:math:`\alpha^2` can be interpreted as a ratio of surface energy
+and the elastic energy necessary for full contact.
 
 .. math ::
 
     \alpha^2  = \frac{w}{h p_{wfc}} \frac{2}{\pi}
 
+:math:`alpha` is also the stress intensity factor in nondimensional form
+
+.. math ::
+
+    \alpha = \frac{K}{p_{wfc} \sqrt{\lambda}} = \frac{K}{\pi E^* h / \sqrt{\lambda}}
 
 """
 
