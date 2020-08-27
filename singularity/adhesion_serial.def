@@ -1,18 +1,18 @@
 
 Bootstrap: localimage
-From: dep_mpi.sif
+From: ContactMechanics_serial.sif
 
 %labels
     Author antoine.sanner@imtek.uni-freiburg.de
 
 %files
-    ../ PyCo
+    ../ Adhesion
 
 %post 
     # note: -y is to automatically accept when apt asks for confirmation. Otherwise the recipe fails
 
     # Install the rest using 
-    cd PyCo 
+    cd Adhesion
     python3 -m pip install git+file:$PWD
 
 %environment
