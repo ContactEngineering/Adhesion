@@ -53,7 +53,7 @@ and the elastic energy necessary for full contact.
 
     \alpha^2  = \frac{w}{h p_{wfc}} \frac{2}{\pi}
 
-:math:`alpha` is also the stress intensity factor in nondimensional form
+:math:`\alpha` is also the stress intensity factor in nondimensional form
 
 .. math ::
 
@@ -70,28 +70,33 @@ from ContactMechanics.ReferenceSolutions import Westergaard
 
 def flatpunch_pressure(x, a):
     r"""
+    
     solution by koiter
-
-    "Flat punch" solution (uniform deformation on periodic strides)
-
+    
+    Flat punch solution (uniform deformation on periodic strides)
+    
+    Parameters
+    ----------
+    
     x: float, np.array
         in units of lambda
     a: float
         half width of the flat punch
-
-    Returns:
-    --------
-
+    
+    Returns
+    -------
+    
     Pressure distribution with mean -1
-
-    References:
-    -----------
-
-    1.Johnson, K. L. The adhesion of two elastic bodies with slightly wavy surfaces. International Journal of Solids and Structures 32, 423–430 (1995).
-    2.Koiter, W. T. An infinite row of collinear cracks in an infinite elastic sheet. Ing. arch 28, 168–172 (1959).
-    3.Zilberman, S. & Persson, B. N. J. Adhesion between elastic bodies with rough surfaces. Solid State Communications 123, 173–177 (2002).
-
-
+    
+    References
+    ----------
+    
+    Johnson, K. L. The adhesion of two elastic bodies with slightly wavy surfaces. International Journal of Solids and Structures 32, 423–430 (1995).
+    
+    Koiter, W. T. An infinite row of collinear cracks in an infinite elastic sheet. Ing. arch 28, 168–172 (1959).
+    
+    Zilberman, S. & Persson, B. N. J. Adhesion between elastic bodies with rough surfaces. Solid State Communications 123, 173–177 (2002).
+    
     """  # noqa: E501
     res = np.zeros_like(x)
 
@@ -271,7 +276,7 @@ def elastic_energy(a, mean_pressure):
 
     Returns
     -------
-    energy per unit area in units of $h p_{wfc}$
+    energy per unit area in units of :math:`h p_{wfc}`
 
 
     """
