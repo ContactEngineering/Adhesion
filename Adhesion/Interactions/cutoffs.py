@@ -22,8 +22,8 @@ class LinearCorePotential(DecoratedPotential):
         Parameters:
         -----------
         r_ti: float, optional
-            (default r_min/2) transition point between linear function
-                   and lj, defaults to r_min
+            transition point between linear function
+            and lj, defaults to r_min / 2
         hardness: float, optional
             maximum repulsive stress.
         r_ti is choosen so that the maximum repulsive stress is hardness
@@ -31,16 +31,78 @@ class LinearCorePotential(DecoratedPotential):
         super().__init__(parent_potential)
 
         if hardness is not None:
+            ftol = 1e-5 # |(f(r_ti) - hardness) / hardness| < ftol
+            class FinfinityError(Exception):
+                def __init__(self, x):
+                    self.x = x
+
             def f(r):
                 pot, grad, curvature = self.parent_potential.evaluate(r,
                 gradient=True, curvature=True)
-                return (- grad - hardness)
+                f = (- grad - hardness)
+                if not np.isfinite(f):
+                    raise FinfinityError(r)
+                return f
 
             def fprime(r):
-               pot, grad, curvature =  self.parent_potential.evaluate(r, gradient=True, curvature=True)
-               return -curvature
+                pot, grad, curvature = self.parent_potential.evaluate(
+                    r,
+                    gradient=True, curvature=True)
+                return - curvature
 
-            self.r_ti = scipy.optimize.newton(f, parent_potential.r_min, fprime)
+            self.r_ti = self.parent_potential.r_min
+
+            try:
+                sol = scipy.optimize.root_scalar(
+                    f, x0=self.r_ti,
+                    fprime=fprime,
+                    options=dict(maxiter=50,
+                                 tol=ftol / abs(fprime(self.r_ti)))
+                    # this is the tolerance in |x - x0|
+                    )
+                assert sol.converged, sol.message
+                self.r_ti = sol.root
+            except FinfinityError as err:
+                # print("encountered infinity, make use of tweaky method")
+                left = err.x
+
+                # make a tweaked f that never gets infinity
+                def ftweaked(r):
+                    pot, grad, curvature = self.parent_potential.evaluate(
+                        r,
+                        gradient=True,
+                        curvature=True)
+                    f = (- grad - hardness)
+                    if not np.isfinite(f):
+                        return 1000 * hardness
+                    return f
+
+                # use brentq so we do not have to tweak fprime as well, and
+                # since now have a bracketing interval
+                self.r_ti, rr = scipy.optimize.brentq(
+                    ftweaked,
+                    left, self.r_ti,
+                    xtol=1e-10 / abs(fprime(
+                        self.r_ti)) * hardness,
+                    full_output=True)
+                # conversion from ftol to xtol using the curvature
+
+                # since the curvature was not necessarily close to
+                # the curvature at the root we need to check if we meet the
+                # tolerence and eventually iterate again
+                while abs(f(self.r_ti) / hardness) > ftol:
+                    sol = scipy.optimize.root_scalar(
+                        f, x0=self.r_ti,
+                        fprime=fprime,
+                        options=dict(maxiter=50,
+                                     tol=1e-1 * ftol / abs(
+                                         fprime(
+                                             self.r_ti)) * hardness)
+                        # this is the tolerance in |x - x0|
+                                                     )
+                    assert sol.converged
+                    self.r_ti = sol.root
+
         else:
             self.r_ti = r_ti if r_ti is not None else parent_potential.r_min/2
         self.lin_part = self._compute_linear_part()

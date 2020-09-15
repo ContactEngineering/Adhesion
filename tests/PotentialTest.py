@@ -593,6 +593,18 @@ def test_LinearCorePotential_hardness():
         fig.savefig("test_LinearCorePotential_hardness.png")
         subprocess.call("open test_LinearCorePotential_hardness.png", shell=True)
 
+def test_linearize_core_hardness_infinite():
+    """
+    the cutoff radius matching the hardness value is found using an iterative
+    rootfinding algorithm
+
+    for very steep potentials the potential evaluation can produce infinite
+    values during this process.
+
+    here we test the mechanism that can handle that
+    """
+    pot = RepulsiveExponential(2, 0.75, 1000, 1.5)
+    pot.linearize_core(hardness = 1000000000000000)
 
 @pytest.mark.parametrize(
     "pot_creation",
