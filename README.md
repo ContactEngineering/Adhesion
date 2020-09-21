@@ -1,7 +1,7 @@
-PyCo
+Adhesion
 ====
 
-*Contact mechanics with Python.* This code implements computation of contact geometry and pressure of a rigid object on a flat elastic half-space. All calculations assume small deformations; in that limit, the contact of any two objects of arbitrary geometry and elastic moduli can be mapped on that of a rigid on an elastic flat.
+*Contact mechanics with adhesion with Python.* This code implements computation of contact geometry and pressure of a rigid object on a flat elastic half-space. All calculations assume small deformations; in that limit, the contact of any two objects of arbitrary geometry and elastic moduli can be mapped on that of a rigid on an elastic flat.
 
 The methods that are implemented in this code are described in various papers:
 
@@ -26,12 +26,12 @@ Build status
 
 The following badge should say _build passing_. This means that all automated tests completed successfully for the master branch.
 
-[![Build Status](https://travis-ci.com/pastewka/PyCo.svg?token=NoUEfXFkhDQgj5AmLB27&branch=master)](https://travis-ci.com/pastewka/PyCo)
+[![Build Status](https://travis-ci.com/ComputationalMechanics/Adhesion.svg?token=qEEcjJuzdytivTUsSm9h&branch=master)](https://travis-ci.com/ComputationalMechanics/Adhesion)
 
 Installation
 ------------
 
-You need Python 3 and [FFTW3](http://www.fftw.org/) to run PyCo. All Python dependencies can be installed automatically by invoking
+You need Python 3 and [FFTW3](http://www.fftw.org/) to run Adhesion. All Python dependencies can be installed automatically by invoking
 
 #### Installation directly with pip
 
@@ -43,7 +43,7 @@ pip install [--user] cython
 pip install [--user] mpi4py #optional
 
 # install pyco
-pip  install [--user]  git+https://github.com/pastewka/PyCo.git#egg=PyCo
+pip  install [--user]  git+https://github.com/pastewka/Adhesion.git#egg=Adhesion
 ```
 
 The last command will install other dependencies including 
@@ -66,7 +66,7 @@ pip install [--user] mpi4py #optional
 pip3 install [--user] -r requirements.txt
 ```
 
-in the source directory. PyCo can be installed by invoking
+in the source directory. Adhesion can be installed by invoking
 
 ```pip3 install [--user] .```
 
@@ -91,10 +91,10 @@ export PKG_CONFIG_PATH="/usr/local/opt/lapack/lib/pkgconfig:$PKG_CONFIG_PATH"
 where the paths have probably to be adapted to your particular installation method
 (here it was an extra homebrew installation).
 
-Updating PyCo
+Updating Adhesion
 ------------- 
 
-If you update PyCo (whether with pip or `git pull` if you cloned the repository), 
+If you update Adhesion (whether with pip or `git pull` if you cloned the repository), 
 you may need to uninstall `NuMPI`, `muSpectre` and or `runtests`, so that the 
 newest version of them will be installed.
 
@@ -123,9 +123,9 @@ Development
 
 To use the code without installing it, e.g. for development purposes, use the `env.sh` script to set the environment:
 
-```source /path/to/PyCo/env.sh [python3]```
+```source /path/to/Adhesion/env.sh [python3]```
 
-Note that the parameter to `env.sh` specifies the Python interpreter for which the environment is set up. PyCo contains portions that need to be compiled, make sure to run
+Note that the parameter to `env.sh` specifies the Python interpreter for which the environment is set up. Adhesion contains portions that need to be compiled, make sure to run
 
 ```python setup.py build```
 
@@ -144,9 +144,9 @@ The code is documented via Python's documentation strings that can be accesses v
 Compiling the documentation
 ---------------------------
 
-- After changes to the PyCo source, you have to build again: ```python setup.py build```
+- After changes to the Adhesion source, you have to build again: ```python setup.py build```
 - Navigate into the docs folder: ```cd docs/``` 
-- Automatically generate reStructuredText files from the source: ```sphinx-apidoc -o source/ ../PyCo``` 
+- Automatically generate reStructuredText files from the source: ```sphinx-apidoc -o source/ ../Adhesion``` 
 Do just once, or if you have added/removed classes or methods. In case of the latter, be sure to remove the previous source before: ```rm -rf source/```
 - Build html files: ```make html```
-- The resulting html files can be found in the ```PyCo/docs/_build/html/``` folder. Root is ```PyCo/docs/_build/html/index.html```.
+- The resulting html files can be found in the ```Adhesion/docs/_build/html/``` folder. Root is ```Adhesion/docs/_build/html/index.html```.
