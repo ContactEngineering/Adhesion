@@ -12,7 +12,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 # 
-# The above copyright notice and this permission notice shall be included in all
+# The above copyright notice and this permission notice shall be included in
+# all
 # copies or substantial portions of the Software.
 # 
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -34,11 +35,13 @@ import Adhesion, ContactMechanics, SurfaceTopography
 from ContactMechanics.Tools import compare_containers
 from ContactMechanics.Systems import IncompatibleResolutionError, SystemBase
 
+
 class SmoothContactSystem(SystemBase):
     """
     For smooth contact mechanics (i.e. the ones for which optimization is only
     kinda-hell
     """
+
     def __init__(self, substrate, interaction, surface):
         """ Represents a contact problem
         Parameters
@@ -62,7 +65,7 @@ class SmoothContactSystem(SystemBase):
             raise IncompatibleResolutionError(
                 ("the substrate ({}) and the surface ({}) have incompatible "
                  "nb_grid_ptss.").format(
-                     substrate.nb_grid_pts, surface.nb_grid_pts))  # nopep8
+                    substrate.nb_grid_pts, surface.nb_grid_pts))  # nopep8
         self.dim = len(self.substrate.nb_grid_pts)
         self.energy = None
         self.force = None
@@ -93,13 +96,13 @@ class SmoothContactSystem(SystemBase):
         "computes and returns the sum of all repulsive forces"
         return self.pnp.sum(np.where(
             self.interaction_force > 0, self.interaction_force, 0
-            ))
+        ))
 
     def compute_attractive_force(self):
         "computes and returns the sum of all attractive forces"
         return self.pnp.sum(np.where(
             self.interaction_force < 0, self.interaction_force, 0
-            ))
+        ))
 
     def compute_normal_force(self):
         "computes and returns the sum of all forces"
@@ -107,11 +110,11 @@ class SmoothContactSystem(SystemBase):
 
     def compute_repulsive_contact_area(self):
         "computes and returns the area where contact pressure is repulsive"
-        return self.compute_nb_repulsive_pts()*self.area_per_pt
+        return self.compute_nb_repulsive_pts() * self.area_per_pt
 
     def compute_attractive_contact_area(self):
         "computes and returns the are where contact pressure is attractive"
-        return self.compute_nb_attractive_pts()*self.area_per_pt
+        return self.compute_nb_attractive_pts() * self.area_per_pt
 
     def compute_nb_contact_pts(self):
         """
@@ -170,15 +173,15 @@ class SmoothContactSystem(SystemBase):
         rel_att_area = self.compute_nb_attractive_pts() / tot_nb_grid_pts
 
         return (['energy', 'mean gap', 'frac. rep. area',
-                       'frac. att. area',
-                       'frac. int. area', 'substrate force', 'interaction force'],
-              [self.energy,
-               self.compute_mean_gap(),
-               rel_rep_area,
-               rel_att_area,
-               rel_rep_area + rel_att_area,
-               -self.pnp.sum(self.substrate.force),
-               self.pnp.sum(self.interaction_force)])
+                 'frac. att. area',
+                 'frac. int. area', 'substrate force', 'interaction force'],
+                [self.energy,
+                 self.compute_mean_gap(),
+                 rel_rep_area,
+                 rel_att_area,
+                 rel_rep_area + rel_att_area,
+                 -self.pnp.sum(self.substrate.force),
+                 self.pnp.sum(self.interaction_force)])
 
     def evaluate(self, disp, offset, pot=True, forces=False, logger=None):
         """
@@ -204,30 +207,29 @@ class SmoothContactSystem(SystemBase):
         # attention: the substrate may have a higher nb_grid_pts than the gap
         # and the interaction (e.g. FreeElasticHalfSpace)
         self.gap = self.compute_gap(disp, offset)
-        interaction_energies, self.interaction_force, _ =  \
+        interaction_energies, self.interaction_force, _ = \
             self.interaction.evaluate(self.gap,
                                       potential=pot,
                                       gradient=forces,
                                       curvature=False)
 
-
         self.interaction_energy = \
             self.pnp.sum(interaction_energies) * self.area_per_pt
 
         self.substrate.compute(disp, pot, forces)
-        self.energy = (self.interaction_energy+
+        self.energy = (self.interaction_energy +
                        self.substrate.energy
                        if pot else None)
         if forces:
             self.interaction_force *= -self.area_per_pt
             #                       ^ gradient to force per pixel
             self.force = self.substrate.force.copy()
-            if self.dim == 1: # TODO: remove this if
+            if self.dim == 1:  # TODO: remove this if
                 self.force[self.comp_slice] += \
-                  self.interaction_force
+                    self.interaction_force
             else:
                 self.force[self.comp_slice] += \
-                  self.interaction_force
+                    self.interaction_force
         else:
             self.force = None
         if logger is not None:
@@ -284,12 +286,125 @@ class SmoothContactSystem(SystemBase):
                     raise ValueError(
                         "{}: disp.shape: {}, res: {}".format(
                             err, disp.shape, res))
-                return (self.energy, -self.force.reshape(-1)*disp_scale)
+                return (self.energy, -self.force.reshape(-1) * disp_scale)
         else:
             def fun(disp):
                 # pylint: disable=missing-docstring
                 return self.evaluate(
                     disp_scale * disp.reshape(res), offset, forces=False,
+                    logger=logger)[0]
+
+        return fun
+
+    def evaluate_k(self, disp_k, disp, offset, pot=True, forces=False,
+                   logger=None):
+
+        """
+        Compute the energies and forces in the system for a given displacement
+        field in fourier space.
+
+        Parameters:
+        -----------
+        disp_k: ndarray
+            displacement field in fourier space, in the shape of
+            system.substrate.nb_subdomain_grid_pts
+        offset_k: float
+            determines indentation depth,
+            constant value added to the heights (system.topography)
+        pot: bool, optional
+            Wether to evaluate the energy, default True
+        forces: bool, optional
+            Wether to evaluate the forces, default False
+        logger: ContactMechanics.Tools.Logger
+            informations of current state of the system will be passed to
+            logger at every evaluation
+        """
+        # attention: the substrate may have a higher nb_grid_pts than the gap
+        # and the interaction (e.g. FreeElasticHalfSpace)
+
+        self.gap = self.compute_gap(disp, offset)
+        interaction_energies, self.interaction_force, _ = \
+            self.interaction.evaluate(self.gap,
+                                      potential=pot,
+                                      gradient=forces,
+                                      curvature=False)
+
+        self.interaction_energy = \
+            self.pnp.sum(interaction_energies) * self.area_per_pt
+
+        self.substrate.compute_k(disp_k, pot, forces)
+        self.energy = (
+            self.interaction_energy + self.substrate.energy if pot else None)
+
+        if forces:
+            self.interaction_force *= -self.area_per_pt
+            #                     ^ gradient to force per pixel
+
+            self.substrate.real_buffer.array()[...] = self.interaction_force
+            self.substrate.fftengine.fft(self.substrate.real_buffer,
+                                         self.substrate.fourier_buffer)
+            interaction_force_k = self.substrate.fourier_buffer.array()[...]
+
+            self.force_k = self.substrate.force_k.copy()
+
+            self.force_k += interaction_force_k
+        else:
+            self.force_k = None
+
+        if logger is not None:
+            logger.st(*self.logger_input())
+
+        return (self.energy, self.force_k)
+
+    def objective_k(self, offset, disp0=None, gradient=False,
+                    logger=None):
+        r"""
+        This helper method exposes a scipy.optimize-friendly interface to the
+        evaluate_k() method. Use this for optimization purposes, it lets you
+        set the offset and 'forces' flag without using scipy's cumbersome
+        argument passing interface. Returns a function of only disp_k
+
+        Parameters:
+        -----------
+        disp0: ndarray
+            unused variable, present only for interface compatibility
+            with inheriting classes
+        offset: float
+            determines indentation depth,
+            constant value added to the heights (system.topography)
+        gradient: bool, optional
+            Wether to evaluate the gradient, default False
+        disp_scale : float, optional
+            (default 1.) allows to specify a scaling of the
+            dislacement before evaluation. This can be necessary when
+            using dumb minimizers with hardcoded convergence criteria
+            such as scipy's L-BFGS-B.
+        logger: ContactMechanics.Tools.Logger
+            informations of current state of the system will be passed to
+            logger at every evaluation
+
+        Returns:
+            function(disp_k, disp)
+                Parameters:
+                disp_k: an ndarray in fourier space
+                disp: an ndarray in real space
+
+                Returns:
+                    energy or energy, gradient
+        """
+        dummy = disp0
+        # res = self.substrate.nb_subdomain_grid_pts
+        if gradient:
+
+            def fun(disp_k, disp):
+                self.evaluate_k(disp_k, disp, offset, forces=True,
+                                logger=logger)
+                return (self.energy, -self.force_k)
+        else:
+            def fun(disp_k, disp):
+                # pylint: disable=missing-docstring
+                return self.evaluate_k(
+                    disp_k, disp, offset, forces=False,
                     logger=logger)[0]
 
         return fun
@@ -323,9 +438,10 @@ class SmoothContactSystem(SystemBase):
                     counter, self.energy))
         return fun
 
+
 class BoundedSmoothContactSystem(SmoothContactSystem):
     @staticmethod
-    def handles(*args, **kwargs): # FIXME work around, see issue #208
+    def handles(*args, **kwargs):  # FIXME work around, see issue #208
         return False
 
     def compute_nb_contact_pts(self):
@@ -345,21 +461,29 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
 
         # sum of the jacobian in the contact area (Lagrange multiplier)
         # and the ineraction forces.
-        # can also be computed easily from the substrate forces, what we do here
-        return self.pnp.sum( - self.substrate.force[self.substrate.topography_subdomain_slices])
+        # can also be computed easily from the substrate forces, what we do
+        # here
+        return self.pnp.sum(
+            - self.substrate.force[self.substrate.topography_subdomain_slices])
 
     def compute_repulsive_force(self):
         """computes and returns the sum of all repulsive forces
 
         Assumptions: there
         """
-        return self.pnp.sum(np.where( - self.substrate.force[self.substrate.topography_subdomain_slices] > 0,
-                 - self.substrate.force[self.substrate.topography_subdomain_slices], 0.))
+        return self.pnp.sum(np.where(- self.substrate.force[
+            self.substrate.topography_subdomain_slices] > 0,
+                                     - self.substrate.force[
+                                         self.substrate.topography_subdomain_slices],
+                                     0.))
 
     def compute_attractive_force(self):
         "computes and returns the sum of all attractive forces"
-        return self.pnp.sum(np.where( - self.substrate.force[self.substrate.topography_subdomain_slices] < 0,
-                - self.substrate.force[self.substrate.topography_subdomain_slices], 0.))
+        return self.pnp.sum(np.where(- self.substrate.force[
+            self.substrate.topography_subdomain_slices] < 0,
+                                     - self.substrate.force[
+                                         self.substrate.topography_subdomain_slices],
+                                     0.))
 
     def compute_nb_repulsive_pts(self):
         """
@@ -367,7 +491,10 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         pressure.
 
         """
-        return self.pnp.sum(np.where(np.logical_and(self.gap == 0., - self.substrate.force[self.substrate.topography_subdomain_slices] > 0), 1., 0.))
+        return self.pnp.sum(np.where(np.logical_and(self.gap == 0.,
+                                                    - self.substrate.force[
+                                                        self.substrate.topography_subdomain_slices] > 0),
+                                     1., 0.))
 
     def compute_nb_attractive_pts(self):
         """
@@ -375,13 +502,16 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         pressure.
         """
 
-        # Compute points where substrate force is negative or there is no contact
-        pts = np.logical_or( - self.substrate.force[self.substrate.topography_subdomain_slices] < 0,
-                                            self.gap > 0.)
+        # Compute points where substrate force is negative or there is no
+        # contact
+        pts = np.logical_or(- self.substrate.force[
+            self.substrate.topography_subdomain_slices] < 0,
+                            self.gap > 0.)
 
-        # exclude points where there is no contact and the interaction force is 0.
+        # exclude points where there is no contact and the interaction force
+        # is 0.
         pts[np.logical_and(self.gap > 0.,
-            self.interaction_force == 0.)] = 0.
+                           self.interaction_force == 0.)] = 0.
 
         return self.pnp.sum(pts)
 
@@ -390,7 +520,9 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         returns an array of all coordinates, where contact pressure is
         repulsive. Useful for evaluating the number of contact islands etc.
         """
-        return np.argwhere(np.logical_and(self.gap == 0., - self.substrate.force[self.substrate.topography_subdomain_slices] > 0))
+        return np.argwhere(np.logical_and(self.gap == 0.,
+                                          - self.substrate.force[
+                                              self.substrate.topography_subdomain_slices] > 0))
 
     def compute_attractive_coordinates(self):
         """
@@ -399,11 +531,12 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         """
 
         # Compute points where substrate force is negative or there is no contact
-        pts = np.logical_or( - self.substrate.force[self.substrate.topography_subdomain_slices] < 0,
-                                            self.gap > 0.)
+        pts = np.logical_or(- self.substrate.force[
+            self.substrate.topography_subdomain_slices] < 0,
+                            self.gap > 0.)
 
         # exclude points where there is no contact and the interaction force is 0.
         pts[np.logical_and(self.gap > 0.,
-            self.interaction_force == 0.)] = 0.
+                           self.interaction_force == 0.)] = 0.
 
         return np.argwhere(pts)
