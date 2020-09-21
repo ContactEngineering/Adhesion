@@ -69,6 +69,7 @@ class SmoothContactSystem(SystemBase):
         self.dim = len(self.substrate.nb_grid_pts)
         self.energy = None
         self.force = None
+        self.force_k = None
         self.interaction_energy = None
         self.interaction_force = None
 
@@ -232,6 +233,7 @@ class SmoothContactSystem(SystemBase):
                     self.interaction_force
         else:
             self.force = None
+
         if logger is not None:
             logger.st(*self.logger_input())
         return (self.energy, self.force)
@@ -303,10 +305,13 @@ class SmoothContactSystem(SystemBase):
         Compute the energies and forces in the system for a given displacement
         field in fourier space.
 
-        Parameters:
+        Parameters
         -----------
+
         disp_k: ndarray
-            displacement field in fourier space, in the shape of
+            displacement field in fourier space.
+        disp:  ndarray
+            displacement field in real space, in the shape of
             system.substrate.nb_subdomain_grid_pts
         offset_k: float
             determines indentation depth,
@@ -317,10 +322,8 @@ class SmoothContactSystem(SystemBase):
             Wether to evaluate the forces, default False
         logger: ContactMechanics.Tools.Logger
             informations of current state of the system will be passed to
-            logger at every evaluation
+            logger at every evaluation.
         """
-        # attention: the substrate may have a higher nb_grid_pts than the gap
-        # and the interaction (e.g. FreeElasticHalfSpace)
 
         self.gap = self.compute_gap(disp, offset)
         interaction_energies, self.interaction_force, _ = \
@@ -359,10 +362,9 @@ class SmoothContactSystem(SystemBase):
     def objective_k(self, offset, disp0=None, gradient=False,
                     logger=None):
         r"""
-        This helper method exposes a scipy.optimize-friendly interface to the
-        evaluate_k() method. Use this for optimization purposes, it lets you
-        set the offset and 'forces' flag without using scipy's cumbersome
-        argument passing interface. Returns a function of only disp_k
+        This helper method interface to the evaluate_k() method. Use this
+        for optimization purposes, it lets you
+        set the offset and 'forces' flag. Returns a function of  (disp_k,disp).
 
         Parameters:
         -----------
@@ -373,29 +375,30 @@ class SmoothContactSystem(SystemBase):
             determines indentation depth,
             constant value added to the heights (system.topography)
         gradient: bool, optional
-            Wether to evaluate the gradient, default False
-        disp_scale : float, optional
-            (default 1.) allows to specify a scaling of the
-            dislacement before evaluation. This can be necessary when
-            using dumb minimizers with hardcoded convergence criteria
-            such as scipy's L-BFGS-B.
+            Whether to evaluate the gradient, default False
         logger: ContactMechanics.Tools.Logger
             informations of current state of the system will be passed to
             logger at every evaluation
 
-        Returns:
+        Returns
+        _______
+
             function(disp_k, disp)
-                Parameters:
+
+                Parameters
+                __________
+
                 disp_k: an ndarray in fourier space
                 disp: an ndarray in real space
 
-                Returns:
-                    energy or energy, gradient
+                Returns
+                _______
+
+                    energy or energy, gradient_k
         """
         dummy = disp0
         # res = self.substrate.nb_subdomain_grid_pts
         if gradient:
-
             def fun(disp_k, disp):
                 self.evaluate_k(disp_k, disp, offset, forces=True,
                                 logger=logger)
@@ -530,12 +533,14 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         attractive. Useful for evaluating the number of contact islands etc.
         """
 
-        # Compute points where substrate force is negative or there is no contact
+        # Compute points where substrate force is negative or there is no
+        # contact
         pts = np.logical_or(- self.substrate.force[
             self.substrate.topography_subdomain_slices] < 0,
                             self.gap > 0.)
 
-        # exclude points where there is no contact and the interaction force is 0.
+        # exclude points where there is no contact and the interaction force
+        # is 0.
         pts[np.logical_and(self.gap > 0.,
                            self.interaction_force == 0.)] = 0.
 
