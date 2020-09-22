@@ -13,6 +13,5 @@ pytest-flake8
 flake8
 sphinx_rtd_theme
 setuptools_scm>=3.5.0
-git+https://gitlab.com/muspectre/muspectre.git#egg=muFFT
 git+https://github.com/pastewka/runtests.git#egg=runtests
 git+https://github.com/ComputationalMechanics/ContactMechanics.git
