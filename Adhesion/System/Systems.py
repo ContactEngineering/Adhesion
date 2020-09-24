@@ -70,6 +70,7 @@ class SmoothContactSystem(SystemBase):
         self.energy = None
         self.force = None
         self.force_k = None
+        self.force_k_float = None
         self.interaction_energy = None
         self.interaction_force = None
 
@@ -198,11 +199,11 @@ class SmoothContactSystem(SystemBase):
             determines indentation depth,
             constant value added to the heights (system.topography)
         pot: bool, optional
-            Wether to evaluate the energy, default True
+            Whether to evaluate the energy, default True
         forces: bool, optional
-            Wether to evaluate the forces, default False
+            Whether to evaluate the forces, default False
         logger: ContactMechanics.Tools.Logger
-            informations of current state of the system will be passed to
+            information of current state of the system will be passed to
             logger at every evaluation
         """
         # attention: the substrate may have a higher nb_grid_pts than the gap
@@ -297,6 +298,129 @@ class SmoothContactSystem(SystemBase):
                     logger=logger)[0]
 
         return fun
+
+    def primal_evaluate(self, disp, gap, pot=True, forces=False, logger=None):
+        """
+        Compute the energies and forces in the system for a given
+        displacement and gap..
+
+        Parameters:
+        -----------
+        disp: ndarray
+            displacement field, in the shape of
+            system.substrate.nb_subdomain_grid_pts
+        gap: ndarray
+            gap , in the shape of
+            system.substrate.nb_subdomain_grid_pts
+        pot: bool, optional
+            Whether to evaluate the energy, default True
+        forces: bool, optional
+            Whether to evaluate the forces, default False
+        logger: ContactMechanics.Tools.Logger
+            information of current state of the system will be
+            passed to
+            logger at every evaluation
+        """
+        # attention: the substrate may have a higher nb_grid_pts than the gap
+        # and the interaction (e.g. FreeElasticHalfSpace)
+
+        self.gap = gap
+        interaction_energies, self.interaction_force, _ = \
+            self.interaction.evaluate(self.gap,
+                                      potential=pot,
+                                      gradient=forces,
+                                      curvature=False)
+
+        self.interaction_energy = \
+            self.pnp.sum(interaction_energies) * self.area_per_pt
+
+        self.substrate.compute(disp, pot, forces)
+        self.energy = (self.interaction_energy +
+                       self.substrate.energy
+                       if pot else None)
+        if forces:
+            self.interaction_force *= -self.area_per_pt
+            #                       ^ gradient to force per pixel
+            self.force = self.substrate.force.copy()
+
+            self.force[self.comp_slice] += \
+                self.interaction_force
+        else:
+            self.force = None
+
+        if logger is not None:
+            logger.st(*self.logger_input())
+
+        return (self.energy, self.force)
+
+    def primal_objective(self, offset, disp0=None, gradient=False,
+                         logger=None):
+        r"""To solve the primal objective using gap as the variable.
+        Can be fed directly to standard solvers ex: scipy solvers etc
+        and returns the elastic energy and it's gradient (negative of
+        the forces) as a function of the gap.
+
+        Parameters
+        __________
+
+        gap : float
+              gap between the contact surfaces.
+        offset : float
+                constant value to add to the surface heights
+        pot : (default False)
+
+        gradient : (default True)
+
+        Returns
+        _______
+        energy : float
+                value of energy(scalar value).
+        force : float,array
+                value of force(array).
+
+        Notes
+        _____
+
+        Objective:
+        .. math ::
+            min_u f = 1/2u_i*K_{ij}*u_j + \phi (u_{ij})\\
+            \\
+            gradient = K_{ij}*u_j + \phi^{\prime} which is, Force. \\
+
+        """
+
+        res = self.substrate.nb_domain_grid_pts
+        if gradient:
+            def fun(gap):
+                disp = gap.reshape(res) + self.surface.heights() + offset
+                try:
+                    self.evaluate(
+                        disp.reshape(res), gap, forces=True,logger=logger)
+                except ValueError as err:
+                    raise ValueError(
+                        "{}: gap.shape: {}, res: {}".format(
+                            err, gap.shape, res))
+                return (self.energy, -self.force.reshape(-1))
+        else:
+            def fun(gap):
+                disp = gap.reshape(res) + self.surface.heights() + offset
+                return self.evaluate(
+                    disp.reshape(res), gap, forces=False,logger=logger)[0]
+
+        return fun
+
+    def primal_hessp(self,gap,des_dir):
+        """Returns the hessian product of the primal_objective function.
+        """
+        _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
+
+        hessp_val = -self.substrate.evaluate_force(des_dir.reshape(
+            self.substrate.nb_domain_grid_pts)) + adh_curv * des_dir.reshape(
+            self.substrate.nb_domain_grid_pts) * self.substrate.area_per_pt
+
+        return hessp_val.reshape(-1)
+
+
 
     def evaluate_k(self, disp_k, disp, offset, pot=True, forces=False,
                    logger=None):
@@ -394,7 +518,7 @@ class SmoothContactSystem(SystemBase):
                 Returns
                 _______
 
-                    energy or energy, gradient_k
+                    energy, gradient_k
         """
         dummy = disp0
         # res = self.substrate.nb_subdomain_grid_pts
@@ -406,6 +530,101 @@ class SmoothContactSystem(SystemBase):
         else:
             def fun(disp_k, disp):
                 # pylint: disable=missing-docstring
+                return self.evaluate_k(
+                    disp_k, disp, offset, forces=False,
+                    logger=logger)[0]
+
+        return fun
+
+
+    def hessp_k(self,dispk,des_dir_k):
+        """Returns the hessian product of the fourier space objective_k function.
+        """
+        self.substrate.fourier_buffer.array()[...] = dispk.copy()
+        self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
+                                      self.substrate.real_buffer)
+        disp = self.substrate.real_buffer.array()[...].copy() \
+            * self.substrate.fftengine.normalisation
+
+        gap = self.compute_gap(disp)
+        _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
+
+        self.substrate.real_buffer.array()[...] = adh_curv.reshape(
+            self.substrate.nb_grid_pts).copy()
+        self.substrate.fftengine.fft(self.substrate.real_buffer,
+                                self.substrate.fourier_buffer)
+        adh_curv_k = self.substrate.fourier_buffer.array()[...].copy()
+
+        hessp_val_k = -self.substrate.evaluate_k_force_k(des_dir_k) + \
+                    adh_curv_k * des_dir_k * self.substrate.area_per_pt
+
+        return hessp_val_k
+
+    def objective_k_float(self, offset, disp0=None, gradient=False,
+                    logger=None):
+        r"""
+        This helper method interface to the evaluate_k() method. Use this
+        for optimization purposes, it lets you set the offset and 'forces'
+        flag. Returns a function of (disp_k) takes input a complex array of
+        shape(n//2 + 1) and returns a float type array of complex force_k of
+        shape (n+1) and a scalar energy.
+
+        Parameters:
+        -----------
+        disp0: ndarray
+            unused variable, present only for interface compatibility
+            with inheriting classes
+        offset: float
+            determines indentation depth,
+            constant value added to the heights (system.topography)
+        gradient: bool, optional
+            Whether to evaluate the gradient, default False
+        logger: ContactMechanics.Tools.Logger
+            informations of current state of the system will be passed to
+            logger at every evaluation
+
+        Returns
+        _______
+
+            function(disp_k)
+
+                Parameters
+                __________
+
+                disp_k: an ndarray in fourier space
+
+                Returns
+                _______
+
+                    energy, gradient_k_float
+        """
+        dummy = disp0
+        # res = self.substrate.nb_subdomain_grid_pts
+
+        if gradient:
+            def fun(disp_k):
+
+                disp_float_k = self.substrate.float_to_k(disp_k)
+                self.substrate.fourier_buffer.array()[...] = disp_float_k.copy()
+                self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
+                                              self.substrate.real_buffer)
+                disp = self.substrate.real_buffer.array()[...].copy() \
+                    * self.substrate.fftengine.normalisation
+
+                self.evaluate_k(disp_k, disp, offset, forces=True,
+                                logger=logger)
+                self.force_k_float = self.substrate.k_to_float(self.force_k)
+                return (self.energy, -self.force_k_float)
+        else:
+            def fun(disp_k):
+                # pylint: disable=missing-docstring
+                float_k_disp = self.substrate.float_to_k(disp_k)
+                self.substrate.fourier_buffer.array()[...] = float_k_disp.copy()
+                self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
+                                              self.substrate.real_buffer)
+                disp = self.substrate.real_buffer.array()[...].copy() \
+                       * self.substrate.fftengine.normalisation
+
                 return self.evaluate_k(
                     disp_k, disp, offset, forces=False,
                     logger=logger)[0]
