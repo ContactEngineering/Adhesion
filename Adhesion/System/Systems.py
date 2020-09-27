@@ -394,7 +394,7 @@ class SmoothContactSystem(SystemBase):
             def fun(gap):
                 disp = gap.reshape(res) + self.surface.heights() + offset
                 try:
-                    self.evaluate(
+                    self.primal_evaluate(
                         disp.reshape(res), gap, forces=True,logger=logger)
                 except ValueError as err:
                     raise ValueError(
@@ -404,7 +404,7 @@ class SmoothContactSystem(SystemBase):
         else:
             def fun(gap):
                 disp = gap.reshape(res) + self.surface.heights() + offset
-                return self.evaluate(
+                return self.primal_evaluate(
                     disp.reshape(res), gap, forces=False,logger=logger)[0]
 
         return fun
@@ -580,7 +580,7 @@ class SmoothContactSystem(SystemBase):
         gradient: bool, optional
             Whether to evaluate the gradient, default False
         logger: ContactMechanics.Tools.Logger
-            informations of current state of the system will be passed to
+            information of current state of the system will be passed to
             logger at every evaluation
 
         Returns
@@ -603,7 +603,7 @@ class SmoothContactSystem(SystemBase):
 
         if gradient:
             def fun(disp_k):
-
+                disp_k = disp_k.copy()
                 disp_float_k = self.substrate.float_to_k(disp_k)
                 self.substrate.fourier_buffer.array()[...] = disp_float_k.copy()
                 self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
@@ -611,9 +611,9 @@ class SmoothContactSystem(SystemBase):
                 disp = self.substrate.real_buffer.array()[...].copy() \
                     * self.substrate.fftengine.normalisation
 
-                self.evaluate_k(disp_k, disp, offset, forces=True,
+                self.evaluate_k(disp_float_k, disp, offset, forces=True,
                                 logger=logger)
-                self.force_k_float = self.substrate.k_to_float(self.force_k)
+                self.force_k_float = self.substrate.k_to_float(self.force_k.copy())
                 return (self.energy, -self.force_k_float)
         else:
             def fun(disp_k):
@@ -630,6 +630,7 @@ class SmoothContactSystem(SystemBase):
                     logger=logger)[0]
 
         return fun
+
 
     def callback(self, force=False):
         """
