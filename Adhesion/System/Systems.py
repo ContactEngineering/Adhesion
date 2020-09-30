@@ -226,12 +226,9 @@ class SmoothContactSystem(SystemBase):
             self.interaction_force *= -self.area_per_pt
             #                       ^ gradient to force per pixel
             self.force = self.substrate.force.copy()
-            if self.dim == 1:  # TODO: remove this if
-                self.force[self.comp_slice] += \
-                    self.interaction_force
-            else:
-                self.force[self.comp_slice] += \
-                    self.interaction_force
+
+            self.force[self.comp_slice] += \
+              self.interaction_force
         else:
             self.force = None
 

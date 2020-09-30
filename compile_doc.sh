@@ -6,4 +6,4 @@ cd docs/
 rm -rf source/
 sphinx-apidoc -o source/ ../Adhesion
 make html
-open Adhesion/docs/_build/html/index.html
+open docs/_build/html/index.html

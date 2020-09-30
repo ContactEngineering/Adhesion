@@ -429,7 +429,9 @@ class PotentialTest(unittest.TestCase):
         for i, n in enumerate(ns):
             r = np.linspace(-.1, 10, n + 1)
             pot = RepulsiveExponential(0.5, 0.5, 1.3, 1.)
-            V, dV, ddV = pot.evaluate(r)
+            V, dV, ddV = pot.evaluate(r, potential=True,
+                                         gradient=True,
+                                         curvature=True)
             dV_num = np.diff(V) / np.diff(r)
             ddV_num = np.diff(dV_num) / (r[1] - r[0])
             errordV[i] = abs((dV[:-1] + dV[1:]) / 2 - dV_num).max()

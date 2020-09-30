@@ -26,24 +26,20 @@
 Tests for PyCo ReferenceSolutions
 """
 
-
-
 import numpy as np
 
 import Adhesion.ReferenceSolutions.MaugisDugdale as MD
-import ContactMechanics.ReferenceSolutions.Hertz as Hz
 
 
 def test_md_dmt_limit():
     A = np.linspace(0.001, 10, 11)
     N, d = MD._load_and_displacement(A, 1e-12)
-    np.testing.assert_allclose(N, A**3-2)
-    np.testing.assert_allclose(d, A**2, atol=1e-5)
+    np.testing.assert_allclose(N, A ** 3 - 2)
+    np.testing.assert_allclose(d, A ** 2, atol=1e-5)
+
 
 def test_md_jkr_limit():
     A = np.linspace(0.001, 10, 11)
     N, d = MD._load_and_displacement(A, 1e3)
-    np.testing.assert_allclose(N, A**3-A*np.sqrt(6*A), atol=1e-4)
-    np.testing.assert_allclose(d, A**2-2/3*np.sqrt(6*A), atol=1e-4)
-
-
+    np.testing.assert_allclose(N, A ** 3 - A * np.sqrt(6 * A), atol=1e-4)
+    np.testing.assert_allclose(d, A ** 2 - 2 / 3 * np.sqrt(6 * A), atol=1e-4)
