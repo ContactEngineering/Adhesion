@@ -181,7 +181,7 @@ class RepulsiveExponential(Potential):
         return np.log(self.gam_rep / self.gam_att * self.rho_att**2 / self.rho_rep**2) \
                / (1 / self.rho_rep - 1 / self.rho_att)
 
-    def evaluate(self, gap, pot=True, gradient=False, curvature=False,
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False,
                   mask=(slice(None), slice(None))):
 
         if np.isscalar(self.rho_att):

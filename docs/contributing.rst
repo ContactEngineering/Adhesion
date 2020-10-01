@@ -1,6 +1,6 @@
 .. _contributing:
 
-Contributing to PyCo-web
+Contributing to Adhesion
 ========================
 
 Code style

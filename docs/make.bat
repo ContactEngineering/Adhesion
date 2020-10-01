@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=PyCo
+set SPHINXPROJ=Adhesion
 
 if "%1" == "" goto help
 

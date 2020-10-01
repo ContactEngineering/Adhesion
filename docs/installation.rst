@@ -11,7 +11,4 @@ in the source directory. PyCo can be installed by invoking
 
 in the source directoy. The command line parameter --user is optional and leads to a local installation in the current user's `$HOME/.local` directory.
 
-
-
-
 .. _FFTW3: http://www.fftw.org/

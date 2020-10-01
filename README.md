@@ -12,7 +12,7 @@ Build status
 
 The following badge should say _build passing_. This means that all automated tests completed successfully for the master branch.
 
-[![Build Status](https://travis-ci.com/pastewka/Adhesion.svg?token=NoUEfXFkhDQgj5AmLB27&branch=master)](https://travis-ci.com/pastewka/Adhesion)
+[![Build Status](https://travis-ci.com/ComputationalMechanics/Adhesion.svg?token=qEEcjJuzdytivTUsSm9h&branch=master)](https://travis-ci.com/ComputationalMechanics/Adhesion)
 
 Installation
 ------------
