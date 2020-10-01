@@ -72,7 +72,7 @@ def test_stress_intensity_factor_derivative_1_a_s():
         a_s=am,
         a_o=a_o,
         P=P, der="1_a_s")
-    if True:
+    if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
         ax.plot(am, dK_da_num, "+", label="numerical")

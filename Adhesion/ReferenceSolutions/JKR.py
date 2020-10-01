@@ -106,7 +106,7 @@ def contact_radius(force=None,
                    work_of_adhesion=1 / np.pi):
     r"""
     Given normal load or rigid body penetration, sphere radius and contact
-    modulus compute contact radius.
+    modulus compute contact radius on the stable branch.
 
     if only force or penetration is provided, it is assumed that the
     nondimensionalisation
@@ -302,7 +302,7 @@ def penetration(contact_radius=None,
     radius : float, optional
         Sphere (actually paraboloid) radius.
     contact_modulus : float, optional
-        Contact modulus: :math:`E^* = E/(1-\nu**2)`
+        Contact modulus: :math:`E^* = E/(1-\nu^2)`
         with Young's modulus E and Poisson number :math:`\nu`.
         The default value is so that Maugis's contact Modulus is one
         (:math:`K = 4 / 3 E^*`)
@@ -370,7 +370,7 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
     (with respect to the nondimensional area)
 
     .. math ::
-          \frac{\partial U_{el}}{\partial pi A^2}
+          \frac{\partial U_{el}}{\partial \pi A^2}
           = \frac{3}{8 \pi} w_{ref} \frac{1}{A} (\Delta - A^2)^2
 
     be careful, this is
@@ -382,8 +382,10 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
 
     Parameters
     ----------
-    penetration: :math:`\Delta` in maugis
-    contact_radius: :math:`A` in maugis
+    penetration: float or np.array
+        :math:`\Delta` in maugis
+    contact_radius: float or np.array
+        :math:`A` in maugis
 
     Returns
     -------

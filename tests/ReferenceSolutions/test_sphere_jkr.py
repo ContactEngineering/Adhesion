@@ -14,10 +14,24 @@ def test_penetration_radius_inverse():
 
 def test_penetration_force():
     JKR.penetration(force=0)  # TODO : accuracy
+    
+
+def test_force_penetration_vs_radius():
+    a = 2. # has to be on the stable branch
+    force_from_a = JKR.force(contact_radius=a)
+    force_from_pen = JKR.force(penetration=JKR.penetration(contact_radius=a))
+
+    assert abs(force_from_a - force_from_pen) < 1e-10
+
+
+def test_force_radius_inverse():
+     assert abs(JKR.contact_radius(
+        force=JKR.force(contact_radius=2.)) - 2.
+               ) < 1e-10
 
 
 @pytest.mark.parametrize("w", [1 / np.pi, 2.])
-def test_force_consistency(w):
+def test_force_consistency_pen_w(w):
     contact_radius = 3.
 
     force_from_w = JKR.force(contact_radius=contact_radius, work_of_adhesion=w)
@@ -142,3 +156,10 @@ def test_stress_intensity_factor_second_derivative():
 
     np.testing.assert_allclose(dK_da2_analytical, dK_da2_num,
                                atol=1e-6, rtol=1e-4)
+
+
+def test_equilibrium_elastic_energy_vs_nonequilibrium():
+    a = 0.5
+    Eel = JKR.equilibrium_elastic_energy(a)
+
+    np.testing.assert_allclose(Eel,JKR.nonequilibrium_elastic_energy(JKR.penetration(a), a))
