@@ -293,7 +293,7 @@ def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):
     units for a_s and a_o: wavelength of the sinewave
     units of pressure: westergaard full contact pressure :math:`\pi E^* h / \lambda`
 
-    returns the stress intensity factor in units of :math:`\pi E^* h / \sqrt(\lambda)`
+    returns the stress intensity factor in units of :math:`\pi E^* h / \sqrt{\lambda}`
     or it's partial derivative.
 
     Notation for the derivative flag:

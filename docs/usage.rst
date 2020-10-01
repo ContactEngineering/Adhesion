@@ -9,6 +9,9 @@ They are in the `commandline` subdirectory:
 
 - `soft_wall.py`: Command line front end for calculations with soft (possibly adhesive) interactions between rigid and elastic flat. This is a stub rather than a fully featured command line tool that can be used as a starting point for modified script. The present implementation is set up for a solution of Martin Müser's contact mechanics challenge.
 
+Have a look in the `examples` folder as well as in the tests.
+
+
 Conventions
 -----------
 
