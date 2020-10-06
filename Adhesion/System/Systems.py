@@ -392,7 +392,7 @@ class SmoothContactSystem(SystemBase):
                 disp = gap.reshape(res) + self.surface.heights() + offset
                 try:
                     self.primal_evaluate(
-                        disp.reshape(res), gap, forces=True,logger=logger)
+                        disp.reshape(res), gap, forces=True, logger=logger)
                 except ValueError as err:
                     raise ValueError(
                         "{}: gap.shape: {}, res: {}".format(
@@ -402,11 +402,11 @@ class SmoothContactSystem(SystemBase):
             def fun(gap):
                 disp = gap.reshape(res) + self.surface.heights() + offset
                 return self.primal_evaluate(
-                    disp.reshape(res), gap, forces=False,logger=logger)[0]
+                    disp.reshape(res), gap, forces=False, logger=logger)[0]
 
         return fun
 
-    def primal_hessp(self,gap,des_dir):
+    def primal_hessp(self, gap, des_dir):
         """Returns the hessian product of the primal_objective function.
         """
         _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
@@ -416,8 +416,6 @@ class SmoothContactSystem(SystemBase):
             self.substrate.nb_domain_grid_pts) * self.substrate.area_per_pt
 
         return hessp_val.reshape(-1)
-
-
 
     def evaluate_k(self, disp_k, disp, offset, pot=True, forces=False,
                    logger=None):
@@ -533,15 +531,15 @@ class SmoothContactSystem(SystemBase):
 
         return fun
 
-
-    def hessp_k(self,dispk,des_dir_k):
-        """Returns the hessian product of the fourier space objective_k function.
+    def hessp_k(self, dispk, des_dir_k):
+        """Returns the hessian product of the fourier space
+        objective_k function.
         """
         self.substrate.fourier_buffer.array()[...] = dispk.copy()
         self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
                                       self.substrate.real_buffer)
         disp = self.substrate.real_buffer.array()[...].copy() \
-            * self.substrate.fftengine.normalisation
+               * self.substrate.fftengine.normalisation
 
         gap = self.compute_gap(disp)
         _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
@@ -549,16 +547,16 @@ class SmoothContactSystem(SystemBase):
         self.substrate.real_buffer.array()[...] = adh_curv.reshape(
             self.substrate.nb_grid_pts).copy()
         self.substrate.fftengine.fft(self.substrate.real_buffer,
-                                self.substrate.fourier_buffer)
+                                     self.substrate.fourier_buffer)
         adh_curv_k = self.substrate.fourier_buffer.array()[...].copy()
 
         hessp_val_k = -self.substrate.evaluate_k_force_k(des_dir_k) + \
-                    adh_curv_k * des_dir_k * self.substrate.area_per_pt
+                      adh_curv_k * des_dir_k * self.substrate.area_per_pt
 
         return hessp_val_k
 
     def objective_k_float(self, offset, disp0=None, gradient=False,
-                    logger=None):
+                          logger=None):
         r"""
         This helper method interface to the evaluate_k() method. Use this
         for optimization purposes, it lets you set the offset and 'forces'

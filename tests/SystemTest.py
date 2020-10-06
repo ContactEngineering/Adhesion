@@ -40,7 +40,8 @@ from Adhesion.System import make_system
 from ContactMechanics.Systems import IncompatibleResolutionError
 from Adhesion.System import SmoothContactSystem
 import ContactMechanics as Solid
-import Adhesion.Interactions as Contact
+import Adhesion.Interactions as Inter
+
 import ContactMechanics.Tools as Tools
 from SurfaceTopography import make_sphere, Topography
 
@@ -68,7 +69,7 @@ def self(request):
     self.sig = 3+np.random.rand()
     self.gam = (5+np.random.rand())
     self.rcut = 2.5*self.sig+np.random.rand()
-    self.smooth = Contact.LJ93(self.eps, self.sig
+    self.smooth = Inter.LJ93(self.eps, self.sig
                                ).spline_cutoff(self.gam
                                                ).linearize_core()
 
@@ -318,7 +319,7 @@ def test_LBFGSB_Hertz():
                                               fft="serial",
                                               communicator=MPI.COMM_SELF)
 
-    interaction = Contact.Exponential(0., 0.0001)
+    interaction = Inter.Exponential(0., 0.0001)
     system = SmoothContactSystem(substrate, interaction,surface)
 
     gtol=1e-6
@@ -369,8 +370,6 @@ def test_LBFGSB_Hertz():
         plt.show(block=True)
 
 
-
-
 def test_undefined_data():
     t = Topography(
         np.ma.masked_array(
@@ -378,9 +377,9 @@ def test_undefined_data():
                   [4, 5, 6]],
             mask=[[False, True, False],
                   [False, False, False]]
-        ), (2, 3))
+            ), (2, 3))
 
-    interaction = Contact.Lj82(1., 1.)
+    interaction = Inter.Lj82(1., 1.)
     substrate = Solid.PeriodicFFTElasticHalfSpace((2, 3), 1, (2, 3))
     with pytest.raises(ValueError):
         SmoothContactSystem(interaction=interaction,
