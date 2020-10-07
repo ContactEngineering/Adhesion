@@ -30,7 +30,7 @@ represents the UseCase of creating System with MPI parallelization
 
 import pytest
 
-from mpi4py import MPI
+from NuMPI import MPI
 from ContactMechanics import FreeFFTElasticHalfSpace, PeriodicFFTElasticHalfSpace
 from Adhesion.System import make_system
 from Adhesion.Interactions import VDW82, Exponential
