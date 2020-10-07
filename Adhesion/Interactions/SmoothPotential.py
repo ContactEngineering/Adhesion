@@ -22,9 +22,6 @@
 # SOFTWARE.
 #
 from Adhesion.Interactions.Potentials import DecoratedPotential, Potential
-
-import abc
-
 import numpy as np
 import scipy.optimize
 
@@ -110,12 +107,13 @@ class SmoothPotential(DecoratedPotential):
 
     def __getstate__(self):
         state = super().__getstate__(), self.gamma, self.r_t, self.coeffs, \
-                self.poly, self.dpoly, self.ddpoly, self.cutoff_radius, self.offset
+                self.poly, self.dpoly, self.ddpoly, \
+                self.cutoff_radius, self.offset
         return state
 
     def __setstate__(self, state):
         superstate, self.gamma, self.r_t, self.coeffs, self.poly, \
-        self.dpoly, self.ddpoly, self.cutoff_radius, self.offset = state
+            self.dpoly, self.ddpoly, self.cutoff_radius, self.offset = state
         super().__setstate__(superstate)
 
     def __repr__(self):
@@ -180,18 +178,22 @@ class SmoothPotential(DecoratedPotential):
         if np.array_equal(sl_inner, np.array([True])):
             #            raise AssertionError(" I thought this code is never
             #            executed")
-            V, dV, ddV = self.parent_potential.evaluate(r, potential, gradient, curvature)
+            V, dV, ddV = self.parent_potential.evaluate(r,
+                                                        potential, gradient,
+                                                        curvature)
             V -= self.offset
             return (V if potential else None,
                     dV if gradient else None,
                     ddV if curvature else None)
         else:
             V[sl_inner], dV[sl_inner], ddV[sl_inner] = \
-                self.parent_potential.evaluate(r[sl_inner], potential, gradient, curvature)
+                self.parent_potential.evaluate(r[sl_inner],
+                                               potential, gradient, curvature)
         V[sl_inner] -= self.offset
 
-        sl_outer = np.logical_and(np.ma.filled(r < self.cutoff_radius, fill_value=False),
-                                  sl_rest)
+        sl_outer = np.logical_and(
+            np.ma.filled(r < self.cutoff_radius, fill_value=False),
+            sl_rest)
         # little hack to work around numpy bug
         if np.array_equal(sl_outer, np.array([True])):
             V, dV, ddV = self._spline_pot(r, potential, gradient, curvature)
@@ -380,8 +382,9 @@ class SmoothPotential(DecoratedPotential):
                 if sol.success:
                     Δrt = sol.x.item()
                     offset = self.parent_potential.evaluate(self.r_t)[0] - \
-                             np.array(spline(Δrt)(Δrt))
-                    error = self.parent_potential.evaluate(self.r_min)[0] - offset + self.gamma
+                        np.array(spline(Δrt)(Δrt))
+                    error = self.parent_potential.evaluate(self.r_min)[0] \
+                        - offset + self.gamma
 
                     return error
                 else:
@@ -549,7 +552,8 @@ class SmoothPotential(DecoratedPotential):
         options = dict(xtol=-gam * xtol)
         sol = scipy.optimize.root(obj_fun, x0, jac=jacobian, options=options)
         if sol.success:
-            self.coeffs[0], self.coeffs[3], self.coeffs[4], self.cutoff_radius = sol.x
+            self.coeffs[0], self.coeffs[3], self.coeffs[
+                4], self.cutoff_radius = sol.x
             self.cutoff_radius += self.r_t
             # !!WARNING!! poly is 'backwards': poly = [C4, C3, C2, C1, C0] and
             # all coeffs except C0 have the wrong sign, furthermore they are
@@ -568,5 +572,6 @@ class SmoothPotential(DecoratedPotential):
             err_str = ("Evaluation of spline for potential '{}' failed. Please"
                        " check whether the inputs make sense").format(self)
             raise self.PotentialError(err_str)
+
 
 Potential.register_function("spline_cutoff", SmoothPotential)

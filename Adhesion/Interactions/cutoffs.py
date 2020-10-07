@@ -37,8 +37,9 @@ class LinearCorePotential(DecoratedPotential):
     The repulsive part of the potential is linear, meaning that the pressure is
     constant. This thus corresponds to an ideal plastic model.
     """
+
     def __init__(self, parent_potential, r_ti=None, hardness=None,
-        htol=1e-5):
+                 htol=1e-5):
         """
 
         Either the cutoff radius or the hardness (- the gradient at the cutoff)
@@ -62,14 +63,17 @@ class LinearCorePotential(DecoratedPotential):
         super().__init__(parent_potential)
 
         if hardness is not None:
-            htol = 1e-5 #
+            htol = 1e-5  #
+
             class FinfinityError(Exception):
                 def __init__(self, x):
                     self.x = x
 
             def f(r):
-                pot, grad, curvature = self.parent_potential.evaluate(r,
-                gradient=True, curvature=True)
+                pot, grad, curvature = self.parent_potential.evaluate(
+                    r,
+                    gradient=True,
+                    curvature=True)
                 f = (- grad - hardness)
                 if not np.isfinite(f):
                     raise FinfinityError(r)
@@ -164,19 +168,23 @@ class LinearCorePotential(DecoratedPotential):
         return np.poly1d((float(f_prime), f_val - f_prime*self.r_ti))
 
     def __repr__(self):
-        return "{0} -> LinearCorePotential: r_ti = {1.r_ti}".format(self.parent_potential.__repr__(),self)
+        return "{0} -> LinearCorePotential: r_ti = {1.r_ti}".format(
+            self.parent_potential.__repr__(), self)
 
-    def evaluate(self, gap, potential=True, gradient=False, curvature=False, mask=None):
+    def evaluate(self, gap, potential=True, gradient=False,
+                 curvature=False, mask=None):
 
         r = np.asarray(gap)
         nb_dim = len(r.shape)
         if nb_dim == 0:
             r.shape = (1,)
         # we use subok = False to ensure V will not be a masked array
-        V = np.zeros_like(r, subok=False) if potential else self.SliceableNone()
-        dV = np.zeros_like(r, subok=False) if gradient else self.SliceableNone()
-        ddV = np.zeros_like(r, subok=False) if curvature else self.SliceableNone()
-
+        V = np.zeros_like(r, subok=False) \
+            if potential else self.SliceableNone()
+        dV = np.zeros_like(r, subok=False) \
+            if gradient else self.SliceableNone()
+        ddV = np.zeros_like(r, subok=False) \
+            if curvature else self.SliceableNone()
 
         sl_core = np.ma.filled(r < self.r_ti, fill_value=False)
         sl_rest = np.logical_not(sl_core)
@@ -184,17 +192,17 @@ class LinearCorePotential(DecoratedPotential):
         # little hack to work around numpy bug
         if np.array_equal(sl_core, np.array([True])):
             V, dV, ddV = self._lin_pot(r, potential, gradient, curvature)
-            #raise AssertionError(" I thought this code is never executed")
+            # raise AssertionError(" I thought this code is never executed")
         else:
             V[sl_core], dV[sl_core], ddV[sl_core] = \
                 self._lin_pot(r[sl_core], potential, gradient, curvature)
             V[sl_rest], dV[sl_rest], ddV[sl_rest] = \
-                self.parent_potential.evaluate(r[sl_rest], potential, gradient, curvature)
+                self.parent_potential.evaluate(r[sl_rest],
+                                               potential, gradient, curvature)
 
         return (V if potential else None,
                 dV if gradient else None,
                 ddV if curvature else None)
-
 
     def _lin_pot(self, gap, pot=True, gradient=False, curvature=False):
         """ Evaluates the linear part and its derivatives of the potential.
@@ -230,12 +238,14 @@ class LinearCorePotential(DecoratedPotential):
 
         return self.parent_potential.r_infl
 
+
 class CutoffPotential(DecoratedPotential):
     """
         sets the potential to 0 above the cutoff radius and shifts it up to
         enforce continuity of the potential. This potential hence has a
         discontinuity in the force
     """
+
     def __init__(self, parent_potential, cutoff_radius):
         """
         Parameters
@@ -262,7 +272,7 @@ class CutoffPotential(DecoratedPotential):
         return state
 
     def __setstate__(self, state):
-        superstate, self.potential_offset,  self.cutoff_radius  = state
+        superstate, self.potential_offset, self.cutoff_radius = state
         super().__setstate__(superstate)
 
     @property
@@ -297,7 +307,8 @@ class CutoffPotential(DecoratedPotential):
 
         V[inside_mask], dV[inside_mask], ddV[inside_mask] = \
             self.parent_potential.evaluate(gap[inside_mask],
-                potential, gradient, curvature, mask=inside_mask)
+                                           potential, gradient, curvature,
+                                           mask=inside_mask)
         if V[inside_mask] is not None:
             V[inside_mask] -= self.potential_offset
         return (V if potential else None,
@@ -307,10 +318,10 @@ class CutoffPotential(DecoratedPotential):
 
 class ParabolicCutoffPotential(DecoratedPotential):
     """
-        Implements a very simple smoothing of a potential, by complementing the
-        functional form of the potential with a parabola that brings to zero the
-        potential's zeroth, first and second derivative at an imposed (and freely
-        chosen) cut_off radius r_c
+    Implements a very simple smoothing of a potential, by complementing the
+    functional form of the potential with a parabola that brings to zero the
+    potential's zeroth, first and second derivative at an imposed (and freely
+    chosen) cut_off radius r_c
     """
 
     def __init__(self, parent_potential, cutoff_radius):
@@ -332,7 +343,8 @@ class ParabolicCutoffPotential(DecoratedPotential):
         """ is called and the returned object is pickled as the contents for
             the instance
         """
-        state = super().__getstate__(), self.cutoff_radius , self.poly, self.dpoly, self.ddpoly, self._r_min, self._r_infl
+        state = super().__getstate__(), self.cutoff_radius, \
+            self.poly, self.dpoly, self.ddpoly, self._r_min, self._r_infl
         return state
 
     def __setstate__(self, state):
@@ -340,23 +352,24 @@ class ParabolicCutoffPotential(DecoratedPotential):
         Keyword Arguments:
         state -- result of __getstate__
         """
-        superstate, self.cutoff_radius , self.poly, self.dpoly, self.ddpoly, self._r_min, self._r_infl= state
+        superstate, self.cutoff_radius, self.poly, self.dpoly, self.ddpoly, \
+            self._r_min, self._r_infl = state
         super().__setstate__(superstate)
 
     def __repr__(self):
         return "{0} -> ParabolicCutoffPotential: " \
-        "cutoff_radius = {1.cutoff_radius}".format(
-        self.parent_potential.__repr__(),self)
+               "cutoff_radius = {1.cutoff_radius}".format(
+                self.parent_potential.__repr__(), self)
 
     def _precompute_min(self):
         """
         computes r_min
         """
         result = scipy.optimize.fminbound(func=lambda r: self.evaluate(r)[0],
-                                          x1=0.01*self.cutoff_radius,
+                                          x1=0.01 * self.cutoff_radius,
                                           x2=self.cutoff_radius,
                                           disp=1,
-                                          xtol=1e-5*self.cutoff_radius,
+                                          xtol=1e-5 * self.cutoff_radius,
                                           full_output=True)
         error = result[2]
         if error:
@@ -383,7 +396,6 @@ class ParabolicCutoffPotential(DecoratedPotential):
                  "This was the full minimisation result: {}").format(result))
         return float(result[0])
 
-
     @property
     def r_min(self):
         """
@@ -403,15 +415,15 @@ class ParabolicCutoffPotential(DecoratedPotential):
         computes the coefficients of the corrective parabola
         """
         ΔV, ΔdV, ΔddV = [-float(dummy)
-                            for dummy
-                            in self.parent_potential.evaluate(
-                                self.cutoff_radius, potential=True,
-                                gradient=True,
-                                curvature=True)]
-        ΔdV =  ΔdV - ΔddV*self.cutoff_radius
+                         for dummy
+                         in self.parent_potential.evaluate(
+                self.cutoff_radius, potential=True,
+                gradient=True,
+                curvature=True)]
+        ΔdV = ΔdV - ΔddV * self.cutoff_radius
         ΔV -= ΔddV / 2 * self.cutoff_radius ** 2 + ΔdV * self.cutoff_radius
 
-        self.poly = np.poly1d([ΔddV/2, ΔdV, ΔV])
+        self.poly = np.poly1d([ΔddV / 2, ΔdV, ΔV])
         self.dpoly = np.polyder(self.poly)
         self.ddpoly = np.polyder(self.dpoly)
 
@@ -426,7 +438,8 @@ class ParabolicCutoffPotential(DecoratedPotential):
 
         def adjust_pot(r):
             " shifts potentials, if an offset has been set"
-            V, dV, ddV = self.parent_potential.evaluate(r, potential, gradient, curvature)
+            V, dV, ddV = self.parent_potential.evaluate(r, potential, gradient,
+                                                        curvature)
             for val, cond, fun in zip(  # pylint: disable=W0612
                     (V, dV, ddV),
                     (potential, gradient, curvature),
@@ -448,6 +461,7 @@ class ParabolicCutoffPotential(DecoratedPotential):
     @property
     def has_cutoff(self):
         return True
+
 
 Potential.register_function("linearize_core", LinearCorePotential)
 Potential.register_function("cutoff", CutoffPotential)

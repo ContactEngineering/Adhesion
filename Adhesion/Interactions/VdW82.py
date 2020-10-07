@@ -31,9 +31,7 @@ http://dx.doi.org/10.1103/PhysRevLett.111.035502
 import numpy as np
 from NuMPI import MPI
 
-from Adhesion.Interactions import Potential, SmoothPotential
-from Adhesion.Interactions.cutoffs import ParabolicCutoffPotential
-from Adhesion.Interactions.cutoffs import LinearCorePotential
+from Adhesion.Interactions import Potential
 
 
 class VDW82(Potential):
@@ -93,19 +91,19 @@ class VDW82(Potential):
                  mask=(slice(None), slice(None))):
         r = np.asarray(gap)
         V = dV = ddV = None
-        r_2 = r**-2
-        c_sr_r6 = self.c_sr*r_2**3 if  np.isscalar(self.c_sr) \
-                else self.c_sr[mask] *r_2**3
-        a_pi = self.hamaker/np.pi if  np.isscalar(self.hamaker) \
-                else self.hamaker[mask] /np.pi
+        r_2 = r ** -2
+        c_sr_r6 = self.c_sr * r_2 ** 3 if np.isscalar(self.c_sr) \
+            else self.c_sr[mask] * r_2 ** 3
+        a_pi = self.hamaker / np.pi if np.isscalar(self.hamaker) \
+            else self.hamaker[mask] / np.pi
 
         if potential:
-            V = r_2*(-a_pi/12 + c_sr_r6)
+            V = r_2 * (-a_pi / 12 + c_sr_r6)
         if gradient or curvature:
-            r_3 = r_2/r
+            r_3 = r_2 / r
         if gradient:
             # Forces are the negative gradient
-            dV = - r_3*(-a_pi/6 + 8*c_sr_r6)
+            dV = - r_3 * (-a_pi / 6 + 8 * c_sr_r6)
         if curvature:
             ddV = r_3/r*(-a_pi/2 + 72*c_sr_r6)
         return (V, dV, ddV)

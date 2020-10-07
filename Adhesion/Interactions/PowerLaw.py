@@ -64,7 +64,8 @@ class PowerLaw(Potential):
                 ).format(self)
 
     def __getstate__(self):
-        state = super().__getstate__(), self.exponent, self.rho, self.work_of_adhesion
+        state = super().__getstate__(), \
+            self.exponent, self.rho, self.work_of_adhesion
         return state
 
     def __setstate__(self, state):

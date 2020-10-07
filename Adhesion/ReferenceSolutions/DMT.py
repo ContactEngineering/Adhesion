@@ -31,6 +31,7 @@ import math
 
 import ContactMechanics.ReferenceSolutions.Hertz as Hertz
 
+
 ###
 
 def radius_and_pressure(N, R, Es, w):
@@ -79,7 +80,7 @@ def surface_stress(r, a, nu):
     """
 
     return Hertz.surface_stress(r, a, nu)
-    
-    
+
+
 def surface_displacements(r, a):
     return Hertz.surface_displacements(r, a)
