@@ -80,7 +80,7 @@ def plot_result(filename="data.nc"):
     x, y = topography.positions()
     for i in range(len(nc)):
         ax.plot(x[:, 0], nc.displacements[i][:, ny // 2],
-                label=f"penetration={nc.penetration[i]:.2f} ")
+                label="penetration={:.2f}".format(nc.penetration[i]))
     ax.set_ylabel(r"displacement $(\pi^2 w_m^2 R / K^2)^{1/3}$")
     ax.set_xlabel(r"x ($\left(\pi w R^2 /K\right)^{1/3}$)")
     ax.legend()
@@ -198,5 +198,6 @@ if __name__ == '__main__':
     endtime = time.time()
     elapsed_time = endtime - absstarttime
     print(
-        f"elapsed time: {elapsed_time} \n= "
-        f"{datetime.timedelta(seconds=elapsed_time)}")
+        "elapsed time: {} \n= {}"
+        "".format(elapsed_time,
+                  datetime.timedelta(seconds=elapsed_time)))
