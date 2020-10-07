@@ -41,7 +41,7 @@ setup(
     author_email="lars.pastewka@imtek.uni-freiburg.de",
     description="Efficient contact mechanics with Python",
     license="MIT",
-    test_suite='tests',
+    test_suite='test',
     # dependencies
     python_requires='>=3.5.0',
     use_scm_version=True,
