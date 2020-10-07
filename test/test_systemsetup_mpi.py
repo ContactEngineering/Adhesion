@@ -1,19 +1,19 @@
 #
-# Copyright 2018-2019 Antoine Sanner
-#           2019 Lars Pastewka
-# 
+# Copyright 2018, 2020 Antoine Sanner
+#           2019-2020 Lars Pastewka
+#
 # ### MIT license
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -46,12 +46,13 @@ import os
 
 DATADIR = os.path.dirname(os.path.realpath(__file__))
 
+
 @pytest.fixture
 def examplefile(comm):
     fn = DATADIR + "/worflowtest.npy"
-    res = (128,64)
+    res = (128, 64)
     np.random.seed(1)
-    data = np.random.random(res )
+    data = np.random.random(res)
     data -= np.mean(data)
     if comm.rank == 0:
         np.save(fn, data)
@@ -59,9 +60,10 @@ def examplefile(comm):
     comm.barrier()
     return (fn, res, data)
 
-#DATAFILE = DATADIR + "/worflowtest.npy"
-#@pytest.fixture
-#def data(comm):
+
+# DATAFILE = DATADIR + "/worflowtest.npy"
+# @pytest.fixture
+# def data(comm):
 #    res = (256,256)#(128, 64)
 #    np.random.seed(1)
 #    data = np.random.random(res)
@@ -83,17 +85,18 @@ def test_make_system_from_file(examplefile, comm):
     # Maybe it will be another Function or class
     fn, res, data = examplefile
 
-    substrate =  PeriodicFFTElasticHalfSpace
+    substrate = PeriodicFFTElasticHalfSpace
     interaction = HardWall()
 
     system = make_system(substrate="periodic",
                          interaction=interaction,
                          surface=fn,
                          communicator=comm,
-                         physical_sizes=(20.,30.),
+                         physical_sizes=(20., 30.),
                          young=1)
 
-    print( system.__class__)
+    print(system.__class__)
+
 
 def test_make_system_from_file_serial(comm_self):
     """
@@ -105,7 +108,8 @@ def test_make_system_from_file_serial(comm_self):
     """
     pass
 
-#def test_automake_substrate(comm):
+
+# def test_automake_substrate(comm):
 #    surface = make_sphere(2, (4,4), (1., 1.), )
 
 def test_smoothcontactsystem_no_minimize_proxy(examplefile, comm):
@@ -115,9 +119,9 @@ def test_smoothcontactsystem_no_minimize_proxy(examplefile, comm):
     """
     fn, res, data = examplefile
 
-    interaction = VDW82(1.,1., communicator=comm)
+    interaction = VDW82(1., 1., communicator=comm)
 
-    if comm.size ==1:
+    if comm.size == 1:
         system = make_system(substrate="periodic",
                              interaction=interaction,
                              surface=fn,
@@ -136,18 +140,12 @@ def test_smoothcontactsystem_no_minimize_proxy(examplefile, comm):
             print(system.surface.is_domain_decomposed)
             system.minimize_proxy()
 
+
 @pytest.mark.skip("automatic choice of systemclass not supported for now")
 def test_make_free_system(examplefile, comm):
     """
     For number of processors > 1 it SmartSmoothContactSystem
     doesn't work.
-    Parameters
-    ----------
-    comm
-
-    Returns
-    -------
-
     """
     fn, res, data = examplefile
 
@@ -156,13 +154,14 @@ def test_make_free_system(examplefile, comm):
                          interaction=interaction,
                          surface=fn,
                          communicator=comm,
-                         physical_sizes=(20.,30.),
+                         physical_sizes=(20., 30.),
                          young=1)
 
-    if comm.size==1:
+    if comm.size == 1:
         assert system.__class__.__name__ == "FastSmoothContactSystem"
     else:
         assert system.__class__.__name__ == "SmoothContactSystem"
+
 
 def test_choose_smoothcontactsystem(comm, examplefile):
     """
@@ -184,6 +183,7 @@ def test_choose_smoothcontactsystem(comm, examplefile):
 
     assert system.__class__.__name__ == "SmoothContactSystem"
 
+
 @pytest.mark.skip("automatic choice of systemclass not supported for now")
 def test_incompatible_system_prescribed(comm_self, examplefile):
     fn, res, data = examplefile
@@ -196,6 +196,7 @@ def test_incompatible_system_prescribed(comm_self, examplefile):
                              physical_sizes=(20., 30.),
                              young=1,
                              system_class=SmoothContactSystem)
+
 
 def test_hardwall_as_string(comm, examplefile):
     fn, res, data = examplefile
@@ -227,9 +228,9 @@ def test_logger():
     surface = make_sphere(R, (nx, ny), (sx, sy), kind="paraboloid")
     Es = 50.
     substrate = FreeFFTElasticHalfSpace((nx, ny), young=Es,
-                                              physical_sizes=(sx, sy),
-                                              fft="serial",
-                                              communicator=MPI.COMM_SELF)
+                                        physical_sizes=(sx, sy),
+                                        fft="serial",
+                                        communicator=MPI.COMM_SELF)
 
     interaction = Exponential(0., 0.0001)
     system = SmoothContactSystem(substrate, interaction, surface)
