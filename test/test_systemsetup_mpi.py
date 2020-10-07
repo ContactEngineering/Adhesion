@@ -164,7 +164,7 @@ def test_make_free_system(examplefile, comm):
     else:
         assert system.__class__.__name__ == "SmoothContactSystem"
 
-def test_choose_smoothcontactsystem(comm_self, examplefile):
+def test_choose_smoothcontactsystem(comm, examplefile):
     """
     even on one processor, one should be able to force the usage of the
     smooth contact system. The occurence of jump instabilities make the babushka
@@ -173,11 +173,11 @@ def test_choose_smoothcontactsystem(comm_self, examplefile):
     """
     fn, res, data = examplefile
 
-    interaction = VDW82(1., 1., communicator=comm_self)
+    interaction = VDW82(1., 1., communicator=comm)
     system = make_system(substrate="free",
                          interaction=interaction,
                          surface=fn,
-                         communicator=comm_self,
+                         communicator=comm,
                          physical_sizes=(20., 30.),
                          young=1,
                          system_class=SmoothContactSystem)
@@ -202,15 +202,18 @@ def test_hardwall_as_string(comm, examplefile):
     make_system(substrate="periodic",
                 interaction="hardwall",
                 surface=fn,
-                physical_sizes=(1.,1.),
+                physical_sizes=(1., 1.),
                 young=1,
                 communicator=comm)
 
-def test_logger(comm_self):
+
+@pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+                    reason="not parallelized yet")
+def test_logger():
     """
     This should test the following:
     - that that the logger works in an MPI application
-       (on the example of Softwall)
+       (on the example of Softwall) # TODO: this not tested actually
     - Test that the reductions are well done). To do that we compare the
     quantities computed at the step with the
 
