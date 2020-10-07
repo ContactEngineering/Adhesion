@@ -24,7 +24,10 @@
 # SOFTWARE.
 #
 
-from test import lj93_ref_potential as lj93, lj93smooth_ref_potential as lj93s
+from test.Interactions import (
+    lj93_ref_potential as lj93,
+    lj93smooth_ref_potential as lj93s
+    )
 import numpy as np
 
 eps = 1.
