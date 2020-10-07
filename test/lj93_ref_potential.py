@@ -24,7 +24,7 @@
 # SOFTWARE.
 #
 
-## taken as reference from pycontact (https://github.com/pastewka/pycontact)
+# taken as reference from pycontact (https://github.com/pastewka/pycontact)
 
 import numpy as np
 

@@ -120,7 +120,10 @@ def test_SystemGradient(self):
     V, dV, ddV = S.interaction.evaluate(gap, potential=True, gradient=True)
     f = V.sum()
     g = dV
-    fun = lambda x: S.interaction.evaluate(x)[0].sum()
+
+    def fun(x):
+        return S.interaction.evaluate(x)[0].sum()
+
     approx_g = Tools.evaluate_gradient(
         fun, gap, self.sig / 1e5)
 
@@ -143,7 +146,10 @@ def test_SystemGradient(self):
     V, dV = S.substrate.evaluate(disp, pot=True, forces=True)
     f = V.sum()
     g = -dV
-    fun = lambda x: S.substrate.evaluate(x)[0].sum()
+
+    def fun(x):
+        return S.substrate.evaluate(x)[0].sum()
+
     approx_g = Tools.evaluate_gradient(
         fun, disp, self.sig / 1e5)
 

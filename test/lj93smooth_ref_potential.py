@@ -62,17 +62,17 @@ def C0(epsilon, sigma, rc1, rc2):
 
 def V(x, epsilon, sigma, rc1, rc2):
     return np.where(x < rc1,
-                      epsilon*(2./15*(sigma/x)**9 - (sigma/x)**3)
-                    - epsilon*(2./15*(sigma/rc1)**9 - (sigma/rc1)**3)
-                    + C0(epsilon, sigma, rc1, rc2),
-           np.where(x < rc2,
-                      C0(epsilon, sigma, rc1, rc2)
-                    - C1(epsilon, sigma, rc1, rc2)*(x - rc1)
-                    - C2(epsilon, sigma, rc1, rc2)*(x - rc1)**2/2
-                    - C3(epsilon, sigma, rc1, rc2)*(x - rc1)**3/3
-                    - C4(epsilon, sigma, rc1, rc2)*(x - rc1)**4/4,
-                    np.zeros_like(x)
-                    ))  # noqa: E122, E127, E128
+                      epsilon*(2./15*(sigma/x)**9 - (sigma/x)**3)  # noqa: E122, E127, E501
+                    - epsilon*(2./15*(sigma/rc1)**9 - (sigma/rc1)**3)  # noqa: E122, E127, E501
+                    + C0(epsilon, sigma, rc1, rc2),  # noqa: E122, E127
+           np.where(x < rc2,  # noqa: E122, E127, E128
+              C0(epsilon, sigma, rc1, rc2)  # noqa: E122, E128
+            - C1(epsilon, sigma, rc1, rc2)*(x - rc1)  # noqa: E122
+            - C2(epsilon, sigma, rc1, rc2)*(x - rc1)**2/2  # noqa: E122
+            - C3(epsilon, sigma, rc1, rc2)*(x - rc1)**3/3  # noqa: E122
+            - C4(epsilon, sigma, rc1, rc2)*(x - rc1)**4/4,  # noqa: E122
+            np.zeros_like(x)  # noqa: E128, E122
+            ))  # noqa: E122, E127, E128
 
 
 def dV(x, epsilon, sigma, rc1, rc2):

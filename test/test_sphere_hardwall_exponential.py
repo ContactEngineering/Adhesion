@@ -81,10 +81,11 @@ class AdhesionTest(unittest.TestCase):
             normal_force = []
             area = []
             for _disp0 in disp0:
-                result = system.minimize_proxy(_disp0,
-                                               lbounds="auto",
-                                               # ext_surface.heights() + _disp0,
-                                               tol=self.tol)
+                result = system.minimize_proxy(
+                    _disp0,
+                    lbounds="auto",
+                    # ext_surface.heights() + _disp0,
+                    tol=self.tol)
                 u = result.x
                 u.shape = ext_surface.nb_grid_pts
                 f = substrate.evaluate_force(u)
