@@ -20,14 +20,17 @@ def make_system(substrate, interaction, surface, communicator=MPI.COMM_WORLD,
     -------
     """
 
-    if interaction=="hardwall":
-        return ContactMechanics.Factory.make_system(substrate, surface, communicator=MPI.COMM_WORLD,
-                physical_sizes=physical_sizes,
-                **kwargs)
+    if interaction == "hardwall":
+        return ContactMechanics.Factory.make_system(
+            substrate, surface,
+            communicator=communicator,
+            physical_sizes=physical_sizes,
+            **kwargs)
     else:
-        substrate, surface = _make_system_args(substrate, surface, communicator=MPI.COMM_WORLD,
-                physical_sizes=physical_sizes,
-                **kwargs)
+        substrate, surface = _make_system_args(substrate, surface,
+                                               communicator=communicator,
+                                               physical_sizes=physical_sizes,
+                                               **kwargs)
         # make shure the interaction has the correcrt communicator
         interaction.pnp = Reduction(communicator)
         interaction.communicator = communicator

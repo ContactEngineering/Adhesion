@@ -34,11 +34,13 @@ import Adhesion, ContactMechanics, SurfaceTopography
 from ContactMechanics.Tools import compare_containers
 from ContactMechanics.Systems import IncompatibleResolutionError, SystemBase
 
+
 class SmoothContactSystem(SystemBase):
     """
     For smooth contact mechanics (i.e. the ones for which optimization is only
     kinda-hell
     """
+
     def __init__(self, substrate, interaction, surface):
         """ Represents a contact problem
         Parameters
