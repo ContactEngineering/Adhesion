@@ -31,13 +31,14 @@ represents the UseCase of creating System with MPI parallelization
 import pytest
 
 from mpi4py import MPI
-from ContactMechanics import FreeFFTElasticHalfSpace,PeriodicFFTElasticHalfSpace
-from ContactMechanics.Factory import make_system
+from ContactMechanics import FreeFFTElasticHalfSpace, PeriodicFFTElasticHalfSpace
+from Adhesion.System import make_system
 from Adhesion.Interactions import VDW82, Exponential
 from SurfaceTopography import make_sphere
 from SurfaceTopography.IO import NPYReader
 from Adhesion.System import SmoothContactSystem
-from ContactMechanics.Tools import Logger
+from ContactMechanics.Tools.Logger import Logger
+from Adhesion.Interactions import HardWall
 
 import numpy as np
 
@@ -50,7 +51,7 @@ def examplefile(comm):
     fn = DATADIR + "/worflowtest.npy"
     res = (128,64)
     np.random.seed(1)
-    data  = np.random.random(res )
+    data = np.random.random(res )
     data -= np.mean(data)
     if comm.rank == 0:
         np.save(fn, data)
@@ -70,6 +71,7 @@ def examplefile(comm):
 #    comm.barrier() # all processors wait on the file to be created
 #    return data
 
+@pytest.mark.skip("not supported for now")
 def test_make_system_from_file(examplefile, comm):
     """
     longtermgoal for confortable and secure use
@@ -86,7 +88,7 @@ def test_make_system_from_file(examplefile, comm):
 
     system = make_system(substrate="periodic",
                          interaction=interaction,
-                         topography=fn,
+                         surface=fn,
                          communicator=comm,
                          physical_sizes=(20.,30.),
                          young=1)
@@ -121,7 +123,7 @@ def test_smoothcontactsystem_no_minimize_proxy(examplefile, comm):
                              surface=fn,
                              communicator=comm,
                              physical_sizes=(20., 30.),
-                             young=1)
+                             young=1, system_class=SmoothContactSystem)
     else:
 
         with pytest.raises(ValueError):
@@ -130,11 +132,11 @@ def test_smoothcontactsystem_no_minimize_proxy(examplefile, comm):
                                  surface=fn,
                                  communicator=comm,
                                  physical_sizes=(20., 30.),
-                                 young=1)
+                                 young=1, system_class=SmoothContactSystem)
             print(system.surface.is_domain_decomposed)
             system.minimize_proxy()
 
-
+@pytest.mark.skip("automatic choice of systemclass not supported for now")
 def test_make_free_system(examplefile, comm):
     """
     For number of processors > 1 it SmartSmoothContactSystem
@@ -182,6 +184,7 @@ def test_choose_smoothcontactsystem(comm_self, examplefile):
 
     assert system.__class__.__name__ == "SmoothContactSystem"
 
+@pytest.mark.skip("automatic choice of systemclass not supported for now")
 def test_incompatible_system_prescribed(comm_self, examplefile):
     fn, res, data = examplefile
     from ContactMechanics.Systems import IncompatibleFormulationError
@@ -198,7 +201,7 @@ def test_hardwall_as_string(comm, examplefile):
     fn, res, data = examplefile
     make_system(substrate="periodic",
                 interaction="hardwall",
-                topography=fn,
+                surface=fn,
                 physical_sizes=(1.,1.),
                 young=1,
                 communicator=comm)
@@ -242,15 +245,3 @@ def test_logger(comm_self):
         fig, ax = plt.subplots()
         plt.colorbar(ax.pcolormesh(- system.substrate.force), label="pressure")
         plt.show(block=True)
-
-if __name__ == "__main__":
-    comm = MPI.COMM_WORLD
-    fn = "worflowtest.npy"
-    res = (128, 64)
-    np.random.seed(1)
-    data = np.random.random(res)
-    data -= np.mean(data)
-
-    np.save(fn, data)
-    test_LoadTopoFromFile(comm, (fn, res, data), HS=PeriodicFFTElasticHalfSpace,
-                              loader=NPYReader)

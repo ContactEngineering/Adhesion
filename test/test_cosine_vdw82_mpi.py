@@ -96,7 +96,7 @@ def test_wavy(comm):
 
         ax.plot(offsets, force)
         #plt.show(block=True)
-        figname="MPI_Smoothcontact_tests.png"
+        figname="test_cosine_vdw82.png"
         fig.savefig(figname)
 
         import subprocess

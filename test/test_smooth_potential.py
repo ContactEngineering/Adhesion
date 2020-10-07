@@ -41,8 +41,8 @@ from Adhesion.Interactions import SmoothPotential
 
 import ContactMechanics.Tools as Tools
 
-from tests.lj93_ref_potential import V as LJ_ref_V, dV as LJ_ref_dV, d2V as LJ_ref_ddV
-from tests.lj93smooth_ref_potential import V as LJs_ref_V, dV as LJs_ref_dV, d2V as LJs_ref_ddV
+from test.lj93_ref_potential import V as LJ_ref_V, dV as LJ_ref_dV, d2V as LJ_ref_ddV
+from test.lj93smooth_ref_potential import V as LJs_ref_V, dV as LJs_ref_dV, d2V as LJs_ref_ddV
 
 
 import pytest
