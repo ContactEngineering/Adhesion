@@ -34,7 +34,8 @@ from Adhesion.System import SmoothContactSystem, BoundedSmoothContactSystem
 from NuMPI import MPI
 
 pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
-                                reason="tests only serial funcionalities, please execute with pytest")
+                                reason="tests only serial funcionalities,"
+                                       " please execute with pytest")
 
 
 def test_smooth_contact_postprocessing():
@@ -55,8 +56,8 @@ def test_smooth_contact_postprocessing():
     w = 1.
 
     surface = make_sphere(R, (nx, ny), (sx, sx), standoff=float('inf'))
-    ext_surface = make_sphere(R, (2 * nx, 2 * ny), (2 * sx, 2 * sx),
-                              centre=(sx / 2, sx / 2), standoff=float('inf'))
+    # ext_surface = make_sphere(R, (2 * nx, 2 * ny), (2 * sx, 2 * sx),
+    #                          centre=(sx / 2, sx / 2), standoff=float('inf'))
     smoothsystem = SmoothContactSystem(
         FreeFFTElasticHalfSpace((nx, ny), E_s, (sx, sx)),
         LinearCorePotential(Lj82(w, rho)), surface)
@@ -67,23 +68,27 @@ def test_smooth_contact_postprocessing():
 
     penetration = 2.
 
-    sol = boundedsmoothsystem.minimize_proxy(penetration,
-                                             options=dict(maxcor=3, ftol=0,
-                                                          gtol=1e-6 * (
-                                                                      w / rho) * surface.area_per_pt),
-                                             lbounds="auto")
+    sol = boundedsmoothsystem.minimize_proxy(
+        penetration,
+        options=dict(maxcor=3, ftol=0,
+                     gtol=1e-6 * (
+                             w / rho) * surface.area_per_pt),
+        lbounds="auto")
     assert sol.success
-    sol = smoothsystem.minimize_proxy(penetration - rho,
-                                      options=dict(maxcor=3, ftol=0,
-                                                   gtol=1e-6 * (
-                                                               w / rho) * surface.area_per_pt))
+    sol = smoothsystem.minimize_proxy(
+        penetration - rho,
+        options=dict(maxcor=3, ftol=0,
+                     gtol=1e-6 * (w / rho) * surface.area_per_pt))
     assert sol.success
 
     if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
 
-        # plt.colorbar(ax.contourf(- smoothsystem.substrate.force[smoothsystem.substrate.topography_subdomain_slices], levels=(-w/rho,-0.01,0.01,10.)), )
+        # plt.colorbar(ax.contourf(
+        # - smoothsystem.substrate.force[
+        #       smoothsystem.substrate.topography_subdomain_slices],
+        #       levels=(-w/rho,-0.01,0.01,10.)), )
         plt.colorbar(ax.imshow(- smoothsystem.substrate.force[
             smoothsystem.substrate.topography_subdomain_slices]))
         plt.show()
@@ -96,12 +101,16 @@ def test_smooth_contact_postprocessing():
         plt.show()
 
         fig, ax = plt.subplots()
-        ax.plot(- smoothsystem.substrate.force[
-                      smoothsystem.substrate.topography_subdomain_slices][:,
-                  ny // 2], label="smooth")
-        ax.plot(- boundedsmoothsystem.substrate.force[
-                      boundedsmoothsystem.substrate.topography_subdomain_slices][
-                  :, ny // 2], label="bounded smooth")
+        ax.plot(
+            - smoothsystem.substrate.force[
+                  smoothsystem.substrate.topography_subdomain_slices]
+            [:, ny // 2],
+            label="smooth")
+        ax.plot(
+            - boundedsmoothsystem.substrate.force[
+                  boundedsmoothsystem.substrate.topography_subdomain_slices]
+            [:, ny // 2],
+            label="bounded smooth")
         ax.legend()
         plt.show()
 

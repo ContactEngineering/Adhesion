@@ -41,9 +41,12 @@ from Adhesion.System import make_system
 from SurfaceTopography import make_sphere
 
 pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
-                                reason="tests only serial funcionalities, please execute with pytest")
+                                reason="tests only serial funcionalities, "
+                                       "please execute with pytest")
 
-pytestmark = pytest.mark.skip(reason="no support for FastSystem for the moment")
+pytestmark = pytest.mark.skip(
+    reason="no support for FastSystem for the moment")
+
 
 @pytest.fixture(params=range(50))
 def self(request):
@@ -71,8 +74,8 @@ def self(request):
     # self.min_pot = Contact.Exponential(self.gam, 0.05, self.rcut)
 
     self.surface = make_sphere(self.radius, self.res,
-                                                 self.physical_sizes,
-                                                 standoff=float('inf'))
+                               self.physical_sizes,
+                               standoff=float('inf'))
 
     if False:
         import matplotlib.pyplot as plt
@@ -90,12 +93,14 @@ def self(request):
 
         plt.show(block=True)
 
+
 def test_FastSmoothContactSystem(self):
     S = FastSmoothContactSystem(self.substrate,
                                 self.interaction,
                                 self.surface)
     fun = S.objective(.95 * self.interaction.cutoff_radius)
     print(fun(np.zeros(S.babushka.substrate.nb_domain_grid_pts)))
+
 
 def test_SystemFactory(self):
     S = make_system(self.substrate,
@@ -106,11 +111,13 @@ def test_SystemFactory(self):
     self.assertIsInstance(S, FastSmoothContactSystem)
     self.assertIsInstance(S, SmoothContactSystem)
 
+
 def test_babushka_translations(self):
     S = FastSmoothContactSystem(self.substrate,
                                 self.interaction,
                                 self.surface)
     fun = S.objective(.95 * self.interaction.cutoff_radius)
+
 
 def test_equivalence(self):
     tol = 1e-6
@@ -166,6 +173,7 @@ def test_equivalence(self):
                     "error = {} > tol = {}".format(
                         error, tol))
 
+
 def test_minimize_proxy(self):
     tol = 1e-6
     # here, i deliberately avoid using the make_system, because I want to
@@ -208,6 +216,7 @@ def test_minimize_proxy(self):
                     "error = {} > tol = {}".format(
                         error, tol))
 
+
 def test_babuschka_eval(self):
     tol = 1e-6
     # here, i deliberately avoid using the make_system, because I want to
@@ -237,6 +246,7 @@ def test_babuschka_eval(self):
                      "type(S.babushka) = {}, err = {}").format(
                         F_n, F_n2, type(S), type(babushka), error))
 
+
 def test_unit_neutrality(self):
     tol = 2e-7
     # runs the same problem in two unit sets and checks whether results are
@@ -250,7 +260,8 @@ def test_unit_neutrality(self):
     energy_c = force_c * length_c
 
     young = (self.young, pressure_c * self.young)
-    size = (self.physical_sizes, tuple((length_c * s for s in self.physical_sizes)))
+    size = (
+    self.physical_sizes, tuple((length_c * s for s in self.physical_sizes)))
     print("SIZES!!!!! = ", size)
     radius = (self.radius, length_c * self.radius)
     res = self.res
@@ -267,16 +278,19 @@ def test_unit_neutrality(self):
 
     for i in range(2):
         substrate = ContactMechanics.PeriodicFFTElasticHalfSpace(res, young[i],
-                                                      size[i])
+                                                                 size[i])
         interaction = Contact.LJ93smoothMin(
             eps[i], sig[i], gam[i])
-        surface = make_sphere(radius[i], res, size[i], standoff=float(sig[i] * 1000))
-        systems.append(make_system(substrate, interaction, surface, system_class=SmoothContactSystem))
+        surface = make_sphere(radius[i], res, size[i],
+                              standoff=float(sig[i] * 1000))
+        systems.append(make_system(substrate, interaction, surface,
+                                   system_class=SmoothContactSystem))
         offsets.append(.8 * systems[i].interaction.cutoff_radius)
 
     gaps = list()
     for i in range(2):
-        gap = systems[i].compute_gap(np.zeros(systems[i].nb_grid_pts), offsets[i])
+        gap = systems[i].compute_gap(np.zeros(systems[i].nb_grid_pts),
+                                     offsets[i])
         gaps.append(gap * length_rc[i])
 
     error = Tools.mean_err(gaps[0], gaps[1])
@@ -285,7 +299,8 @@ def test_unit_neutrality(self):
 
     forces = list()
     for i in range(2):
-        energy, force = systems[i].evaluate(np.zeros(res), offsets[i], forces=True)
+        energy, force = systems[i].evaluate(np.zeros(res), offsets[i],
+                                            forces=True)
         forces.append(force * force_rc[i])
 
     error = Tools.mean_err(forces[0], forces[1])
@@ -306,7 +321,8 @@ def test_unit_neutrality(self):
         gaps.append(gap * length_rc[i])
         energies.append(energy * energy_rc[i])
         substrate_energies.append(systems[i].substrate.energy * energy_rc[i])
-        interaction_energies.append(systems[i].interaction.energy * energy_rc[i])
+        interaction_energies.append(
+            systems[i].interaction.energy * energy_rc[i])
         forces.append(force * force_rc[i])
 
     error = Tools.mean_err(gaps[0], gaps[1])
@@ -324,7 +340,8 @@ def test_unit_neutrality(self):
 
     error = abs(substrate_energies[0] - substrate_energies[1])
     self.assertTrue(error < tol,
-                    "error = {} ≥ tol = {}, (c = {})".format(error, tol, energy_c))
+                    "error = {} ≥ tol = {}, (c = {})".format(error, tol,
+                                                             energy_c))
 
     error = abs(energies[0] - energies[1])
     self.assertTrue(error < tol,
@@ -334,11 +351,14 @@ def test_unit_neutrality(self):
     for i in range(2):
         options = dict(ftol=1e-32, gtol=1e-20)
         result = systems[i].minimize_proxy(offsets[i], options=options)
-        disps.append(systems[i].shape_minimisation_output(result.x) * length_rc[i])
+        disps.append(
+            systems[i].shape_minimisation_output(result.x) * length_rc[i])
 
     error = Tools.mean_err(disps[0], disps[1])
     self.assertTrue(error < tol,
-                    "error = {} ≥ tol = {}, (c = {})".format(error, tol, length_c))
+                    "error = {} ≥ tol = {}, (c = {})".format(error, tol,
+                                                             length_c))
+
 
 def test_BabushkaBoundaryError(self):
     """
@@ -356,12 +376,16 @@ def test_BabushkaBoundaryError(self):
         gam = 0.05
 
         surface = make_sphere(radius, res, size)
-        ext_surface = make_sphere(radius, (2 * n, 2 * n), (2 * s, 2 * s), centre=(s / 2, s / 2))
+        ext_surface = make_sphere(radius, (2 * n, 2 * n), (2 * s, 2 * s),
+                                  centre=(s / 2, s / 2))
 
-        interaction = Contact.LJ93smoothMin(young / 18 * np.sqrt(2 / 5), 2.5 ** (1 / 6), gamma=gam)
+        interaction = Contact.LJ93smoothMin(young / 18 * np.sqrt(2 / 5),
+                                            2.5 ** (1 / 6), gamma=gam)
 
-        substrate = ContactMechanics.FreeFFTElasticHalfSpace(surface.nb_grid_pts, young, surface.physical_sizes)
-        system = FastSmoothContactSystem(substrate, interaction, surface, margin=4)
+        substrate = ContactMechanics.FreeFFTElasticHalfSpace(
+            surface.nb_grid_pts, young, surface.physical_sizes)
+        system = FastSmoothContactSystem(substrate, interaction, surface,
+                                         margin=4)
 
         start_disp = - interaction.cutoff_radius + 1e-10
         load_history = np.concatenate((
@@ -380,9 +404,13 @@ def test_BabushkaBoundaryError(self):
             u = system.disp
 
         import matplotlib.pyplot as plt
-        X, Y = np.meshgrid((np.arange(0, int(n / 2))) * dx, (np.arange(0, int(n / 2))) * dx)
+        X, Y = np.meshgrid((np.arange(0, int(n / 2))) * dx,
+                           (np.arange(0, int(n / 2))) * dx)
         fig, ax = plt.subplots()
-        plt.colorbar(ax.pcolormesh(X, Y, substrate.interact_forces[-1, int(n / 2):, int(n / 2):]))
+        plt.colorbar(ax.pcolormesh(X, Y,
+                                   substrate.interact_forces[-1, int(n / 2):,
+                                   int(n / 2):]))
+
 
 def test_FreeBoundaryError(self):
     """
@@ -401,17 +429,24 @@ def test_FreeBoundaryError(self):
     centre = (0.75 * s, 0.5 * s)
 
     topography = make_sphere(radius, res, size, centre=centre)
-    ext_topography = make_sphere(radius, (2 * n, 2 * n), (2 * s, 2 * s), centre=centre)
+    ext_topography = make_sphere(radius, (2 * n, 2 * n), (2 * s, 2 * s),
+                                 centre=centre)
 
-    substrate = ContactMechanics.FreeFFTElasticHalfSpace(topography.nb_grid_pts, young,
-                                              topography.physical_sizes,
-                                              check_boundaries=True)
+    substrate = ContactMechanics.FreeFFTElasticHalfSpace(
+        topography.nb_grid_pts, young,
+        topography.physical_sizes,
+        check_boundaries=True)
 
-    for system in [NonSmoothContactSystem(substrate, topography), # TODO: this actually belongs to ContactMechanics
-                   SmoothContactSystem(substrate, Contact.LJ93SimpleSmooth(0.01, 0.01, 10), topography)]:
+    for system in [NonSmoothContactSystem(substrate, topography),
+                   # TODO: this actually belongs to ContactMechanics
+                   SmoothContactSystem(substrate,
+                                       Contact.LJ93SimpleSmooth(0.01, 0.01,
+                                                                10),
+                                       topography)]:
         with self.subTest(system=system):
             offset = 15
-            with self.assertRaises(ContactMechanics.FreeFFTElasticHalfSpace.FreeBoundaryError):
+            with self.assertRaises(
+                    ContactMechanics.FreeFFTElasticHalfSpace.FreeBoundaryError):
                 opt = system.minimize_proxy(offset=offset)
             if False:
                 import matplotlib.pyplot as plt
@@ -420,5 +455,5 @@ def test_FreeBoundaryError(self):
                 fig, ax = plt.subplots()
                 plt.colorbar(
                     ax.pcolormesh(X, Y, substrate.force)
-                )
+                    )
                 plt.show(block=True)

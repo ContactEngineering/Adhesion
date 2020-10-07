@@ -28,7 +28,10 @@ import pytest
 
 import Adhesion.ReferenceSolutions.MaugisDugdale as MD
 from Adhesion.Interactions import Dugdale
-from ContactMechanics import PeriodicFFTElasticHalfSpace, FreeFFTElasticHalfSpace
+from ContactMechanics import (
+    PeriodicFFTElasticHalfSpace,
+    FreeFFTElasticHalfSpace
+    )
 from ContactMechanics import make_system
 from ContactMechanics.Tools.Logger import screen
 from ContactMechanics.Optimization import constrained_conjugate_gradients
@@ -49,10 +52,12 @@ def test_flat():
                                           Dugdale=(sigma0, 1),
                                           offset=-0.5,
                                           disp0=topography.heights() + 1,
-                                          verbose=True, maxiter=50, logger=screen)
+                                          verbose=True, maxiter=50,
+                                          logger=screen)
     assert sol.success
 
     assert (- sol.jac == sigma0).all
+
 
 @pytest.mark.skip
 def test_sphere(plot=False):
@@ -65,8 +70,12 @@ def test_sphere(plot=False):
     Dugdale_length = 0.2
     work_of_adhesion = cohesive_stress * Dugdale_length
 
-    displacement_factor = (np.pi**2 * work_of_adhesion**2 * sphere_radius / (4/3 * contact_modulus)**2)**(1/3)
-    area_factor = np.pi * (np.pi * work_of_adhesion * sphere_radius**2 / (4/3 * contact_modulus))**(2/3)
+    displacement_factor = (
+        np.pi ** 2 * work_of_adhesion ** 2 * sphere_radius / (
+            4 / 3 * contact_modulus) ** 2) ** (
+        1 / 3)
+    area_factor = np.pi * (np.pi * work_of_adhesion * sphere_radius ** 2 / (
+                4 / 3 * contact_modulus)) ** (2 / 3)
     force_factor = np.pi * work_of_adhesion * sphere_radius
 
     halfspace = FreeFFTElasticHalfSpace((nx, ny), contact_modulus, (sx, sx))
@@ -77,7 +86,7 @@ def test_sphere(plot=False):
     if plot:
         import matplotlib.pyplot as plt
 
-    displacements = [ -0.15, -0.05, 0.0, 0.05, 0.15]
+    displacements = [-0.15, -0.05, 0.0, 0.05, 0.15]
     forces = []
     areas = []
     for displacement in displacements:
@@ -86,17 +95,20 @@ def test_sphere(plot=False):
             maxiter=100,
             prestol=1e-5,
             offset=displacement
-        )
+            )
         forces += [opt.jac.sum()]
         areas += [opt.active_set.sum() * halfspace.area_per_pt]
 
         if plot:
             plt.figure()
             plt.title('offset = ${}$'.format(displacement))
-            plt.plot(opt.jac[nx//2], 'k-')
+            plt.plot(opt.jac[nx // 2], 'k-')
         # Some of these do not converge
-        #assert opt.success
-        print('Displacement = {}, number of iterations = {}, converged = {}'.format(displacement, opt.nit, opt.success))
+        # assert opt.success
+        print(
+            'Displacement = {}, number of iterations = {},'
+            ' converged = {}'.format(
+                displacement, opt.nit, opt.success))
 
     displacements = np.array(displacements) / displacement_factor
     forces = np.array(forces) / force_factor
@@ -104,8 +116,9 @@ def test_sphere(plot=False):
 
     if plot:
         md_areas = np.linspace(0.1, 25, 101)
-        md_forces, md_displacements = MD.load_and_displacement(np.sqrt(md_areas / np.pi), sphere_radius,
-                                                               contact_modulus, work_of_adhesion, cohesive_stress)
+        md_forces, md_displacements = MD.load_and_displacement(
+            np.sqrt(md_areas / np.pi), sphere_radius,
+            contact_modulus, work_of_adhesion, cohesive_stress)
 
         md_areas /= area_factor
         md_forces /= force_factor
@@ -115,23 +128,24 @@ def test_sphere(plot=False):
         plt.subplot(221)
         plt.plot(md_forces, md_areas, 'k-')
         plt.plot(forces, areas, 'ro')
-        plt.xlabel('Normalized force $F/\pi w R$')
-        plt.ylabel('Normalized area $A/(\pi w R^2/K)^{2/3}$')
+        plt.xlabel(r'Normalized force $F/\pi w R$')
+        plt.ylabel(r'Normalized area $A/(\pi w R^2/K)^{2/3}$')
         plt.subplot(222)
         plt.plot(md_displacements, md_areas, 'k-')
         plt.plot(displacements, areas, 'ro')
-        plt.xlabel('Normalized displacement $\delta/(\pi^2 w^2 R/K^2)^{1/3}$')
-        plt.ylabel('Normalized area $A/(\pi w R^2/K)^{2/3}$')
+        plt.xlabel(r'Normalized displacement $\delta/(\pi^2 w^2 R/K^2)^{1/3}$')
+        plt.ylabel(r'Normalized area $A/(\pi w R^2/K)^{2/3}$')
         plt.subplot(223)
         plt.plot(md_displacements, md_forces, 'k-')
         plt.plot(displacements, forces, 'ro')
-        plt.xlabel('Normalized displacement $\delta/(\pi^2 w^2 R/K^2)^{1/3}$')
-        plt.ylabel('Normalized force $F/\pi w R$')
+        plt.xlabel(r'Normalized displacement $\delta/(\pi^2 w^2 R/K^2)^{1/3}$')
+        plt.ylabel(r'Normalized force $F/\pi w R$')
         plt.tight_layout()
         plt.show()
 
-    md_forces, md_displacements = MD.load_and_displacement(np.sqrt(areas / np.pi), sphere_radius,
-                                                           contact_modulus, work_of_adhesion, cohesive_stress)
+    md_forces, md_displacements = MD.load_and_displacement(
+        np.sqrt(areas / np.pi), sphere_radius,
+        contact_modulus, work_of_adhesion, cohesive_stress)
     md_forces /= force_factor
     md_displacements /= displacement_factor
 
@@ -140,5 +154,3 @@ def test_sphere(plot=False):
 
     assert np.std(md_forces - forces) < 0.35
     assert np.std(md_displacements - displacements) < 0.35
-
-

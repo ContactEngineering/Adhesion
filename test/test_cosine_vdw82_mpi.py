@@ -32,18 +32,18 @@ from NuMPI.Tools.Reduction import Reduction
 from Adhesion.Interactions import VDW82
 from Adhesion.System import SmoothContactSystem
 
-_toplot=False
-def test_wavy(comm):
+_toplot = False
 
-    n=32
-    surf_res = (n,n)
-    surf_size = (n,n)
+
+def test_wavy(comm):
+    n = 32
+    surf_res = (n, n)
+    surf_size = (n, n)
 
     z0 = 1
     Es = 1
 
-    R = 100
-    w = 0.01*z0 * Es
+    w = 0.01 * z0 * Es
 
     pnp = Reduction(comm=comm)
 
@@ -54,17 +54,20 @@ def test_wavy(comm):
     # Parallel SurfaceTopography Patch
 
     substrate = PeriodicFFTElasticHalfSpace(surf_res, young=Es,
-                                            physical_sizes=surf_size, communicator=comm, fft='mpi')
+                                            physical_sizes=surf_size,
+                                            communicator=comm, fft='mpi')
 
     surface = Topography(
         np.cos(np.arange(0, n) * np.pi * 2. / n) * np.ones((n, 1)),
         physical_sizes=surf_size)
 
-    psurface = Topography(surface.heights(), physical_sizes=surface.physical_sizes,
-                          subdomain_locations=substrate.topography_subdomain_locations,
-                          nb_subdomain_grid_pts=substrate.nb_subdomain_grid_pts,
-                          periodic=True, communicator=comm,
-                          decomposition="domain")
+    psurface = Topography(
+        surface.heights(),
+        physical_sizes=surface.physical_sizes,
+        subdomain_locations=substrate.topography_subdomain_locations,
+        nb_subdomain_grid_pts=substrate.nb_subdomain_grid_pts,
+        periodic=True, communicator=comm,
+        decomposition="domain")
 
     system = SmoothContactSystem(substrate, inter, psurface)
 
@@ -75,28 +78,31 @@ def test_wavy(comm):
     nsteps = len(offsets)
     disp0 = np.zeros(substrate.nb_subdomain_grid_pts)
     for i in range(nsteps):
-        result = LBFGS(system.objective(offsets[i], gradient=True), disp0, jac=True,
+        result = LBFGS(system.objective(offsets[i], gradient=True),
+                       disp0, jac=True,
                        maxcor=3,
                        gtol=1e-5, pnp=pnp)
         assert result.success
         force[i] = system.compute_normal_force()
 
-        np.testing.assert_allclose(force[i], (system.compute_repulsive_force() + system.compute_attractive_force()))
+        np.testing.assert_allclose(force[i], (
+                system.compute_repulsive_force()
+                + system.compute_attractive_force()))
 
-        #print("step {}".format(i))
+        # print("step {}".format(i))
 
     toPlot = comm.Get_rank() == 0 and _toplot
 
     if toPlot:
-        #matplotlib.use("Agg")
+        # matplotlib.use("Agg")
         import matplotlib.pyplot as plt
-        fig, ax  = plt.subplots()
+        fig, ax = plt.subplots()
         ax.set_xlabel("displacement")
         ax.set_ylabel("force")
 
         ax.plot(offsets, force)
-        #plt.show(block=True)
-        figname="test_cosine_vdw82.png"
+        # plt.show(block=True)
+        figname = "test_cosine_vdw82.png"
         fig.savefig(figname)
 
         import subprocess
@@ -104,7 +110,9 @@ def test_wavy(comm):
 
         plt.show(block=True)
 
+
 if __name__ == "__main__":
     from mpi4py import MPI
+
     _toplot = True
     test_wavy(MPI.COMM_WORLD)

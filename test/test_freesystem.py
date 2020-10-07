@@ -30,7 +30,6 @@ consistent with computing the full system
 """
 
 import time
-import unittest
 
 import numpy as np
 import pytest
@@ -42,9 +41,6 @@ import ContactMechanics as ContactMechanics
 import Adhesion.Interactions as Contact
 import ContactMechanics.Tools as Tools
 from Adhesion.System import SmoothContactSystem
-from ContactMechanics.Systems import NonSmoothContactSystem
-from Adhesion.System import FastSmoothContactSystem
-from Adhesion.System import make_system
 from SurfaceTopography import make_sphere
 import os
 from netCDF4 import Dataset
@@ -52,10 +48,8 @@ from netCDF4 import Dataset
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
 
 pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
-                                reason="tests only serial funcionalities, please execute with pytest")
-
-# class SmoothSystemTest(unittest.TestCase):
-import pytest
+                                reason="tests only serial funcionalities, "
+                                       "please execute with pytest")
 
 
 @pytest.mark.parametrize("r_c", [2., 6.])
@@ -71,11 +65,11 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
 
     size = (15., 15.)
     surface = make_sphere(radius, res, size, standoff=float('inf'))
-    ext_surface = make_sphere(radius,
-                              [2 * r for r in res],
-                              [2 * s for s in size],
-                              centre=[s / 2 for s in size],
-                              standoff=1000)
+    # ext_surface = make_sphere(radius,
+    #                          [2 * r for r in res],
+    #                          [2 * s for s in size],
+    #                          centre=[s / 2 for s in size],
+    #                          standoff=1000)
 
     substrate = ContactMechanics.FreeFFTElasticHalfSpace(
         res, young, size)
@@ -97,31 +91,37 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
                             pot,
                             surface)
 
-    # print("testing: {}, rc = {}, offset= {}".format(pot.__class__, S.interaction.cutoff_radius, S.interaction.offset))
+    # print("testing: {}, rc = {}, offset= {}".format(
+    #   pot.__class__, S.interaction.cutoff_radius, S.interaction.offset))
     offset = .8 * S.interaction.parent_potential.cutoff_radius
     fun = S.objective(offset, gradient=True)
 
-    options = dict(ftol=0,
-                   gtol=1e-5 *
-                        max(abs(pot.max_tensile),
-                            2 * young / np.pi * np.sqrt((
-                                                                    pot.r_min + offset) / radius))  # max pressure in the hertzian contact
-                        * S.area_per_pt,
-                   maxcor=3)
+    options = dict(
+        ftol=0,
+        gtol=1e-5 *
+        max(
+            abs(pot.max_tensile),
+            2 * young / np.pi * np.sqrt(
+                (pot.r_min + offset) / radius)
+            # max pressure in the hertzian contact
+            ) * S.area_per_pt,
+        maxcor=3)
     disp = S.shape_minimisation_input(
         np.zeros(substrate.nb_domain_grid_pts))
 
-    lbounds = S.shape_minimisation_input(ext_surface.heights() + offset)
-    bnds = tuple(zip(lbounds.tolist(), [None for i in range(len(lbounds))]))
+    # lbounds = S.shape_minimisation_input(ext_surface.heights() + offset)
+    # bnds = tuple(zip(lbounds.tolist(), [None for i in range(len(lbounds))]))
     result = minimize(fun, disp, jac=True,
-                      method='L-BFGS-B', options=options)  # , bounds=bnds)
+                      method='L-BFGS-B', options=options)
+    # , bounds=bnds)
     if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
 
         # ax.pcolormesh(result.x.reshape(substrate.computational_nb_grid_pts))
         plt.colorbar(ax.pcolormesh(S.interaction_force))
-        #    np.savetxt("{}_forces.txt".format(pot_class.__name__), S.interaction_force)
+        # np.savetxt("{}_forces.txt".format(pot_class.__name__),
+        # S.interaction_force)
         ax.set_xlabel("x")
         ax.set_ylabel("")
         ax.grid(True)
@@ -131,7 +131,9 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
         fig.tight_layout()
         # plt.show(block=True)
     assert result.success, "{}".format(result)
-    assert result.message == b'CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL'
+    assert result.message == \
+        b'CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL'
+
 
 """
 # TODO
@@ -210,6 +212,7 @@ def test_minimization(pot_class, young, base_res):
     assert result.success, "{}".format(result)
 """  # noqa: E501
 
+
 @pytest.fixture(params=range(50))
 def self(request):
     np.random.seed(request.param)
@@ -239,10 +242,10 @@ def test_unconfirmed_minimization(self):
     # the plausibility of the result is not verified
     res = self.res[0]
     size = self.physical_sizes[0]
-    substrate = ContactMechanics.PeriodicFFTElasticHalfSpace(res,
-                                                             25 * self.young,
-                                                             self.physical_sizes[
-                                                                 0])
+    substrate = ContactMechanics.PeriodicFFTElasticHalfSpace(
+        res,
+        25 * self.young,
+        self.physical_sizes[0])
     sphere = make_sphere(self.radius, res, size)
     # here, i deliberately avoid using the make_system, because I want to
     # explicitly test the dumb (yet safer) way of computing problems with a
@@ -322,7 +325,7 @@ def test_comparison_pycontact(self):
         ref_data.variables['h'] + ref_data.variables['avgh'][0])[:32, :32]
     offset = -.8 * potential.cutoff_radius
     gap = S.compute_gap(np.zeros(substrate.nb_domain_grid_pts), offset)
-    diff = ref_profile - gap
+    # diff = ref_profile - gap
     # pycontact centres spheres at (n + 0.5, m + 0.5). need to correct for test
     correction = radius - np.sqrt(radius ** 2 - .5)
     error = Tools.mean_err(ref_profile + correction, gap)
@@ -333,7 +336,7 @@ def test_comparison_pycontact(self):
     # pycontact does not save the offset in the nc, so this one has to be
     # taken on faith
     fun = S.objective(offset + correction, gradient=True)
-    fun_hard = S.objective(offset + correction, gradient=False)
+    fun_hard = S.objective(offset + correction, gradient=False)  # noqa: F841
 
     # initial guess (cheating) is the solution of pycontact
     disp = np.zeros(S.substrate.nb_domain_grid_pts)
@@ -382,7 +385,8 @@ def test_comparison_pycontact(self):
     # plt.colorbar(CS)
     # plt.title("my_u")
     # fig = plt.figure()
-    # CS = plt.contourf(result.x.reshape([64, 64])[:32, :32] + ref_data.variables['u'][0][:32, :32])
+    # CS = plt.contourf(result.x.reshape([64, 64])[:32, :32]
+    #   + ref_data.variables['u'][0][:32, :32])
     # plt.colorbar(CS)
     # plt.title("my_u - ref_u")
     # plt.show()
@@ -414,7 +418,7 @@ def test_size_insensitivity(self):
     with open(out_fpath) as fh:
         fh.__next__()
         fh.__next__()
-        ref_N = float(fh.__next__().split()[0])
+        # ref_N = float(fh.__next__().split()[0])
     # 1. replicate potential
     sig = ref_data.lj_sigma
     eps = ref_data.lj_epsilon
@@ -450,8 +454,8 @@ def test_size_insensitivity(self):
         offset = -.8 * potential.cutoff_radius
         fun = S.objective(offset, gradient=True)
         disp = np.zeros(np.prod(res) * 4)
-        result = minimize(fun, disp, jac=True,
-                          method='L-BFGS-B', options=options)
+        minimize(fun, disp, jac=True,
+                 method='L-BFGS-B', options=options)
         normalforce[i] = S.interaction_force.sum()
         error = abs(normalforce - normalforce.mean()).mean()
     assert error < tol, "error = {:.15g} > tol = {}, N = {}".format(
