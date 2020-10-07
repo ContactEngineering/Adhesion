@@ -22,10 +22,13 @@
 # SOFTWARE.
 #
 
-from ContactMechanics.Systems import IncompatibleResolutionError
+from ContactMechanics.Systems import IncompatibleResolutionError  # noqa: F401
 
-from .Systems import SmoothContactSystem, BoundedSmoothContactSystem
-from .SmoothSystemSpecialisations import FastSmoothContactSystem
-from .PlasticSystemSpecialisations import PlasticSmoothContactSystem
-from .Factory import make_system
-
+from .Systems import (  # noqa: F401
+    SmoothContactSystem,
+    BoundedSmoothContactSystem
+    )
+from .SmoothSystemSpecialisations import FastSmoothContactSystem  # noqa: F401
+from .PlasticSystemSpecialisations import \
+    PlasticSmoothContactSystem  # noqa: F401
+from .Factory import make_system  # noqa: F401

@@ -28,12 +28,13 @@ from NuMPI import MPI
 from ContactMechanics.Factory import _make_system_args
 import ContactMechanics.Factory
 
+
 def make_system(substrate, interaction, surface, communicator=MPI.COMM_WORLD,
                 physical_sizes=None, system_class=None,
                 **kwargs):
     """
-    Factory function for contact systems. The returned object is always of a subtype
-    of SystemBase.
+    Factory function for contact systems. The returned object is always
+    of a subtype of SystemBase.
     Parameters:
     -----------
     substrate   -- An instance of HalfSpace. Defines the solid mechanics in
