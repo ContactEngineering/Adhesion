@@ -11,8 +11,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -35,18 +35,24 @@ import numpy as np
 
 from Adhesion.ReferenceSolutions.MaugisDugdale import afindroot
 
+
 ###
 
 def maugis_parameter(radius, elastic_modulus, work_of_adhesion,
                      cohesive_stress):
-    return 4*cohesive_stress/(np.pi**2*elastic_modulus**2*work_of_adhesion/radius)**(1/3)
+    return 4 * cohesive_stress / (
+            np.pi ** 2 * elastic_modulus ** 2 * work_of_adhesion / radius
+    ) ** (1 / 3)
 
-### Dimensionless quantities
+
+# Dimensionless quantities
 
 def fm(m, a, lam):
-    mu = np.sqrt(m*m-1)
+    mu = np.sqrt(m * m - 1)
     # This is Eq. (23) from Baney and Hui's paper
-    return lam*a*a/2*(m*mu-np.log(m+mu))+lam*lam*a/2*(mu*np.log(m+mu)-m*np.log(m))-1
+    return lam * a * a / 2 * (m * mu - np.log(m + mu)) + lam * lam * a / 2 * (
+                mu * np.log(m + mu) - m * np.log(m)) - 1
+
 
 def _cohesive_zone(a, lam):
     """
@@ -67,6 +73,7 @@ def _cohesive_zone(a, lam):
     """
     return afindroot(fm, 1.0, 1e12, a, lam)
 
+
 def _load(a, lam, return_m=False):
     """
     Compute load for the Maugis-Dugdale model given the dimensionless contact
@@ -85,36 +92,42 @@ def _load(a, lam, return_m=False):
         Non-dimensional load
     """
     m = _cohesive_zone(a, lam)
-    mu = np.sqrt(m*m-1)
-    P = a*a-lam*a*mu
+    mu = np.sqrt(m * m - 1)
+    P = a * a - lam * a * mu
     if return_m:
         return P, m
     else:
         return P
 
+
 def _contact_radius(P, lam, return_cohesive_zone=False):
-    a = afindroot(lambda a, P, lam: _load(a, lam)-P, 1e-6, 1e12, P, lam)
+    a = afindroot(lambda a, P, lam: _load(a, lam) - P, 1e-6, 1e12, P, lam)
     if return_cohesive_zone:
         return a, _cohesive_zone(a, lam)
     else:
         return a
 
+
 def _pressure(x, a, lam):
     m = _cohesive_zone(a, lam)
     p = np.zeros_like(x)
     p[:] = np.nan
-    mask = abs(x)<1
-    p[mask] = a*np.sqrt(1-x[mask]*x[mask])-lam/2*np.arctan(np.sqrt((m*m-1)/(1-x[mask]*x[mask])))
-    mask = np.logical_and(abs(x)>=1, abs(x)<=m)
-    p[mask] = -np.pi*lam/4
+    mask = abs(x) < 1
+    p[mask] = a * np.sqrt(1 - x[mask] * x[mask]) - lam / 2 * np.arctan(
+        np.sqrt((m * m - 1) / (1 - x[mask] * x[mask])))
+    mask = np.logical_and(abs(x) >= 1, abs(x) <= m)
+    p[mask] = -np.pi * lam / 4
     return p
 
-### Dimensional quantities
+
+# Dimensional quantities
 
 def load(contact_radius, radius, elastic_modulus, work_of_adhesion,
          cohesive_stress):
     lam = maugis_parameter(radius, elastic_modulus, work_of_adhesion,
                            cohesive_stress)
-    a = contact_radius/(2*(work_of_adhesion*radius**2/(np.pi*elastic_modulus))**(1/3))
+    a = contact_radius / (2 * (work_of_adhesion * radius ** 2 / (
+                np.pi * elastic_modulus)) ** (1 / 3))
     P = _load(a, lam)
-    return P*(np.pi*elastic_modulus*work_of_adhesion**2*radius)**(1/3)
+    return P * (np.pi * elastic_modulus * work_of_adhesion ** 2 * radius) ** (
+                1 / 3)

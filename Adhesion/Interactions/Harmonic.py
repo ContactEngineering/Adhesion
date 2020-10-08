@@ -11,8 +11,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -28,8 +28,8 @@ Harmonic potential for wall interaction
 """
 
 from Adhesion.Interactions import Potential
-import numpy as np
 from NuMPI import MPI
+
 
 class Harmonic(Potential):
     """ Repulsive harmonic potential.
@@ -48,7 +48,7 @@ class Harmonic(Potential):
             Spring constant k
         """
         self.spring_constant = spring_constant
-        Potential.__init__(self, 0,communicator=communicator)
+        Potential.__init__(self, 0, communicator=communicator)
 
     def __repr__(self, ):
         return ("Potential '{0.name}': k = {0.spring_constant}").format(self)
@@ -65,11 +65,11 @@ class Harmonic(Potential):
         """
         return None
 
-    def evaluate(self, gap, potential=True, gradient=False, curvature=True,):
+    def evaluate(self, gap, potential=True, gradient=False, curvature=True, ):
 
         V = dV = ddV = None
         if potential:
-            V = 0.5*self.spring_constant * gap ** 2
+            V = 0.5 * self.spring_constant * gap ** 2
         if gradient:
             # Forces are the negative gradient
             dV = self.spring_constant * gap

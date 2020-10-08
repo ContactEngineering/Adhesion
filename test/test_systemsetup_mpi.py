@@ -11,8 +11,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -30,12 +30,11 @@ represents the UseCase of creating System with MPI parallelization
 
 import pytest
 
-from mpi4py import MPI
-from ContactMechanics import FreeFFTElasticHalfSpace, PeriodicFFTElasticHalfSpace
+from NuMPI import MPI
+from ContactMechanics import FreeFFTElasticHalfSpace
 from Adhesion.System import make_system
 from Adhesion.Interactions import VDW82, Exponential
 from SurfaceTopography import make_sphere
-from SurfaceTopography.IO import NPYReader
 from Adhesion.System import SmoothContactSystem
 from ContactMechanics.Tools.Logger import Logger
 from Adhesion.Interactions import HardWall
@@ -85,7 +84,6 @@ def test_make_system_from_file(examplefile, comm):
     # Maybe it will be another Function or class
     fn, res, data = examplefile
 
-    substrate = PeriodicFFTElasticHalfSpace
     interaction = HardWall()
 
     system = make_system(substrate="periodic",
@@ -166,7 +164,8 @@ def test_make_free_system(examplefile, comm):
 def test_choose_smoothcontactsystem(comm, examplefile):
     """
     even on one processor, one should be able to force the usage of the
-    smooth contact system. The occurence of jump instabilities make the babushka
+    smooth contact system.
+    The occurence of jump instabilities make the babushka
     system difficult to use.
 
     """
@@ -189,7 +188,7 @@ def test_incompatible_system_prescribed(comm_self, examplefile):
     fn, res, data = examplefile
     from ContactMechanics.Systems import IncompatibleFormulationError
     with pytest.raises(IncompatibleFormulationError):
-        system = make_system(substrate="free",
+        system = make_system(substrate="free",  # noqa: F841
                              interaction="hardwall",
                              surface=fn,
                              communicator=comm_self,
@@ -237,7 +236,7 @@ def test_logger():
 
     gtol = 1e-5
     offset = 1.
-    res = system.minimize_proxy(offset=offset, lbounds="auto",
+    res = system.minimize_proxy(offset=offset, lbounds="auto",  # noqa: F841
                                 options=dict(gtol=gtol, ftol=0),
                                 logger=Logger("test_logger.log"))
 

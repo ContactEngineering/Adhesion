@@ -1,6 +1,6 @@
 #
 # Copyright 2020 Antoine Sanner
-#           2020 Lars Pastewka
+#           2016, 2020 Lars Pastewka
 #           2015 Till Junge
 #
 # ### MIT license
@@ -12,8 +12,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -24,24 +24,25 @@
 # SOFTWARE.
 #
 
-## taken as reference from pycontact (https://github.com/pastewka/pycontact)
-
+from test.Interactions import (
+    lj93_ref_potential as lj93,
+    lj93smooth_ref_potential as lj93s
+    )
 import numpy as np
-def V(x, epsilon, sigma, rc1):
-    return np.where(x < rc1,
-                      epsilon*(2./15*(sigma/x)**9 - (sigma/x)**3)
-                    - epsilon*(2./15*(sigma/rc1)**9 - (sigma/rc1)**3),
-                    np.zeros_like(x)
-                    )
 
-def dV(x, epsilon, sigma, rc1):
-    return np.where(x < rc1,
-                    - epsilon*(6./5*(sigma/x)**6 - 3)*(sigma/x)**3/x,
-                    np.zeros_like(x)
-                    )
+eps = 1.
+sig = 1.
+rc1 = 2.5
+rc2 = 1.
 
-def d2V(x, epsilon, sigma, rc1):
-    return np.where(x < rc1,
-                    12*epsilon*((sigma/x)**6 - 1)*(sigma/x)**3/(x*x),
-                    np.zeros_like(x)
-                    )
+xmin, xmax, step = (.7, 3, .01)
+x = np.arange(xmin, xmax, step)
+
+v = lj93.V(x, eps, sig, rc1)
+vs = lj93s.V(x, eps, sig, 1.1, rc1)
+
+# import matplotlib.pyplot as plt
+# plt.plot(x, v,  label='std')
+# plt.plot(x, vs, label='smooth')
+# plt.legend(loc='best')
+# plt.show()

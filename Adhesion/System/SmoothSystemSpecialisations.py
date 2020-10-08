@@ -13,8 +13,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -38,7 +38,8 @@ import scipy
 from Adhesion.System import SmoothContactSystem
 from Adhesion.System import IncompatibleResolutionError
 from SurfaceTopography import Topography
-import Adhesion, ContactMechanics
+import Adhesion
+import ContactMechanics
 
 
 # convenient container for storing correspondences betwees small and large
@@ -48,10 +49,11 @@ BndSet = namedtuple('BndSet', ('large', 'small'))
 
 class FastSmoothContactSystem(SmoothContactSystem):
     """
-    This proxy class tries to take advantage of the system-physical_sizes independence of
-    non-periodic FFT-solved systems by determining the required minimum system
-    physical_sizes, encapsulating a SmoothContactSystem of that physical_sizes and run it almost
-    transparently instead of the full system.
+    This proxy class tries to take advantage of the system-physical_sizes
+    independence of non-periodic FFT-solved systems by determining the required
+    minimum system physical_sizes, encapsulating a SmoothContactSystem of
+    that physical_sizes and run it almost transparently instead of the full
+    system.
     It's almost transparent, because by its nature, the small system does not
     compute displacements everywhere the large system exists. Therefore, for
     full-domain output, an extra evaluation step must be taken. But since using
@@ -72,9 +74,9 @@ class FastSmoothContactSystem(SmoothContactSystem):
 
     class BabushkaBoundaryError(Exception):
         """
-        Called when the choosen physical_sizes of the Babushka System had an Influence on
-        the Solution. In the Future, one may catch this error,
-        increase the margin and restart minimization
+        Called when the choosen physical_sizes of the Babushka System
+        had an Influence on the Solution. In the Future, one may catch
+        this error, increase the margin and restart minimization
         """
         pass
 
@@ -117,7 +119,8 @@ class FastSmoothContactSystem(SmoothContactSystem):
     def shape_minimisation_input(self, in_array):
         """
         For minimisation of smart systems, the initial guess array (e.g.
-        displacement) may have a non-intuitive shape and physical_sizes (The problem physical_sizes
+        displacement) may have a non-intuitive shape and physical_sizes
+        (The problem physical_sizes
         may be decreased, as for free, non-periodic systems, or increased as
         with augmented-lagrangian-type issues). Use the output of this function
         as argument x0 for scipy minimisation functions. Also, if your initial
@@ -162,14 +165,19 @@ class FastSmoothContactSystem(SmoothContactSystem):
         """
         is_ok = True
         if self.dim == 2:
-            # Sometimes, the Topograsphy.__h is a masked array, where the masked values represent infinite heights
+            # Sometimes, the Topograsphy.__h is a masked array,
+            # where the masked values represent infinite heights
             # At this points there is no interaction
 
-            is_ok &= np.ma.filled(self.babushka.interaction_force[:, 0] == 0.,True).all()
-            is_ok &= np.ma.filled(self.babushka.interaction_force[:, -1] == 0.,True).all()
-            is_ok &= np.ma.filled(self.babushka.interaction_force[0, :] == 0.,True).all()
-            is_ok &= np.ma.filled(self.babushka.interaction_force[-1, :] == 0.,True).all()
-            
+            is_ok &= np.ma.filled(self.babushka.interaction_force[:, 0] == 0.,
+                                  True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[:, -1] == 0.,
+                                  True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[0, :] == 0.,
+                                  True).all()
+            is_ok &= np.ma.filled(self.babushka.interaction_force[-1, :] == 0.,
+                                  True).all()
+
         if not is_ok:
             self.deproxified()
             raise self.BabushkaBoundaryError(
@@ -177,7 +185,8 @@ class FastSmoothContactSystem(SmoothContactSystem):
                  "Pressure is non-zero at the bounds of the Babushka System"))
 
     @staticmethod
-    def handles(substrate_type, interaction_type, surface_type, is_domain_decomposed):
+    def handles(substrate_type, interaction_type, surface_type,
+                is_domain_decomposed):
         is_ok = True
         # any periodic type of substrate formulation should do
         is_ok &= issubclass(substrate_type,
@@ -255,10 +264,11 @@ class FastSmoothContactSystem(SmoothContactSystem):
             raise self.FreeBoundaryError(
                 ("With the current margin of {}, the system overlaps the upper"
                  " bounds by {}. Total nb_grid_pts is {}").format(
-                     self.margin,
-                     tuple(self.__babushka_offset[i] + res - self.nb_grid_pts[i]
-                           for i, res in enumerate(sm_res)),
-                     self.nb_grid_pts), disp0)  # nopep8
+                    self.margin,
+                    tuple(self.__babushka_offset[i]
+                          + res - self.nb_grid_pts[i]
+                          for i, res in enumerate(sm_res)),
+                    self.nb_grid_pts), disp0)  # nopep8
 
         self.compute_babushka_bounds(sm_res)
         sm_surf = self._get_babushka_array(self.surface.heights(),
@@ -325,10 +335,11 @@ class FastSmoothContactSystem(SmoothContactSystem):
                     lg_slice = tuple((
                         slice(i*lg_res[0]+self.__babushka_offset[0],
                               i*lg_res[0]+sm_res[0]+self.__babushka_offset[0]),
-                        slice(j*lg_res[1]+self.__babushka_offset[1],
-                              j*lg_res[1]+sm_res[1] +
+                        slice(j * lg_res[1] + self.__babushka_offset[1],
+                              j * lg_res[1] + sm_res[1] +
                               self.__babushka_offset[1])))
                     yield BndSet(large=lg_slice, small=sm_slice)
+
         self.bounds = tuple((bnd for bnd in boundary_generator()))
 
     def _get_babushka_array(self, full_array, babushka_array=None):
@@ -340,6 +351,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
         full_array     -- large-scale input array
         babushka_array -- optional small-scale output array to overwrite
         """
+
         # pylint: disable=unused-argument
         def nb_domain_grid_pts():
             "used when arrays correspond to the substrate"
@@ -372,6 +384,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
         full_array     -- optional large-scale output array to overwrite
         babushka_array -- small-scale input array
         """
+
         # pylint: disable=unused-argument
         def nb_domain_grid_pts():
             "used when arrays correspond to the substrate"
@@ -391,6 +404,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
             bnd = self.bounds[0]
             full_array[bnd.large] = babushka_array[bnd.small]
             return full_array
+
         if babushka_array.shape == self.babushka.nb_grid_pts:
             return normal_nb_grid_pts()
         else:
@@ -446,8 +460,8 @@ class FastSmoothContactSystem(SmoothContactSystem):
         def compound_callback(disp_k):
             """
             The callback first check whether the new state of the system
-            violates the physical_sizes restrictions of the babuška system before calling
-            the user-provided callback function
+            violates the physical_sizes restrictions of the babuška
+            system before calling the user-provided callback function
             Parameter:
             disp_k -- flattened displacement vector at the current optimization
                       step
@@ -460,17 +474,19 @@ class FastSmoothContactSystem(SmoothContactSystem):
 
         bnds = None
         if lbounds is not None and ubounds is not None:
-            ubounds = disp_scale*self.shape_minimisation_input(ubounds)
-            lbounds = disp_scale*self.shape_minimisation_input(lbounds)
-            bnds = tuple(zip(lbounds.tolist(),ubounds.tolist()))
+            ubounds = disp_scale * self.shape_minimisation_input(ubounds)
+            lbounds = disp_scale * self.shape_minimisation_input(lbounds)
+            bnds = tuple(zip(lbounds.tolist(), ubounds.tolist()))
         elif lbounds is not None:
-            lbounds = disp_scale*self.shape_minimisation_input(lbounds)
-            bnds = tuple(zip(lbounds.tolist(),[None for i in range(len(lbounds))]))
+            lbounds = disp_scale * self.shape_minimisation_input(lbounds)
+            bnds = tuple(
+                zip(lbounds.tolist(), [None for i in range(len(lbounds))]))
         elif ubounds is not None:
-            ubounds = disp_scale*self.shape_minimisation_input(ubounds)
-            bnds = tuple(zip([None for i in range(len(ubounds))],ubounds.tolist()))
+            ubounds = disp_scale * self.shape_minimisation_input(ubounds)
+            bnds = tuple(
+                zip([None for i in range(len(ubounds))], ubounds.tolist()))
         # Scipy minimizers that accept bounds
-        bounded_minimizers = {'L-BFGS-B','TNC','SLSQP'}
+        bounded_minimizers = {'L-BFGS-B', 'TNC', 'SLSQP'}
 
         try:
             if method in bounded_minimizers:

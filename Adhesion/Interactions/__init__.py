@@ -10,8 +10,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -22,17 +22,15 @@
 # SOFTWARE.
 #
 
-from .Interactions import SoftWall, HardWall, Dugdale
-from .Potentials import Potential
-from .SmoothPotential import SmoothPotential
-from .cutoffs import LinearCorePotential, ParabolicCutoffPotential
+from .Interactions import SoftWall, HardWall, Dugdale  # noqa: F401
+from .Potentials import Potential  # noqa: F401
+from .SmoothPotential import SmoothPotential  # noqa: F401
 
-from .Harmonic import Harmonic
-from .VdW82 import VDW82, Lj82
-from .Lj93 import LJ93
-from .PowerLaw import PowerLaw
-from .Exponential import Exponential, RepulsiveExponential
+from .Harmonic import Harmonic  # noqa: F401
+from .VdW82 import VDW82, Lj82  # noqa: F401
+from .Lj93 import LJ93  # noqa: F401
+from .PowerLaw import PowerLaw  # noqa: F401
+from .Exponential import Exponential, RepulsiveExponential  # noqa: F401
 
-# These imports are required to register the analysis functions!
-import Adhesion.Interactions.cutoffs
-import Adhesion.Interactions.SmoothPotential
+import Adhesion.Interactions.cutoffs  # noqa: F401
+import Adhesion.Interactions.SmoothPotential  # noqa: F401

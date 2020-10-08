@@ -11,8 +11,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -31,6 +31,7 @@ from Adhesion.Interactions import Potential
 
 import numpy as np
 from NuMPI import MPI
+
 
 class LJ93(Potential):
     """ 9-3 Lennard-Jones potential with optional cutoff radius.
@@ -83,7 +84,6 @@ class LJ93(Potential):
         superstate, self.eps, self.sig = state
         super().__setstate__(superstate)
 
-
     def __repr__(self, ):
         return ("Potential '{0.name}': ε = {0.eps}, σ = {0.sig}").format(self)
 
@@ -107,21 +107,21 @@ class LJ93(Potential):
         """
         return self.sig
 
-    def evaluate(self, gap, potential=True, gradient=False, curvature=False, mask=None):
+    def evaluate(self, gap, potential=True, gradient=False, curvature=False,
+                 mask=None):
         r = np.asarray(gap)
-        
+
         V = dV = ddV = None
-        sig_r3 = (self.sig/r)**3
-        sig_r9 = sig_r3**3
+        sig_r3 = (self.sig / r) ** 3
+        sig_r9 = sig_r3 ** 3
 
         if potential:
-            V = self.eps*(2./15*sig_r9 - sig_r3)
+            V = self.eps * (2. / 15 * sig_r9 - sig_r3)
         if gradient or curvature:
-            eps_r = self.eps/r
+            eps_r = self.eps / r
         if gradient:
-            dV = - eps_r*(6./5*sig_r9 - 3*sig_r3)
+            dV = - eps_r * (6. / 5 * sig_r9 - 3 * sig_r3)
         if curvature:
-            ddV = 12*eps_r/r*(sig_r9 - sig_r3)
-
+            ddV = 12 * eps_r / r * (sig_r9 - sig_r3)
 
         return (V, dV, ddV)

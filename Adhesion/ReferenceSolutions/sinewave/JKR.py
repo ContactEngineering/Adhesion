@@ -10,8 +10,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -82,7 +82,7 @@ and the elastic energy necessary for full contact.
 
     \alpha = \frac{K}{p_{wfc} \sqrt{\lambda}} = \frac{K}{\pi E^* h / \sqrt{\lambda}}
 
-"""
+"""  # noqa E501
 
 import numpy as np
 from numpy import sqrt, cos, tan, sin, pi, log
@@ -120,7 +120,7 @@ def flatpunch_pressure(x, a):
     
     Zilberman, S. & Persson, B. N. J. Adhesion between elastic bodies with rough surfaces. Solid State Communications 123, 173–177 (2002).
     
-    """  # noqa: E501
+    """  # noqa: E501, W293
     res = np.zeros_like(x)
 
     sl = abs((x + 1 / 2) % 1 - 1 / 2) < a

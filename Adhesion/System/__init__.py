@@ -10,8 +10,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -22,10 +22,13 @@
 # SOFTWARE.
 #
 
-from ContactMechanics.Systems import IncompatibleResolutionError
+from ContactMechanics.Systems import IncompatibleResolutionError  # noqa: F401
 
-from .Systems import SmoothContactSystem, BoundedSmoothContactSystem
-from .SmoothSystemSpecialisations import FastSmoothContactSystem
-from .PlasticSystemSpecialisations import PlasticSmoothContactSystem
-from .Factory import make_system
-
+from .Systems import (  # noqa: F401
+    SmoothContactSystem,
+    BoundedSmoothContactSystem
+    )
+from .SmoothSystemSpecialisations import FastSmoothContactSystem  # noqa: F401
+from .PlasticSystemSpecialisations import \
+    PlasticSmoothContactSystem  # noqa: F401
+from .Factory import make_system  # noqa: F401
