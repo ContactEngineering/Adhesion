@@ -1,3 +1,26 @@
+#
+# Copyright 2020 Antoine Sanner
+#
+# ### MIT license
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
 import pytest
 
 from Adhesion.ReferenceSolutions import JKR
@@ -16,8 +39,22 @@ def test_penetration_force():
     JKR.penetration(force=0)  # TODO : accuracy
 
 
+def test_force_penetration_vs_radius():
+    a = 2.  # has to be on the stable branch
+    force_from_a = JKR.force(contact_radius=a)
+    force_from_pen = JKR.force(penetration=JKR.penetration(contact_radius=a))
+
+    assert abs(force_from_a - force_from_pen) < 1e-10
+
+
+def test_force_radius_inverse():
+    assert abs(JKR.contact_radius(
+        force=JKR.force(contact_radius=2.)) - 2.
+               ) < 1e-10
+
+
 @pytest.mark.parametrize("w", [1 / np.pi, 2.])
-def test_force_consistency(w):
+def test_force_consistency_pen_w(w):
     contact_radius = 3.
 
     force_from_w = JKR.force(contact_radius=contact_radius, work_of_adhesion=w)
@@ -126,9 +163,9 @@ def test_stress_intensity_factor_second_derivative():
     pen = 0.5
     am = a[1:-1]
     da = a[1] - a[0]
-    dK_da2_num = (JKR.stress_intensity_factor(a[2:], pen,)
-                  - 2 * JKR.stress_intensity_factor(a[1:-1], pen,)
-                  + JKR.stress_intensity_factor(a[:-2], pen,)) / da ** 2
+    dK_da2_num = (JKR.stress_intensity_factor(a[2:], pen, )
+                  - 2 * JKR.stress_intensity_factor(a[1:-1], pen, )
+                  + JKR.stress_intensity_factor(a[:-2], pen, )) / da ** 2
     dK_da2_analytical = JKR.stress_intensity_factor(
         contact_radius=am,
         penetration=pen, der="2_a")
@@ -142,3 +179,12 @@ def test_stress_intensity_factor_second_derivative():
 
     np.testing.assert_allclose(dK_da2_analytical, dK_da2_num,
                                atol=1e-6, rtol=1e-4)
+
+
+def test_equilibrium_elastic_energy_vs_nonequilibrium():
+    a = 0.5
+    Eel = JKR.equilibrium_elastic_energy(a)
+
+    np.testing.assert_allclose(Eel,
+                               JKR.nonequilibrium_elastic_energy(
+                                   JKR.penetration(a), a))

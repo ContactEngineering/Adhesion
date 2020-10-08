@@ -1,20 +1,19 @@
 #
-# Copyright 2019 Lars Pastewka
-#           2018-2019 Antoine Sanner
-#           2016 Till Junge
-# 
+# Copyright 2020 Antoine Sanner
+#           2020 Lars Pastewka
+#
 # ### MIT license
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -33,13 +32,16 @@ import copy
 from NuMPI import MPI
 from NuMPI.Tools import Reduction
 
+
 class Interaction(object):
     """base class for all interactions, e.g. interatomic potentials"""
     # pylint: disable=too-few-public-methods
     pass
 
+
 class HardWall(Interaction):
     """base class for non-smooth contact mechanics"""
+
     # pylint: disable=too-few-public-methods
     def __init__(self):
         self.penetration = None
@@ -86,7 +88,8 @@ class SoftWall(Interaction):
 
     def __deepcopy__(self, memo):
         """
-        makes a deepcopy of all the attributes except self.pnp, where it stores the same reference
+        makes a deepcopy of all the attributes except self.pnp,
+        where it stores the same reference
 
         Parameters
         ----------
@@ -103,7 +106,8 @@ class SoftWall(Interaction):
         keys = set(self.__dict__.keys())
 
         # exceptions
-        # pnp is a module or a class impolenting computation methods, it is not copied
+        # pnp is a module or a class impolenting computation methods,
+        # it is not copied
         result.pnp = self.pnp
         keys.remove('pnp')
         # same for communicator
@@ -125,11 +129,14 @@ class SoftWall(Interaction):
         computes and returns the interaction energy and/or forces based on the
         as fuction of the gap
         Parameters:
-        gap        -- array containing the point-wise gap values
-        potential        -- (default True) whether the energy should be evaluated
-        gradient     -- (default False) whether the gradient should be evaluated
+        -----------
+        gap: array like
+            the point-wise gap values
+        potential: bool
+            (default True) whether the energy should be evaluated
+        gradient: bool
+            (default False) whether the gradient should be evaluated
         """
-        r = np.asarray(gap)
         raise NotImplementedError()
 
     def plot(self):

@@ -1,18 +1,20 @@
 #
-# Copyright 2016 Lars Pastewka
-# 
+# Copyright 2020 Antoine Sanner
+#           2015-2016, 2020 Lars Pastewka
+#           2015-2016 Till Junge
+#
 # ### MIT license
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -54,7 +56,8 @@ Nondimensional units
 The nondimensionalisation follows
 Maugis's book (p.290):
 
-- lengths in the vertical direction (penetration, heights, displacements, gaps),
+- lengths in the vertical direction
+   (penetration, heights, displacements, gaps),
    are in units of
 
 .. math ::
@@ -86,7 +89,7 @@ from scipy.optimize import newton
 ###
 
 def radius_unit(radius, contact_modulus, work_of_adhesion):
-    k = 4 / 3 * contact_modulus # maugis contact modulus
+    k = 4 / 3 * contact_modulus  # maugis contact modulus
     return (np.pi * work_of_adhesion * radius ** 2 / k) ** (1 / 3)
 
 
@@ -106,7 +109,7 @@ def contact_radius(force=None,
                    work_of_adhesion=1 / np.pi):
     r"""
     Given normal load or rigid body penetration, sphere radius and contact
-    modulus compute contact radius.
+    modulus compute contact radius on the stable branch.
 
     if only force or penetration is provided, it is assumed that the
     nondimensionalisation
@@ -161,6 +164,8 @@ def contact_radius(force=None,
             return root
         else:
             return 0
+
+
 _contact_radius_fun = contact_radius
 
 
@@ -265,7 +270,8 @@ def force(contact_radius=None,
         hertzian_pen = contact_radius ** 2 / radius
 
         flat_punch_pen = penetration - hertzian_pen
-        flat_punch_force = 2 * contact_radius * flat_punch_pen * contact_modulus
+        flat_punch_force = \
+            2 * contact_radius * flat_punch_pen * contact_modulus
 
         return hertzian_force + flat_punch_force
 
@@ -279,12 +285,11 @@ def force(contact_radius=None,
                 contact_modulus=contact_modulus,
                 work_of_adhesion=work_of_adhesion)
 
-
         hertzian_force = contact_radius ** 3 * maugis_modulus / radius
         # Force in the hertzian contact at the same radius
 
-        return hertzian_force \
-            - np.sqrt(6 * np.pi * work_of_adhesion * radius * hertzian_force)
+        return hertzian_force - np.sqrt(
+            6 * np.pi * work_of_adhesion * radius * hertzian_force)
 
 
 def penetration(contact_radius=None,
@@ -302,7 +307,7 @@ def penetration(contact_radius=None,
     radius : float, optional
         Sphere (actually paraboloid) radius.
     contact_modulus : float, optional
-        Contact modulus: :math:`E^* = E/(1-\nu**2)`
+        Contact modulus: :math:`E^* = E/(1-\nu^2)`
         with Young's modulus E and Poisson number :math:`\nu`.
         The default value is so that Maugis's contact Modulus is one
         (:math:`K = 4 / 3 E^*`)
@@ -325,15 +330,15 @@ def penetration(contact_radius=None,
         2 * np.pi * contact_radius * work_of_adhesion / contact_modulus)
 
 
-
-
 def equilibrium_elastic_energy(contact_radius):
     A = contact_radius
-    return 1/3 * A * (A**2 - np.sqrt(6 * A))**2 + A**5 / 15
+    return 1 / 3 * A * (A ** 2 - np.sqrt(6 * A)) ** 2 + A ** 5 / 15
+
 
 # dimensional version
-#def elastic_energy__a(a, R, Es, w):
-#    return (a**5 * 4 * Es) / (9 * R**2) * (1/5 + (1 - R * np.sqrt(9 * np.pi * w / (2*a**3 * Es)))**2)
+# def elastic_energy__a(a, R, Es, w):
+#    return (a**5 * 4 * Es) / (9 * R**2)
+#       * (1/5 + (1 - R * np.sqrt(9 * np.pi * w / (2*a**3 * Es)))**2)
 
 
 def nonequilibrium_elastic_energy(penetration, contact_radius):
@@ -360,7 +365,7 @@ def nonequilibrium_elastic_energy(penetration, contact_radius):
     A = contact_radius
     d = penetration
 
-    return 3/4 * A * (d - A**2 / 3 )**2 + A**5 / 15
+    return 3 / 4 * A * (d - A ** 2 / 3) ** 2 + A ** 5 / 15
 
 
 def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
@@ -370,26 +375,30 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
     (with respect to the nondimensional area)
 
     .. math ::
-          \frac{\partial U_{el}}{\partial pi A^2}
+          \frac{\partial U_{el}}{\partial \pi A^2}
           = \frac{3}{8 \pi} w_{ref} \frac{1}{A} (\Delta - A^2)^2
 
     be careful, this is
 
-    Here :math:`\tilde U_{el} = \frac{U_{el}}{\pi w R (\pi^2 w^2 R / K^2)^{1/3}}`
+    Here
+    :math:`\tilde U_{el} = \frac{U_{el}}{\pi w R (\pi^2 w^2 R / K^2)^{1/3}}`
     is the nondimensionalized elastic energy
 
     For the units, see maugis p.290
 
     Parameters
     ----------
-    penetration: :math:`\Delta` in maugis
-    contact_radius: :math:`A` in maugis
+    penetration: float or np.array
+        :math:`\Delta` in maugis
+    contact_radius: float or np.array
+        :math:`A` in maugis
 
     Returns
     -------
 
     """
-    return 3 / 8 / np.pi * (penetration - contact_radius**2)**2 / contact_radius
+    return 3 / 8 / np.pi * (penetration - contact_radius**2)**2 \
+        / contact_radius
 
 
 def stress_intensity_factor(contact_radius, penetration, der="0",
@@ -421,18 +430,20 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
     d = penetration
     Es = contact_modulus
 
-    dh = a ** 2 / R # hertzian displacement
-    dc = d - dh # displacement imposed to the external crack
+    dh = a ** 2 / R  # hertzian displacement
+    dc = d - dh  # displacement imposed to the external crack
 
     if der == "0":
-        return - (Es * dc / np.sqrt(np.pi * a) )
+        return - (Es * dc / np.sqrt(np.pi * a))
     elif der == "1_a":
-        return 1 / 2 * a ** (-3/2) * Es * dc / np.sqrt(np.pi) + Es / np.sqrt(np.pi * a) * 2 * a / R
+        return 1 / 2 * a ** (-3 / 2) * Es * dc / np.sqrt(np.pi) \
+               + Es / np.sqrt(np.pi * a) * 2 * a / R
     elif der == "2_a":
-        return - 3 / 4 * a**(-5/2) * Es * dc / np.sqrt(np.pi)
+        return - 3 / 4 * a ** (-5 / 2) * Es * dc / np.sqrt(np.pi)
 
 
-def displacement_field(r, contact_radius, radius, contact_modulus, work_of_adhesion):
+def displacement_field(r, contact_radius,
+                       radius, contact_modulus, work_of_adhesion):
     r"""
     a function of the distance from the contact center giving the displacement
 
@@ -442,8 +453,8 @@ def displacement_field(r, contact_radius, radius, contact_modulus, work_of_adhes
     radius : float
         Sphere radius.
     contact_modulus : float
-        Contact modulus: :math:`E^* = E/(1-\nu^2)` with Young's modulus E and Poisson
-        number :math:`\nu`.
+        Contact modulus: :math:`E^* = E/(1-\nu^2)` with Young's
+        modulus E and Poisson number :math:`\nu`.
     work_of_adhesion : float
         Work of adhesion.
     Returns
@@ -456,7 +467,7 @@ def displacement_field(r, contact_radius, radius, contact_modulus, work_of_adhes
     Es = contact_modulus
 
     P1 = a ** 3 * 4 * Es / 3 / R
-    P1mP = np.sqrt(6 * np.pi * w * R * P1)
+    P1mP = np.sqrt(6 * np.pi * work_of_adhesion * R * P1)
     assert np.any(r > 0)
     r_a = r / a
     sl_inner = r_a < 1
@@ -465,14 +476,16 @@ def displacement_field(r, contact_radius, radius, contact_modulus, work_of_adhes
     u = np.zeros_like(r_a)
     u[sl_outer] = (- P1mP / (Es * np.pi * a) * np.arcsin(1 / r_a[sl_outer])
                    + a ** 2 / (np.pi * R) * (
-                               np.sqrt(r_a[sl_outer] ** 2 - 1) + (
-                                   2 - r_a[sl_outer] ** 2) * np.arcsin(
-                           1 / r_a[sl_outer])))
+                           np.sqrt(r_a[sl_outer] ** 2 - 1)
+                           + (2 - r_a[sl_outer] ** 2)
+                           * np.arcsin(1 / r_a[sl_outer])
+                   )
+                   )
     u[sl_inner] = + penetration(contact_radius=contact_radius,
                                 radius=radius,
                                 contact_modulus=contact_modulus,
                                 work_of_adhesion=work_of_adhesion) \
-                  - 1 / (2 * R) * r[sl_inner] ** 2
+        - 1 / (2 * R) * r[sl_inner] ** 2
     return u
 
 
@@ -500,8 +513,9 @@ def stress_distribution(r, contact_radius, radius, contact_modulus,
     sl_inner = r_a < 1
 
     sig = np.zeros_like(r_a)
-    sig[sl_inner] = P1mP / (2 * np.pi * a ** 2) / np.sqrt(
-        1 - r_a[sl_inner] ** 2) - 1.5 * P1 / (np.pi * a ** 2) * \
-        np.sqrt(1 - r_a[sl_inner] ** 2)
+    sig[sl_inner] = P1mP / (2 * np.pi * a ** 2) \
+        / np.sqrt(1 - r_a[sl_inner] ** 2) \
+        - 1.5 * P1 / (np.pi * a ** 2) \
+        * np.sqrt(1 - r_a[sl_inner] ** 2)
 
     return sig

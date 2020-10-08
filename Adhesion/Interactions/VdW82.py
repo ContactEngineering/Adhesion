@@ -1,20 +1,19 @@
 #
-# Copyright 2018-2019 Antoine Sanner
-#           2019 Lars Pastewka
-#           2016 Till Junge
-# 
+# Copyright 2020 Antoine Sanner
+#           2020 Lars Pastewka
+#
 # ### MIT license
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -32,9 +31,7 @@ http://dx.doi.org/10.1103/PhysRevLett.111.035502
 import numpy as np
 from NuMPI import MPI
 
-from Adhesion.Interactions import Potential, SmoothPotential
-from Adhesion.Interactions import ParabolicCutoffPotential
-from Adhesion.Interactions import LinearCorePotential
+from Adhesion.Interactions import Potential
 
 
 class VDW82(Potential):
@@ -94,19 +91,19 @@ class VDW82(Potential):
                  mask=(slice(None), slice(None))):
         r = np.asarray(gap)
         V = dV = ddV = None
-        r_2 = r**-2
-        c_sr_r6 = self.c_sr*r_2**3 if  np.isscalar(self.c_sr) \
-                else self.c_sr[mask] *r_2**3
-        a_pi = self.hamaker/np.pi if  np.isscalar(self.hamaker) \
-                else self.hamaker[mask] /np.pi
+        r_2 = r ** -2
+        c_sr_r6 = self.c_sr * r_2 ** 3 if np.isscalar(self.c_sr) \
+            else self.c_sr[mask] * r_2 ** 3
+        a_pi = self.hamaker / np.pi if np.isscalar(self.hamaker) \
+            else self.hamaker[mask] / np.pi
 
         if potential:
-            V = r_2*(-a_pi/12 + c_sr_r6)
+            V = r_2 * (-a_pi / 12 + c_sr_r6)
         if gradient or curvature:
-            r_3 = r_2/r
+            r_3 = r_2 / r
         if gradient:
             # Forces are the negative gradient
-            dV = - r_3*(-a_pi/6 + 8*c_sr_r6)
+            dV = - r_3 * (-a_pi / 6 + 8 * c_sr_r6)
         if curvature:
             ddV = r_3/r*(-a_pi/2 + 72*c_sr_r6)
         return (V, dV, ddV)

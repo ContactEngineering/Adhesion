@@ -1,18 +1,18 @@
 
 Bootstrap: localimage
-From: dep_serial.sif
+From: dep_mpi.sif
 
 %labels
     Author antoine.sanner@imtek.uni-freiburg.de
 
 %files
-    ../ Adhesion
+    ../Adhesion 
 
 %post 
     # note: -y is to automatically accept when apt asks for confirmation. Otherwise the recipe fails
 
     # Install the rest using 
-    cd Adhesion
+    cd Adhesion 
     python3 -m pip install git+file:$PWD
 
 %environment

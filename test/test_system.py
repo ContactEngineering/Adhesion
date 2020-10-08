@@ -1,19 +1,21 @@
 #
-# Copyright 2019-2020 Lars Pastewka
-#           2018-2019 Antoine Sanner
-# 
+# Copyright 2018, 2020 Antoine Sanner
+#           2016, 2020 Lars Pastewka
+#           2015-2016 Till Junge
+#           2015 junge@cmsjunge
+#
 # ### MIT license
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,7 +28,6 @@
 Tests the creation of tribosystems
 """
 
-import unittest
 from numpy.random import rand, random
 import numpy as np
 
@@ -34,7 +35,6 @@ from scipy.optimize import minimize
 import time
 
 import os
-
 
 from Adhesion.System import make_system
 from ContactMechanics.Systems import IncompatibleResolutionError
@@ -48,34 +48,37 @@ from SurfaceTopography import make_sphere, Topography
 import pytest
 from NuMPI import MPI
 
-pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size()> 1,
-        reason="tests only serial functionalities, please execute with pytest")
+pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+                                reason="tests only serial functionalities, "
+                                       "please execute with pytest")
 
 BASEDIR = os.path.dirname(os.path.realpath(__file__))
+
 
 @pytest.fixture(params=range(50))
 def self(request):
     np.random.seed(request.param)
-    self.physical_sizes = (7.5+5*rand(), 7.5+5*rand())
+    self.physical_sizes = (7.5 + 5 * rand(), 7.5 + 5 * rand())
     self.radius = 100
     base_res = 16
     self.res = (base_res, base_res)
-    self.young = 3+2*random()
+    self.young = 3 + 2 * random()
 
     self.substrate = Solid.PeriodicFFTElasticHalfSpace(self.res, self.young,
                                                        self.physical_sizes)
 
-    self.eps = 1+np.random.rand()
-    self.sig = 3+np.random.rand()
-    self.gam = (5+np.random.rand())
-    self.rcut = 2.5*self.sig+np.random.rand()
+    self.eps = 1 + np.random.rand()
+    self.sig = 3 + np.random.rand()
+    self.gam = (5 + np.random.rand())
+    self.rcut = 2.5 * self.sig + np.random.rand()
     self.smooth = Inter.LJ93(self.eps, self.sig
                                ).spline_cutoff(self.gam
                                                ).linearize_core()
 
     self.sphere = make_sphere(self.radius, self.res,
-                                                self.physical_sizes)
+                              self.physical_sizes)
     return self
+
 
 def test_DecoratedTopography(self):
     top = self.sphere.detrend()
@@ -85,39 +88,45 @@ def test_DecoratedTopography(self):
                 surface=top
                 )
 
+
 def test_RejectInconsistentSizes(self):
-    incompat_res = tuple((2*r for r in self.res))
+    incompat_res = tuple((2 * r for r in self.res))
     incompat_sphere = make_sphere(self.radius, incompat_res,
-                                                    self.physical_sizes)
+                                  self.physical_sizes)
     with pytest.raises(IncompatibleResolutionError):
         make_system(self.substrate, self.smooth, incompat_sphere,
                     system_class=SmoothContactSystem)
+
 
 def test_SmoothContact(self):
     S = SmoothContactSystem(self.substrate, self.smooth, self.sphere)
     offset = self.sig
     disp = np.zeros(self.res)
-    pot, forces = S.evaluate(disp, offset, forces = True)
+    pot, forces = S.evaluate(disp, offset, forces=True)
+
 
 def test_SystemGradient(self):
-    res = self.res##[0]
-    size = [r*1.28 for r in self.res]##[0]
+    res = self.res
+    size = [r * 1.28 for r in self.res]
     substrate = Solid.PeriodicFFTElasticHalfSpace(res, 25 * self.young,
                                                   size)
     sphere = make_sphere(self.radius, res, size)
     S = SmoothContactSystem(substrate, self.smooth, sphere)
-    disp = random(res)*self.sig/10
+    disp = random(res) * self.sig / 10
     disp -= disp.mean()
     offset = -self.sig
     gap = S.compute_gap(disp, offset)
 
-    ## check subgradient of potential
+    # check subgradient of potential
     V, dV, ddV = S.interaction.evaluate(gap, potential=True, gradient=True)
     f = V.sum()
     g = dV
-    fun = lambda x: S.interaction.evaluate(x)[0].sum()
+
+    def fun(x):
+        return S.interaction.evaluate(x)[0].sum()
+
     approx_g = Tools.evaluate_gradient(
-        fun, gap, self.sig/1e5)
+        fun, gap, self.sig / 1e5)
 
     tol = 1e-8
     error = Tools.mean_err(g, approx_g)
@@ -125,20 +134,25 @@ def test_SystemGradient(self):
     msg.append("f = {}".format(f))
     msg.append("g = {}".format(g))
     msg.append('approx = {}'.format(approx_g))
-    msg.append("g/approx = {}".format(g/approx_g))
+    msg.append("g/approx = {}".format(g / approx_g))
     msg.append("error = {}".format(error))
     msg.append("tol = {}".format(tol))
     assert error < tol, ", ".join(msg)
-    interaction = dict({"e":f*S.area_per_pt,
-                        "g":g*S.area_per_pt,
-                        "a":approx_g*S.area_per_pt})
-    ## check subgradient of substrate
-    V, dV = S.substrate.evaluate(disp, pot=True,forces=True)
+    interaction = dict({
+        "e": f * S.area_per_pt,
+        "g": g * S.area_per_pt,
+        "a": approx_g * S.area_per_pt
+        })
+    # check subgradient of substrate
+    V, dV = S.substrate.evaluate(disp, pot=True, forces=True)
     f = V.sum()
     g = -dV
-    fun = lambda x: S.substrate.evaluate(x)[0].sum()
+
+    def fun(x):
+        return S.substrate.evaluate(x)[0].sum()
+
     approx_g = Tools.evaluate_gradient(
-        fun, disp, self.sig/1e5)
+        fun, disp, self.sig / 1e5)
 
     tol = 1e-8
     error = Tools.mean_err(g, approx_g)
@@ -149,9 +163,11 @@ def test_SystemGradient(self):
     msg.append("error = {}".format(error))
     msg.append("tol = {}".format(tol))
     assert error < tol, ", ".join(msg)
-    substrate = dict({"e":f,
-                      "g":g,
-                      "a":approx_g})
+    substrate = dict({
+        "e": f,
+        "g": g,
+        "a": approx_g
+        })
 
     V, dV = S.evaluate(disp, offset, forces=True)
     f = V
@@ -166,21 +182,19 @@ def test_SystemGradient(self):
             approx_g, approx_g2, Tools.mean_err(approx_g2, approx_g),
             tol)
 
-
     i, s = interaction, substrate
     f_combo = i['e'] + s['e']
-    error = abs(f_combo-V)
+    error = abs(f_combo - V)
 
     assert error < tol, \
         "f_combo = {}, f = {}, error = {}, tol = {}".format(
             f_combo, V, error, tol)
 
-
     g_combo = i['g'] + s['g']
     error = Tools.mean_err(g_combo, g)
     assert error < tol, \
         "g_combo = {}, g = {}, error = {}, tol = {}, g/g_combo = {}".format(
-        g_combo, g, error, tol, g / g_combo)
+            g_combo, g, error, tol, g / g_combo)
 
     approx_g_combo = i['a'] + s['a']
     error = Tools.mean_err(approx_g_combo, approx_g)
@@ -199,8 +213,8 @@ def test_SystemGradient(self):
 
 
 def test_unconfirmed_minimization(self):
-    ## this merely makes sure that the code doesn't throw exceptions
-    ## the plausibility of the result is not verified
+    # this merely makes sure that the code doesn't throw exceptions
+    # the plausibility of the result is not verified
     res = self.res[0]
     size = self.physical_sizes[0]
     substrate = Solid.PeriodicFFTElasticHalfSpace(res, 25 * self.young,
@@ -211,30 +225,32 @@ def test_unconfirmed_minimization(self):
     disp = np.zeros(res)
 
     fun_jac = S.objective(offset, gradient=True)
-    fun     = S.objective(offset, gradient=False)
+    fun = S.objective(offset, gradient=False)
 
-    info =[]
+    info = []
     start = time.perf_counter()
-    result_grad = minimize(fun_jac, disp.reshape(-1), jac=True, method="L-BFGS-B")
-    duration_g = time.perf_counter()-start
+    result_grad = minimize(fun_jac, disp.reshape(-1),
+                           jac=True, method="L-BFGS-B")
+    duration_g = time.perf_counter() - start
     info.append("using gradient:")
     info.append("solved in {} seconds using {} fevals".format(
         duration_g, result_grad.nfev))
 
     start = time.perf_counter()
-    result_simple = minimize(fun, disp,  method="L-BFGS-B")
-    duration_w = time.perf_counter()-start
+    result_simple = minimize(fun, disp, method="L-BFGS-B")
+    duration_w = time.perf_counter() - start
     info.append("without gradient:")
     info.append("solved in {} seconds using {} fevals".format(
         duration_w, result_simple.nfev))
 
-    info.append("speedup (timewise) was {}".format(duration_w/duration_g))
+    info.append("speedup (timewise) was {}".format(duration_w / duration_g))
 
     print('\n'.join(info))
     message = ("Success with gradient: {0.success}, message was '{0.message"
                "}',\nSuccess without: {1.success}, message was '{1.message}"
                "'").format(result_grad, result_simple)
     assert result_grad.success and result_simple.success, message
+
 
 def test_minimize_proxy(self):
     res = self.res
@@ -248,14 +264,15 @@ def test_minimize_proxy(self):
     n_iter = np.zeros(nb_scales, dtype=int)
     n_force = np.zeros(nb_scales, dtype=float)
     for i in range(nb_scales):
-        scale = 10**(i-2)
-        res = S.minimize_proxy(offset, disp_scale=scale, tol = 1e-40,
+        scale = 10 ** (i - 2)
+        res = S.minimize_proxy(offset, disp_scale=scale, tol=1e-40,
                                gradient=True, callback=True)
         print(res.message)
         n_iter[i] = res.nit
         n_force[i] = S.compute_normal_force()
     print("N_iter = ", n_iter)
     print("N_force = ", n_force)
+
 
 def test_minimize_proxy_tol(self):
     res = self.res
@@ -266,7 +283,7 @@ def test_minimize_proxy_tol(self):
     S = SmoothContactSystem(substrate, self.smooth, sphere)
     offset = self.sig
 
-    res = S.minimize_proxy(offset, tol = 1e-20,
+    res = S.minimize_proxy(offset, tol=1e-20,
                            gradient=True, callback=True)
     print(res.message)
 
@@ -279,17 +296,16 @@ def test_minimize_proxy_tol(self):
 
     error = Tools.mean_err(rep_force, alt_rep_force)
 
-
-    ## import matplotlib.pyplot as plt
-    ## fig = plt.figure()
-    ## CS = plt.contourf(S.interaction_force)
-    ## plt.colorbar(CS)
-    ## plt.title("interaction")
-    ## fig = plt.figure()
-    ## CS = plt.contourf(S.substrate.force)
-    ## plt.colorbar(CS)
-    ## plt.title("substrate")
-    ## plt.show()
+    # import matplotlib.pyplot as plt
+    # fig = plt.figure()
+    # CS = plt.contourf(S.interaction_force)
+    # plt.colorbar(CS)
+    # plt.title("interaction")
+    # fig = plt.figure()
+    # CS = plt.contourf(S.substrate.force)
+    # plt.colorbar(CS)
+    # plt.title("substrate")
+    # plt.show()
 
     assert error < 1e-5, "error = {}".format(error)
 
@@ -308,60 +324,64 @@ def test_LBFGSB_Hertz():
     For some reason it is difficult to reach the gradient tolerance
 
     """
-    nx, ny = 64,64
+    nx, ny = 64, 64
     sx, sy = 20., 20.
     R = 11.
 
-    surface =make_sphere(R, (nx, ny), (sx, sy), kind="paraboloid")
-    Es=50.
-    substrate = Solid.FreeFFTElasticHalfSpace((nx,ny), young=Es,
+    surface = make_sphere(R, (nx, ny), (sx, sy), kind="paraboloid")
+    Es = 50.
+    substrate = Solid.FreeFFTElasticHalfSpace((nx, ny), young=Es,
                                               physical_sizes=(sx, sy),
                                               fft="serial",
                                               communicator=MPI.COMM_SELF)
 
     interaction = Inter.Exponential(0., 0.0001)
-    system = SmoothContactSystem(substrate, interaction,surface)
+    system = SmoothContactSystem(substrate, interaction, surface)
 
-    gtol=1e-6
-    offset=1.
+    gtol = 1e-6
+    offset = 1.
     res = system.minimize_proxy(offset=offset, lbounds="auto",
                                 options=dict(gtol=gtol, ftol=0))
 
     assert res.success, res.message
     print(res.message)
-    print(np.max(abs(res.jac))) # This far beyond the tolerance because
-    # at the points where the constraint act the gradient is allowed to not be zero
+    print(np.max(abs(res.jac)))  # This far beyond the tolerance because
+    # at the points where the
+    # constraint act the gradient is allowed to not be zero
 
-    padding_mask = np.full(substrate.nb_subdomain_grid_pts , True)
+    padding_mask = np.full(substrate.nb_subdomain_grid_pts, True)
     padding_mask[substrate.topography_subdomain_slices] = False
 
     print(np.max(abs(res.jac[padding_mask])))
     # no force in padding area
     np.testing.assert_allclose(
-        system.substrate.force[padding_mask],0, rtol=0, atol=gtol)
+        system.substrate.force[padding_mask], 0, rtol=0, atol=gtol)
 
-    contacting_points = np.where(system.compute_gap(res.x, offset) == 0, 1.,0.)
+    contacting_points = np.where(system.compute_gap(res.x, offset) == 0, 1.,
+                                 0.)
     comp_contact_area = np.sum(contacting_points) * system.area_per_pt
 
     contacting_points_forces = np.where(abs(system.force) > gtol, 1., 0.)
 
-    assert (contacting_points_forces[ \
-        system.substrate.local_topography_subdomain_slices] == contacting_points).all()
+    assert (contacting_points_forces[
+                system.substrate.local_topography_subdomain_slices]
+            == contacting_points).all()
 
-    comp_normal_force= np.sum(-substrate.evaluate_force(res.x))
+    comp_normal_force = np.sum(-substrate.evaluate_force(res.x))
     from ContactMechanics.ReferenceSolutions import Hertz as Hz
     a, p0 = Hz.radius_and_pressure(Hz.normal_load(offset, R, Es), R, Es)
 
-    np.testing.assert_allclose(comp_normal_force,
-                        Hz.normal_load(offset, R, Es),
-                        rtol=1e-3,
-                        err_msg="computed normal force doesn't match with hertz "
-                                "theory for imposed Penetration {}".format(
-                            offset))
+    np.testing.assert_allclose(
+        comp_normal_force, Hz.normal_load(offset, R, Es),
+        rtol=1e-3,
+        err_msg="computed normal force doesn't match with hertz "
+                "theory for imposed Penetration {}".format(
+            offset))
 
-    np.testing.assert_allclose(comp_contact_area, np.pi * a ** 2,
-                        rtol=5e-2,
-                        err_msg="Computed area doesn't match Hertz Theory")
+    np.testing.assert_allclose(
+        comp_contact_area, np.pi * a ** 2,
+        rtol=5e-2,
+        err_msg="Computed area doesn't match Hertz Theory")
 
     if False:
         import matplotlib.pyplot as plt

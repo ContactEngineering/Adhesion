@@ -1,21 +1,19 @@
 #
-# Copyright 2018-2019 Antoine Sanner
-#           2019 Lintao Fang
-#           2016, 2019 Lars Pastewka
-#           2016 Till Junge
-# 
+# Copyright 2020 Antoine Sanner
+#           2020 Lars Pastewka
+#
 # ### MIT license
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-# 
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,7 +27,6 @@
 Generic potential class, all potentials inherit it
 """
 
-import math
 import abc
 
 import numpy as np
@@ -47,7 +44,7 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
         computed at any point in the problem from just the one-dimensional gap
         (h(x,y)-z(x,y)) at that point
     """
-    _functions={}
+    _functions = {}
     name = "generic_potential"
 
     class PotentialError(Exception):
@@ -92,7 +89,6 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
     def __init__(self, communicator=MPI.COMM_WORLD):
         super().__init__(communicator)
         self.curvature = None
-
 
     @abc.abstractmethod
     def __repr__(self):
@@ -173,4 +169,3 @@ class DecoratedPotential(Potential):
 
     def pipeline(self):
         return self.parent_potential.pipeline() + [self]
-

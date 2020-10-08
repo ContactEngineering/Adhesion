@@ -1,3 +1,26 @@
+#
+# Copyright 2020 Antoine Sanner
+#
+# ### MIT license
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
 r"""
 
 References:
@@ -59,7 +82,7 @@ and the elastic energy necessary for full contact.
 
     \alpha = \frac{K}{p_{wfc} \sqrt{\lambda}} = \frac{K}{\pi E^* h / \sqrt{\lambda}}
 
-"""
+"""  # noqa E501
 
 import numpy as np
 from numpy import sqrt, cos, tan, sin, pi, log
@@ -97,7 +120,7 @@ def flatpunch_pressure(x, a):
     
     Zilberman, S. & Persson, B. N. J. Adhesion between elastic bodies with rough surfaces. Solid State Communications 123, 173–177 (2002).
     
-    """  # noqa: E501
+    """  # noqa: E501, W293
     res = np.zeros_like(x)
 
     sl = abs((x + 1 / 2) % 1 - 1 / 2) < a
@@ -293,7 +316,7 @@ def stress_intensity_factor_asymmetric(a_s, a_o, P, der="0"):
     units for a_s and a_o: wavelength of the sinewave
     units of pressure: westergaard full contact pressure :math:`\pi E^* h / \lambda`
 
-    returns the stress intensity factor in units of :math:`\pi E^* h / \sqrt(\lambda)`
+    returns the stress intensity factor in units of :math:`\pi E^* h / \sqrt{\lambda}`
     or it's partial derivative.
 
     Notation for the derivative flag:
