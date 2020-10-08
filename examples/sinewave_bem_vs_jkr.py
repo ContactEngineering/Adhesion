@@ -60,7 +60,7 @@ for p in [6, 8, 10, 12]:
     i = 0
     for offset in offsets:
         if disp0 is not None:
-            disp0 += offset - offset_prev
+            disp0 += offset - offset_prev  # noqa: F821
         sol = system.minimize_proxy(
             disp0=disp0,
             options=dict(gtol=gtol * max(Es * surface.rms_slope(), abs(

@@ -205,7 +205,6 @@ class LinearCorePotential(DecoratedPotential):
                 dV if gradient else None,
                 ddV if curvature else None)
 
-
     def _lin_pot(self, gap, potential=True, gradient=False, curvature=False):
         """ Evaluates the linear part and its derivatives of the potential.
         Parameters:

@@ -513,8 +513,6 @@ class SmoothContactSystem(SystemBase):
 
                     energy, gradient_k
         """
-        dummy = disp0
-        # res = self.substrate.nb_subdomain_grid_pts
         if gradient:
             def fun(disp_k, disp):
                 self.evaluate_k(disp_k, disp, offset, forces=True,
@@ -537,7 +535,7 @@ class SmoothContactSystem(SystemBase):
         self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
                                       self.substrate.real_buffer)
         disp = self.substrate.real_buffer.array()[...].copy() \
-               * self.substrate.fftengine.normalisation
+            * self.substrate.fftengine.normalisation
 
         gap = self.compute_gap(disp)
         _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
@@ -549,7 +547,7 @@ class SmoothContactSystem(SystemBase):
         adh_curv_k = self.substrate.fourier_buffer.array()[...].copy()
 
         hessp_val_k = -self.substrate.evaluate_k_force_k(des_dir_k) + \
-                      adh_curv_k * des_dir_k * self.substrate.area_per_pt
+            adh_curv_k * des_dir_k * self.substrate.area_per_pt
 
         return hessp_val_k
 
@@ -591,14 +589,12 @@ class SmoothContactSystem(SystemBase):
 
                     energy, gradient_k_float
         """
-        dummy = disp0
-        # res = self.substrate.nb_subdomain_grid_pts
-
         if gradient:
             def fun(disp_k):
                 disp_k = disp_k.copy()
                 disp_float_k = self.substrate.float_to_k(disp_k)
-                self.substrate.fourier_buffer.array()[...] = disp_float_k.copy()
+                self.substrate.fourier_buffer.array()[...] = \
+                    disp_float_k.copy()
                 self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
                                               self.substrate.real_buffer)
                 disp = self.substrate.real_buffer.array()[...].copy() \
@@ -606,24 +602,25 @@ class SmoothContactSystem(SystemBase):
 
                 self.evaluate_k(disp_float_k, disp, offset, forces=True,
                                 logger=logger)
-                self.force_k_float = self.substrate.k_to_float(self.force_k.copy())
+                self.force_k_float = \
+                    self.substrate.k_to_float(self.force_k.copy())
                 return (self.energy, -self.force_k_float)
         else:
             def fun(disp_k):
                 # pylint: disable=missing-docstring
                 float_k_disp = self.substrate.float_to_k(disp_k)
-                self.substrate.fourier_buffer.array()[...] = float_k_disp.copy()
+                self.substrate.fourier_buffer.array()[...] = \
+                    float_k_disp.copy()
                 self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
                                               self.substrate.real_buffer)
                 disp = self.substrate.real_buffer.array()[...].copy() \
-                       * self.substrate.fftengine.normalisation
+                    * self.substrate.fftengine.normalisation
 
                 return self.evaluate_k(
                     disp_k, disp, offset, forces=False,
                     logger=logger)[0]
 
         return fun
-
 
     def callback(self, force=False):
         """

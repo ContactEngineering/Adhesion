@@ -1,5 +1,5 @@
-
-
+import pytest
+from NuMPI import MPI
 import numpy as np
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from SurfaceTopography import UniformLineScan
@@ -7,6 +7,10 @@ from SurfaceTopography import UniformLineScan
 from Adhesion.Interactions import VDW82, Exponential
 from Adhesion.System import SmoothContactSystem, BoundedSmoothContactSystem
 from Adhesion.ReferenceSolutions.sinewave import JKR
+
+pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+                                reason="tests only serial funcionalities,"
+                                       " please execute with pytest")
 
 
 def test_1d_sinewave_smooth_against_jkr():
@@ -47,7 +51,7 @@ def test_1d_sinewave_smooth_against_jkr():
         i = 0
         for offset in offsets:
             if disp0 is not None:
-                disp0 += offset - offset_prev
+                disp0 += offset - offset_prev  # noqa: F821
             sol = system.minimize_proxy(
                 disp0=disp0,
                 options=dict(
@@ -68,7 +72,7 @@ def test_1d_sinewave_smooth_against_jkr():
             mean_pressures[i] = system.compute_normal_force() / s
             contact_areas[i] = np.count_nonzero(system.gap < inter.r_infl) / n
 
-            offset_prev = offset
+            offset_prev = offset  # noqa: F841
             i += 1
 
         abserror.append(np.max(abs(
@@ -113,7 +117,7 @@ def test_1d_sinewave_hardwall_against_jkr():
         i = 0
         for offset in offsets:
             if disp0 is not None:
-                disp0 += offset - offset_prev
+                disp0 += offset - offset_prev  # noqa: F821
             sol = system.minimize_proxy(
                 disp0=disp0,
                 options=dict(gtol=gtol * max(Es * surface.rms_slope(),
@@ -127,14 +131,14 @@ def test_1d_sinewave_hardwall_against_jkr():
                 offset=offset,
                 callback=None,
                 lbounds="auto"
-                    )
+                )
             assert sol.success, sol.message
             disp0 = sol.x
             mean_pressures[i] = system.compute_normal_force() / s
             contact_areas[i] = system.compute_contact_area() / s
 
             # print("step {}".format(i))
-            offset_prev = offset
+            offset_prev = offset  # noqa: F841
             i += 1
 
         abserror.append(np.max(abs(

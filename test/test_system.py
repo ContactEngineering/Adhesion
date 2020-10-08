@@ -72,11 +72,10 @@ def self(request):
     self.gam = (5 + np.random.rand())
     self.rcut = 2.5 * self.sig + np.random.rand()
     self.smooth = Inter.LJ93(self.eps, self.sig
-                               ).spline_cutoff(self.gam
-                                               ).linearize_core()
+                             ).spline_cutoff(self.gam
+                                             ).linearize_core()
 
-    self.sphere = make_sphere(self.radius, self.res,
-                              self.physical_sizes)
+    self.sphere = make_sphere(self.radius, self.res, self.physical_sizes)
     return self
 
 

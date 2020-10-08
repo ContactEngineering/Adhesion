@@ -141,7 +141,7 @@ class SoftWall(Interaction):
 
     def plot(self):
         import matplotlib.pyplot as plt
-        fig, (axpot, axf, axcurv) = plt.subplots(3,1)
+        fig, (axpot, axf, axcurv) = plt.subplots(3, 1)
         r = np.linspace(0.7 * self.r_min, 4 * self.r_min, 200)
 
         v, dv, ddv = self.evaluate(r, True, True, True)
