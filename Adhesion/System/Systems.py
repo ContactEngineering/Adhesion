@@ -339,7 +339,7 @@ class SmoothContactSystem(SystemBase):
             self.force = self.substrate.force.copy()
 
             self.force[self.comp_slice] += \
-                self.interaction_force
+                self.interaction_force.reshape(self.nb_grid_pts)
         else:
             self.force = None
 
@@ -409,11 +409,11 @@ class SmoothContactSystem(SystemBase):
         """
         _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
 
-        hessp_val = -self.substrate.evaluate_force(des_dir.reshape(
-            self.substrate.nb_domain_grid_pts)) + adh_curv * des_dir.reshape(
-            self.substrate.nb_domain_grid_pts) * self.substrate.area_per_pt
+        hessp_val = self.substrate.evaluate_force(
+            des_dir.reshape(self.nb_grid_pts)).reshape(
+            -1) - adh_curv * des_dir * self.substrate.area_per_pt
 
-        return hessp_val.reshape(-1)
+        return -hessp_val.reshape(-1)
 
     def evaluate_k(self, disp_k, disp, offset, pot=True, forces=False,
                    logger=None):
@@ -452,9 +452,63 @@ class SmoothContactSystem(SystemBase):
         self.interaction_energy = \
             self.pnp.sum(interaction_energies) * self.area_per_pt
 
-        self.substrate.compute_k(disp_k, pot, forces)
-        self.energy = (
-            self.interaction_energy + self.substrate.energy if pot else None)
+        # self.substrate.compute_k(disp_k, pot, forces)
+        ##########################################################################
+
+        stiffness = 0.5 * 2 * np.pi * self.substrate.young * abs(
+            np.fft.fftfreq(self.substrate.nb_grid_pts[0],
+                           self.substrate.physical_sizes[0] /
+                           self.substrate.nb_grid_pts[0]))
+        stiffness[0] = stiffness[1]
+
+        n = self.substrate.nb_grid_pts[0]
+        # print('stiffness matrix  {}'.format(stiffness))
+
+        self.grad_k = np.zeros(self.substrate.nb_grid_pts)
+        self.grad_k[0] = stiffness[0] * disp_k[0] / self.substrate.nb_grid_pts[
+            0]
+        self.grad_k[1:n // 2] = 2 * stiffness[1:n // 2] * disp_k[1:n // 2] / \
+                                self.substrate.nb_grid_pts[0]
+        self.grad_k[n // 2 + 1:] = 2 * stiffness[n // 2 + 1:] * disp_k[
+                                                                n // 2 + 1:]\
+                                   / \
+                                   self.substrate.nb_grid_pts[0]
+        self.grad_k[n // 2] = stiffness[n // 2] * disp_k[n // 2] / \
+                              self.substrate.nb_grid_pts[0]
+
+        self.grad_k *= self.area_per_pt
+
+        # ENERGY FROM SUBSTRATE
+
+        # if (self.substrate.nb_domain_grid_pts[-1] % 2 == 0):
+        #     self.energy = (self.grad_k[0]*disp_k[0] +
+        #                    np.sum(self.grad_k[1:n//2]*disp_k[1:n//2]) +
+        #                np.sum(self.grad_k[n//2+1:]*disp_k[
+        #                n//2+1:]))*self.substrate.nb_grid_pts[0]
+        #                #+ self.grad_k[n//2+1]*disp_k[
+        #                n//2+1])*self.substrate.nb_grid_pts[0]
+        # else:
+        #     self.energy = (self.grad_k[0] * disp_k[0] +
+        #                    np.sum(self.grad_k[1:n // 2 + 1] * disp_k[1:n
+        #                    // 2 + 1]) +
+        #                    np.sum(self.grad_k[n // 2 + 2:] * disp_k[n // 2
+        #                    + 2:])
+        #                    + self.grad_k[n//2+1]*disp_k[n//2+1])\
+        #                   *self.substrate.nb_grid_pts[0]
+
+        self.energy = 0.5 * (
+            np.sum(self.grad_k * disp_k)) / self.area_per_pt * n * \
+                      self.substrate.physical_sizes[0]
+        # self.grad_k *= self.area_per_pt
+
+        self.force_k_float = -self.grad_k
+
+        # TOTAL ENERGY
+        self.energy += self.interaction_energy
+        #########################################################################
+        #
+        # self.energy = (
+        #     self.interaction_energy + self.substrate.energy if pot else None)
 
         if forces:
             self.interaction_force *= -self.area_per_pt
@@ -465,16 +519,23 @@ class SmoothContactSystem(SystemBase):
                                          self.substrate.fourier_buffer)
             interaction_force_k = self.substrate.fourier_buffer.array()[...]
 
-            self.force_k = self.substrate.force_k.copy()
+            # self.force_k = self.substrate.force_k.copy()
+            # self.force_k = np.conj(self.force_k)/self.nb_grid_pts
 
-            self.force_k += interaction_force_k
+            interaction_force_k = np.conj(
+                interaction_force_k) / self.nb_grid_pts
+            interaction_force_float_k = self.substrate.k_to_float(
+                interaction_force_k)
+            # Updated here according to derivation using complex var!
+            self.force_k_float += interaction_force_float_k
         else:
-            self.force_k = None
+            self.grad_k = None
 
         if logger is not None:
             logger.st(*self.logger_input())
 
-        return (self.energy, self.force_k)
+        return (self.energy, self.force_k_float)
+        # return (self.energy, self.force_k)
 
     def objective_k(self, offset, disp0=None, gradient=False,
                     logger=None):
@@ -535,7 +596,7 @@ class SmoothContactSystem(SystemBase):
         self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
                                       self.substrate.real_buffer)
         disp = self.substrate.real_buffer.array()[...].copy() \
-            * self.substrate.fftengine.normalisation
+               * self.substrate.fftengine.normalisation
 
         gap = self.compute_gap(disp)
         _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
@@ -547,7 +608,7 @@ class SmoothContactSystem(SystemBase):
         adh_curv_k = self.substrate.fourier_buffer.array()[...].copy()
 
         hessp_val_k = -self.substrate.evaluate_k_force_k(des_dir_k) + \
-            adh_curv_k * des_dir_k * self.substrate.area_per_pt
+                      adh_curv_k * des_dir_k * self.substrate.area_per_pt
 
         return hessp_val_k
 
@@ -591,20 +652,22 @@ class SmoothContactSystem(SystemBase):
         """
         if gradient:
             def fun(disp_k):
-                disp_k = disp_k.copy()
-                disp_float_k = self.substrate.float_to_k(disp_k)
+                disp_float_k = disp_k.copy()
+                disp_k = self.substrate.float_to_k(disp_float_k)
                 self.substrate.fourier_buffer.array()[...] = \
-                    disp_float_k.copy()
+                    disp_k.copy()
                 self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
                                               self.substrate.real_buffer)
                 disp = self.substrate.real_buffer.array()[...].copy() \
-                    * self.substrate.fftengine.normalisation
+                       * self.substrate.fftengine.normalisation
 
-                self.evaluate_k(disp_float_k, disp, offset, forces=True,
-                                logger=logger)
-                self.force_k_float = \
-                    self.substrate.k_to_float(self.force_k.copy())
-                return (self.energy, -self.force_k_float)
+                self.energy, self.grad_k_float = self.evaluate_k(disp_float_k,
+                                                                 disp, offset,
+                                                                 forces=True,
+                                                                 logger=logger)
+                # self.force_k_float = \
+                #     self.substrate.k_to_float(self.force_k.copy())
+                return (self.energy, self.grad_k_float)
         else:
             def fun(disp_k):
                 # pylint: disable=missing-docstring
@@ -614,7 +677,7 @@ class SmoothContactSystem(SystemBase):
                 self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
                                               self.substrate.real_buffer)
                 disp = self.substrate.real_buffer.array()[...].copy() \
-                    * self.substrate.fftengine.normalisation
+                       * self.substrate.fftengine.normalisation
 
                 return self.evaluate_k(
                     disp_k, disp, offset, forces=False,
