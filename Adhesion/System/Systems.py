@@ -453,7 +453,6 @@ class SmoothContactSystem(SystemBase):
             self.pnp.sum(interaction_energies) * self.area_per_pt
 
         # self.substrate.compute_k(disp_k, pot, forces)
-        ##########################################################################
 
         stiffness = 0.5 * 2 * np.pi * self.substrate.young * abs(
             np.fft.fftfreq(self.substrate.nb_grid_pts[0],
@@ -480,33 +479,14 @@ class SmoothContactSystem(SystemBase):
 
         # ENERGY FROM SUBSTRATE
 
-        # if (self.substrate.nb_domain_grid_pts[-1] % 2 == 0):
-        #     self.energy = (self.grad_k[0]*disp_k[0] +
-        #                    np.sum(self.grad_k[1:n//2]*disp_k[1:n//2]) +
-        #                np.sum(self.grad_k[n//2+1:]*disp_k[
-        #                n//2+1:]))*self.substrate.nb_grid_pts[0]
-        #                #+ self.grad_k[n//2+1]*disp_k[
-        #                n//2+1])*self.substrate.nb_grid_pts[0]
-        # else:
-        #     self.energy = (self.grad_k[0] * disp_k[0] +
-        #                    np.sum(self.grad_k[1:n // 2 + 1] * disp_k[1:n
-        #                    // 2 + 1]) +
-        #                    np.sum(self.grad_k[n // 2 + 2:] * disp_k[n // 2
-        #                    + 2:])
-        #                    + self.grad_k[n//2+1]*disp_k[n//2+1])\
-        #                   *self.substrate.nb_grid_pts[0]
-
         self.energy = 0.5 * (
-            np.sum(self.grad_k * disp_k)) / self.area_per_pt * n * \
-                      self.substrate.physical_sizes[0]
-        # self.grad_k *= self.area_per_pt
+            np.sum(self.grad_k * disp_k))
 
         self.force_k_float = -self.grad_k
 
         # TOTAL ENERGY
         self.energy += self.interaction_energy
-        #########################################################################
-        #
+        
         # self.energy = (
         #     self.interaction_energy + self.substrate.energy if pot else None)
 
@@ -535,7 +515,6 @@ class SmoothContactSystem(SystemBase):
             logger.st(*self.logger_input())
 
         return (self.energy, self.force_k_float)
-        # return (self.energy, self.force_k)
 
     def objective_k(self, offset, disp0=None, gradient=False,
                     logger=None):
@@ -661,13 +640,13 @@ class SmoothContactSystem(SystemBase):
                 disp = self.substrate.real_buffer.array()[...].copy() \
                        * self.substrate.fftengine.normalisation
 
-                self.energy, self.grad_k_float = self.evaluate_k(disp_float_k,
-                                                                 disp, offset,
-                                                                 forces=True,
-                                                                 logger=logger)
+                self.energy, self.force_k_float = self.evaluate_k(disp_float_k,
+                                                                  disp, offset,
+                                                                  forces=True,
+                                                                  logger=logger)
                 # self.force_k_float = \
                 #     self.substrate.k_to_float(self.force_k.copy())
-                return (self.energy, self.grad_k_float)
+                return (self.energy, -self.force_k_float)
         else:
             def fun(disp_k):
                 # pylint: disable=missing-docstring
