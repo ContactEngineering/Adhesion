@@ -351,9 +351,10 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         # TODO: eventually put a flag to turn
         #  reductions off since this is an additional communication.
 
-        contacting_points = self.gap==0.
+        contacting_points = self.gap == 0.
         mask = np.ones(self.substrate.nb_subdomain_grid_pts)
-        mask[self.substrate.local_topography_subdomain_slices][contacting_points] = 0
+        mask[self.substrate.local_topography_subdomain_slices][
+            contacting_points] = 0
         max_proj_grad = self.pnp.max(abs(mask * self.force))
 
         return (['energy',
