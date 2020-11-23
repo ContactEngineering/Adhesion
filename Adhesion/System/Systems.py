@@ -171,11 +171,16 @@ class SmoothContactSystem(SystemBase):
         tot_nb_grid_pts = np.prod(self.nb_grid_pts)
         rel_rep_area = self.compute_nb_repulsive_pts() / tot_nb_grid_pts
         rel_att_area = self.compute_nb_attractive_pts() / tot_nb_grid_pts
-
-        return (['energy', 'mean gap', 'frac. rep. area',
+        # TODO: eventually put a flag to turn
+        #  reductions off since this is an additional communication.
+        return (['energy',
+                 'max. abs. grad.',
+                 'mean gap',
+                 'frac. rep. area',
                  'frac. att. area',
                  'frac. int. area', 'substrate force', 'interaction force'],
                 [self.energy,
+                 self.pnp.max(np.abs(self.force)),
                  self.compute_mean_gap(),
                  rel_rep_area,
                  rel_att_area,
@@ -333,10 +338,43 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         return self.pnp.sum(np.where(self.gap == 0., 1., 0.))
 
     def logger_input(self):
-        headers, vals = super().logger_input()
-        headers.append("frac. cont. area")
-        vals.append(self.compute_nb_contact_pts() / np.prod(self.nb_grid_pts))
-        return headers, vals
+        """
+
+        Returns
+        -------
+        headers: list of strings
+        values: list
+        """
+        tot_nb_grid_pts = np.prod(self.nb_grid_pts)
+        rel_rep_area = self.compute_nb_repulsive_pts() / tot_nb_grid_pts
+        rel_att_area = self.compute_nb_attractive_pts() / tot_nb_grid_pts
+        # TODO: eventually put a flag to turn
+        #  reductions off since this is an additional communication.
+
+        contacting_points = self.gap == 0.
+        mask = np.ones(self.substrate.nb_subdomain_grid_pts)
+        mask[self.substrate.local_topography_subdomain_slices][
+            contacting_points] = 0
+        max_proj_grad = self.pnp.max(abs(mask * self.force))
+
+        return (['energy',
+                 'max. proj. grad.',
+                 'mean gap',
+                 'frac. cont. area',
+                 'frac. rep. area',
+                 'frac. att. area',
+                 'frac. int. area',
+                 'substrate force',
+                 'interaction force'],
+                [self.energy,
+                 max_proj_grad,
+                 self.compute_mean_gap(),
+                 self.compute_nb_contact_pts() / np.prod(self.nb_grid_pts),
+                 rel_rep_area,
+                 rel_att_area,
+                 rel_rep_area + rel_att_area,
+                 -self.pnp.sum(self.substrate.force),
+                 self.pnp.sum(self.interaction_force)])
 
     def compute_normal_force(self):
         "computes and returns the sum of all forces"
