@@ -28,8 +28,8 @@ pip install [--user] pylint
 pip install [--user] cython
 pip install [--user] mpi4py #optional
 
-# install pyco
-pip  install [--user]  git+https://github.com/pastewka/Adhesion.git#egg=Adhesion
+# install Adhesion
+pip  install [--user]  git+https://github.com/ComputationalMechanics/Adhesion.git
 ```
 
 The last command will install other dependencies including 
