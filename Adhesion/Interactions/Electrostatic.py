@@ -189,7 +189,7 @@ class ChargePatternsInteraction(Potential):
             E_x = np.fft.ifft2(
                 np.multiply(
                     "pq, pq, pqz, pqz-> pqz",
-                    -complex("j") * q1_axis / q_norm
+                    -complex("j") * q1_axis / q_norm,
                     fft_magnitude / (self.epsilon_material + self.epsilon_gap),
                     1 + np.exp(-q_norm*gap_axis),
                     1 / (1 - B*decay),
@@ -200,7 +200,7 @@ class ChargePatternsInteraction(Potential):
             E_y = np.fft.ifft2(
                 np.multiply(
                     "pq, pq, pqz, pqz-> pqz",
-                    -complex("j") * q2_axis / q_norm
+                    -complex("j") * q2_axis / q_norm,
                     fft_magnitude / (self.epsilon_material + self.epsilon_gap),
                     1 + np.exp(-q_norm*gap_axis),
                     1 / (1 - B*decay),
