@@ -436,7 +436,7 @@ def test_primal_hessian_product(s):
     for h in hs:
         _, grad_d = obj(gaps + h * dgaps)
         dgrad = grad_d - grad
-        dgrad_from_hess = system.primal_hessp(gaps, h * dgaps)
+        dgrad_from_hess = system.primal_hessian_product(gaps, h * dgaps)
         rms_errors.append(np.sqrt(np.mean((dgrad_from_hess - dgrad) ** 2)))
 
     rms_errors = np.array(rms_errors)
@@ -449,7 +449,7 @@ def test_primal_hessian_product(s):
         for h in hs:
             _, grad_d = obj(gaps + h * dgaps)
             dgrad = grad_d - grad
-            dgrad_from_hess = system.primal_hessp(gaps, h * dgaps)
+            dgrad_from_hess = system.primal_hessian_product(gaps, h * dgaps)
             rms_errors.append(np.sqrt(np.mean((dgrad_from_hess - dgrad) ** 2)))
 
         # Visualize the quadratic convergence of the taylor expansion
