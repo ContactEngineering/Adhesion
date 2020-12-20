@@ -296,6 +296,127 @@ class SmoothContactSystem(SystemBase):
 
         return fun
 
+    def primal_evaluate(self, disp, gap, pot=True, forces=False, logger=None):
+        """
+        Compute the energies and forces in the system for a given
+        displacement and gap..
+
+        Parameters:
+        -----------
+        disp: ndarray
+            displacement field, in the shape of
+            system.substrate.nb_subdomain_grid_pts
+        gap: ndarray
+            gap , in the shape of
+            system.substrate.nb_subdomain_grid_pts
+        pot: bool, optional
+            Whether to evaluate the energy, default True
+        forces: bool, optional
+            Whether to evaluate the forces, default False
+        logger: ContactMechanics.Tools.Logger
+            information of current state of the system will be
+            passed to
+            logger at every evaluation
+        """
+        # attention: the substrate may have a higher nb_grid_pts than the gap
+        # and the interaction (e.g. FreeElasticHalfSpace)
+
+        self.gap = gap
+        interaction_energies, self.interaction_force, _ = \
+            self.interaction.evaluate(self.gap,
+                                      potential=pot,
+                                      gradient=forces,
+                                      curvature=False)
+
+        self.interaction_energy = \
+            self.pnp.sum(interaction_energies) * self.area_per_pt
+
+        self.substrate.compute(disp, pot, forces)
+        self.energy = (self.interaction_energy +
+                       self.substrate.energy
+                       if pot else None)
+        if forces:
+            self.interaction_force *= -self.area_per_pt
+            #                       ^ gradient to force per pixel
+            self.force = self.substrate.force.copy()
+
+            self.force[self.comp_slice] += \
+                self.interaction_force.reshape(self.nb_grid_pts)
+        else:
+            self.force = None
+
+        if logger is not None:
+            logger.st(*self.logger_input())
+
+        return (self.energy, self.force)
+
+    def primal_objective(self, offset, disp0=None, gradient=False,
+                         logger=None):
+        r"""To solve the primal objective using gap as the variable.
+        Can be fed directly to standard solvers ex: scipy solvers etc
+        and returns the elastic energy and it's gradient (negative of
+        the forces) as a function of the gap.
+
+        Parameters
+        __________
+
+        gap : float
+              gap between the contact surfaces.
+        offset : float
+                constant value to add to the surface heights
+        pot : (default False)
+
+        gradient : (default True)
+
+        Returns
+        _______
+        energy : float
+                value of energy(scalar value).
+        force : float,array
+                value of force(array).
+
+        Notes
+        _____
+
+        Objective:
+        .. math ::
+            min_u f = 1/2u_i*K_{ij}*u_j + \phi (u_{ij})\\
+            \\
+            gradient = K_{ij}*u_j + \phi^{\prime} which is, Force. \\
+
+        """
+
+        res = self.substrate.nb_subdomain_grid_pts
+        if gradient:
+            def fun(gap):
+                disp = gap.reshape(res) + self.surface.heights() + offset
+                try:
+                    self.primal_evaluate(
+                        disp.reshape(res), gap, forces=True, logger=logger)
+                except ValueError as err:
+                    raise ValueError(
+                        "{}: gap.shape: {}, res: {}".format(
+                            err, gap.shape, res))
+                return (self.energy, -self.force.reshape(-1))
+        else:
+            def fun(gap):
+                disp = gap.reshape(res) + self.surface.heights() + offset
+                return self.primal_evaluate(
+                    disp.reshape(res), gap, forces=False, logger=logger)[0]
+
+        return fun
+
+    def primal_hessian_product(self, gap, des_dir):
+        """Returns the hessian product of the primal_objective function.
+        """
+        _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
+
+        hessp_val = self.substrate.evaluate_force(
+            des_dir.reshape(self.substrate.nb_subdomain_grid_pts)).reshape(-1) - \
+            adh_curv * des_dir * self.substrate.area_per_pt
+
+        return -hessp_val.reshape(-1)
+
     def callback(self, force=False):
         """
         Simple callback function that can be handed over to scipy's minimize to
