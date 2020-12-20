@@ -65,7 +65,7 @@ class SmoothContactSystem(SystemBase):
             raise IncompatibleResolutionError(
                 ("the substrate ({}) and the surface ({}) have incompatible "
                  "nb_grid_ptss.").format(
-                     substrate.nb_grid_pts, surface.nb_grid_pts))  # nopep8
+                    substrate.nb_grid_pts, surface.nb_grid_pts))  # nopep8
         self.dim = len(self.substrate.nb_grid_pts)
         self.energy = None
         self.force = None
@@ -110,11 +110,11 @@ class SmoothContactSystem(SystemBase):
 
     def compute_repulsive_contact_area(self):
         "computes and returns the area where contact pressure is repulsive"
-        return self.compute_nb_repulsive_pts()*self.area_per_pt
+        return self.compute_nb_repulsive_pts() * self.area_per_pt
 
     def compute_attractive_contact_area(self):
         "computes and returns the are where contact pressure is attractive"
-        return self.compute_nb_attractive_pts()*self.area_per_pt
+        return self.compute_nb_attractive_pts() * self.area_per_pt
 
     def compute_nb_contact_pts(self):
         """
@@ -286,7 +286,7 @@ class SmoothContactSystem(SystemBase):
                     raise ValueError(
                         "{}: disp.shape: {}, res: {}".format(
                             err, disp.shape, res))
-                return (self.energy, -self.force.reshape(-1)*disp_scale)
+                return (self.energy, -self.force.reshape(-1) * disp_scale)
         else:
             def fun(disp):
                 # pylint: disable=missing-docstring
@@ -412,8 +412,9 @@ class SmoothContactSystem(SystemBase):
         _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
 
         hessp_val = self.substrate.evaluate_force(
-            des_dir.reshape(self.substrate.nb_subdomain_grid_pts)).reshape(-1) - \
-            adh_curv * des_dir * self.substrate.area_per_pt
+            des_dir.reshape(self.substrate.nb_subdomain_grid_pts)
+            ).reshape(np.shape(des_dir))\
+            - adh_curv * des_dir * self.substrate.area_per_pt
 
         return -hessp_val.reshape(-1)
 
