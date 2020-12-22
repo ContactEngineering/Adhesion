@@ -223,8 +223,8 @@ def test_bugnicourt_weakly_adhesive(comm,
 
     assert pnp.max(abs(gap - reference_gap)) < tol
 
-    forces_ref = substrate.evaluate_force(gap
-        + topography.heights() + _penetration)
+    forces_ref = substrate.evaluate_force(
+        gap + topography.heights() + _penetration)
 
     print("""
     ########## mean_gap controlled #################
@@ -273,7 +273,8 @@ def test_bugnicourt_weakly_adhesive(comm,
         + lagrange_mean_gap
 
     max_abs_error = pnp.max(abs(forces - forces_ref))
-    assert max_abs_error < forcetol, "{} >= tol = {}".format(max_abs_error, forcetol)
+    assert max_abs_error < forcetol, \
+        "{} >= tol = {}".format(max_abs_error, forcetol)
 
     print("""
     #########   NONADHESIVE, same mean gap #############
