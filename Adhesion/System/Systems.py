@@ -340,8 +340,7 @@ class SmoothContactSystem(SystemBase):
             #                       ^ gradient to force per pixel
             self.force = self.substrate.force.copy()
 
-            self.force[self.comp_slice] += \
-                self.interaction_force.reshape(self.nb_grid_pts)
+            self.force[self.comp_slice] += self.interaction_force
         else:
             self.force = None
 
@@ -392,7 +391,7 @@ class SmoothContactSystem(SystemBase):
                 disp = gap.reshape(res) + self.surface.heights() + offset
                 try:
                     self.primal_evaluate(
-                        disp.reshape(res), gap, forces=True, logger=logger)
+                        disp, gap.reshape(res), forces=True, logger=logger)
                 except ValueError as err:
                     raise ValueError(
                         "{}: gap.shape: {}, res: {}".format(
@@ -402,7 +401,7 @@ class SmoothContactSystem(SystemBase):
             def fun(gap):
                 disp = gap.reshape(res) + self.surface.heights() + offset
                 return self.primal_evaluate(
-                    disp.reshape(res), gap, forces=False, logger=logger)[0]
+                    disp, gap.reshape(res), forces=False, logger=logger)[0]
 
         return fun
 
