@@ -13,8 +13,8 @@ import pytest
     'bugnicourt_cg'])
 def test_primal_obj(_solver, offset):
     nx, ny = 256, 256
-    ## FIXED by the nondimensionalisation
-    maugis_K = 1.
+    # FIXED by the nondimensionalisation
+    # maugis_K = 1.
     Es = 3 / 4  # maugis K = 1.
     w = 1 / np.pi
     R = 1.
@@ -107,7 +107,7 @@ def test_primal_obj(_solver, offset):
                                                       (offset, gradient=True),
                                                       system.
                                                       primal_hessian_product,
-                                                      disp0=init_gap,
+                                                      x0=init_gap,
                                                       mean_val=None, gtol=gtol)
 
         bugnicourt = res.x.reshape((nx, ny))
@@ -116,13 +116,14 @@ def test_primal_obj(_solver, offset):
 
         mean_val = np.mean(_lbfgsb)
 
-        bugnicourt_cg.constrained_conjugate_gradients(system.primal_objective
-                                                      (offset, gradient=True),
-                                                      system.primal_hessian_product,
-                                                      disp0=init_gap,
-                                                      mean_val=mean_val,
-                                                      gtol=gtol
-                                                      )
+        bugnicourt_cg.constrained_conjugate_gradients(
+            system.primal_objective
+            (offset, gradient=True),
+            system.primal_hessian_product,
+            x0=init_gap,
+            mean_val=mean_val,
+            gtol=gtol
+            )
 
         bugnicourt_mean = res.x.reshape((nx, ny))
 
