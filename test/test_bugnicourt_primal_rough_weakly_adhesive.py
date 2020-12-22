@@ -144,7 +144,8 @@ def test_bugnicourt_weakly_adhesive(comm,
         subdomain_locations=substrate.subdomain_locations)
 
     tol = 1e-5 * topography.rms_height()
-
+    forcetol = 10 * gtol * max(Es * rms_slope, abs(
+            interaction.max_tensile)) * topography.area_per_pt
     system = make_system(interaction=interaction,
                          surface=topography,
                          substrate=substrate,
@@ -222,6 +223,9 @@ def test_bugnicourt_weakly_adhesive(comm,
 
     assert pnp.max(abs(gap - reference_gap)) < tol
 
+    forces_ref = substrate.evaluate_force(gap
+        + topography.heights() + _penetration)
+
     print("""
     ########## mean_gap controlled #################
     """)
@@ -256,6 +260,20 @@ def test_bugnicourt_weakly_adhesive(comm,
 
     max_abs_error = pnp.max(abs(gap - reference_gap))
     assert max_abs_error < tol, "{} >= tol = {}".format(max_abs_error, tol)
+
+    # just check that I am still able to compute the correct pressures
+    grad = system.primal_objective(0, gradient=True)(
+        gap)[1].reshape(substrate.nb_subdomain_grid_pts)
+
+    nc_points = gap > 0
+    nb_nc_points = pnp.sum(np.count_nonzero(nc_points))
+    lagrange_mean_gap = pnp.sum(grad[nc_points]) / nb_nc_points
+
+    forces = substrate.evaluate_force(gap + topography.heights()) \
+        + lagrange_mean_gap
+
+    max_abs_error = pnp.max(abs(forces - forces_ref))
+    assert max_abs_error < forcetol, "{} >= tol = {}".format(max_abs_error, forcetol)
 
     print("""
     #########   NONADHESIVE, same mean gap #############
