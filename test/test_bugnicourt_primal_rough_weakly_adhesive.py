@@ -8,7 +8,7 @@ code with displacements as variables
 
 
 from NuMPI.IO import load_npy
-from SurfaceTopography import Topography, NPYReader
+from SurfaceTopography import NPYReader
 from SurfaceTopography.Generation import fourier_synthesis
 from Adhesion.Interactions import Exponential
 from ContactMechanics.Systems import NonSmoothContactSystem
@@ -16,7 +16,7 @@ from ContactMechanics import PeriodicFFTElasticHalfSpace
 from Adhesion.System import make_system, BoundedSmoothContactSystem
 from NuMPI.Optimization.bugnicourt_cg import constrained_conjugate_gradients
 from NuMPI.Tools import Reduction
-import pytest
+
 import os
 import numpy as np
 from NuMPI import MPI
@@ -45,6 +45,7 @@ rho = dx / 4
 # parameters accordingly
 
 interaction = Exponential(w, rho)
+
 
 def get_topography_file(_comm):
     """
@@ -189,11 +190,12 @@ def test_bugnicourt_weakly_adhesive(comm,
         print("{}".format(
             R ** (1 / 3) * elastocapillary_length ** (2 / 3) / rho))
 
-    reference_gap = load_npy(reference_data_file,
-                             subdomain_locations=substrate.subdomain_locations,
-                             nb_subdomain_grid_pts=substrate.nb_subdomain_grid_pts,
-                             comm=comm
-                             )
+    reference_gap = load_npy(
+        reference_data_file,
+        subdomain_locations=substrate.subdomain_locations,
+        nb_subdomain_grid_pts=substrate.nb_subdomain_grid_pts,
+        comm=comm
+        )
 
     print("""
     ########## PENETRATION CONTROLLED ##################
