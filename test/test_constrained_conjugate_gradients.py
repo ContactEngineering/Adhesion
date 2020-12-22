@@ -8,14 +8,14 @@ import scipy.optimize as optim
 import pytest
 
 
-
 @pytest.mark.parametrize("offset", [0, 1.])
-@pytest.mark.parametrize('_solver', ['generic_cg_polonsky', 'bugnicourt_cg'])
+@pytest.mark.parametrize('_solver', [  # 'generic_cg_polonsky',
+    'bugnicourt_cg'])
 def test_primal_obj(_solver, offset):
     nx, ny = 256, 256
     ## FIXED by the nondimensionalisation
     maugis_K = 1.
-    Es = 3/4 # maugis K = 1.
+    Es = 3 / 4  # maugis K = 1.
     w = 1 / np.pi
     R = 1.
 
@@ -34,15 +34,15 @@ def test_primal_obj(_solver, offset):
 
     system = BoundedSmoothContactSystem(substrate, interaction, surface)
 
-
     lbounds = np.zeros((nx, ny))
     bnds = system._reshape_bounds(lbounds, )
-    init_gap = np.zeros((nx, ny))  # .flatten()
-    disp = init_gap + surface.heights() + offset
+
+    init_disp = np.zeros((nx, ny))
+    init_gap = init_disp - surface.heights() - offset
 
     # #####################LBFGSB#####################################
     res = optim.minimize(system.primal_objective(offset, gradient=True),
-                         disp,
+                         init_gap,
                          method='L-BFGS-B', jac=True,
                          bounds=bnds,
                          options=dict(gtol=gtol, ftol=0))
@@ -50,14 +50,12 @@ def test_primal_obj(_solver, offset):
     assert res.success
     _lbfgsb = res.x.reshape((nx, ny))
 
-
-
     if _solver == 'generic_cg_polonsky':
         # ####################POLONSKY-KEER##############################
         res = generic_cg_polonsky.min_cg(
             system.primal_objective(offset, gradient=True),
             system.primal_hessian_product,
-            disp, polonskykeer=True, gtol=gtol)
+            init_gap, polonskykeer=True, gtol=gtol)
 
         assert res.success
         polonsky = res.x.reshape((nx, ny))
@@ -66,7 +64,7 @@ def test_primal_obj(_solver, offset):
         res = generic_cg_polonsky.min_cg(
             system.primal_objective(offset, gradient=True),
             system.primal_hessian_product,
-            disp, bugnicourt=True, gtol=gtol)
+            init_gap, bugnicourt=True, gtol=gtol)
         assert res.success
 
         bugnicourt = res.x.reshape((nx, ny))
@@ -82,7 +80,7 @@ def test_primal_obj(_solver, offset):
         res = generic_cg_polonsky.min_cg(
             system.primal_objective(offset, gradient=True),
             system.primal_hessian_product,
-            disp,
+            init_gap,
             polonskykeer=True,
             mean_value=mean_val,
             gtol=gtol,
@@ -96,7 +94,7 @@ def test_primal_obj(_solver, offset):
         res = generic_cg_polonsky.min_cg(
             system.primal_objective(offset, gradient=True),
             system.primal_hessian_product,
-            disp, bugnicourt=True, mean_value=mean_val, gtol=gtol)
+            init_gap, bugnicourt=True, mean_value=mean_val, gtol=gtol)
         assert res.success
 
         bugnicourt_mean = res.x.reshape((nx, ny))
@@ -109,7 +107,7 @@ def test_primal_obj(_solver, offset):
                                                       (offset, gradient=True),
                                                       system.
                                                       primal_hessian_product,
-                                                      disp0=disp,
+                                                      disp0=init_gap,
                                                       mean_val=None, gtol=gtol)
 
         bugnicourt = res.x.reshape((nx, ny))
@@ -120,9 +118,8 @@ def test_primal_obj(_solver, offset):
 
         bugnicourt_cg.constrained_conjugate_gradients(system.primal_objective
                                                       (offset, gradient=True),
-                                                      system.
-                                                      primal_hessian_product,
-                                                      disp0=disp,
+                                                      system.primal_hessian_product,
+                                                      disp0=init_gap,
                                                       mean_val=mean_val,
                                                       gtol=gtol
                                                       )
