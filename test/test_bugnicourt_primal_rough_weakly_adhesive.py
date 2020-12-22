@@ -1,4 +1,14 @@
-from SurfaceTopography import Topography
+"""
+
+Runs the  primal (gap as DOFS) bugnicourt algorithm with fixed penetration
+and with constrained mean gap. Compares the gaps with the old serial lbfgsb
+code with displacements as variables
+
+"""
+
+
+from NuMPI.IO import load_npy
+from SurfaceTopography import Topography, NPYReader
 from SurfaceTopography.Generation import fourier_synthesis
 from Adhesion.Interactions import Exponential
 from ContactMechanics.Systems import NonSmoothContactSystem
@@ -6,44 +16,109 @@ from ContactMechanics import PeriodicFFTElasticHalfSpace
 from Adhesion.System import make_system, BoundedSmoothContactSystem
 from NuMPI.Optimization.bugnicourt_cg import constrained_conjugate_gradients
 from NuMPI.Tools import Reduction
-
+import pytest
+import os
 import numpy as np
+from NuMPI import MPI
+
+_comm = MPI.COMM_WORLD
+Es = 1.
+
+gtol = 1e-8
+
+n = 512
+dx = 1.
+s = n
+
+rms_slope = 0.1
+
+penetration = 0.1
+
+# interaction parameters
+elastocapillary_length = 0.005 * dx
+w = Es * elastocapillary_length
+# Interaction range as in P&R PNAS
+# with some modifications
+rho = dx / 4
+# P&R keep the interaction parameters and vary h'rms,
+# We keep h'rms constant and hence need to vary the interaction
+# parameters accordingly
+
+interaction = Exponential(w, rho)
+
+def get_topography_file(_comm):
+    """
+    generates the topography for the tests
+    """
+
+    print("topography fixture")
+    path = "topography.npy"
+    if _comm.rank == 0:
+        if not os.path.exists(path):
+            np.random.seed(0)
+            full_topography = fourier_synthesis((n, n), (s, s),
+                                                0.8,
+                                                rms_slope=rms_slope,
+                                                long_cutoff=s / 2,
+                                                short_cutoff=32,
+                                                )
+            full_topography._heights = full_topography.heights() - np.max(
+                full_topography.heights())
+
+            np.save(path, full_topography.heights())
+
+    _comm.barrier()
+    return path
 
 
-def test_bugnicourt_weakly_adhesive(comm, verbose=False):
-    Es = 1.
+def get_reference_data_file(_comm):
+    """
+    computes a reference solution using lbfgsb. Is serial, so cannot be done
+    inside the parallel test
+    """
+    print("reference fixture")
+    path = "reference_gap.npy"
+    if _comm.rank == 0:
+        if not os.path.exists(path):
+            system = make_system(interaction=interaction,
+                                 surface="topography.npy",
+                                 substrate="periodic",
+                                 physical_sizes=(n, n),
+                                 young=Es, communicator=MPI.COMM_SELF,
+                                 system_class=BoundedSmoothContactSystem
+                                 )
+            print("computing reference")
+            sol = system.minimize_proxy(
+                offset=penetration,
+                lbounds="auto",
+                options=dict(
+                    ftol=0,
+                    gtol=1e-5 * max(Es * rms_slope, abs(
+                        interaction.max_tensile)) * system.surface.area_per_pt,
+                    maxcor=3,
+                    maxiter=1000,
+                    )
 
-    gtol = 1e-8
+                )
 
-    n = 512
-    dx = 1.
-    s = n
+            assert sol.success
+            gap = system.compute_gap(
+                disp=sol.x,
+                offset=penetration)
+            np.save(path, gap)
+            print("finished computing reference")
+    _comm.barrier()
 
-    rms_slope = 0.1
+    return path
 
-    np.random.seed(0)
-    full_topography = fourier_synthesis((n, n), (s, s),
-                                        0.8,
-                                        rms_slope=rms_slope,
-                                        long_cutoff=s / 2,
-                                        short_cutoff=32,
-                                        )
-    full_topography._heights = full_topography.heights() - np.max(
-        full_topography.heights())
 
+def test_bugnicourt_weakly_adhesive(comm,
+                                    verbose=False):
+
+    topography_file = get_topography_file(comm)
+    reference_data_file = get_reference_data_file(comm)
+    _penetration = penetration
     pnp = Reduction(comm)
-
-    # interaction parameters
-    elastocapillary_length = 0.005 * dx
-    w = Es * elastocapillary_length
-    # Interaction range as in P&R PNAS
-    # with some modifications
-    rho = dx / 4
-    # P&R keep the interaction parameters and vary h'rms,
-    # We keep h'rms constant and hence need to vary the interaction
-    # parameters accordingly
-
-    interaction = Exponential(w, rho)
 
     substrate = PeriodicFFTElasticHalfSpace(
         nb_grid_pts=(n, n),
@@ -52,14 +127,22 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
         fft="mpi",
         communicator=comm)
 
-    topography = Topography(
-        full_topography.heights(),
+    # topography = Topography(
+    #     full_topography.heights(),
+    #     physical_sizes=(n, n),
+    #     decomposition="domain",
+    #     nb_subdomain_grid_pts=substrate.nb_subdomain_grid_pts,
+    #     subdomain_locations=substrate.subdomain_locations,
+    #     communicator=comm,
+    #     )
+
+    print("reading topography")
+    topography = NPYReader(topography_file, communicator=comm).topography(
         physical_sizes=(n, n),
-        decomposition="domain",
         nb_subdomain_grid_pts=substrate.nb_subdomain_grid_pts,
-        subdomain_locations=substrate.subdomain_locations,
-        communicator=comm,
-        )
+        subdomain_locations=substrate.subdomain_locations)
+
+    tol = 1e-5 * topography.rms_height()
 
     system = make_system(interaction=interaction,
                          surface=topography,
@@ -106,18 +189,22 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
         print("{}".format(
             R ** (1 / 3) * elastocapillary_length ** (2 / 3) / rho))
 
+    reference_gap = load_npy(reference_data_file,
+                             subdomain_locations=substrate.subdomain_locations,
+                             nb_subdomain_grid_pts=substrate.nb_subdomain_grid_pts,
+                             comm=comm
+                             )
+
     print("""
     ########## PENETRATION CONTROLLED ##################
     """)
 
-    penetration = 0.1
-
     init_disp = np.zeros(substrate.nb_subdomain_grid_pts)
-    init_gap = init_disp - topography.heights() - penetration
+    init_gap = init_disp - topography.heights() - _penetration
     init_gap[init_gap < 0] = 0
 
     res = constrained_conjugate_gradients(
-        system.primal_objective(penetration, gradient=True),
+        system.primal_objective(_penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=None,
         gtol=gtol * max(Es * rms_slope, abs(
@@ -129,7 +216,9 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
     print(res.nit)
 
     assert res.success, res.message
-    gap = res.x
+    gap = res.x.reshape(substrate.nb_subdomain_grid_pts)
+
+    assert pnp.max(abs(gap - reference_gap)) < tol
 
     print("""
     ########## mean_gap controlled #################
@@ -140,17 +229,17 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
     # typical initial guess
 
     init_disp = np.zeros(substrate.nb_subdomain_grid_pts)
-    penetration = pnp.sum(
+    _penetration = pnp.sum(
         init_disp - topography.heights() - mean_gap) / np.prod(
         substrate.nb_domain_grid_pts)
 
-    print(penetration)
+    print(_penetration)
 
-    init_gap = init_disp - topography.heights() - penetration
+    init_gap = init_disp - topography.heights() - _penetration
     init_gap[init_gap < 0] = 0
 
     res = constrained_conjugate_gradients(
-        system.primal_objective(penetration, gradient=True),
+        system.primal_objective(_penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
         gtol=gtol * max(Es * rms_slope, abs(
@@ -160,8 +249,11 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
         )
 
     assert res.success, res.message
-    gap = res.x
+    gap = res.x.reshape(substrate.nb_subdomain_grid_pts)
     print(res.nit)
+
+    max_abs_error = pnp.max(abs(gap - reference_gap))
+    assert max_abs_error < tol, "{} >= tol = {}".format(max_abs_error, tol)
 
     print("""
     #########   NONADHESIVE, same mean gap #############
@@ -170,7 +262,7 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
                                            surface=topography)
 
     res = constrained_conjugate_gradients(
-        nonadh_system.primal_objective(penetration, gradient=True),
+        nonadh_system.primal_objective(_penetration, gradient=True),
         nonadh_system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
         gtol=gtol * max(Es * rms_slope, abs(
