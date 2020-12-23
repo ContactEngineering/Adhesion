@@ -1,5 +1,7 @@
 from SurfaceTopography import make_sphere
 import ContactMechanics as Solid
+from SurfaceTopography.Generation import fourier_synthesis
+
 from Adhesion.Interactions import Exponential
 from Adhesion.System import BoundedSmoothContactSystem
 from NuMPI.Optimization import generic_cg_polonsky, bugnicourt_cg
@@ -246,3 +248,92 @@ def test_force_computation_mean_gap_constrained():
              - lagrange_mean_gap
 
     np.testing.assert_allclose(forces, forces_lbfgs, atol=10 * gtol)
+
+
+def test_mean_value_mode_is_penetration_indepentent():
+    nx, ny = 128, 128
+    # FIXED by the nondimensionalisation
+    # maugis_K = 1.
+    Es = 1  # maugis K = 1.
+    w = .0001
+
+    dx = 1
+    rho = 1
+
+    rms_slope = 0.1
+
+    interaction = Exponential(w, rho)
+
+    sx = sy = dx * nx
+
+    gtol = 1e-11
+    np.random.seed(0)
+    topography = fourier_synthesis(
+        (nx, ny), (sx, sy),
+        0.8,
+        rms_slope=rms_slope,
+        long_cutoff=sx / 2,
+        short_cutoff=4 * dx,
+        )
+    topography ._heights = topography .heights() - np.max(
+        topography .heights())
+    substrate = Solid.PeriodicFFTElasticHalfSpace((nx, ny), young=Es,
+                                                  physical_sizes=(sx, sy))
+
+    system = BoundedSmoothContactSystem(substrate, interaction, topography)
+
+    mean_gap = - np.mean(topography.heights()) - 0.7
+
+    ##############################
+    # typical initial guess
+
+    init_disp = np.zeros(substrate.nb_subdomain_grid_pts)
+    _penetration = np.sum(
+        init_disp - topography.heights() - mean_gap) / np.prod(
+        substrate.nb_domain_grid_pts)
+
+    print(_penetration)
+
+    init_gap = init_disp - topography.heights() - _penetration
+    init_gap[init_gap < 0] = 0
+
+    ca = []
+    arbitrary_penetration = 0
+    res = bugnicourt_cg.constrained_conjugate_gradients(
+        system.primal_objective(arbitrary_penetration, gradient=True),
+        system.primal_hessian_product,
+        x0=init_gap, mean_val=mean_gap,
+        gtol=gtol,
+        maxiter=1000,
+        callback=lambda x: ca.append(np.count_nonzero(x == 0))
+        )
+    first_ca = ca[0]
+    assert res.success
+
+    ca = []
+    arbitrary_penetration = 100
+    res = bugnicourt_cg.constrained_conjugate_gradients(
+        system.primal_objective(arbitrary_penetration, gradient=True),
+        system.primal_hessian_product,
+        x0=init_gap, mean_val=mean_gap,
+        gtol=gtol,
+        maxiter=1000,
+        callback=lambda x: ca.append(np.count_nonzero(x == 0))
+        )
+    assert ca[0] == first_ca
+    assert res.success
+    print("bugnicourt nit: {}".format(res.nit))
+
+    ca = []
+    arbitrary_penetration = -100
+    res = bugnicourt_cg.constrained_conjugate_gradients(
+        system.primal_objective(arbitrary_penetration, gradient=True),
+        system.primal_hessian_product,
+        x0=init_gap, mean_val=mean_gap,
+        gtol=gtol,
+        maxiter=1000,
+        callback=lambda x: ca.append(np.count_nonzero(x == 0))
+        )
+    assert ca[0] == first_ca
+    assert res.success
+    print("bugnicourt nit: {}".format(res.nit))
