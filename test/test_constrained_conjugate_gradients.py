@@ -6,6 +6,11 @@ from NuMPI.Optimization import generic_cg_polonsky, bugnicourt_cg
 import numpy as np
 import scipy.optimize as optim
 import pytest
+from NuMPI import MPI
+
+pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+                                reason="tests only serial funcionalities,"
+                                       " please execute with pytest")
 
 
 @pytest.mark.parametrize("offset", [0, 1.])
@@ -117,8 +122,7 @@ def test_primal_obj(_solver, offset):
         mean_val = np.mean(_lbfgsb)
 
         bugnicourt_cg.constrained_conjugate_gradients(
-            system.primal_objective
-            (offset, gradient=True),
+            system.primal_objective(offset, gradient=True),
             system.primal_hessian_product,
             x0=init_gap,
             mean_val=mean_val,
@@ -130,3 +134,115 @@ def test_primal_obj(_solver, offset):
         np.testing.assert_allclose(_lbfgsb, bugnicourt_mean, atol=1e-3)
     else:
         assert False
+
+
+def test_force_computation_mean_gap_constrained():
+    pnp = np
+    nx, ny = 32, 32
+    # FIXED by the nondimensionalisation
+    # maugis_K = 1.
+    Es = 3 / 4  # maugis K = 1.
+    w = 1 / np.pi * .001
+    R = 1.
+
+    dx = 0.15
+    rho = 2.
+
+    interaction = Exponential(w, rho)
+
+    sx = sy = dx * nx
+
+    gtol = 1e-11
+
+    topography = make_sphere(R, (nx, ny), (sx, sy), kind="paraboloid")
+    substrate = Solid.PeriodicFFTElasticHalfSpace((nx, ny), young=Es,
+                                                  physical_sizes=(sx, sy))
+
+    system = BoundedSmoothContactSystem(substrate, interaction, topography)
+
+    penetration = 0.2
+
+    sol = system.minimize_proxy(
+        offset=penetration,
+        options=dict(gtol=gtol, ftol=0),
+        lbounds="auto"
+        )
+
+    assert sol.success
+    print("{}".format(sol.message))
+
+    print("lbfgs nit: {}".format(sol.nit))
+    disp = sol.x
+
+    gap_lbfgs = system.compute_gap(disp, penetration)
+
+    mean_gap = np.sum(gap_lbfgs) / np.prod(substrate.nb_domain_grid_pts)
+
+    forces_lbfgs = - substrate.evaluate_force(disp)
+
+    print("max abs force {}".format(np.max(abs(forces_lbfgs ))))
+
+    ######### Check that at least the not mean constrained way works
+    init_disp = np.zeros((nx, ny))
+    init_gap = init_disp - topography.heights() - penetration
+    init_gap[init_gap < 0] = 0
+
+    res = bugnicourt_cg.constrained_conjugate_gradients(
+        system.primal_objective(penetration, gradient=True),
+        system.primal_hessian_product,
+        x0=init_gap,
+        gtol=gtol,
+        maxiter=1000,
+        )
+
+    assert res.success
+    print("bugnicourt nit: {}".format(res.nit))
+    gap = res.x.reshape(substrate.nb_subdomain_grid_pts)
+
+    grad = system.primal_objective(penetration, gradient=True)(
+        gap)[1].reshape(substrate.nb_subdomain_grid_pts)
+
+    assert np.max(abs(grad * (gap >0))) < gtol
+
+    np.testing.assert_allclose(gap, gap_lbfgs, atol=1e-6 * abs(topography.min()))
+
+    ##############################
+    # typical initial guess
+
+    init_disp = np.zeros(substrate.nb_subdomain_grid_pts)
+    _penetration = np.sum(
+        init_disp - topography.heights() - mean_gap) / np.prod(
+        substrate.nb_domain_grid_pts)
+
+    print(_penetration)
+
+    init_gap = init_disp - topography.heights() - _penetration
+    init_gap[init_gap < 0] = 0
+
+    res = bugnicourt_cg.constrained_conjugate_gradients(
+        system.primal_objective(_penetration, gradient=True),
+        system.primal_hessian_product,
+        x0=init_gap, mean_val=mean_gap,
+        gtol=gtol,
+        maxiter=1000,
+        )
+
+    assert res.success
+    print("bugnicourt nit: {}".format(res.nit))
+    gap = res.x.reshape(substrate.nb_subdomain_grid_pts)
+
+
+
+    np.testing.assert_allclose(gap, gap_lbfgs, atol=1e-6 * abs(topography.min()))
+    
+    grad = system.primal_objective(0, gradient=True)(
+        gap)[1].reshape(substrate.nb_subdomain_grid_pts)
+
+    nc_points = gap > 0
+    nb_nc_points = pnp.sum(np.count_nonzero(nc_points))
+    lagrange_mean_gap = pnp.sum(grad[nc_points]) / nb_nc_points
+
+    forces = - substrate.evaluate_force(gap + topography.heights()) \
+             - lagrange_mean_gap
+
+    np.testing.assert_allclose(forces, forces_lbfgs, atol=10*gtol)
