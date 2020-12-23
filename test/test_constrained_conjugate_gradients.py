@@ -180,9 +180,9 @@ def test_force_computation_mean_gap_constrained():
 
     forces_lbfgs = - substrate.evaluate_force(disp)
 
-    print("max abs force {}".format(np.max(abs(forces_lbfgs ))))
+    print("max abs force {}".format(np.max(abs(forces_lbfgs))))
 
-    ######### Check that at least the not mean constrained way works
+    #  Check that at least the not mean constrained way works
     init_disp = np.zeros((nx, ny))
     init_gap = init_disp - topography.heights() - penetration
     init_gap[init_gap < 0] = 0
@@ -202,9 +202,10 @@ def test_force_computation_mean_gap_constrained():
     grad = system.primal_objective(penetration, gradient=True)(
         gap)[1].reshape(substrate.nb_subdomain_grid_pts)
 
-    assert np.max(abs(grad * (gap >0))) < gtol
+    assert np.max(abs(grad * (gap > 0))) < gtol
 
-    np.testing.assert_allclose(gap, gap_lbfgs, atol=1e-6 * abs(topography.min()))
+    np.testing.assert_allclose(gap, gap_lbfgs,
+                               atol=1e-6 * abs(topography.min()))
 
     ##############################
     # typical initial guess
@@ -231,10 +232,9 @@ def test_force_computation_mean_gap_constrained():
     print("bugnicourt nit: {}".format(res.nit))
     gap = res.x.reshape(substrate.nb_subdomain_grid_pts)
 
+    np.testing.assert_allclose(gap, gap_lbfgs,
+                               atol=1e-6 * abs(topography.min()))
 
-
-    np.testing.assert_allclose(gap, gap_lbfgs, atol=1e-6 * abs(topography.min()))
-    
     grad = system.primal_objective(0, gradient=True)(
         gap)[1].reshape(substrate.nb_subdomain_grid_pts)
 
@@ -245,4 +245,4 @@ def test_force_computation_mean_gap_constrained():
     forces = - substrate.evaluate_force(gap + topography.heights()) \
              - lagrange_mean_gap
 
-    np.testing.assert_allclose(forces, forces_lbfgs, atol=10*gtol)
+    np.testing.assert_allclose(forces, forces_lbfgs, atol=10 * gtol)
