@@ -410,12 +410,30 @@ class SmoothContactSystem(SystemBase):
         """
         _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
 
-        hessp_val = self.substrate.evaluate_force(
+        hessp_val = - self.substrate.evaluate_force(
             des_dir.reshape(self.substrate.nb_subdomain_grid_pts)
-            ).reshape(np.shape(des_dir))\
-            - adh_curv * des_dir * self.substrate.area_per_pt
+            ).reshape(np.shape(des_dir)) \
+            + adh_curv * des_dir * self.substrate.area_per_pt
 
-        return -hessp_val.reshape(-1)
+        return hessp_val.reshape(des_dir.shape)
+
+    def hessian_product_function(self, offset):
+        def hessp(disp, des_dir):
+            gap = disp.reshape(self.substrate.nb_subdomain_grid_pts
+                               )[self.comp_slice] \
+                - (self.surface.heights() + offset)
+            _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
+            hessp_val = - self.substrate.evaluate_force(
+                des_dir.reshape(self.substrate.nb_subdomain_grid_pts)
+                )
+
+            hessp_val[self.comp_slice] += adh_curv \
+                * des_dir.reshape(self.substrate.nb_subdomain_grid_pts
+                                  )[self.comp_slice] \
+                * self.substrate.area_per_pt
+            return hessp_val.reshape(des_dir.shape)
+
+        return hessp
 
     def callback(self, force=False):
         """
