@@ -338,6 +338,7 @@ def test_mean_value_mode_is_penetration_indepentent():
     assert res.success
     print("bugnicourt nit: {}".format(res.nit))
 
+
 def test_bugnicourt_free_system():
     pnp = np
     # TODO: there is an old bug in the nonsmoothcontactsystem objective
@@ -350,17 +351,13 @@ def test_bugnicourt_free_system():
     rho = 6.
 
     surface = make_sphere(R, (nx, ny), (sx, sy),
-        centre  = (sx / 2, sy / 2),
-        kind="paraboloid")
-    padded_surface = make_sphere(R, (2 * nx, 2* ny), (2* sx, 2 * sy),
-        centre = (sx / 2, sy / 2),
-        kind="paraboloid")
+                          centre=(sx / 2, sy / 2),
+                          kind="paraboloid")
 
     interaction = Exponential(w, rho)
 
-
     substrate = Solid.FreeFFTElasticHalfSpace((nx, ny), young=Es,
-                                               physical_sizes=(sx, sy))
+                                              physical_sizes=(sx, sy))
 
     system = BoundedSmoothContactSystem(substrate, interaction, surface)
 
@@ -368,9 +365,9 @@ def test_bugnicourt_free_system():
     lbounds = system._lbounds_from_heights(penetration)
 
     bnds = system._reshape_bounds(lbounds, )
-    init_disp = np.zeros(substrate.nb_subdomain_grid_pts) # .flatten()
+    init_disp = np.zeros(substrate.nb_subdomain_grid_pts)
 
-    bounded =  init_disp<lbounds
+    bounded = init_disp < lbounds
     init_disp[bounded] == lbounds[bounded]
 
     res = optim.minimize(system.objective(penetration, gradient=True),
@@ -381,7 +378,6 @@ def test_bugnicourt_free_system():
 
     assert res.success
     _lbfgsb = res.x.reshape((2 * nx, 2 * ny))
-    _lbfgs_jac = res.jac.reshape((2 * nx, 2 * ny))
 
     res = bugnicourt_cg.constrained_conjugate_gradients(
         system.objective(penetration, gradient=True),
@@ -395,21 +391,20 @@ def test_bugnicourt_free_system():
 
     print(res.nit)
     _bug = res.x.reshape((2 * nx, 2 * ny))
-    _bug_jac = res.jac.reshape((2 * nx, 2 * ny))
 
     import matplotlib.pyplot as plt
     fig, ax = plt.subplots()
     ax.plot(_bug[:, ny//2], label="bug")
-    ax.plot(_lbfgsb[:, ny//2], label="lbfgsb")
+    ax.plot(_lbfgsb[:, ny // 2], label="lbfgsb")
     ax.legend()
     plt.show()
 
     fig, ax = plt.subplots()
-    ax.plot(system.objective(penetration, gradient=True)(_bug)[1].reshape((2 * nx, 2 * ny))[:, ny//2], label="bug")
-    ax.plot(system.objective(penetration, gradient=True)(_lbfgsb)[1].reshape((2 * nx, 2 * ny))[:, ny//2], label="lbfgsb")
+    ax.plot(system.objective(penetration, gradient=True)(_bug)[1].reshape(
+        (2 * nx, 2 * ny))[:, ny // 2], label="bug")
+    ax.plot(system.objective(penetration, gradient=True)(_lbfgsb)[1].reshape(
+        (2 * nx, 2 * ny))[:, ny // 2], label="lbfgsb")
     ax.legend()
     plt.show()
 
-    assert pnp.max(abs(_bug-_lbfgsb)) < 1e-5
-
-
+    assert pnp.max(abs(_bug - _lbfgsb)) < 1e-5
