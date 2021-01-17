@@ -10,11 +10,9 @@ import scipy.optimize as optim
 import pytest
 from NuMPI import MPI
 
-pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+@pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
                                 reason="tests only serial funcionalities,"
                                        " please execute with pytest")
-
-
 @pytest.mark.parametrize("offset", [0, 1.])
 @pytest.mark.parametrize('_solver', [  # 'generic_cg_polonsky',
     'bugnicourt_cg'])
@@ -137,7 +135,9 @@ def test_primal_obj(_solver, offset):
     else:
         assert False
 
-
+@pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+                                reason="tests only serial funcionalities,"
+                                       " please execute with pytest")
 def test_force_computation_mean_gap_constrained():
     pnp = np
     nx, ny = 32, 32
@@ -249,7 +249,9 @@ def test_force_computation_mean_gap_constrained():
 
     np.testing.assert_allclose(forces, forces_lbfgs, atol=10 * gtol)
 
-
+@pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+                                reason="tests only serial funcionalities,"
+                                       " please execute with pytest")
 def test_mean_value_mode_is_penetration_indepentent():
     nx, ny = 128, 128
     # FIXED by the nondimensionalisation
@@ -339,10 +341,10 @@ def test_mean_value_mode_is_penetration_indepentent():
     print("bugnicourt nit: {}".format(res.nit))
 
 
-def test_bugnicourt_free_system():
+def test_bugnicourt_free_system(comm):
     pnp = np
-    # TODO: there is an old bug in the nonsmoothcontactsystem objective
-    nx, ny = 8, 8
+
+    nx, ny = 32, 21
     sx = sy = 4.
     R = 1.
     Es = 0.75
@@ -350,14 +352,16 @@ def test_bugnicourt_free_system():
     w = 1 / np.pi * 1e-2
     rho = 6.
 
+    # MAKE REFERENCE solution in serial
+
     surface = make_sphere(R, (nx, ny), (sx, sy),
                           centre=(sx / 2, sy / 2),
-                          kind="paraboloid")
+                          kind="paraboloid", communicator=MPI.COMM_SELF)
 
-    interaction = Exponential(w, rho)
+    interaction = Exponential(w, rho, communicator=MPI.COMM_SELF)
 
     substrate = Solid.FreeFFTElasticHalfSpace((nx, ny), young=Es,
-                                              physical_sizes=(sx, sy))
+                                              physical_sizes=(sx, sy), communicator=MPI.COMM_SELF)
 
     system = BoundedSmoothContactSystem(substrate, interaction, surface)
 
@@ -379,32 +383,51 @@ def test_bugnicourt_free_system():
     assert res.success
     _lbfgsb = res.x.reshape((2 * nx, 2 * ny))
 
+    # Parallelized objective
+
+    interaction = Exponential(w, rho, communicator=comm)
+
+    substrate = Solid.FreeFFTElasticHalfSpace((nx, ny), young=Es,
+                                              physical_sizes=(sx, sy),
+                                              communicator=comm,
+                                              fft="mpi")
+
+    surface = make_sphere(R, (nx, ny), (sx, sy),
+                          centre=(sx / 2, sy / 2),
+                          subdomain_locations=substrate.topography_subdomain_locations,
+                          nb_subdomain_grid_pts=substrate.topography_nb_subdomain_grid_pts,
+                          kind="paraboloid", communicator=comm)
+
+    system = BoundedSmoothContactSystem(substrate, interaction, surface)
+
     res = bugnicourt_cg.constrained_conjugate_gradients(
         system.objective(penetration, gradient=True),
         system.hessian_product_function(penetration),
-        init_disp.reshape(-1),
+        init_disp[substrate.subdomain_slices].reshape(-1),
         gtol=1e-13,
-        bounds=lbounds.filled().reshape(-1),
-        maxiter=500
+        bounds=lbounds.filled()[substrate.subdomain_slices].reshape(-1),
+        maxiter=500,
+        communicator=comm
     )
     assert res.success
 
     print(res.nit)
-    _bug = res.x.reshape((2 * nx, 2 * ny))
+    _bug = res.x.reshape(substrate.nb_subdomain_grid_pts)
 
-    import matplotlib.pyplot as plt
-    fig, ax = plt.subplots()
-    ax.plot(_bug[:, ny//2], label="bug")
-    ax.plot(_lbfgsb[:, ny // 2], label="lbfgsb")
-    ax.legend()
-    plt.show()
+    if False:
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots()
+        ax.plot(_bug[:, ny//2], label="bug")
+        ax.plot(_lbfgsb[:, ny // 2], label="lbfgsb")
+        ax.legend()
+        plt.show()
 
-    fig, ax = plt.subplots()
-    ax.plot(system.objective(penetration, gradient=True)(_bug)[1].reshape(
-        (2 * nx, 2 * ny))[:, ny // 2], label="bug")
-    ax.plot(system.objective(penetration, gradient=True)(_lbfgsb)[1].reshape(
-        (2 * nx, 2 * ny))[:, ny // 2], label="lbfgsb")
-    ax.legend()
-    plt.show()
+        fig, ax = plt.subplots()
+        ax.plot(system.objective(penetration, gradient=True)(_bug)[1].reshape(
+            (2 * nx, 2 * ny))[:, ny // 2], label="bug")
+        ax.plot(system.objective(penetration, gradient=True)(_lbfgsb)[1].reshape(
+            (2 * nx, 2 * ny))[:, ny // 2], label="lbfgsb")
+        ax.legend()
+        plt.show()
 
-    assert pnp.max(abs(_bug - _lbfgsb)) < 1e-5
+    assert pnp.max(abs(_bug - _lbfgsb[substrate.subdomain_slices])) < 1e-5
