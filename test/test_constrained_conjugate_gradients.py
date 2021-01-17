@@ -10,9 +10,10 @@ import scipy.optimize as optim
 import pytest
 from NuMPI import MPI
 
+
 @pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
-                                reason="tests only serial funcionalities,"
-                                       " please execute with pytest")
+                    reason="tests only serial funcionalities,"
+                           " please execute with pytest")
 @pytest.mark.parametrize("offset", [0, 1.])
 @pytest.mark.parametrize('_solver', [  # 'generic_cg_polonsky',
     'bugnicourt_cg'])
@@ -135,9 +136,10 @@ def test_primal_obj(_solver, offset):
     else:
         assert False
 
+
 @pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
-                                reason="tests only serial funcionalities,"
-                                       " please execute with pytest")
+                    reason="tests only serial funcionalities,"
+                           " please execute with pytest")
 def test_force_computation_mean_gap_constrained():
     pnp = np
     nx, ny = 32, 32
@@ -249,9 +251,10 @@ def test_force_computation_mean_gap_constrained():
 
     np.testing.assert_allclose(forces, forces_lbfgs, atol=10 * gtol)
 
+
 @pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
-                                reason="tests only serial funcionalities,"
-                                       " please execute with pytest")
+                    reason="tests only serial funcionalities,"
+                           " please execute with pytest")
 def test_mean_value_mode_is_penetration_indepentent():
     nx, ny = 128, 128
     # FIXED by the nondimensionalisation
@@ -360,8 +363,9 @@ def test_bugnicourt_free_system(comm):
 
     interaction = Exponential(w, rho, communicator=MPI.COMM_SELF)
 
-    substrate = Solid.FreeFFTElasticHalfSpace((nx, ny), young=Es,
-                                              physical_sizes=(sx, sy), communicator=MPI.COMM_SELF)
+    substrate = Solid.FreeFFTElasticHalfSpace(
+        (nx, ny), young=Es,
+        physical_sizes=(sx, sy), communicator=MPI.COMM_SELF)
 
     system = BoundedSmoothContactSystem(substrate, interaction, surface)
 
@@ -392,11 +396,12 @@ def test_bugnicourt_free_system(comm):
                                               communicator=comm,
                                               fft="mpi")
 
-    surface = make_sphere(R, (nx, ny), (sx, sy),
-                          centre=(sx / 2, sy / 2),
-                          subdomain_locations=substrate.topography_subdomain_locations,
-                          nb_subdomain_grid_pts=substrate.topography_nb_subdomain_grid_pts,
-                          kind="paraboloid", communicator=comm)
+    surface = make_sphere(
+        R, (nx, ny), (sx, sy),
+        centre=(sx / 2, sy / 2),
+        subdomain_locations=substrate.topography_subdomain_locations,
+        nb_subdomain_grid_pts=substrate.topography_nb_subdomain_grid_pts,
+        kind="paraboloid", communicator=comm)
 
     system = BoundedSmoothContactSystem(substrate, interaction, surface)
 
@@ -417,16 +422,16 @@ def test_bugnicourt_free_system(comm):
     if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
-        ax.plot(_bug[:, ny//2], label="bug")
+        ax.plot(_bug[:, ny // 2], label="bug")
         ax.plot(_lbfgsb[:, ny // 2], label="lbfgsb")
         ax.legend()
         plt.show()
 
         fig, ax = plt.subplots()
-        ax.plot(system.objective(penetration, gradient=True)(_bug)[1].reshape(
-            (2 * nx, 2 * ny))[:, ny // 2], label="bug")
-        ax.plot(system.objective(penetration, gradient=True)(_lbfgsb)[1].reshape(
-            (2 * nx, 2 * ny))[:, ny // 2], label="lbfgsb")
+        ax.plot(system.objective(penetration, gradient=True)(_bug)[1]
+                .reshape((2 * nx, 2 * ny))[:, ny // 2], label="bug")
+        ax.plot(system.objective(penetration, gradient=True)(_lbfgsb)[1]
+                .reshape((2 * nx, 2 * ny))[:, ny // 2], label="lbfgsb")
         ax.legend()
         plt.show()
 
