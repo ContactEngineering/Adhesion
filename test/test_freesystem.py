@@ -133,7 +133,7 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
     assert result.success, "{}".format(result)
 
     if hasattr(result.message, "decode"):
-        decoded_message = result.decode()
+        decoded_message = result.message.decode()
     else:
         decoded_message = result.message
 
