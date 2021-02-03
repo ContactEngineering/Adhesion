@@ -18,7 +18,7 @@ def test_2d():
     w = 0.01 * z0 * Es
     surf_size = (n, n)
 
-    inter = RepulsiveExponential(w, 0.5, 0, 1.)
+    inter = RepulsiveExponential(2*w, 0.5, w, 1.)
 
     substrate = PeriodicFFTElasticHalfSpace(surf_res, young=Es,
                                             physical_sizes=surf_size)
