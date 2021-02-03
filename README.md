@@ -34,7 +34,7 @@ pip  install [--user]  git+https://github.com/ComputationalMechanics/Adhesion.gi
 
 The last command will install other dependencies including 
 [muFFT](https://gitlab.com/muspectre/muspectre.git), 
-[NuMPI](https://github.com/IMTEK-Simulation/NuMPI.git) and [a fork of runtests](https://github.com/AntoineSIMTEK/runtests.git)
+[NuMPI](https://github.com/IMTEK-Simulation/NuMPI.git) and [runtests](https://github.com/bccp/runtests.git)
 
 Note: sometimes [muFFT](https://gitlab.com/muspectre/muspectre.git) will not find the FFTW3 installation you expect.
 You can specify the directory where you installed [FFTW3](http://www.fftw.org/)  
