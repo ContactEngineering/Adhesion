@@ -478,11 +478,10 @@ class SmoothContactSystem(SystemBase):
             hessp_val[self.comp_slice] += adh_curv \
                 * des_dir.reshape(self.substrate.nb_subdomain_grid_pts
                                   )[self.comp_slice] \
-                * self.substrate.area_per_pt
+                                          * self.substrate.area_per_pt
             return hessp_val.reshape(des_dir.shape)
 
         return hessp
-
 
     def fourier_el_coefficients(self):
         """
