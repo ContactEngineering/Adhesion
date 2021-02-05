@@ -4,11 +4,12 @@ from SurfaceTopography.Generation import fourier_synthesis
 
 from Adhesion.Interactions import Exponential
 from Adhesion.System import BoundedSmoothContactSystem
-from NuMPI.Optimization import generic_cg_polonsky, bugnicourt_cg
+from NuMPI.Optimization import bugnicourt_cg
 import numpy as np
 import scipy.optimize as optim
 import pytest
 from NuMPI import MPI
+
 
 @pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
                     reason="tests only serial funcionalities,"
