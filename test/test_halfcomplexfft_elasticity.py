@@ -6,19 +6,20 @@ from SurfaceTopography.Generation import fourier_synthesis
 from Adhesion.Interactions import RepulsiveExponential
 from Adhesion.System import make_system, SmoothContactSystem
 
+
 # @pytest.mark.parametrize("nx, ny", [(15, 15),
 #                                     (8, 8),
 #                                     (9, 9),
 #                                     (113, 113)])
 
-@pytest.mark.parametrize("k", [  (1, 0),
-        (0, 1),
-    (1, 2),
-    (4, 0),
-    (1, 4),
-    (0, 2),
-    (4, 4),
-    (0, 4)])
+@pytest.mark.parametrize("k", [(1, 0),
+                               (0, 1),
+                               (1, 2),
+                               (4, 0),
+                               (1, 4),
+                               (0, 2),
+                               (4, 4),
+                               (0, 4)])
 def test_sineWave_(k):
     """
     for given sinusoidal displacements, compares the energies
@@ -47,18 +48,17 @@ def test_sineWave_(k):
     qy = k[1] * np.pi * 2 / sy
     q = np.sqrt(qx ** 2 + qy ** 2)
 
-     ###########################################################
+    ###########################################################
     # This is only for the purpose of using the mass-weighted objective
     # accessible only through the Adhesive system. Interaction and Topography
     # do not affect the computation of energy.
 
-
-    topo = fourier_synthesis(nb_grid_pts=(nx,ny),
+    topo = fourier_synthesis(nb_grid_pts=(nx, ny),
                              hurst=0.8,  # Fig. 4
-                             physical_sizes=(sx,sy),
+                             physical_sizes=(sx, sy),
                              rms_slope=1.,
                              long_cutoff=sx,
-                             short_cutoff=0.01*sx ,
+                             short_cutoff=0.01 * sx,
                              )
 
     inter = RepulsiveExponential(0, 0.5, 0, 1.0)
@@ -78,21 +78,21 @@ def test_sineWave_(k):
                                             fft='fftw')
     engine = FFT((nx, ny), fft='fftw')
 
-    real_buffer = engine.register_hc_space_field(
+    real_buffer = engine.register_halfcomplex_field(
         "real-space", 1)
-    fourier_buffer = engine.register_hc_space_field(
+    fourier_buffer = engine.register_halfcomplex_field(
         "fourier-space", 1)
     real_buffer.array()[...] = disp.copy()
     engine.hcfft(real_buffer, fourier_buffer)
     k_float_disp = fourier_buffer.array()[...].copy()
     k_float_disp_mw = k_float_disp * np.sqrt(system.stiffness_k)
 
-    refpressure = - disp * E_s / 2 * q
+    # refpressure = - disp * E_s / 2 * q
 
     engine.create_plan(1)
 
-    kpressure = substrate.evaluate_k_force(
-        disp[substrate.subdomain_slices]) / substrate.area_per_pt
+    # kpressure = substrate.evaluate_k_force(
+    #     disp[substrate.subdomain_slices]) / substrate.area_per_pt
 
     expected_k_disp = np.zeros((nx, ny), dtype=complex)
     expected_k_disp[k[0], k[1]] += (.5 - .5j) * (nx * ny)
@@ -103,20 +103,19 @@ def test_sineWave_(k):
     if k[0] == nx // 2 and nx % 2 == 0:
         expected_k_disp[k[0], -k[1]] += (.5 + .5j) * (nx * ny)
 
-    expected_k_pressure = - E_s / 2 * q * expected_k_disp
+    # expected_k_pressure = - E_s / 2 * q * expected_k_disp
 
-    energy = system.objective_k_float_mw(0, gradient=True)(k_float_disp_mw)[0]
+    energy = \
+        system.preconditioned_objective(0, gradient=True)(k_float_disp_mw)[0]
 
     computedenergy_kspace = energy
 
     refenergy = E_s / 8 * 2 * q * sx * sy
 
-    np.testing.assert_allclose(
-        computedenergy_kspace, refenergy,
-        rtol=1e-10,
-        err_msg="wavevektor {} for nb_domain_grid_pts {}, "
-                "subdomain nb_grid_pts {}, nb_fourier_grid_pts {}"
-            .format(k, substrate.nb_domain_grid_pts,
-                    substrate.nb_subdomain_grid_pts,
-                    substrate.nb_fourier_grid_pts))
-
+    np.testing.assert_allclose(computedenergy_kspace, refenergy, rtol=1e-10,
+                               err_msg="wavevektor {} for nb_domain_grid_pts "
+                                       "{}, subdomain nb_grid_pts {}, "
+                                       "nb_fourier_grid_pts {}".format(k,
+                                        substrate.nb_domain_grid_pts,
+                                        substrate.nb_subdomain_grid_pts,
+                                            substrate.nb_fourier_grid_pts))
