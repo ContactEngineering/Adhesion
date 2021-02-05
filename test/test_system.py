@@ -437,7 +437,10 @@ def test_primal_hessian_product(s):
         _, grad_d = obj(gaps + h * dgaps)
         dgrad = grad_d - grad
         dgrad_from_hess = system.primal_hessian_product(gaps, h * dgaps)
-        rms_errors.append(np.sqrt(np.mean((dgrad_from_hess - dgrad) ** 2)))
+        rms_errors.append(
+            np.sqrt(
+                np.mean(
+                    (dgrad_from_hess.reshape(-1) - dgrad.reshape(-1)) ** 2)))
 
     rms_errors = np.array(rms_errors)
     assert rms_errors[-1] / rms_errors[0] < 1.5 * (hs[-1] / hs[0]) ** 2
