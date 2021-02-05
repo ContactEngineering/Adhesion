@@ -227,7 +227,7 @@ class SmoothContactSystem(SystemBase):
                  'frac. att. area',
                  'frac. int. area', 'substrate force', 'interaction force'],
                 [self.energy,
-                 self.pnp.max(np.abs(self.force)),
+                 self.reduction.max(np.abs(self.force)),
                  self.compute_mean_gap(),
                  rel_rep_area,
                  rel_att_area,
@@ -905,7 +905,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         mask = np.ones(self.substrate.nb_subdomain_grid_pts)
         mask[self.substrate.local_topography_subdomain_slices][
             contacting_points] = 0
-        max_proj_grad = self.pnp.max(abs(mask * self.force))
+        max_proj_grad = self.reduction.max(abs(mask * self.force))
 
         return (['energy',
                  'max. proj. grad.',
@@ -923,8 +923,8 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
                  rel_rep_area,
                  rel_att_area,
                  rel_rep_area + rel_att_area,
-                 -self.pnp.sum(self.substrate.force),
-                 self.pnp.sum(self.interaction_force)])
+                 -self.reduction.sum(self.substrate.force),
+                 self.reduction.sum(self.interaction_force)])
 
     def compute_normal_force(self):
         "computes and returns the sum of all forces"
