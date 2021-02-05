@@ -151,7 +151,7 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
         nonadh_system.primal_objective(penetration, gradient=True),
         nonadh_system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
-        gtol=gtol * max(Es * topography.rms_slope(), abs(
+        gtol=gtol * max(Es * hprms, abs(
                 interaction.max_tensile)) * topography.area_per_pt,
         maxiter=1000)
 
