@@ -53,7 +53,7 @@ def test_1d_sinewave_smooth_against_jkr():
             if disp0 is not None:
                 disp0 += offset - offset_prev  # noqa: F821
             sol = system.minimize_proxy(
-                disp0=disp0,
+                initial_displacements=disp0,
                 options=dict(
                     gtol=gtol * max(Es * surface.rms_slope(),
                                     abs(inter.max_tensile))
@@ -119,7 +119,7 @@ def test_1d_sinewave_hardwall_against_jkr():
             if disp0 is not None:
                 disp0 += offset - offset_prev  # noqa: F821
             sol = system.minimize_proxy(
-                disp0=disp0,
+                initial_displacements=disp0,
                 options=dict(gtol=gtol * max(Es * surface.rms_slope(),
                                              abs(inter.max_tensile))
                              * surface.area_per_pt,

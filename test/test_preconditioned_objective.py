@@ -1,15 +1,14 @@
 import numpy as np
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from SurfaceTopography import Topography
-from Adhesion.Interactions import VDW82, RepulsiveExponential
+from Adhesion.Interactions import RepulsiveExponential
 from Adhesion.System import SmoothContactSystem, make_system
 import muFFT
 from SurfaceTopography.Generation import fourier_synthesis
-import scipy.optimize as optim
-import matplotlib.pyplot as plt
 
 
 def test_2d():
+
     n = 32
     surf_res = (n, n)
 
@@ -18,7 +17,7 @@ def test_2d():
     w = 0.01 * z0 * Es
     surf_size = (n, n)
 
-    inter = RepulsiveExponential(2*w, 0.5, w, 1.)
+    inter = RepulsiveExponential(2 * w, 0.5, w, 1.)
 
     substrate = PeriodicFFTElasticHalfSpace(surf_res, young=Es,
                                             physical_sizes=surf_size)
@@ -36,17 +35,15 @@ def test_2d():
     # init_gap[init_gap < 0] = 0
     # disp0 = init_gap + system.surface.heights() + penetrations[5]
 
-    disp0 = np.random.uniform(0,1,size=surface.nb_grid_pts)
-    # disp0 = np.ones(surface.nb_grid_pts)
-    # disp0 = 0.5*disp0
+    disp0 = np.random.uniform(0, 1, size=surface.nb_grid_pts)
 
     engine = muFFT.FFT(substrate.nb_grid_pts, fft='fftw',
                        allow_temporary_buffer=False,
                        allow_destroy_input=True)
 
-    real_buffer = engine.register_hc_space_field(
+    real_buffer = engine.register_halfcomplex_field(
         "real-space", 1)
-    fourier_buffer = engine.register_hc_space_field(
+    fourier_buffer = engine.register_halfcomplex_field(
         "fourier-space", 1)
 
     real_buffer.array()[...] = disp0.copy()
@@ -55,7 +52,7 @@ def test_2d():
     k_float_disp_mw = k_float_disp * np.sqrt(
         system.stiffness_k)
 
-    en_mw = system.objective_k_float_mw(penetrations[5], gradient=True)(
+    en_mw = system.preconditioned_objective(penetrations[5], gradient=True)(
         k_float_disp_mw)[0]
     print('mw el {}'.format(system.substrate.energy))
     en_real = system.objective(penetrations[5], gradient=True)(disp0)[0]
@@ -73,7 +70,7 @@ def test_2d():
 
 def test_1d():
     Es = 1.
-    rms_slope = 1.
+    # rms_slope = 1.
     dx = 1
     n = 1024
     s = n * dx
@@ -99,7 +96,7 @@ def test_1d():
                                        interaction_length).linearize_core(
         hardness=1000 * Es * topo.rms_slope())
 
-    w = abs(interaction.v_min)
+    # w = abs(interaction.v_min)
 
     system = make_system(interaction=interaction,
                          surface=topo,
@@ -112,9 +109,9 @@ def test_1d():
                        allow_temporary_buffer=False,
                        allow_destroy_input=True)
 
-    real_buffer = engine.register_hc_space_field(
+    real_buffer = engine.register_halfcomplex_field(
         "real-space", 1)
-    fourier_buffer = engine.register_hc_space_field(
+    fourier_buffer = engine.register_halfcomplex_field(
         "fourier-space", 1)
 
     penetrations = np.linspace(-np.max(topo.heights()), 0, 10)
@@ -130,11 +127,12 @@ def test_1d():
     k_float_disp_mw = k_float_disp * np.sqrt(
         system.stiffness_k)
 
-    en_mw = system.objective_k_float_mw(penetrations[5], gradient=True)(
+    en_mw = system.preconditioned_objective(penetrations[5], gradient=True)(
         k_float_disp_mw)[0]
     en_real = system.objective(penetrations[5], gradient=True)(disp0)[0]
     en_fourier = \
-    system.objective_k_float(penetrations[5], gradient=True)(k_float_disp)[0]
+        system.objective_k_float(penetrations[5], gradient=True)(k_float_disp)[
+            0]
 
     print(en_fourier, en_real, en_mw)
     np.testing.assert_allclose(en_mw, en_real, atol=1e-3)
