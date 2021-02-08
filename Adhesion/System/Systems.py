@@ -218,11 +218,16 @@ class SmoothContactSystem(SystemBase):
         tot_nb_grid_pts = np.prod(self.nb_grid_pts)
         rel_rep_area = self.compute_nb_repulsive_pts() / tot_nb_grid_pts
         rel_att_area = self.compute_nb_attractive_pts() / tot_nb_grid_pts
-
-        return (['energy', 'mean gap', 'frac. rep. area',
+        # TODO: eventually put a flag to turn
+        #  reductions off since this is an additional communication.
+        return (['energy',
+                 'max. abs. grad.',
+                 'mean gap',
+                 'frac. rep. area',
                  'frac. att. area',
                  'frac. int. area', 'substrate force', 'interaction force'],
                 [self.energy,
+                 self.reduction.max(np.abs(self.force)),
                  self.compute_mean_gap(),
                  rel_rep_area,
                  rel_att_area,
@@ -383,8 +388,7 @@ class SmoothContactSystem(SystemBase):
             #                       ^ gradient to force per pixel
             self.force = self.substrate.force.copy()
 
-            self.force[self.comp_slice] += \
-                self.interaction_force.reshape(self.nb_grid_pts)
+            self.force[self.comp_slice] += self.interaction_force
         else:
             self.force = None
 
@@ -429,13 +433,13 @@ class SmoothContactSystem(SystemBase):
 
         """
 
-        res = self.substrate.nb_domain_grid_pts
+        res = self.substrate.nb_subdomain_grid_pts
         if gradient:
             def fun(gap):
                 disp = gap.reshape(res) + self.surface.heights() + offset
                 try:
                     self.primal_evaluate(
-                        disp.reshape(res), gap, forces=True, logger=logger)
+                        disp, gap.reshape(res), forces=True, logger=logger)
                 except ValueError as err:
                     raise ValueError(
                         "{}: gap.shape: {}, res: {}".format(
@@ -445,21 +449,37 @@ class SmoothContactSystem(SystemBase):
             def fun(gap):
                 disp = gap.reshape(res) + self.surface.heights() + offset
                 return self.primal_evaluate(
-                    disp.reshape(res), gap, forces=False, logger=logger)[0]
+                    disp, gap.reshape(res), forces=False, logger=logger)[0]
 
         return fun
 
     def primal_hessian_product(self, gap, des_dir):
         """Returns the hessian product of the primal_objective function.
         """
-        adh_curv = self.interaction.evaluate(gap, curvature=True)[2]
+        _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
 
-        hessp_val = self.substrate.evaluate_force(
-            des_dir.reshape(self.substrate.nb_domain_grid_pts)).reshape(
-            np.shape(des_dir)) - adh_curv * des_dir * \
-            self.substrate.area_per_pt
+        hessp_val = - self.substrate.evaluate_force(
+            des_dir.reshape(self.substrate.nb_subdomain_grid_pts)
+            ).reshape(np.shape(des_dir)) \
+            + adh_curv * des_dir * self.substrate.area_per_pt
 
-        return -hessp_val.reshape(-1)
+        return hessp_val.reshape(des_dir.shape)
+
+    def hessian_product_function(self, offset):
+        def hessp(disp, des_dir):
+            gap = disp.reshape(self.substrate.nb_subdomain_grid_pts
+                               )[self.comp_slice] \
+                - (self.surface.heights() + offset)
+            _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
+            hessp_val = - self.substrate.evaluate_force(
+                des_dir.reshape(self.substrate.nb_subdomain_grid_pts)
+                )
+
+            hessp_val[self.comp_slice] += adh_curv \
+                * des_dir.reshape(self.substrate.nb_subdomain_grid_pts)[self.comp_slice] * self.substrate.area_per_pt
+            return hessp_val.reshape(des_dir.shape)
+
+        return hessp
 
     def fourier_el_coefficients(self):
         """
@@ -865,10 +885,43 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         return self.reduction.sum(np.where(self.gap == 0., 1., 0.))
 
     def logger_input(self):
-        headers, vals = super().logger_input()
-        headers.append("frac. cont. area")
-        vals.append(self.compute_nb_contact_pts() / np.prod(self.nb_grid_pts))
-        return headers, vals
+        """
+
+        Returns
+        -------
+        headers: list of strings
+        values: list
+        """
+        tot_nb_grid_pts = np.prod(self.nb_grid_pts)
+        rel_rep_area = self.compute_nb_repulsive_pts() / tot_nb_grid_pts
+        rel_att_area = self.compute_nb_attractive_pts() / tot_nb_grid_pts
+        # TODO: eventually put a flag to turn
+        #  reductions off since this is an additional communication.
+
+        contacting_points = self.gap == 0.
+        mask = np.ones(self.substrate.nb_subdomain_grid_pts)
+        mask[self.substrate.local_topography_subdomain_slices][
+            contacting_points] = 0
+        max_proj_grad = self.reduction.max(abs(mask * self.force))
+
+        return (['energy',
+                 'max. proj. grad.',
+                 'mean gap',
+                 'frac. cont. area',
+                 'frac. rep. area',
+                 'frac. att. area',
+                 'frac. int. area',
+                 'substrate force',
+                 'interaction force'],
+                [self.energy,
+                 max_proj_grad,
+                 self.compute_mean_gap(),
+                 self.compute_nb_contact_pts() / np.prod(self.nb_grid_pts),
+                 rel_rep_area,
+                 rel_att_area,
+                 rel_rep_area + rel_att_area,
+                 -self.reduction.sum(self.substrate.force),
+                 self.reduction.sum(self.interaction_force)])
 
     def compute_normal_force(self):
         "computes and returns the sum of all forces"

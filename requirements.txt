@@ -1,7 +1,6 @@
 igor
 matplotlib>=1.0.0
 numpy>=1.16.3
-pylint>0.25
 pep8>=0.6
 scipy>=1.2.0
 netCDF4==1.5.3
@@ -13,6 +12,6 @@ pytest-flake8
 flake8
 sphinx_rtd_theme
 setuptools_scm>=3.5.0
-muFFT>=0.11.1
+muFFT>=0.14.0
 runtests>=0.0.28
 git+https://github.com/ComputationalMechanics/ContactMechanics.git@feat/20_objective

@@ -7,12 +7,17 @@ from Adhesion.System import make_system, BoundedSmoothContactSystem
 from NuMPI.Optimization.bugnicourt_cg import constrained_conjugate_gradients
 # from NuMPI import MPI
 from NuMPI.Tools import Reduction
+import pytest
+from NuMPI import MPI
 
 import numpy as np
 
+pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+                                reason="tests only serial funcionalities, "
+                                       "please execute with pytest")
+
 
 def test_bugnicourt_weakly_adhesive(comm, verbose=False):
-
     Es = 1.
     gtol = 1e-8
     n = 512
@@ -23,10 +28,9 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
 
     np.random.seed(0)
     full_topography = fourier_synthesis((n, n), (s, s), 0.8, rms_slope=hprms,
-                                        long_cutoff=s/2, short_cutoff=32,)
+                                        long_cutoff=s / 2, short_cutoff=32, )
 
-    full_topography._heights = full_topography.heights() - \
-        np.max(full_topography.heights())
+    full_topography._heights = full_topography.heights() - np.max(full_topography.heights())
 
     pnp = Reduction(comm)
 
@@ -108,7 +112,7 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
         system.primal_objective(penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=None,
-        gtol=gtol * max(Es * topography.rms_slope(), abs(
+        gtol=gtol * max(Es * hprms, abs(
                 interaction.max_tensile)) * topography.area_per_pt,
         maxiter=1000)
 
@@ -135,7 +139,7 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
         system.primal_objective(penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
-        gtol=gtol * max(Es * topography.rms_slope(), abs(
+        gtol=gtol * max(Es * hprms, abs(
                 interaction.max_tensile)) * topography.area_per_pt,
         maxiter=1000)
 
@@ -151,7 +155,7 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
         nonadh_system.primal_objective(penetration, gradient=True),
         nonadh_system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
-        gtol=gtol * max(Es * topography.rms_slope(), abs(
+        gtol=gtol * max(Es * hprms, abs(
                 interaction.max_tensile)) * topography.area_per_pt,
         maxiter=1000)
 

@@ -20,7 +20,7 @@ from Adhesion.System import make_system, SmoothContactSystem
                                (0, 2),
                                (4, 4),
                                (0, 4)])
-def test_sineWave_(k):
+def test_sinewave_(k):
     """
     for given sinusoidal displacements, compares the energies
     to the analytical solutions
@@ -112,10 +112,12 @@ def test_sineWave_(k):
 
     refenergy = E_s / 8 * 2 * q * sx * sy
 
-    np.testing.assert_allclose(computedenergy_kspace, refenergy, rtol=1e-10,
-                               err_msg="wavevektor {} for nb_domain_grid_pts "
-                                       "{}, subdomain nb_grid_pts {}, "
-                                       "nb_fourier_grid_pts {}".format(k,
-                                        substrate.nb_domain_grid_pts,
-                                        substrate.nb_subdomain_grid_pts,
-                                            substrate.nb_fourier_grid_pts))
+    np.testing.assert_allclose(
+        computedenergy_kspace, refenergy, rtol=1e-10,
+        err_msg="wavevektor {} for nb_domain_grid_pts "
+                "{}, subdomain nb_grid_pts {}, "
+                "nb_fourier_grid_pts {}".format(
+                    k,
+                    substrate.nb_domain_grid_pts,
+                    substrate.nb_subdomain_grid_pts,
+                    substrate.nb_fourier_grid_pts))

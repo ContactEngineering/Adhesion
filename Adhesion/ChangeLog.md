@@ -5,6 +5,8 @@ Change log for PyCo
 v0.90.0 (???)
 -------------
 
+- Dropped support for python3.5 and scipy < 0.16.0
+
 - Refactored PyCo code into three separate Python modules:
   SurfaceTopography, ContactMechanics and Adhesion
 

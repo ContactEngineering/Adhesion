@@ -5,10 +5,15 @@ from Adhesion.Interactions import RepulsiveExponential
 from Adhesion.System import SmoothContactSystem, make_system
 import muFFT
 from SurfaceTopography.Generation import fourier_synthesis
+import pytest
+from NuMPI import MPI
+
+pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+                                reason="tests only serial funcionalities, "
+                                       "please execute with pytest")
 
 
 def test_2d():
-
     n = 32
     surf_res = (n, n)
 

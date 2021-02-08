@@ -412,7 +412,7 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
     ----------
     a: contact radius
     d: penetration
-    der: {"0", "1_a", "2_a"}
+    der: {"0", "1_a", "2_a", "1_d", "2_ad"}
     R: default 1, optional
     radius of the sphere
     Es: default 3/4, optional
@@ -440,6 +440,12 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
                + Es / np.sqrt(np.pi * a) * 2 * a / R
     elif der == "2_a":
         return - 3 / 4 * a ** (-5 / 2) * Es * dc / np.sqrt(np.pi)
+    elif der == "1_d":
+        return - Es / np.sqrt(np.pi * a)
+    elif der == "2_ad" or der == "2_da":
+        return Es / (2 * np.sqrt(np.pi)) * a ** (-3 / 2)
+    else:
+        raise ValueError()
 
 
 def displacement_field(r, contact_radius,

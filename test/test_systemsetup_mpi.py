@@ -35,7 +35,7 @@ from ContactMechanics import FreeFFTElasticHalfSpace
 from Adhesion.System import make_system
 from Adhesion.Interactions import VDW82, Exponential
 from SurfaceTopography import make_sphere
-from Adhesion.System import SmoothContactSystem
+from Adhesion.System import SmoothContactSystem, BoundedSmoothContactSystem
 from ContactMechanics.Tools.Logger import Logger
 from Adhesion.Interactions import HardWall
 
@@ -207,9 +207,7 @@ def test_hardwall_as_string(comm, examplefile):
                 communicator=comm)
 
 
-@pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
-                    reason="not parallelized yet")
-def test_logger():
+def test_bounded_logger():
     """
     This should test the following:
     - that that the logger works in an MPI application
@@ -232,7 +230,7 @@ def test_logger():
                                         communicator=MPI.COMM_SELF)
 
     interaction = Exponential(0., 0.0001)
-    system = SmoothContactSystem(substrate, interaction, surface)
+    system = BoundedSmoothContactSystem(substrate, interaction, surface)
 
     gtol = 1e-5
     offset = 1.
@@ -240,11 +238,70 @@ def test_logger():
                                 options=dict(gtol=gtol, ftol=0),
                                 logger=Logger("test_logger.log"))
 
-    with open("test_logger.log") as logfile:
-        print(logfile.read())
+    log = np.loadtxt("test_logger.log")
 
     if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
         plt.colorbar(ax.pcolormesh(- system.substrate.force), label="pressure")
+
+        fig, ax = plt.subplots()
+        ax.plot(log[:, 1])
+        ax.set_xlabel("# objective eval")
+        ax.set_ylabel("max abs proj grad")
+
+        ax.set_yscale("log")
+
         plt.show(block=True)
+
+    assert log[-1, 1] < gtol
+
+
+def test_smooth_logger():
+    """
+    This should test the following:
+    - that that the logger works in an MPI application
+       (on the example of Softwall) # TODO: this not tested actually
+    - Test that the reductions are well done). To do that we compare the
+    quantities computed at the step with the
+
+    The simplest way to check the independence on number of processors is
+    to store a reference computation somewhere. Looking at the
+    """
+    nx, ny = 16, 16
+    sx, sy = 20., 20.
+    R = 11.
+
+    surface = make_sphere(R, (nx, ny), (sx, sy), kind="paraboloid")
+    Es = 50.
+    substrate = FreeFFTElasticHalfSpace((nx, ny), young=Es,
+                                        physical_sizes=(sx, sy),
+                                        fft="serial",
+                                        communicator=MPI.COMM_SELF)
+
+    interaction = Exponential(-100, 0.1)
+    system = SmoothContactSystem(substrate, interaction, surface)
+
+    gtol = 1e-5
+    offset = 1.
+    res = system.minimize_proxy(offset=offset,  # noqa: F841
+                                options=dict(gtol=gtol, ftol=0),
+                                logger=Logger("test_logger.log"))
+
+    log = np.loadtxt("test_logger.log")
+
+    if False:
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots()
+        plt.colorbar(ax.pcolormesh(- system.substrate.force), label="pressure")
+
+        fig, ax = plt.subplots()
+        ax.plot(log[:, 1])
+        ax.set_xlabel("# objective eval")
+        ax.set_ylabel("max abs proj grad")
+
+        ax.set_yscale("log")
+
+        plt.show(block=True)
+
+    assert log[-1, 1] < gtol
