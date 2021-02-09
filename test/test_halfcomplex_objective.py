@@ -59,18 +59,31 @@ def test_2d():
 
     en_mw = system.preconditioned_objective(penetrations[5], gradient=True)(
         k_float_disp_mw)[0]
-    print('mw el {}'.format(system.substrate.energy))
+    # print('mw el {}'.format(system.substrate.energy))
+    en_mw_el = system.substrate.energy
+    en_mw_adh = system.interaction_energy
     en_real = system.objective(penetrations[5], gradient=True)(disp0)[0]
-    print('real el {} '.format(system.substrate.energy))
+    en_real_el = system.substrate.energy
+    en_real_adh = system.interaction_energy
+    # print('real el {} '.format(system.substrate.energy))
     en_fourier = \
         system.objective_k_float(penetrations[5], gradient=True)(k_float_disp)[
             0]
-    print('fourier el {} '.format(system.substrate.energy))
+    en_fourier_el = system.substrate.energy
+    en_fourier_adh = system.interaction_energy
+    # print('fourier el {} '.format(system.substrate.energy))
 
-    print(en_fourier, en_real, en_mw)
-    np.testing.assert_allclose(en_mw, en_real, atol=1e-3)
-    np.testing.assert_allclose(en_fourier, en_real, atol=1e-3)
-    np.testing.assert_allclose(en_fourier, en_mw, atol=1e-3)
+    # print(en_fourier, en_real, en_mw)
+
+    np.testing.assert_allclose(en_mw_el, en_real_el, atol=1e-8)
+    np.testing.assert_allclose(en_fourier_el, en_real_el, atol=1e-8)
+    np.testing.assert_allclose(en_fourier_el, en_mw_el, atol=1e-8)
+    np.testing.assert_allclose(en_mw_adh, en_real_adh, atol=1e-8)
+    np.testing.assert_allclose(en_fourier_adh, en_real_adh, atol=1e-8)
+    np.testing.assert_allclose(en_fourier_adh, en_mw_adh, atol=1e-8)
+    np.testing.assert_allclose(en_mw, en_real, atol=1e-8)
+    np.testing.assert_allclose(en_fourier, en_real, atol=1e-8)
+    np.testing.assert_allclose(en_fourier, en_mw, atol=1e-8)
 
 
 def test_1d():
@@ -123,8 +136,9 @@ def test_1d():
 
     disp0 = np.zeros(topo.nb_grid_pts)
     init_gap = disp0 - system.surface.heights() - penetrations[5]
-    init_gap[init_gap < 0] = 0
-    disp0 = init_gap + system.surface.heights() + penetrations[5]
+    disp0 = init_gap
+    # init_gap[init_gap < 0] = 0
+    # disp0 = init_gap + system.surface.heights() + penetrations[5]
 
     real_buffer.array()[...] = disp0.copy()
     engine.hcfft(real_buffer, fourier_buffer)
@@ -134,12 +148,25 @@ def test_1d():
 
     en_mw = system.preconditioned_objective(penetrations[5], gradient=True)(
         k_float_disp_mw)[0]
+    en_mw_el = system.substrate.energy
+    en_mw_adh = system.interaction_energy
     en_real = system.objective(penetrations[5], gradient=True)(disp0)[0]
+    en_real_el = system.substrate.energy
+    en_real_adh = system.interaction_energy
     en_fourier = \
         system.objective_k_float(penetrations[5], gradient=True)(k_float_disp)[
             0]
+    en_fourier_el = system.substrate.energy
+    en_fourier_adh = system.interaction_energy
 
-    print(en_fourier, en_real, en_mw)
-    np.testing.assert_allclose(en_mw, en_real, atol=1e-3)
-    np.testing.assert_allclose(en_fourier, en_real, atol=1e-3)
-    np.testing.assert_allclose(en_fourier, en_mw, atol=1e-3)
+    # print(en_fourier, en_real, en_mw, en_real_el, en_fourier_el, en_mw_el)
+
+    np.testing.assert_allclose(en_mw, en_real, atol=1e-8)
+    np.testing.assert_allclose(en_fourier, en_real, atol=1e-8)
+    np.testing.assert_allclose(en_fourier, en_mw, atol=1e-8)
+    np.testing.assert_allclose(en_mw_el, en_real_el, atol=1e-8)
+    np.testing.assert_allclose(en_fourier_el, en_real_el, atol=1e-8)
+    np.testing.assert_allclose(en_fourier_el, en_mw_el, atol=1e-8)
+    np.testing.assert_allclose(en_mw_adh, en_real_adh, atol=1e-8)
+    np.testing.assert_allclose(en_fourier_adh, en_real_adh, atol=1e-8)
+    np.testing.assert_allclose(en_fourier_adh, en_mw_adh, atol=1e-8)

@@ -70,8 +70,7 @@ class SmoothContactSystem(SystemBase):
         self.dim = len(self.substrate.nb_grid_pts)
         self.energy = None
         self.force = None
-        self.force_k = None
-        self.force_k_float = None
+        self.force_h = None
         self.interaction_energy = None
         self.interaction_force = None
         self.heights_k = None
@@ -460,7 +459,7 @@ class SmoothContactSystem(SystemBase):
 
         hessp_val = - self.substrate.evaluate_force(
             des_dir.reshape(self.substrate.nb_subdomain_grid_pts)
-            ).reshape(np.shape(des_dir)) \
+        ).reshape(np.shape(des_dir)) \
             + adh_curv * des_dir * self.substrate.area_per_pt
 
         return hessp_val.reshape(des_dir.shape)
@@ -469,19 +468,21 @@ class SmoothContactSystem(SystemBase):
         def hessp(disp, des_dir):
             gap = disp.reshape(self.substrate.nb_subdomain_grid_pts
                                )[self.comp_slice] \
-                - (self.surface.heights() + offset)
+                  - (self.surface.heights() + offset)
             _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
             hessp_val = - self.substrate.evaluate_force(
                 des_dir.reshape(self.substrate.nb_subdomain_grid_pts)
-                )
+            )
 
             hessp_val[self.comp_slice] += adh_curv \
-                * des_dir.reshape(self.substrate.nb_subdomain_grid_pts)[self.comp_slice] * self.substrate.area_per_pt
+                * des_dir.reshape(
+                self.substrate.nb_subdomain_grid_pts)[self.comp_slice] * \
+                self.substrate.area_per_pt
             return hessp_val.reshape(des_dir.shape)
 
         return hessp
 
-    def fourier_el_coefficients(self):
+    def fourier_coefficients(self):
         """
         Returns the coefficients for elasticity matrix when working in fourier
         space for both 1D and 2D system.
@@ -528,38 +529,38 @@ class SmoothContactSystem(SystemBase):
 
         return coeffs
 
-    def fourier_adh_coefficients(self):
-        """
-        Returns the coefficients for adhesion matrix when working in fourier
-        space for both 1D and 2D system.
-        """
-
-        nx = self.substrate.nb_grid_pts[0]
-        nb_dims = len(self.substrate.nb_grid_pts)
-
-        if nb_dims == 2:
-            ny = self.substrate.nb_grid_pts[1]
-            adh_coeffs = np.zeros(self.substrate.nb_grid_pts)
-            if np.logical_and((nx % 2 == 0), (ny % 2 == 0)):
-                adh_coeffs[0, :] = 1 / (nx * ny)
-                adh_coeffs[1:nx // 2, :] = 2 / (nx * ny)
-                adh_coeffs[nx // 2 + 1:, :] = 2 / (nx * ny)
-                adh_coeffs[nx // 2, :] = 1 / (nx * ny)
-            else:
-                adh_coeffs[0, :] = 1 / (nx * ny)
-                adh_coeffs[1:, :] = 2 / (nx * ny)
-        elif nb_dims == 1:
-            adh_coeffs = np.zeros(self.substrate.nb_grid_pts)
-            if (nx % 2 == 0):
-                adh_coeffs[0] = 1 / nx
-                adh_coeffs[1:nx // 2] = 2 / nx
-                adh_coeffs[nx // 2 + 1:] = 2 / nx
-                adh_coeffs[nx // 2] = 1 / nx
-            else:
-                adh_coeffs[0] = 1 / nx
-                adh_coeffs[1:] = 2 / nx
-
-        return adh_coeffs
+    # def fourier_adh_coefficients(self):
+    #     """
+    #     Returns the coefficients for adhesion matrix when working in fourier
+    #     space for both 1D and 2D system.
+    #     """
+    #
+    #     nx = self.substrate.nb_grid_pts[0]
+    #     nb_dims = len(self.substrate.nb_grid_pts)
+    #
+    #     if nb_dims == 2:
+    #         ny = self.substrate.nb_grid_pts[1]
+    #         adh_coeffs = np.zeros(self.substrate.nb_grid_pts)
+    #         if np.logical_and((nx % 2 == 0), (ny % 2 == 0)):
+    #             adh_coeffs[0, :] = 1 / (nx * ny)
+    #             adh_coeffs[1:nx // 2, :] = 2 / (nx * ny)
+    #             adh_coeffs[nx // 2 + 1:, :] = 2 / (nx * ny)
+    #             adh_coeffs[nx // 2, :] = 1 / (nx * ny)
+    #         else:
+    #             adh_coeffs[0, :] = 1 / (nx * ny)
+    #             adh_coeffs[1:, :] = 2 / (nx * ny)
+    #     elif nb_dims == 1:
+    #         adh_coeffs = np.zeros(self.substrate.nb_grid_pts)
+    #         if (nx % 2 == 0):
+    #             adh_coeffs[0] = 1 / nx
+    #             adh_coeffs[1:nx // 2] = 2 / nx
+    #             adh_coeffs[nx // 2 + 1:] = 2 / nx
+    #             adh_coeffs[nx // 2] = 1 / nx
+    #         else:
+    #             adh_coeffs[0] = 1 / nx
+    #             adh_coeffs[1:] = 2 / nx
+    #
+    #     return adh_coeffs
 
     def evaluate_k(self, disp_k, gap, offset, mw=False, pot=True, forces=False,
                    logger=None):
@@ -603,7 +604,7 @@ class SmoothContactSystem(SystemBase):
 
         self.grad_k = np.zeros(self.substrate.nb_grid_pts)
 
-        coeff = self.fourier_el_coefficients()
+        coeff = self.fourier_coefficients()
 
         if mw:
             self.grad_k = disp_k * coeff
@@ -617,7 +618,7 @@ class SmoothContactSystem(SystemBase):
 
         self.substrate.energy = self.energy
 
-        self.force_k_float = -self.grad_k
+        self.force_h = -self.grad_k
 
         # TOTAL ENERGY
         self.energy += self.interaction_energy
@@ -630,21 +631,25 @@ class SmoothContactSystem(SystemBase):
             self.engine.hcfft(self.real_buffer, self.fourier_buffer)
             interaction_force_float_k = self.fourier_buffer.array()[...].copy()
 
-            adh_coeffs = self.fourier_adh_coefficients()
+            adh_coeffs = self.fourier_coefficients()
             interaction_force_float_k *= adh_coeffs
 
             if mw:
                 k = np.sqrt(self.stiffness_k.copy() * self.area_per_pt)
                 interaction_force_float_k = interaction_force_float_k * (1 / k)
 
-            self.force_k_float += interaction_force_float_k
+            self.force_h += interaction_force_float_k
         else:
-            self.force_k_float = None
+            self.force_h = None
 
         if logger is not None:
-            logger.st(*self.logger_input())
+            logger.st(*(['energy',
+                         'max. abs. grad.'],
+                        [self.energy,
+                         self.reduction.max(np.abs(self.force_h))
+                         ]))
 
-        return (self.energy, self.force_k_float)
+        return (self.energy, self.force_h)
 
     def hessian_product_k(self, dispk, des_dir_k):
         """Returns the hessian product of the fourier space
@@ -730,16 +735,14 @@ class SmoothContactSystem(SystemBase):
                 gap = self.real_buffer.array()[...].copy() * \
                     self.engine.normalisation
 
-                # self.energy, self.force_k_float = self.evaluate_k_mw(
-                #     disp_float_k, gap, offset, forces=True, logger=logger)
-                self.energy, self.force_k_float = self.evaluate_k(disp_float_k,
-                                                                  gap, offset,
-                                                                  mw=True,
-                                                                  forces=True,
-                                                                  logger=logger
-                                                                  )
+                self.energy, self.force_h = self.evaluate_k(disp_float_k,
+                                                            gap, offset,
+                                                            mw=True,
+                                                            forces=True,
+                                                            logger=logger
+                                                            )
 
-                return (self.energy, -self.force_k_float.reshape(orig_shape))
+                return (self.energy, -self.force_h.reshape(orig_shape))
         else:
             def fun(disp_k):
                 # pylint: disable=missing-docstring
@@ -757,8 +760,6 @@ class SmoothContactSystem(SystemBase):
                 gap = self.substrate.real_buffer.array()[...].copy() \
                     * self.substrate.fftengine.normalisation
 
-                # return self.evaluate_k_mw(disp_float_k, gap, offset,
-                #                           forces=True, logger=logger)[0]
                 return self.evaluate_k(disp_float_k, gap, offset, mw=True,
                                        forces=True, logger=logger)[0]
 
@@ -821,12 +822,12 @@ class SmoothContactSystem(SystemBase):
                 gap = self.real_buffer.array()[...].copy() \
                     * self.engine.normalisation
 
-                self.energy, self.force_k_float = self.evaluate_k(disp_float_k,
-                                                                  gap, offset,
-                                                                  forces=True,
-                                                                  logger=logger
-                                                                  )
-                return (self.energy, -self.force_k_float.reshape(orig_shape))
+                self.energy, self.force_h = self.evaluate_k(disp_float_k,
+                                                            gap, offset,
+                                                            forces=True,
+                                                            logger=logger
+                                                            )
+                return (self.energy, -self.force_h.reshape(orig_shape))
         else:
             def fun(disp_k):
                 # pylint: disable=missing-docstring
