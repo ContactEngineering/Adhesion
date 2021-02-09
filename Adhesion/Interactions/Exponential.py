@@ -229,7 +229,8 @@ class RepulsiveExponential(Potential):
 class Morse(RepulsiveExponential):
     name = "morse"
 
-    def __init__(self, work_of_adhesion, interaction_range, communicator=MPI.COMM_WORLD):
+    def __init__(self, work_of_adhesion, interaction_range,
+                 communicator=MPI.COMM_WORLD):
         """
         Morse potential as in Wang, Zhou, Müser, modelling adhesion hysteresis
 
