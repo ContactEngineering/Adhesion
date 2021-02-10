@@ -30,7 +30,7 @@ from .Harmonic import Harmonic  # noqa: F401
 from .VdW82 import VDW82, Lj82  # noqa: F401
 from .Lj93 import LJ93  # noqa: F401
 from .PowerLaw import PowerLaw  # noqa: F401
-from .Exponential import Exponential, RepulsiveExponential  # noqa: F401
+from .Exponential import Exponential, RepulsiveExponential, Morse  # noqa: F401
 
 import Adhesion.Interactions.cutoffs  # noqa: F401
 import Adhesion.Interactions.SmoothPotential  # noqa: F401

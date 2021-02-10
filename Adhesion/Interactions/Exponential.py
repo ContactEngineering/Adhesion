@@ -224,3 +224,28 @@ class RepulsiveExponential(Potential):
         ddV = ddV_att + ddV_rep
 
         return V, dV, ddV
+
+
+class Morse(RepulsiveExponential):
+    name = "morse"
+
+    def __init__(self, work_of_adhesion, interaction_range,
+                 communicator=MPI.COMM_WORLD):
+        """
+        Morse potential as in Wang, Zhou, Müser, modelling adhesion hysteresis
+
+        This potential has it's mimum at  gap = 0
+
+        Parameters
+        ----------
+        work_of_adhesion: float or ndarray
+            surface energy at perfect contact: minimum of the potential
+        interaction_range: float or ndarray
+            lengthscale of the decay of the interaction
+        communicator: optional
+            not used here
+
+        """
+        super().__init__(1. * work_of_adhesion, 0.5 * interaction_range,
+                         2. * work_of_adhesion, 1. * interaction_range,
+                         communicator=communicator)
