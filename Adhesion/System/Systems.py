@@ -598,7 +598,6 @@ class SmoothContactSystem(SystemBase):
                                       potential=pot,
                                       gradient=forces,
                                       curvature=False)
-
         self.interaction_energy = \
             self.reduction.sum(interaction_energies) * self.area_per_pt
 
@@ -643,10 +642,15 @@ class SmoothContactSystem(SystemBase):
             self.force_h = None
 
         if logger is not None:
+            disp_real = self.gap + self.surface.heights().copy() + offset
+            force_real = self.substrate.evaluate_force(disp_real)
+            force_real = force_real + self.interaction_force
             logger.st(*(['energy',
-                         'max. abs. grad.'],
+                         'max. abs. grad.',
+                         'max. abs. grad. real'],
                         [self.energy,
-                         self.reduction.max(np.abs(self.force_h))
+                         self.reduction.max(np.abs(self.force_h)),
+                         self.reduction.max(np.abs(force_real))
                          ]))
 
         return (self.energy, self.force_h)
