@@ -368,7 +368,7 @@ def nonequilibrium_elastic_energy(penetration, contact_radius):
     return 3 / 4 * A * (d - A ** 2 / 3) ** 2 + A ** 5 / 15
 
 
-def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
+def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radius=1, contact_modulus=3./4, der="0"):
     r"""
 
     Returns the nondimensional energy release rate
@@ -376,30 +376,50 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
 
     .. math ::
           \frac{\partial U_{el}}{\partial \pi A^2}
-          = \frac{3}{8 \pi} w_{ref} \frac{1}{A} (\Delta - A^2)^2
+          = \frac{3}{8 \pi}  \frac{1}{A} (\Delta - A^2)^2
 
-    be careful, this is
 
-    Here
-    :math:`\tilde U_{el} = \frac{U_{el}}{\pi w R (\pi^2 w^2 R / K^2)^{1/3}}`
-    is the nondimensionalized elastic energy
+    :math:`A` is the contact radius, :math:`\Delta` is the penetration.
 
-    For the units, see maugis p.290
+    With the default values of `radius` and `contact_modulus`, this function returns the energy release rate in units
+    of
+
+     - :math:`w` if :math:`\Delta` and :math:`A` are in maugis - JKR units.
+
+     - :math:`E_M R` if :math:`\Delta` and :math:`A` are in units of :math:`R`
+
+    Note that I think perfect consistent use of the maugis-JKR units would require to express the energy release rate
+    in units of :math:`\pi w` instead of just :math:`w`. I might need to change this at some point.
 
     Parameters
     ----------
     penetration: float or np.array
         :math:`\Delta` in maugis
     contact_radius: float or np.array
-        :math:`A` in maugis
+        in units of :math:`R`
+    radius: float
+        default 1, optional
+        radius of the sphere
+    contact_modulus: float
+        default 3/4, optional
+        johnsons contact modulus
 
     Returns
     -------
 
     """
-    return 3 / 8 / np.pi * (penetration - contact_radius**2)**2 \
-        / contact_radius
-
+    prefactor = radius * contact_modulus / (2 * np.pi)
+    if der == "0":
+        return prefactor * (penetration - contact_radius ** 2) ** 2 / contact_radius
+    elif der == "1_a":
+        return prefactor * (4 * (contact_radius ** 2 - penetration)
+                            - (penetration - contact_radius ** 2) ** 2 / contact_radius ** 2)
+    elif der == "1_d":
+        return prefactor * 2 * (penetration / contact_radius - contact_radius)
+    elif der == "2_da" or der == "2_ad":
+        return - prefactor * 2 * (1 + penetration / contact_radius ** 2)
+    else:
+        raise ValueError(der)
 
 def stress_intensity_factor(contact_radius, penetration, der="0",
                             radius=1, contact_modulus=3./4):
@@ -410,13 +430,17 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
 
     Parameters
     ----------
-    a: contact radius
-    d: penetration
+    a:
+        contact radius
+    d:
+        penetration
     der: {"0", "1_a", "2_a", "1_d", "2_ad"}
-    R: default 1, optional
-    radius of the sphere
-    Es: default 3/4, optional
-    johnson's contact modulus
+    R: float
+        default 1, optional
+        radius of the sphere
+    Es: float
+        default 3/4, optional
+        johnson's contact modulus
 
     Returns
     -------
