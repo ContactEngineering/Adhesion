@@ -109,7 +109,7 @@ class SoftWall(Interaction):
         # pnp is a module or a class impolenting computation methods,
         # it is not copied
         result.reduction = self.reduction
-        keys.remove('pnp')
+        keys.remove('reduction')
         # same for communicator
         result.communicator = self.communicator
         keys.remove('communicator')

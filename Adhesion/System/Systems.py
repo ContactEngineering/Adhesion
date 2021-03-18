@@ -394,7 +394,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         return self.reduction.sum(
             np.where(
                 - self.substrate.force[
-                    self.substrate.loxal_topography_subdomain_slices] > 0,
+                    self.substrate.local_topography_subdomain_slices] > 0,
                 - self.substrate.force[
                     self.substrate.local_topography_subdomain_slices], 0.))
 
