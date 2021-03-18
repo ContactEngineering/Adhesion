@@ -1,7 +1,7 @@
 from SurfaceTopography import make_sphere
 import ContactMechanics as Solid
 from SurfaceTopography.Generation import fourier_synthesis
-
+from ContactMechanics.Tools.Logger import screen
 from Adhesion.Interactions import Exponential
 from Adhesion.System import BoundedSmoothContactSystem
 from NuMPI.Optimization import bugnicourt_cg
@@ -252,7 +252,9 @@ def test_bugnicourt_free_system(comm):
     bounded = init_disp < lbounds
     init_disp[bounded] == lbounds[bounded]
 
-    res = optim.minimize(system.objective(penetration, gradient=True),
+    res = optim.minimize(system.objective(penetration, gradient=True,
+                                          logger=screen),  # We also test that the logger and the
+                         #                                   postprocessing involved work properly
                          init_disp,
                          method='L-BFGS-B', jac=True,
                          bounds=bnds,
