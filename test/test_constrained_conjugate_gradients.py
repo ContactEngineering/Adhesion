@@ -254,8 +254,7 @@ def test_bugnicourt_free_system(comm):
     init_disp[bounded] == lbounds[bounded]
 
     res = optim.minimize(system.objective(penetration, gradient=True,
-                                          logger=screen),  # We also test that the logger and the
-                         #                                   postprocessing involved work properly
+                                          logger=screen),
                          init_disp,
                          method='L-BFGS-B', jac=True,
                          bounds=bnds,
@@ -283,7 +282,8 @@ def test_bugnicourt_free_system(comm):
     system = BoundedSmoothContactSystem(substrate, interaction, surface)
 
     res = bugnicourt_cg.constrained_conjugate_gradients(
-        system.objective(penetration, gradient=True),
+        system.objective(penetration, gradient=True, logger=screen),
+         # We also test that the logger and the postprocessing involved work properly in parallel
         system.hessian_product_function(penetration),
         init_disp[substrate.subdomain_slices].reshape(-1),
         gtol=1e-13,
