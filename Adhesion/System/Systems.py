@@ -529,39 +529,6 @@ class SmoothContactSystem(SystemBase):
 
         return coeffs
 
-    # def fourier_adh_coefficients(self):
-    #     """
-    #     Returns the coefficients for adhesion matrix when working in fourier
-    #     space for both 1D and 2D system.
-    #     """
-    #
-    #     nx = self.substrate.nb_grid_pts[0]
-    #     nb_dims = len(self.substrate.nb_grid_pts)
-    #
-    #     if nb_dims == 2:
-    #         ny = self.substrate.nb_grid_pts[1]
-    #         adh_coeffs = np.zeros(self.substrate.nb_grid_pts)
-    #         if np.logical_and((nx % 2 == 0), (ny % 2 == 0)):
-    #             adh_coeffs[0, :] = 1 / (nx * ny)
-    #             adh_coeffs[1:nx // 2, :] = 2 / (nx * ny)
-    #             adh_coeffs[nx // 2 + 1:, :] = 2 / (nx * ny)
-    #             adh_coeffs[nx // 2, :] = 1 / (nx * ny)
-    #         else:
-    #             adh_coeffs[0, :] = 1 / (nx * ny)
-    #             adh_coeffs[1:, :] = 2 / (nx * ny)
-    #     elif nb_dims == 1:
-    #         adh_coeffs = np.zeros(self.substrate.nb_grid_pts)
-    #         if (nx % 2 == 0):
-    #             adh_coeffs[0] = 1 / nx
-    #             adh_coeffs[1:nx // 2] = 2 / nx
-    #             adh_coeffs[nx // 2 + 1:] = 2 / nx
-    #             adh_coeffs[nx // 2] = 1 / nx
-    #         else:
-    #             adh_coeffs[0] = 1 / nx
-    #             adh_coeffs[1:] = 2 / nx
-    #
-    #     return adh_coeffs
-
     def evaluate_k(self, disp_k, gap, offset, mw=False, pot=True, forces=False,
                    logger=None):
 
@@ -681,17 +648,28 @@ class SmoothContactSystem(SystemBase):
 
     def preconditioned_objective(self, offset, gradient=False, logger=None):
         r"""
-        This helper method interface to the evaluate_k_mw() method. Use this
-        for optimization purposes, it lets you set the offset and 'forces'
-        flag. Returns a function of (disp_k) takes input a complex array of
-        shape(n//2 + 1) and returns a float type array of complex force_k of
-        shape (n+1) and a scalar energy.
+        This helper method interface to the evaluate_k() method with
+        preconditioning active. That is, it tries to solve a simpler problem
+        formulated using,
+
+        original problem:
+        .. math ::
+
+            \frac{1}{2(nx*ny)} \tilde{u}\tilde{K}\tilde{u} +
+            \phi(F^{-1}(\tilde{u} - \tilde{h}))
+
+        preconditioned problem:
+        .. math ::
+             \tilde{v} = \tilde{k}^{\frac{1}{2}} \tilde{u} \\
+
+             \frac{1}{2(nx*ny)} \tilde{v}\tilde{v} +
+            \phi(F^{-1}(\frac{\tilde{v}}{\tilde{k}^{\frac{1}{2}}} - \tilde{h}))
+
+        we solve for variable \tilde{v}.
 
         Parameters:
         -----------
-        disp0: ndarray
-            unused variable, present only for interface compatibility
-            with inheriting classes
+
         offset: float
             determines indentation depth,
             constant value added to the heights (system.topography)
@@ -709,12 +687,16 @@ class SmoothContactSystem(SystemBase):
                 Parameters
                 __________
 
-                disp_k: an ndarray in fourier space
+                disp_k: an ndarray in fourier halfcomplex space
 
                 Returns
                 _______
 
-                    energy, gradient_k_float
+                energy: scalar
+                        energy of the system
+
+                force_h: an halfcomplex array of shape(disp_k)
+                        force of the system
         """
 
         self.real_buffer.array()[...] = offset
@@ -771,17 +753,28 @@ class SmoothContactSystem(SystemBase):
 
     def objective_k_float(self, offset, gradient=False, logger=None):
         r"""
-        This helper method interface to the evaluate_k() method. Use this
-        for optimization purposes, it lets you set the offset and 'forces'
-        flag. Returns a function of (disp_k) takes input a complex array of
-        shape(n//2 + 1) and returns a float type array of complex force_k of
-        shape (n+1) and a scalar energy.
+        This helper method interface to the evaluate_k() method without
+        preconditioning active. That is, it tries to solve a simpler problem
+        formulated using, \\
+
+        original problem:
+        .. math ::
+
+            \frac{1}{2(nx*ny)} \tilde{u}\tilde{K}\tilde{u} +
+            \phi(F^{-1}(\tilde{u} - \tilde{h}))  \\
+
+        preconditioned problem:
+        .. math ::
+             \tilde{v} = \tilde{k}^{\frac{1}{2}} \tilde{u} \\
+
+             \frac{1}{2(nx*ny)} \tilde{v}\tilde{v} +
+            \phi(F^{-1}(\frac{\tilde{v}}{\tilde{k}^{\frac{1}{2}}} - \tilde{h}))
+        \\
+        we solve for variable \tilde{v}.
 
         Parameters:
         -----------
-        disp0: ndarray
-            unused variable, present only for interface compatibility
-            with inheriting classes
+
         offset: float
             determines indentation depth,
             constant value added to the heights (system.topography)
