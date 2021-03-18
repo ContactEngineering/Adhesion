@@ -1,3 +1,4 @@
+from NuMPI.Tools import Reduction
 from SurfaceTopography import make_sphere
 import ContactMechanics as Solid
 from SurfaceTopography.Generation import fourier_synthesis
@@ -219,7 +220,7 @@ def test_mean_value_mode_is_penetration_indepentent():
 
 
 def test_bugnicourt_free_system(comm):
-    pnp = np
+    pnp = Reduction(comm)
 
     nx, ny = 32, 21
     sx = sy = 4.
