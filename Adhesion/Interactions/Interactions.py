@@ -138,3 +138,31 @@ class SoftWall(Interaction):
             (default False) whether the gradient should be evaluated
         """
         raise NotImplementedError()
+
+    def plot(self):
+        import matplotlib.pyplot as plt
+        fig, (axpot, axf, axcurv) = plt.subplots(3, 1)
+        r = np.linspace(0.7 * self.r_min, 4 * self.r_min, 200)
+
+        v, dv, ddv = self.evaluate(r, True, True, True)
+
+        axpot.plot(r, v, )
+        axf.plot(r, dv, )
+        axcurv.plot(r, ddv, )
+
+        axpot.set_ylabel("Potential")
+        axf.set_ylabel("interaction stress")
+        axcurv.set_ylabel("curvature")
+
+        for a in (axpot, axf, axcurv):
+            a.grid()
+            a.axvline(self.r_min, label="r_min")
+            a.axvline(self.r_infl, label="r_infl")
+
+        axpot.axhline(self.v_min, c="k", label="v_min")
+        axf.axhline(self.max_tensile, c="k", label="maxtensile")
+
+        axcurv.set_xlabel("gap")
+        axpot.legend()
+
+        return fig, (axpot, axf, axcurv)

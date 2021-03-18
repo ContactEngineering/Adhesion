@@ -34,6 +34,7 @@ import ContactMechanics
 import SurfaceTopography
 from ContactMechanics.Tools import compare_containers
 from ContactMechanics.Systems import IncompatibleResolutionError, SystemBase
+import muFFT
 
 
 class SmoothContactSystem(SystemBase):
@@ -65,12 +66,25 @@ class SmoothContactSystem(SystemBase):
             raise IncompatibleResolutionError(
                 ("the substrate ({}) and the surface ({}) have incompatible "
                  "nb_grid_ptss.").format(
-                     substrate.nb_grid_pts, surface.nb_grid_pts))  # nopep8
+                    substrate.nb_grid_pts, surface.nb_grid_pts))  # nopep8
         self.dim = len(self.substrate.nb_grid_pts)
         self.energy = None
         self.force = None
+        self.force_k = None
+        self.force_k_float = None
         self.interaction_energy = None
         self.interaction_force = None
+        self.heights_k = None
+        self.engine = muFFT.FFT(substrate.nb_grid_pts, fft='fftw',
+                                allow_temporary_buffer=False,
+                                allow_destroy_input=True)
+
+        self.real_buffer = self.engine.register_halfcomplex_field(
+            "real-space", 1)
+        self.fourier_buffer = self.engine.register_halfcomplex_field(
+            "fourier-space", 1)
+
+        self.stiffness_k = self._compute_stiffness_k()
 
     @property
     def nb_grid_pts(self):
@@ -96,13 +110,43 @@ class SmoothContactSystem(SystemBase):
         "computes and returns the sum of all repulsive forces"
         return self.reduction.sum(np.where(
             self.interaction_force > 0, self.interaction_force, 0
-            ))
+        ))
 
     def compute_attractive_force(self):
         "computes and returns the sum of all attractive forces"
         return self.reduction.sum(np.where(
             self.interaction_force < 0, self.interaction_force, 0
-            ))
+        ))
+
+    def _compute_stiffness_k(self):
+        """
+        computes and returns the wavevectors q that exist for the surfaces
+        physical_sizes and nb_grid_pts as one vector of components per
+        dimension
+        """
+
+        vectors = []
+        q = []
+        nb_dims = len(self.substrate.nb_grid_pts)
+        # if nb_dims == 1:
+        #     nb_grid_pts = [self.substrate.nb_grid_pts]
+        #     physical_sizes = [self.substrate.physical_sizes]
+        for dim in range(nb_dims):
+            vectors.append(2 * np.pi * np.fft.fftfreq(
+                self.substrate.nb_grid_pts[dim],
+                self.substrate.physical_sizes[dim] /
+                self.substrate.nb_grid_pts[dim]))
+        if nb_dims == 1:
+            q = vectors[0]
+            q[0] = q[1]
+        elif nb_dims == 2:
+            qx = vectors[0]
+            qy = vectors[1]
+            q = np.sqrt(
+                (qx * qx).reshape((-1, 1)) + (qy * qy).reshape((1, -1)))
+            q[0, 0] = (q[0, 1] + q[1, 0]) / 2
+
+        return 0.5 * self.substrate.contact_modulus * abs(q)
 
     def compute_normal_force(self):
         "computes and returns the sum of all forces"
@@ -110,18 +154,19 @@ class SmoothContactSystem(SystemBase):
 
     def compute_repulsive_contact_area(self):
         "computes and returns the area where contact pressure is repulsive"
-        return self.compute_nb_repulsive_pts()*self.area_per_pt
+        return self.compute_nb_repulsive_pts() * self.area_per_pt
 
     def compute_attractive_contact_area(self):
         "computes and returns the are where contact pressure is attractive"
-        return self.compute_nb_attractive_pts()*self.area_per_pt
+        return self.compute_nb_attractive_pts() * self.area_per_pt
 
     def compute_nb_contact_pts(self):
         """
         compute and return the number of contact points. Note that this is of
         no physical interest, as it is a purely numerical artefact
         """
-        return self.reduction.sum(np.where(self.interaction_force != 0., 1., 0.))
+        return self.reduction.sum(
+            np.where(self.interaction_force != 0., 1., 0.))
 
     def compute_nb_repulsive_pts(self):
         """
@@ -129,7 +174,8 @@ class SmoothContactSystem(SystemBase):
         pressure. Note that this is of no physical interest, as it is a
         purely numerical artefact
         """
-        return self.reduction.sum(np.where(self.interaction_force > 0., 1., 0.))
+        return self.reduction.sum(
+            np.where(self.interaction_force > 0., 1., 0.))
 
     def compute_nb_attractive_pts(self):
         """
@@ -137,7 +183,8 @@ class SmoothContactSystem(SystemBase):
         pressure. Note that this is of no physical interest, as it is a
         purely numerical artefact
         """
-        return self.reduction.sum(np.where(self.interaction_force < 0., 1., 0.))
+        return self.reduction.sum(
+            np.where(self.interaction_force < 0., 1., 0.))
 
     def compute_repulsive_coordinates(self):
         """
@@ -233,6 +280,7 @@ class SmoothContactSystem(SystemBase):
                 self.interaction_force
         else:
             self.force = None
+
         if logger is not None:
             logger.st(*self.logger_input())
         return (self.energy, self.force)
@@ -286,13 +334,512 @@ class SmoothContactSystem(SystemBase):
                     raise ValueError(
                         "{}: disp.shape: {}, res: {}".format(
                             err, disp.shape, res))
-                return (self.energy, -self.force.reshape(-1)*disp_scale)
+                return (self.energy, -self.force.reshape(-1) * disp_scale)
         else:
             def fun(disp):
                 # pylint: disable=missing-docstring
                 return self.evaluate(
                     disp_scale * disp.reshape(res), offset, forces=False,
                     logger=logger)[0]
+
+        return fun
+
+    def primal_evaluate(self, disp, gap, pot=True, forces=False, logger=None):
+        """
+        Compute the energies and forces in the system for a given
+        displacement and gap..
+
+        Parameters:
+        -----------
+        disp: ndarray
+            displacement field, in the shape of
+            system.substrate.nb_subdomain_grid_pts
+        gap: ndarray
+            gap , in the shape of
+            system.substrate.nb_subdomain_grid_pts
+        pot: bool, optional
+            Whether to evaluate the energy, default True
+        forces: bool, optional
+            Whether to evaluate the forces, default False
+        logger: ContactMechanics.Tools.Logger
+            information of current state of the system will be
+            passed to
+            logger at every evaluation
+        """
+        # attention: the substrate may have a higher nb_grid_pts than the gap
+        # and the interaction (e.g. FreeElasticHalfSpace)
+
+        self.gap = gap
+        interaction_energies, self.interaction_force, _ = \
+            self.interaction.evaluate(self.gap,
+                                      potential=pot,
+                                      gradient=forces,
+                                      curvature=False)
+
+        self.interaction_energy = \
+            self.reduction.sum(interaction_energies) * self.area_per_pt
+
+        self.substrate.compute(disp, pot, forces)
+        self.energy = (self.interaction_energy +
+                       self.substrate.energy
+                       if pot else None)
+        if forces:
+            self.interaction_force *= -self.area_per_pt
+            #                       ^ gradient to force per pixel
+            self.force = self.substrate.force.copy()
+
+            self.force[self.comp_slice] += self.interaction_force
+        else:
+            self.force = None
+
+        if logger is not None:
+            logger.st(*self.logger_input())
+
+        return (self.energy, self.force)
+
+    def primal_objective(self, offset, disp0=None, gradient=False,
+                         logger=None):
+        r"""To solve the primal objective using gap as the variable.
+        Can be fed directly to standard solvers ex: scipy solvers etc
+        and returns the elastic energy and it's gradient (negative of
+        the forces) as a function of the gap.
+
+        Parameters
+        __________
+
+        gap : float
+              gap between the contact surfaces.
+        offset : float
+                constant value to add to the surface heights
+        pot : (default False)
+
+        gradient : (default True)
+
+        Returns
+        _______
+        energy : float
+                value of energy(scalar value).
+        force : float,array
+                value of force(array).
+
+        Notes
+        _____
+
+        Objective:
+        .. math ::
+            min_u f = 1/2u_i*K_{ij}*u_j + \phi (u_{ij})\\
+            \\
+            gradient = K_{ij}*u_j + \phi^{\prime} which is, Force. \\
+
+        """
+
+        res = self.substrate.nb_subdomain_grid_pts
+        if gradient:
+            def fun(gap):
+                disp = gap.reshape(res) + self.surface.heights() + offset
+                try:
+                    self.primal_evaluate(
+                        disp, gap.reshape(res), forces=True, logger=logger)
+                except ValueError as err:
+                    raise ValueError(
+                        "{}: gap.shape: {}, res: {}".format(
+                            err, gap.shape, res))
+                return (self.energy, -self.force.reshape(-1))
+        else:
+            def fun(gap):
+                disp = gap.reshape(res) + self.surface.heights() + offset
+                return self.primal_evaluate(
+                    disp, gap.reshape(res), forces=False, logger=logger)[0]
+
+        return fun
+
+    def primal_hessian_product(self, gap, des_dir):
+        """Returns the hessian product of the primal_objective function.
+        """
+        _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
+
+        hessp_val = - self.substrate.evaluate_force(
+            des_dir.reshape(self.substrate.nb_subdomain_grid_pts)
+            ).reshape(np.shape(des_dir)) \
+            + adh_curv * des_dir * self.substrate.area_per_pt
+
+        return hessp_val.reshape(des_dir.shape)
+
+    def hessian_product_function(self, offset):
+        def hessp(disp, des_dir):
+            gap = disp.reshape(self.substrate.nb_subdomain_grid_pts
+                               )[self.comp_slice] \
+                - (self.surface.heights() + offset)
+            _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
+            hessp_val = - self.substrate.evaluate_force(
+                des_dir.reshape(self.substrate.nb_subdomain_grid_pts)
+                )
+
+            hessp_val[self.comp_slice] += adh_curv \
+                * des_dir.reshape(self.substrate.nb_subdomain_grid_pts)[self.comp_slice] * self.substrate.area_per_pt
+            return hessp_val.reshape(des_dir.shape)
+
+        return hessp
+
+    def fourier_el_coefficients(self):
+        """
+        Returns the coefficients for elasticity matrix when working in fourier
+        space for both 1D and 2D system.
+        """
+
+        nx = self.substrate.nb_grid_pts[0]
+        nb_dims = len(self.substrate.nb_grid_pts)
+
+        if nb_dims == 2:
+            ny = self.substrate.nb_grid_pts[1]
+            coeffs = np.zeros(self.substrate.nb_grid_pts)
+            if np.logical_and((nx % 2 == 0), (ny % 2 == 0)):
+                coeffs[0, 0] = 1 / (nx * ny)
+                coeffs[0, 1:ny // 2] = 2 / (nx * ny)
+                coeffs[0, ny // 2 + 1:] = 2 / (nx * ny)
+                coeffs[1:nx // 2, 0] = 2 / (nx * ny)
+                coeffs[nx // 2 + 1:, 0] = 2 / (nx * ny)
+                coeffs[:nx // 2, ny // 2] = 2 / (nx * ny)
+                coeffs[nx // 2 + 1:, ny // 2] = 2 / (nx * ny)
+                coeffs[nx // 2, :ny // 2] = 2 / (nx * ny)
+                coeffs[nx // 2, ny // 2 + 1:] = 2 / (nx * ny)
+                coeffs[1:nx // 2, 1:ny // 2] = 4 / (nx * ny)
+                coeffs[nx // 2 + 1:, 1:ny // 2] = 4 / (nx * ny)
+                coeffs[1:nx // 2, ny // 2 + 1:] = 4 / (nx * ny)
+                coeffs[nx // 2 + 1:, ny // 2 + 1:] = 4 / (nx * ny)
+                coeffs[nx // 2, ny // 2] = 1 / (nx * ny)
+                coeffs[nx // 2, 0] = 1 / (nx * ny)
+                coeffs[0, ny // 2] = 1 / (nx * ny)
+            else:
+                coeffs[0, 0] = 1 / (nx * ny)
+                coeffs[0, 1:] = 2 / (nx * ny)
+                coeffs[1:, 0] = 2 / (nx * ny)
+                coeffs[1:, 1:] = 4 / (nx * ny)
+        elif nb_dims == 1:
+            coeffs = np.zeros(self.substrate.nb_grid_pts)
+            if (nx % 2 == 0):
+                coeffs[0] = 1 / nx
+                coeffs[1:nx // 2] = 2 / nx
+                coeffs[nx // 2 + 1:] = 2 / nx
+                coeffs[nx // 2] = 1 / nx
+            else:
+                coeffs[0] = 1 / nx
+                coeffs[1:] = 2 / nx
+
+        return coeffs
+
+    def fourier_adh_coefficients(self):
+        """
+        Returns the coefficients for adhesion matrix when working in fourier
+        space for both 1D and 2D system.
+        """
+
+        nx = self.substrate.nb_grid_pts[0]
+        nb_dims = len(self.substrate.nb_grid_pts)
+
+        if nb_dims == 2:
+            ny = self.substrate.nb_grid_pts[1]
+            adh_coeffs = np.zeros(self.substrate.nb_grid_pts)
+            if np.logical_and((nx % 2 == 0), (ny % 2 == 0)):
+                adh_coeffs[0, :] = 1 / (nx * ny)
+                adh_coeffs[1:nx // 2, :] = 2 / (nx * ny)
+                adh_coeffs[nx // 2 + 1:, :] = 2 / (nx * ny)
+                adh_coeffs[nx // 2, :] = 1 / (nx * ny)
+            else:
+                adh_coeffs[0, :] = 1 / (nx * ny)
+                adh_coeffs[1:, :] = 2 / (nx * ny)
+        elif nb_dims == 1:
+            adh_coeffs = np.zeros(self.substrate.nb_grid_pts)
+            if (nx % 2 == 0):
+                adh_coeffs[0] = 1 / nx
+                adh_coeffs[1:nx // 2] = 2 / nx
+                adh_coeffs[nx // 2 + 1:] = 2 / nx
+                adh_coeffs[nx // 2] = 1 / nx
+            else:
+                adh_coeffs[0] = 1 / nx
+                adh_coeffs[1:] = 2 / nx
+
+        return adh_coeffs
+
+    def evaluate_k(self, disp_k, gap, offset, mw=False, pot=True, forces=False,
+                   logger=None):
+
+        """
+        Compute the energies and forces in the system for a given displacement
+        field in fourier space.
+
+        Parameters
+        -----------
+
+        disp_k: ndarray
+            displacement field in fourier space.
+        gap:  ndarray
+            displacement field in real space, in the shape of
+            system.substrate.nb_subdomain_grid_pts
+        offset: float
+            determines indentation depth,
+            constant value added to the heights (system.topography)
+        mw: bool, optional
+            when mass weighting is required then set this to TRUE.
+        pot: bool, optional
+            Wether to evaluate the energy, default True
+        forces: bool, optional
+            Wether to evaluate the forces, default False
+        logger: ContactMechanics.Tools.Logger
+            informations of current state of the system will be passed to
+            logger at every evaluation.
+        """
+
+        # self.gap = self.compute_gap(disp, offset)
+        self.gap = gap
+        interaction_energies, self.interaction_force, _ = \
+            self.interaction.evaluate(self.gap,
+                                      potential=pot,
+                                      gradient=forces,
+                                      curvature=False)
+
+        self.interaction_energy = \
+            self.reduction.sum(interaction_energies) * self.area_per_pt
+
+        self.grad_k = np.zeros(self.substrate.nb_grid_pts)
+
+        coeff = self.fourier_el_coefficients()
+
+        if mw:
+            self.grad_k = disp_k * coeff
+        else:
+            self.grad_k = disp_k * coeff * self.stiffness_k
+
+        self.grad_k *= self.area_per_pt
+
+        # ENERGY FROM SUBSTRATE
+        self.energy = 0.5 * (np.sum(self.grad_k * disp_k))
+
+        self.substrate.energy = self.energy
+
+        self.force_k_float = -self.grad_k
+
+        # TOTAL ENERGY
+        self.energy += self.interaction_energy
+
+        if forces:
+            self.interaction_force *= -self.area_per_pt
+            #                     ^ gradient to force per pixel
+
+            self.real_buffer.array()[...] = self.interaction_force
+            self.engine.hcfft(self.real_buffer, self.fourier_buffer)
+            interaction_force_float_k = self.fourier_buffer.array()[...].copy()
+
+            adh_coeffs = self.fourier_adh_coefficients()
+            interaction_force_float_k *= adh_coeffs
+
+            if mw:
+                k = np.sqrt(self.stiffness_k.copy() * self.area_per_pt)
+                interaction_force_float_k = interaction_force_float_k * (1 / k)
+
+            self.force_k_float += interaction_force_float_k
+        else:
+            self.force_k_float = None
+
+        if logger is not None:
+            logger.st(*self.logger_input())
+
+        return (self.energy, self.force_k_float)
+
+    def hessian_product_k(self, dispk, des_dir_k):
+        """Returns the hessian product of the fourier space
+        objective_k function.
+        """
+        self.substrate.fourier_buffer.array()[...] = dispk.copy()
+        self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
+                                      self.substrate.real_buffer)
+        disp = self.substrate.real_buffer.array()[...].copy() \
+            * self.substrate.fftengine.normalisation
+
+        gap = self.compute_gap(disp)
+        _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
+
+        self.substrate.real_buffer.array()[...] = adh_curv.reshape(
+            self.substrate.nb_grid_pts).copy()
+        self.substrate.fftengine.fft(self.substrate.real_buffer,
+                                     self.substrate.fourier_buffer)
+        adh_curv_k = self.substrate.fourier_buffer.array()[...].copy()
+
+        hessp_val_k = -self.substrate.evaluate_k_force_k(des_dir_k) + \
+            adh_curv_k * des_dir_k * self.substrate.area_per_pt
+
+        return hessp_val_k
+
+    def preconditioned_objective(self, offset, gradient=False, logger=None):
+        r"""
+        This helper method interface to the evaluate_k_mw() method. Use this
+        for optimization purposes, it lets you set the offset and 'forces'
+        flag. Returns a function of (disp_k) takes input a complex array of
+        shape(n//2 + 1) and returns a float type array of complex force_k of
+        shape (n+1) and a scalar energy.
+
+        Parameters:
+        -----------
+        disp0: ndarray
+            unused variable, present only for interface compatibility
+            with inheriting classes
+        offset: float
+            determines indentation depth,
+            constant value added to the heights (system.topography)
+        gradient: bool, optional
+            Whether to evaluate the gradient, default False
+        logger: ContactMechanics.Tools.Logger
+            information of current state of the system will be passed to
+            logger at every evaluation
+
+        Returns
+        _______
+
+            function(disp_k)
+
+                Parameters
+                __________
+
+                disp_k: an ndarray in fourier space
+
+                Returns
+                _______
+
+                    energy, gradient_k_float
+        """
+
+        self.real_buffer.array()[...] = offset
+        self.engine.hcfft(self.real_buffer, self.fourier_buffer)
+        offset_k = self.fourier_buffer.array()[...].copy()
+
+        self.real_buffer.array()[...] = self.surface.heights().copy()
+        self.engine.hcfft(self.real_buffer, self.fourier_buffer)
+        self.heights_k_float = self.fourier_buffer.array()[...].copy()
+
+        if gradient:
+            def fun(disp_):
+                disp_float_k = disp_.copy()
+                orig_shape = np.shape(disp_float_k)
+                disp_float_k = disp_float_k.reshape(self.substrate.nb_grid_pts)
+                gap_float_k = (disp_float_k / np.sqrt(self.stiffness_k *
+                                                      self.area_per_pt)) - \
+                    self.heights_k_float - offset_k
+
+                self.fourier_buffer.array()[...] = gap_float_k.copy()
+                self.engine.ihcfft(self.fourier_buffer, self.real_buffer)
+                gap = self.real_buffer.array()[...].copy() * \
+                    self.engine.normalisation
+
+                # self.energy, self.force_k_float = self.evaluate_k_mw(
+                #     disp_float_k, gap, offset, forces=True, logger=logger)
+                self.energy, self.force_k_float = self.evaluate_k(disp_float_k,
+                                                                  gap, offset,
+                                                                  mw=True,
+                                                                  forces=True,
+                                                                  logger=logger
+                                                                  )
+
+                return (self.energy, -self.force_k_float.reshape(orig_shape))
+        else:
+            def fun(disp_k):
+                # pylint: disable=missing-docstring
+                disp_float_k = disp_k.copy()
+                gap_float_k = (disp_float_k / np.sqrt(
+                    self.stiffness_k * self.area_per_pt)) - \
+                    self.heights_k_float - offset_k
+
+                gap_k = self.substrate.float_to_k(gap_float_k)
+                self.substrate.fourier_buffer.array()[...] = \
+                    gap_k.copy()
+                self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
+                                              self.substrate.real_buffer)
+
+                gap = self.substrate.real_buffer.array()[...].copy() \
+                    * self.substrate.fftengine.normalisation
+
+                # return self.evaluate_k_mw(disp_float_k, gap, offset,
+                #                           forces=True, logger=logger)[0]
+                return self.evaluate_k(disp_float_k, gap, offset, mw=True,
+                                       forces=True, logger=logger)[0]
+
+        return fun
+
+    def objective_k_float(self, offset, gradient=False, logger=None):
+        r"""
+        This helper method interface to the evaluate_k() method. Use this
+        for optimization purposes, it lets you set the offset and 'forces'
+        flag. Returns a function of (disp_k) takes input a complex array of
+        shape(n//2 + 1) and returns a float type array of complex force_k of
+        shape (n+1) and a scalar energy.
+
+        Parameters:
+        -----------
+        disp0: ndarray
+            unused variable, present only for interface compatibility
+            with inheriting classes
+        offset: float
+            determines indentation depth,
+            constant value added to the heights (system.topography)
+        gradient: bool, optional
+            Whether to evaluate the gradient, default False
+        logger: ContactMechanics.Tools.Logger
+            information of current state of the system will be passed to
+            logger at every evaluation
+
+        Returns
+        _______
+
+            function(disp_k)
+
+                Parameters
+                __________
+
+                disp_k: an ndarray in fourier space
+
+                Returns
+                _______
+
+                    energy, gradient_k_float
+        """
+
+        self.real_buffer.array()[...] = offset
+        self.engine.hcfft(self.real_buffer, self.fourier_buffer)
+        offset_k = self.fourier_buffer.array()[...].copy()
+
+        self.real_buffer.array()[...] = self.surface.heights().copy()
+        self.engine.hcfft(self.real_buffer, self.fourier_buffer)
+        self.heights_k_float = self.fourier_buffer.array()[...].copy()
+
+        if gradient:
+            def fun(disp_k):
+                disp_float_k = disp_k.copy()
+                orig_shape = np.shape(disp_float_k)
+                disp_float_k = disp_float_k.reshape(self.substrate.nb_grid_pts)
+                gap_float_k = disp_float_k - self.heights_k_float - offset_k
+                self.fourier_buffer.array()[...] = gap_float_k.copy()
+                self.engine.ihcfft(self.fourier_buffer, self.real_buffer)
+                gap = self.real_buffer.array()[...].copy() \
+                    * self.engine.normalisation
+
+                self.energy, self.force_k_float = self.evaluate_k(disp_float_k,
+                                                                  gap, offset,
+                                                                  forces=True,
+                                                                  logger=logger
+                                                                  )
+                return (self.energy, -self.force_k_float.reshape(orig_shape))
+        else:
+            def fun(disp_k):
+                # pylint: disable=missing-docstring
+                disp_float_k = disp_k.copy()
+                disp_float_k = disp_float_k.reshape(self.substrate.nb_grid_pts)
+                gap_float_k = disp_float_k - self.heights_k_float - offset_k
+                self.fourier_buffer.array()[...] = gap_float_k.copy()
+                self.engine.ihcfft(self.fourier_buffer, self.real_buffer)
+                gap = self.real_buffer.array()[...].copy() \
+                    * self.engine.normalisation
+
+                return self.evaluate_k(disp_float_k, gap, offset, forces=True,
+                                       logger=logger)[0]
 
         return fun
 

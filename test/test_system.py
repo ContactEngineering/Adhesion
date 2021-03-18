@@ -40,7 +40,8 @@ from Adhesion.System import make_system
 from ContactMechanics.Systems import IncompatibleResolutionError
 from Adhesion.System import SmoothContactSystem
 import ContactMechanics as Solid
-import Adhesion.Interactions as Contact
+import Adhesion.Interactions as Inter
+
 import ContactMechanics.Tools as Tools
 from SurfaceTopography import make_sphere, Topography
 
@@ -70,12 +71,11 @@ def self(request):
     self.sig = 3 + np.random.rand()
     self.gam = (5 + np.random.rand())
     self.rcut = 2.5 * self.sig + np.random.rand()
-    self.smooth = Contact.LJ93(self.eps, self.sig
-                               ).spline_cutoff(self.gam
-                                               ).linearize_core()
+    self.smooth = Inter.LJ93(self.eps, self.sig
+                             ).spline_cutoff(self.gam
+                                             ).linearize_core()
 
-    self.sphere = make_sphere(self.radius, self.res,
-                              self.physical_sizes)
+    self.sphere = make_sphere(self.radius, self.res, self.physical_sizes)
     return self
 
 
@@ -334,7 +334,7 @@ def test_LBFGSB_Hertz():
                                               fft="serial",
                                               communicator=MPI.COMM_SELF)
 
-    interaction = Contact.Exponential(0., 0.0001)
+    interaction = Inter.Exponential(0., 0.0001)
     system = SmoothContactSystem(substrate, interaction, surface)
 
     gtol = 1e-6
@@ -398,8 +398,75 @@ def test_undefined_data():
                   [False, False, False]]
             ), (2, 3))
 
-    interaction = Contact.Lj82(1., 1.)
+    interaction = Inter.Lj82(1., 1.)
     substrate = Solid.PeriodicFFTElasticHalfSpace((2, 3), 1, (2, 3))
     with pytest.raises(ValueError):
         SmoothContactSystem(interaction=interaction,
                             substrate=substrate, surface=t)
+
+
+@pytest.mark.parametrize("s", (1., 2.))
+def test_primal_hessian_product(s):
+    nx = 64
+    ny = 32
+
+    sx = sy = s
+    R = 10.
+    Es = 50.
+
+    interaction = Inter.RepulsiveExponential(1000, 0.5, 1., 1.)
+
+    substrate = Solid.PeriodicFFTElasticHalfSpace((nx, ny), young=Es,
+                                                  physical_sizes=(sx, sy))
+
+    topography = make_sphere(R, (nx, ny), (sx, sy), kind="paraboloid")
+
+    system = SmoothContactSystem(substrate=substrate, surface=topography,
+                                 interaction=interaction)
+
+    obj = system.primal_objective(0, True, True)
+
+    gaps = interaction.r_min * (0.8 + np.random.random(size=(nx, ny)))
+    dgaps = interaction.r_min * (0.5 + np.random.random(size=(nx, ny)))
+
+    _, grad = obj(gaps)
+
+    hs = np.array([1e-2, 1e-3, 1e-4])
+    rms_errors = []
+    for h in hs:
+        _, grad_d = obj(gaps + h * dgaps)
+        dgrad = grad_d - grad
+        dgrad_from_hess = system.primal_hessian_product(gaps, h * dgaps)
+        rms_errors.append(
+            np.sqrt(
+                np.mean(
+                    (dgrad_from_hess.reshape(-1) - dgrad.reshape(-1)) ** 2)))
+
+    rms_errors = np.array(rms_errors)
+    assert rms_errors[-1] / rms_errors[0] < 1.5 * (hs[-1] / hs[0]) ** 2
+
+    if False:
+        hs = np.array([1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5,
+                       1e-6, 1e-7])
+        rms_errors = []
+        for h in hs:
+            _, grad_d = obj(gaps + h * dgaps)
+            dgrad = grad_d - grad
+            dgrad_from_hess = system.primal_hessian_product(gaps, h * dgaps)
+            rms_errors.append(np.sqrt(np.mean((dgrad_from_hess - dgrad) ** 2)))
+
+        # Visualize the quadratic convergence of the taylor expansion
+        # What to expect:
+        # Taylor expansion: g(x + h ∆x) - g(x) = Hessian * h * ∆x + O(h^2)
+        # We should see quadratic convergence as long as h^2 > g epsmach,
+        # the precision with which we are able to determine ∆g.
+        # What is the precision with which the hessian product is made ?
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots()
+        ax.plot(hs, rms_errors / hs ** 2, "+-")
+        ax.set_xscale("log")
+        ax.set_yscale("log")
+        ax.grid(True)
+        plt.show()
+
+    # np.testing.assert_allclose(dgrad_from_hess, dgrad)
