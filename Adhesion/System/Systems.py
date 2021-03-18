@@ -94,19 +94,19 @@ class SmoothContactSystem(SystemBase):
 
     def compute_repulsive_force(self):
         "computes and returns the sum of all repulsive forces"
-        return self.pnp.sum(np.where(
+        return self.reduction.sum(np.where(
             self.interaction_force > 0, self.interaction_force, 0
             ))
 
     def compute_attractive_force(self):
         "computes and returns the sum of all attractive forces"
-        return self.pnp.sum(np.where(
+        return self.reduction.sum(np.where(
             self.interaction_force < 0, self.interaction_force, 0
             ))
 
     def compute_normal_force(self):
         "computes and returns the sum of all forces"
-        return self.pnp.sum(self.interaction_force)
+        return self.reduction.sum(self.interaction_force)
 
     def compute_repulsive_contact_area(self):
         "computes and returns the area where contact pressure is repulsive"
@@ -121,7 +121,7 @@ class SmoothContactSystem(SystemBase):
         compute and return the number of contact points. Note that this is of
         no physical interest, as it is a purely numerical artefact
         """
-        return self.pnp.sum(np.where(self.interaction_force != 0., 1., 0.))
+        return self.reduction.sum(np.where(self.interaction_force != 0., 1., 0.))
 
     def compute_nb_repulsive_pts(self):
         """
@@ -129,7 +129,7 @@ class SmoothContactSystem(SystemBase):
         pressure. Note that this is of no physical interest, as it is a
         purely numerical artefact
         """
-        return self.pnp.sum(np.where(self.interaction_force > 0., 1., 0.))
+        return self.reduction.sum(np.where(self.interaction_force > 0., 1., 0.))
 
     def compute_nb_attractive_pts(self):
         """
@@ -137,7 +137,7 @@ class SmoothContactSystem(SystemBase):
         pressure. Note that this is of no physical interest, as it is a
         purely numerical artefact
         """
-        return self.pnp.sum(np.where(self.interaction_force < 0., 1., 0.))
+        return self.reduction.sum(np.where(self.interaction_force < 0., 1., 0.))
 
     def compute_repulsive_coordinates(self):
         """
@@ -158,7 +158,7 @@ class SmoothContactSystem(SystemBase):
         mean of the gap in the the physical domain (means excluding padding
         region for the FreeFFTElasticHalfspace)
         """
-        return self.pnp.sum(self.gap) / np.prod(self.nb_grid_pts)
+        return self.reduction.sum(self.gap) / np.prod(self.nb_grid_pts)
 
     def logger_input(self):
         """
@@ -180,13 +180,13 @@ class SmoothContactSystem(SystemBase):
                  'frac. att. area',
                  'frac. int. area', 'substrate force', 'interaction force'],
                 [self.energy,
-                 self.pnp.max(np.abs(self.force)),
+                 self.reduction.max(np.abs(self.force)),
                  self.compute_mean_gap(),
                  rel_rep_area,
                  rel_att_area,
                  rel_rep_area + rel_att_area,
-                 -self.pnp.sum(self.substrate.force),
-                 self.pnp.sum(self.interaction_force)])
+                 -self.reduction.sum(self.substrate.force),
+                 self.reduction.sum(self.interaction_force)])
 
     def evaluate(self, disp, offset, pot=True, forces=False, logger=None):
         """
@@ -219,7 +219,7 @@ class SmoothContactSystem(SystemBase):
                                       curvature=False)
 
         self.interaction_energy = \
-            self.pnp.sum(interaction_energies) * self.area_per_pt
+            self.reduction.sum(interaction_energies) * self.area_per_pt
 
         self.substrate.compute(disp, pot, forces)
         self.energy = (self.interaction_energy +
@@ -335,7 +335,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         """
         compute and return the number of contact points.
         """
-        return self.pnp.sum(np.where(self.gap == 0., 1., 0.))
+        return self.reduction.sum(np.where(self.gap == 0., 1., 0.))
 
     def logger_input(self):
         """
@@ -355,7 +355,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         mask = np.ones(self.substrate.nb_subdomain_grid_pts)
         mask[self.substrate.local_topography_subdomain_slices][
             contacting_points] = 0
-        max_proj_grad = self.pnp.max(abs(mask * self.force))
+        max_proj_grad = self.reduction.max(abs(mask * self.force))
 
         return (['energy',
                  'max. proj. grad.',
@@ -373,8 +373,8 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
                  rel_rep_area,
                  rel_att_area,
                  rel_rep_area + rel_att_area,
-                 -self.pnp.sum(self.substrate.force),
-                 self.pnp.sum(self.interaction_force)])
+                 -self.reduction.sum(self.substrate.force),
+                 self.reduction.sum(self.interaction_force)])
 
     def compute_normal_force(self):
         "computes and returns the sum of all forces"
@@ -383,15 +383,15 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         # and the ineraction forces.
         # can also be computed easily from the substrate forces,
         # what we do here
-        return self.pnp.sum(
-            - self.substrate.force[self.substrate.topography_subdomain_slices])
+        return self.reduction.sum(
+            - self.substrate.force[self.substrate.topography_subdomain_slices]) #TODO
 
     def compute_repulsive_force(self):
         """computes and returns the sum of all repulsive forces
 
         Assumptions: there
         """
-        return self.pnp.sum(
+        return self.reduction.sum(
             np.where(
                 - self.substrate.force[
                     self.substrate.topography_subdomain_slices] > 0,
@@ -400,7 +400,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
 
     def compute_attractive_force(self):
         "computes and returns the sum of all attractive forces"
-        return self.pnp.sum(
+        return self.reduction.sum(
             np.where(
                 - self.substrate.force[
                     self.substrate.topography_subdomain_slices] < 0,
@@ -414,7 +414,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         pressure.
 
         """
-        return self.pnp.sum(
+        return self.reduction.sum(
             np.where(
                 np.logical_and(
                     self.gap == 0.,
@@ -439,7 +439,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         pts[np.logical_and(self.gap > 0.,
                            self.interaction_force == 0.)] = 0.
 
-        return self.pnp.sum(pts)
+        return self.reduction.sum(pts)
 
     def compute_repulsive_coordinates(self):
         """
