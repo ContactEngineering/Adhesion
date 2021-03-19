@@ -298,7 +298,7 @@ def test_bugnicourt_free_system(comm):
     print(res.nit)
     _bug = res.x.reshape(substrate.nb_subdomain_grid_pts)
     _bug_force = - system.substrate.evaluate_force(_bug)
-    if True:
+    if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
         ax.plot(_bug[:, ny // 2], label="bug")
