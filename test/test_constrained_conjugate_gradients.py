@@ -2,7 +2,7 @@ from NuMPI.Tools import Reduction
 from SurfaceTopography import make_sphere
 import ContactMechanics as Solid
 from SurfaceTopography.Generation import fourier_synthesis
-from ContactMechanics.Tools.Logger import screen
+from ContactMechanics.Tools.Logger import Logger
 from Adhesion.Interactions import Exponential
 from Adhesion.System import BoundedSmoothContactSystem
 from NuMPI.Optimization import bugnicourt_cg
@@ -224,11 +224,11 @@ def test_bugnicourt_free_system(comm):
 
     nx, ny = 32, 21
     sx = sy = 4.
-    R = 1.
+    R = 4.
     Es = 0.75
 
-    w = 1 / np.pi * 1e-2
-    rho = 6.
+    w = 1 / np.pi * 1e-3
+    rho = 0.05
 
     # MAKE REFERENCE solution in serial
 
@@ -244,25 +244,25 @@ def test_bugnicourt_free_system(comm):
 
     system = BoundedSmoothContactSystem(substrate, interaction, surface)
 
-    penetration = 0.005
+    penetration = 0.02
     lbounds = system._lbounds_from_heights(penetration)
 
     bnds = system._reshape_bounds(lbounds, )
     init_disp = np.zeros(substrate.nb_subdomain_grid_pts)
 
     bounded = init_disp < lbounds
-    init_disp[bounded] == lbounds[bounded]
+    init_disp[bounded.filled(False)] = lbounds[bounded.filled(False)]
 
     res = optim.minimize(system.objective(penetration, gradient=True,
-                                          logger=screen),
+                                          logger=Logger("test_bugnicourt_free_system_lbfgsb.log")),
                          init_disp,
                          method='L-BFGS-B', jac=True,
                          bounds=bnds,
-                         options=dict(gtol=1e-13, ftol=1e-20))
+                         options=dict(gtol=1e-11, ftol=1e-20))
 
     assert res.success
     _lbfgsb = res.x.reshape((2 * nx, 2 * ny))
-
+    _lbfgsb_force = - system.substrate.evaluate_force(_lbfgsb)
     # Parallelized objective
 
     interaction = Exponential(w, rho, communicator=comm)
@@ -281,13 +281,15 @@ def test_bugnicourt_free_system(comm):
 
     system = BoundedSmoothContactSystem(substrate, interaction, surface)
 
+    lbounds_parallel = system._lbounds_from_heights(penetration)
+
     res = bugnicourt_cg.constrained_conjugate_gradients(
-        system.objective(penetration, gradient=True, logger=screen),
-         # We also test that the logger and the postprocessing involved work properly in parallel
+        system.objective(penetration, gradient=True, logger=Logger("test_bugnicourt_free_system_cg.log")),
+        # We also test that the logger and the postprocessing involved work properly in parallel
         system.hessian_product_function(penetration),
         init_disp[substrate.subdomain_slices].reshape(-1),
-        gtol=1e-13,
-        bounds=lbounds.filled()[substrate.subdomain_slices].reshape(-1),
+        gtol=1e-11,
+        bounds=lbounds_parallel.filled().reshape(-1),
         maxiter=500,
         communicator=comm
     )
@@ -295,20 +297,24 @@ def test_bugnicourt_free_system(comm):
 
     print(res.nit)
     _bug = res.x.reshape(substrate.nb_subdomain_grid_pts)
-
-    if False:
+    _bug_force = - system.substrate.evaluate_force(_bug)
+    if True:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
         ax.plot(_bug[:, ny // 2], label="bug")
         ax.plot(_lbfgsb[:, ny // 2], label="lbfgsb")
         ax.legend()
-        plt.show()
+        #plt.show()
 
         fig, ax = plt.subplots()
         ax.plot(system.objective(penetration, gradient=True)(_bug)[1]
                 .reshape((2 * nx, 2 * ny))[:, ny // 2], label="bug")
         ax.plot(system.objective(penetration, gradient=True)(_lbfgsb)[1]
                 .reshape((2 * nx, 2 * ny))[:, ny // 2], label="lbfgsb")
+
+        ax.plot(_bug_force[:, ny // 2], label="bug")
+        ax.plot(_lbfgsb_force[:, ny // 2], label="lbfgsb")
+
         ax.legend()
         plt.show()
 
