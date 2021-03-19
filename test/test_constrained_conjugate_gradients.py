@@ -292,7 +292,7 @@ def test_bugnicourt_free_system(comm):
         bounds=lbounds_parallel.filled().reshape(-1),
         maxiter=500,
         communicator=comm
-    )
+        )
     assert res.success
 
     print(res.nit)
@@ -304,7 +304,7 @@ def test_bugnicourt_free_system(comm):
         ax.plot(_bug[:, ny // 2], label="bug")
         ax.plot(_lbfgsb[:, ny // 2], label="lbfgsb")
         ax.legend()
-        #plt.show()
+        # plt.show()
 
         fig, ax = plt.subplots()
         ax.plot(system.objective(penetration, gradient=True)(_bug)[1]
