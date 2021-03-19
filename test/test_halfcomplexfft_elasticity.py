@@ -51,7 +51,7 @@ def test_sinewave_(k):
     ###########################################################
     # This is only for the purpose of using the mass-weighted objective
     # accessible only through the Adhesive system. Interaction and Topography
-    # do not affect the computation of energy.
+    # do not affect the computation of mw_energy.
 
     topo = fourier_synthesis(nb_grid_pts=(nx, ny),
                              hurst=0.8,  # Fig. 4
@@ -87,33 +87,20 @@ def test_sinewave_(k):
     k_float_disp = fourier_buffer.array()[...].copy()
     k_float_disp_mw = k_float_disp * np.sqrt(system.stiffness_k)
 
-    # refpressure = - disp * E_s / 2 * q
-
     engine.create_plan(1)
-
-    # kpressure = substrate.evaluate_k_force(
-    #     disp[substrate.subdomain_slices]) / substrate.area_per_pt
 
     expected_k_disp = np.zeros((nx, ny), dtype=complex)
     expected_k_disp[k[0], k[1]] += (.5 - .5j) * (nx * ny)
 
-    # add the symetrics
-    if k[0] == 0:
-        expected_k_disp[0, -k[1]] += (.5 + .5j) * (nx * ny)
-    if k[0] == nx // 2 and nx % 2 == 0:
-        expected_k_disp[k[0], -k[1]] += (.5 + .5j) * (nx * ny)
-
-    # expected_k_pressure = - E_s / 2 * q * expected_k_disp
-
-    energy = \
+    mw_energy = \
         system.preconditioned_objective(0, gradient=True)(k_float_disp_mw)[0]
 
-    computedenergy_kspace = energy
+    fourier_energy = system.objective_k_float(0., gradient=True)(k_float_disp)[0]
 
     refenergy = E_s / 8 * 2 * q * sx * sy
 
     np.testing.assert_allclose(
-        computedenergy_kspace, refenergy, rtol=1e-10,
+        mw_energy, refenergy, rtol=1e-10,
         err_msg="wavevektor {} for nb_domain_grid_pts "
                 "{}, subdomain nb_grid_pts {}, "
                 "nb_fourier_grid_pts {}".format(
@@ -121,3 +108,13 @@ def test_sinewave_(k):
                     substrate.nb_domain_grid_pts,
                     substrate.nb_subdomain_grid_pts,
                     substrate.nb_fourier_grid_pts))
+
+    np.testing.assert_allclose(
+        fourier_energy, refenergy, rtol=1e-10,
+        err_msg="wavevektor {} for nb_domain_grid_pts "
+                "{}, subdomain nb_grid_pts {}, "
+                "nb_fourier_grid_pts {}".format(
+            k,
+            substrate.nb_domain_grid_pts,
+            substrate.nb_subdomain_grid_pts,
+            substrate.nb_fourier_grid_pts))
