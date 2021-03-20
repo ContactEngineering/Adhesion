@@ -37,11 +37,11 @@ from SurfaceTopography import make_sphere
 from Adhesion.Interactions import VDW82
 from Adhesion.System import SmoothContactSystem
 
+from ContactMechanics.Tools.Logger import screen
+
 _toplot = True
 
 
-# TODO problem: difficult to compare contact_area with MD Model,
-@pytest.mark.skip("is very slow, call it explicitely")
 def test_smoothsphere(maxcomm):
     """
     This test needs a lot of computational effort
@@ -106,7 +106,7 @@ def test_smoothsphere(maxcomm):
     normal_force = []
     area = []
     for i in range(nsteps):
-        result = LBFGS(system.objective(offsets[i], gradient=True),
+        result = LBFGS(system.objective(offsets[i], gradient=True, logger=screen),
                        disp0, jac=True, pnp=pnp, gtol=1e-6 * abs(w / z0))
 
         # result = system.minimize_proxy(

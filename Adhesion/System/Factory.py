@@ -57,7 +57,7 @@ def make_system(substrate, interaction, surface, communicator=MPI.COMM_WORLD,
                                                physical_sizes=physical_sizes,
                                                **kwargs)
         # make shure the interaction has the correcrt communicator
-        interaction.pnp = Reduction(communicator)
+        interaction.reduction = Reduction(communicator)
         interaction.communicator = communicator
 
         return system_class(substrate, interaction, surface)

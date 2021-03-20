@@ -929,7 +929,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         # can also be computed easily from the substrate forces,
         # what we do here
         return self.reduction.sum(
-            - self.substrate.force[self.substrate.topography_subdomain_slices])
+            - self.substrate.force[self.substrate.local_topography_subdomain_slices])
 
     def compute_repulsive_force(self):
         """computes and returns the sum of all repulsive forces
@@ -939,18 +939,18 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         return self.reduction.sum(
             np.where(
                 - self.substrate.force[
-                    self.substrate.topography_subdomain_slices] > 0,
+                    self.substrate.local_topography_subdomain_slices] > 0,
                 - self.substrate.force[
-                    self.substrate.topography_subdomain_slices], 0.))
+                    self.substrate.local_topography_subdomain_slices], 0.))
 
     def compute_attractive_force(self):
         "computes and returns the sum of all attractive forces"
         return self.reduction.sum(
             np.where(
                 - self.substrate.force[
-                    self.substrate.topography_subdomain_slices] < 0,
+                    self.substrate.local_topography_subdomain_slices] < 0,
                 - self.substrate.force[
-                    self.substrate.topography_subdomain_slices],
+                    self.substrate.local_topography_subdomain_slices],
                 0.))
 
     def compute_nb_repulsive_pts(self):
@@ -964,7 +964,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
                 np.logical_and(
                     self.gap == 0.,
                     - self.substrate.force[
-                        self.substrate.topography_subdomain_slices] > 0),
+                        self.substrate.local_topography_subdomain_slices] > 0),
                 1., 0.))
 
     def compute_nb_attractive_pts(self):
@@ -976,7 +976,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         # Compute points where substrate force is negative
         # or there is no contact
         pts = np.logical_or(- self.substrate.force[
-            self.substrate.topography_subdomain_slices] < 0,
+            self.substrate.local_topography_subdomain_slices] < 0,
                             self.gap > 0.)
 
         # exclude points where there is no contact
@@ -995,7 +995,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
             np.logical_and(
                 self.gap == 0.,
                 - self.substrate.force[
-                    self.substrate.topography_subdomain_slices]
+                    self.substrate.local_topography_subdomain_slices]
                 > 0))
 
     def compute_attractive_coordinates(self):
@@ -1007,7 +1007,7 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
         # Compute points where substrate force is negative
         # or there is no contact
         pts = np.logical_or(
-            - self.substrate.force[self.substrate.topography_subdomain_slices]
+            - self.substrate.force[self.substrate.local_topography_subdomain_slices]
             < 0,
             self.gap > 0.)
 
