@@ -183,9 +183,7 @@ def test_stress_intensity_factor_second_derivative():
 
 def test_energy_release_rate_derivatives_against_sif_derivatives():
     # We use Maugis unit system
-
     Es = 3 / 4
-    R = 1
 
     contact_radius = np.random.uniform(0.1, 3)
     penetration = np.random.uniform(0.1, 3)

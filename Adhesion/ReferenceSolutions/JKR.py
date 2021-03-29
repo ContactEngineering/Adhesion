@@ -421,8 +421,9 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radi
     else:
         raise ValueError(der)
 
+
 def stress_intensity_factor(contact_radius, penetration, der="0",
-                            radius=1, contact_modulus=3./4):
+                            radius=1, contact_modulus=3. / 4):
     r"""
 
     if R is not given, the length and the penetration
