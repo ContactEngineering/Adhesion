@@ -140,11 +140,11 @@ def test_stress_intensity_factor_derivative():
     pen = 0.5
     am = (a[1:] + a[:-1]) / 2
     da = a[1:] - a[:-1]
-    dK_da_num = (JKR.stress_intensity_factor(a[1:], pen,)
-                 - JKR.stress_intensity_factor(a[:-1], pen,)) / da
+    dK_da_num = (JKR.stress_intensity_factor(a[1:], pen, )
+                 - JKR.stress_intensity_factor(a[:-1], pen, )) / da
     dK_da_analytical = JKR.stress_intensity_factor(
-            contact_radius=am,
-            penetration=pen, der="1_a")
+        contact_radius=am,
+        penetration=pen, der="1_a")
     if False:
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
@@ -179,6 +179,48 @@ def test_stress_intensity_factor_second_derivative():
 
     np.testing.assert_allclose(dK_da2_analytical, dK_da2_num,
                                atol=1e-6, rtol=1e-4)
+
+
+def test_energy_release_rate_derivatives_against_sif_derivatives():
+    # We use Maugis unit system
+    Es = 3 / 4
+
+    contact_radius = np.random.uniform(0.1, 3)
+    penetration = np.random.uniform(0.1, 3)
+
+    sif = JKR.stress_intensity_factor(
+        penetration=penetration,
+        contact_radius=contact_radius)
+
+    np.testing.assert_allclose(
+        JKR.nonequilibrium_elastic_energy_release_rate(
+            penetration=penetration, contact_radius=contact_radius, der="1_a"),
+        # Irwin:
+        sif / Es
+        * JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="1_a"),
+        atol=1e-14, rtol=0
+        )
+
+    np.testing.assert_allclose(
+        JKR.nonequilibrium_elastic_energy_release_rate(
+            penetration=penetration, contact_radius=contact_radius, der="1_d"),
+        # Irwin:
+        sif / Es
+        * JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="1_d"),
+        atol=1e-14, rtol=0
+        )
+
+    np.testing.assert_allclose(
+        JKR.nonequilibrium_elastic_energy_release_rate(
+            penetration=penetration, contact_radius=contact_radius, der="2_da"),
+        # Irwin:
+        1 / Es * (
+                sif * JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="2_da")
+                + JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="1_d") *
+                JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="1_a")
+        ),
+        atol=1e-14, rtol=0
+        )
 
 
 def test_equilibrium_elastic_energy_vs_nonequilibrium():
