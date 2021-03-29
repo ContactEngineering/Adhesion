@@ -431,10 +431,10 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
 
     Parameters
     ----------
-    a:
-        contact radius
-    d:
-        penetration
+    contact_radius: float or ndarray of floats
+        radius of the contact area
+    penetration: float or ndarray of floats
+        rigid body penetration
     der: {"0", "1_a", "2_a", "1_d", "2_ad"}
     R: float
         default 1, optional
