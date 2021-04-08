@@ -403,7 +403,8 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radi
     contact_modulus: float
         default 3/4, optional
         johnsons contact modulus
-
+    der: {"0", "1_a", "1_d", "2_a", "2_da"}, optional
+        order of the derivative
     Returns
     -------
 
@@ -418,6 +419,10 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radi
         return prefactor * 2 * (penetration / contact_radius - contact_radius)
     elif der == "2_da" or der == "2_ad":
         return - prefactor * 2 * (1 + penetration / contact_radius ** 2)
+    elif der == "2_a":
+        return prefactor * (8 * contact_radius
+                            + 4 * (penetration - contact_radius ** 2) / contact_radius
+                            + 2 * (penetration - contact_radius ** 2) ** 2 / contact_radius ** 3)
     else:
         raise ValueError(der)
 
