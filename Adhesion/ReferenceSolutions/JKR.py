@@ -523,7 +523,8 @@ def displacement_field(r, contact_radius,
 def deformed_profile(r, contact_radius, radius, contact_modulus,
                      work_of_adhesion):
     return 1 / (2 * radius) * r ** 2 \
-           - penetration(radius, contact_modulus, work_of_adhesion) \
+           - penetration(contact_radius=contact_radius,
+                         radius=radius, contact_modulus=contact_modulus, work_of_adhesion=work_of_adhesion) \
            + displacement_field(r,
                                 contact_radius, radius, contact_modulus,
                                 work_of_adhesion)
