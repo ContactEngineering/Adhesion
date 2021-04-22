@@ -547,11 +547,11 @@ def deformed_profile(r, contact_radius, radius=1., contact_modulus=3./4,
         gaps at radius r
     """
     return 1 / (2 * radius) * r ** 2 \
-           - penetration(contact_radius=contact_radius,
-                         radius=radius, contact_modulus=contact_modulus, work_of_adhesion=work_of_adhesion) \
-           + displacement_field(r,
-                                contact_radius, radius, contact_modulus,
-                                work_of_adhesion)
+        - penetration(contact_radius=contact_radius,
+                      radius=radius, contact_modulus=contact_modulus, work_of_adhesion=work_of_adhesion) \
+        + displacement_field(r,
+                             contact_radius, radius, contact_modulus,
+                             work_of_adhesion)
 
 
 def stress_distribution(r, contact_radius, radius, contact_modulus,
