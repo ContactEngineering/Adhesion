@@ -520,8 +520,32 @@ def displacement_field(r, contact_radius,
     return u
 
 
-def deformed_profile(r, contact_radius, radius, contact_modulus,
-                     work_of_adhesion):
+def deformed_profile(r, contact_radius, radius=1., contact_modulus=3./4,
+                     work_of_adhesion=1/np.pi):
+    r"""
+    Computes the gap in the JKR contact at radius r
+    Parameters
+    ----------
+    r: float or array of floats
+        radius at which to compute the gap
+    contact_radius : float or array of floats
+        Normal force.
+    radius : float, optional
+        Sphere (actually paraboloid) radius.
+        Default 1.
+    contact_modulus : float, optional
+        Contact modulus: :math:`E^* = E/(1-\nu^2)`
+        with Young's modulus E and Poisson number :math:`\nu`.
+        The default value is so that Maugis's contact Modulus is one
+        (:math:`K = 4 / 3 E^*`)
+    work_of_adhesion : float, optional
+        Work of adhesion.
+        Default :math:`1 / \pi`
+    Returns
+    -------
+    ndarray
+        gaps at radius r
+    """
     return 1 / (2 * radius) * r ** 2 \
            - penetration(contact_radius=contact_radius,
                          radius=radius, contact_modulus=contact_modulus, work_of_adhesion=work_of_adhesion) \

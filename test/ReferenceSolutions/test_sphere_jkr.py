@@ -21,6 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+import matplotlib.pyplot as plt
 import pytest
 
 from Adhesion.ReferenceSolutions import JKR
@@ -230,3 +231,26 @@ def test_equilibrium_elastic_energy_vs_nonequilibrium():
     np.testing.assert_allclose(Eel,
                                JKR.nonequilibrium_elastic_energy(
                                    JKR.penetration(a), a))
+
+
+def test_deformed_profile():
+    Es = 3 / 4  # maugis K = 1.
+    w = 1 / np.pi
+    R = 1.
+    penetration = 0.5
+
+    contact_radius = JKR.contact_radius(penetration=penetration)
+    rho = np.linspace(0.00001, 0.001)
+
+    g = JKR.deformed_profile(contact_radius + rho, contact_radius=contact_radius, radius=R, contact_modulus=Es,
+                             work_of_adhesion=w)
+
+    sif = np.sqrt(2 * Es * w)
+
+    if False:
+        fig, ax = plt.subplots()
+        ax.plot(rho, g, "-", c="gray")
+        ax.plot(rho, np.sqrt(rho / (2 * np.pi)) * 4 * sif / Es, "--", c="k")
+        plt.show()
+
+    np.testing.assert_allclose(g, np.sqrt(rho / (2 * np.pi)) * 4 * sif / Es, atol=1e-4)
