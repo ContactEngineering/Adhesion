@@ -221,6 +221,16 @@ def test_energy_release_rate_derivatives_against_sif_derivatives():
         ),
         atol=1e-14, rtol=0
         )
+    np.testing.assert_allclose(
+        JKR.nonequilibrium_elastic_energy_release_rate(
+            penetration=penetration, contact_radius=contact_radius, der="2_a"),
+        # Irwin:
+        1 / Es * (
+                sif * JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="2_a")
+                + JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="1_a") ** 2
+        ),
+        atol=1e-14, rtol=0
+        )
 
 
 def test_equilibrium_elastic_energy_vs_nonequilibrium():
