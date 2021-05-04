@@ -84,11 +84,11 @@ class SoftWall(Interaction):
     """base class for smooth contact mechanics"""
     def __init__(self, communicator=MPI.COMM_WORLD):
         self.communicator = communicator
-        self.pnp = Reduction(communicator)
+        self.reduction = Reduction(communicator)
 
     def __deepcopy__(self, memo):
         """
-        makes a deepcopy of all the attributes except self.pnp,
+        makes a deepcopy of all the attributes except self.reduction,
         where it stores the same reference
 
         Parameters
@@ -108,8 +108,8 @@ class SoftWall(Interaction):
         # exceptions
         # pnp is a module or a class impolenting computation methods,
         # it is not copied
-        result.pnp = self.pnp
-        keys.remove('pnp')
+        result.reduction = self.reduction
+        keys.remove('reduction')
         # same for communicator
         result.communicator = self.communicator
         keys.remove('communicator')

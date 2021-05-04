@@ -156,7 +156,7 @@ class Potential(SoftWall, metaclass=abc.ABCMeta):
 class DecoratedPotential(Potential):
     def __init__(self, parent_potential):
         self.parent_potential = parent_potential
-        self.pnp = parent_potential.pnp
+        self.reduction = parent_potential.reduction
         self.communicator = parent_potential.communicator
 
     def __getstate__(self):
