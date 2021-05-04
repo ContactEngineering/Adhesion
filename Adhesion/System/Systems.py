@@ -622,29 +622,84 @@ class SmoothContactSystem(SystemBase):
 
         return (self.energy, self.force_h)
 
-    def hessian_product_k(self, dispk, des_dir_k):
-        """Returns the hessian product of the fourier space
-        objective_k function.
-        """
-        self.substrate.fourier_buffer.array()[...] = dispk.copy()
-        self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
-                                      self.substrate.real_buffer)
-        disp = self.substrate.real_buffer.array()[...].copy() \
-            * self.substrate.fftengine.normalisation
+    # def hessian_product_k(self, dispk, des_dir_k):
+    #     """Returns the hessian product of the fourier space
+    #     objective_k function.
+    #     """
+    #     self.substrate.fourier_buffer.array()[...] = dispk.copy()
+    #     self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
+    #                                   self.substrate.real_buffer)
+    #     disp = self.substrate.real_buffer.array()[...].copy() \
+    #         * self.substrate.fftengine.normalisation
+    #
+    #     gap = self.compute_gap(disp)
+    #     _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
+    #
+    #     self.substrate.real_buffer.array()[...] = adh_curv.reshape(
+    #         self.substrate.nb_grid_pts).copy()
+    #     self.substrate.fftengine.fft(self.substrate.real_buffer,
+    #                                  self.substrate.fourier_buffer)
+    #     adh_curv_k = self.substrate.fourier_buffer.array()[...].copy()
+    #
+    #     hessp_val_k = -self.substrate.evaluate_k_force_k(des_dir_k) + \
+    #         adh_curv_k * des_dir_k * self.substrate.area_per_pt
+    #
+    #     return hessp_val_k
 
-        gap = self.compute_gap(disp)
-        _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)
+    # def hessian_product_preconditioned(self, offset):
 
-        self.substrate.real_buffer.array()[...] = adh_curv.reshape(
-            self.substrate.nb_grid_pts).copy()
-        self.substrate.fftengine.fft(self.substrate.real_buffer,
-                                     self.substrate.fourier_buffer)
-        adh_curv_k = self.substrate.fourier_buffer.array()[...].copy()
-
-        hessp_val_k = -self.substrate.evaluate_k_force_k(des_dir_k) + \
-            adh_curv_k * des_dir_k * self.substrate.area_per_pt
-
-        return hessp_val_k
+    #     def hessp_precond(disp_h, des_dir):
+    #
+    #         self.real_buffer.array()[...] = offset
+    #         self.engine.hcfft(self.real_buffer, self.fourier_buffer)
+    #         offset_k = self.fourier_buffer.array()[...].copy()
+    #
+    #         self.real_buffer.array()[...] = self.surface.heights().copy()
+    #         self.engine.hcfft(self.real_buffer, self.fourier_buffer)
+    #         self.heights_k_float = self.fourier_buffer.array()[...].copy()
+    #
+    #         disp_float_k = disp_h.copy()
+    #         disp_float_k = disp_float_k.reshape(self.substrate.nb_grid_pts)
+    #         gap_float_k = (disp_float_k / np.sqrt(self.stiffness_k *
+    #                                               self.area_per_pt)) - \
+    #                       self.heights_k_float - offset_k
+    #
+    #         self.fourier_buffer.array()[...] = gap_float_k.copy()
+    #         self.engine.ihcfft(self.fourier_buffer, self.real_buffer)
+    #         gap = self.real_buffer.array()[...].copy() * \
+    #               self.engine.normalisation
+    #
+    #         _, _, adh_curv = \
+    #             self.interaction.evaluate(gap,
+    #                                       curvature=True)
+    #
+    #         coeff = self.fourier_coefficients()
+    #
+    #         el_hess_k = coeff @ coeff
+    #         el_hess_k *= self.area_per_pt
+    #
+    #         orig_shape = np.shape(des_dir)
+    #
+    #         el_hess_k *= des_dir #.reshape(el_hess_k)
+    #
+    #         adh_curv *= self.area_per_pt
+    #
+    #         self.real_buffer.array()[...] = adh_curv
+    #         self.engine.hcfft(self.real_buffer, self.fourier_buffer)
+    #         adh_curv_float_k = self.fourier_buffer.array()[...].copy()
+    #
+    #         adh_curv_float_k *= coeff @ coeff
+    #
+    #         k = np.sqrt(self.stiffness_k.copy() * self.area_per_pt)
+    #
+    #         adh_hess_k = adh_curv_float_k * des_dir * (1 / k) * (1 / k)
+    #
+    #         hess_k = el_hess_k.reshape(orig_shape) + \
+    #                  adh_hess_k.reshape(orig_shape)
+    #
+    #         return hess_k
+    #
+    #     return hessp_precond
 
     def preconditioned_objective(self, offset, gradient=False, logger=None):
         r"""

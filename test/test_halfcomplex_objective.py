@@ -170,3 +170,97 @@ def test_1d():
     np.testing.assert_allclose(en_mw_adh, en_real_adh, atol=1e-8)
     np.testing.assert_allclose(en_fourier_adh, en_real_adh, atol=1e-8)
     np.testing.assert_allclose(en_fourier_adh, en_mw_adh, atol=1e-8)
+
+
+# def test_preconditioned_hessian():
+#     n = 32
+#     surf_res = (n, n)
+#
+#     z0 = 1
+#     Es = 1
+#     w = 0.01 * z0 * Es
+#     surf_size = (n, n)
+#
+#     inter = RepulsiveExponential(2 * w, 0.5, w, 1.)
+#
+#     substrate = PeriodicFFTElasticHalfSpace(surf_res, young=Es,
+#                                             physical_sizes=surf_size)
+#
+#     surface = Topography(
+#         np.cos(np.arange(0, n) * np.pi * 2. / n) * np.ones((n, 1)),
+#         physical_sizes=surf_size)
+#
+#     system = SmoothContactSystem(substrate, inter, surface)
+#
+#     penetrations = np.linspace(-np.max(surface.heights()), 0, 10)
+#     offset = 0#penetrations[5]
+#
+#     engine = muFFT.FFT(substrate.nb_grid_pts, fft='fftw',
+#                        allow_temporary_buffer=False,
+#                        allow_destroy_input=True)
+#
+#     real_buffer = engine.register_halfcomplex_field(
+#         "real-space", 1)
+#     fourier_buffer = engine.register_halfcomplex_field(
+#         "fourier-space", 1)
+#
+#     obj = system.preconditioned_objective(offset, True)
+#
+#     gaps = np.random.uniform(0, 1, size=surface.nb_grid_pts)
+# #np.random.random(size=(n, n))
+#     real_buffer.array()[...] = gaps.copy()
+#     engine.hcfft(real_buffer, fourier_buffer)
+#     k_float_disp = fourier_buffer.array()[...].copy()
+#
+#
+#     dgaps = np.random.normal(size=(n, n)) * np.mean(gaps) / 10
+#     real_buffer.array()[...] = dgaps.copy()
+#     engine.hcfft(real_buffer, fourier_buffer)
+#     d_k_float_disp = fourier_buffer.array()[...].copy()
+#
+#
+#     _, grad = obj(k_float_disp)
+#
+#     if True:
+#         hs = np.array([1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5,
+#                        1e-6, 1e-7])
+#         rms_errors = []
+#         for h in hs:
+#             _, grad_d = obj(k_float_disp + h * d_k_float_disp)
+#             dgrad = grad_d - grad
+#             # dgrad_from_hess = cf.hessian_product(h * da, a, penetration)
+#             dgrad_from_hess = system.hessian_product_preconditioned(offset)(
+#                 k_float_disp, h * d_k_float_disp)
+#
+#             rms_errors.append(np.sqrt(np.mean((dgrad_from_hess - dgrad) ** 2)))
+#
+#         # Visualize the quadratic convergence of the taylor expansion
+#         # What to expect:
+#         # Taylor expansion: g(x + h ∆x) - g(x) = Hessian * h * ∆x + O(h^2)
+#         # We should see quadratic convergence as long as h^2 > g epsmach,
+#         # the precision with which we are able to determine ∆g.
+#         # What is the precision with which the hessian product is made ?
+#         import matplotlib.pyplot as plt
+#         fig, ax = plt.subplots()
+#         ax.plot(hs, rms_errors / hs ** 2
+#                 , "+-")
+#         ax.set_xscale("log")
+#         ax.set_yscale("log")
+#         ax.grid(True)
+#         plt.show()
+#
+#         hs = np.array([1e-2, 1e-3, 1e-4])
+#     rms_errors = []
+#     for h in hs:
+#         grad_d = obj(k_float_disp + h * d_k_float_disp)[1]
+#         dgrad = grad_d - grad
+#         dgrad_from_hess = system.hessian_product_preconditioned(offset)(
+#                 k_float_disp, h * d_k_float_disp)
+#         rms_errors.append(np.sqrt(np.mean((dgrad_from_hess - dgrad) ** 2)))
+#         rms_errors.append(
+#             np.sqrt(
+#                 np.mean(
+#                     (dgrad_from_hess.reshape(-1) - dgrad.reshape(-1)) ** 2)))
+#
+#     rms_errors = np.array(rms_errors)
+#     assert rms_errors[-1] / rms_errors[0] < 1.5 * (hs[-1] / hs[0]) ** 2
