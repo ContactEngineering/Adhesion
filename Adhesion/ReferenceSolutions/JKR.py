@@ -368,7 +368,7 @@ def nonequilibrium_elastic_energy(penetration, contact_radius):
     return 3 / 4 * A * (d - A ** 2 / 3) ** 2 + A ** 5 / 15
 
 
-def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
+def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radius=1, contact_modulus=3./4, der="0"):
     r"""
 
     Returns the nondimensional energy release rate
@@ -376,33 +376,59 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius):
 
     .. math ::
           \frac{\partial U_{el}}{\partial \pi A^2}
-          = \frac{3}{8 \pi} w_{ref} \frac{1}{A} (\Delta - A^2)^2
+          = \frac{3}{8 \pi}  \frac{1}{A} (\Delta - A^2)^2
 
-    be careful, this is
 
-    Here
-    :math:`\tilde U_{el} = \frac{U_{el}}{\pi w R (\pi^2 w^2 R / K^2)^{1/3}}`
-    is the nondimensionalized elastic energy
+    :math:`A` is the contact radius, :math:`\Delta` is the penetration.
 
-    For the units, see maugis p.290
+    With the default values of `radius` and `contact_modulus`, this function returns the energy release rate in units
+    of
+
+     - :math:`w` if :math:`\Delta` and :math:`A` are in maugis - JKR units.
+
+     - :math:`E_M R` if :math:`\Delta` and :math:`A` are in units of :math:`R`
+
+    Note that I think perfect consistent use of the maugis-JKR units would require to express the energy release rate
+    in units of :math:`\pi w` instead of just :math:`w`. I might need to change this at some point.
 
     Parameters
     ----------
     penetration: float or np.array
         :math:`\Delta` in maugis
     contact_radius: float or np.array
-        :math:`A` in maugis
-
+        in units of :math:`R`
+    radius: float
+        default 1, optional
+        radius of the sphere
+    contact_modulus: float
+        default 3/4, optional
+        johnsons contact modulus
+    der: {"0", "1_a", "1_d", "2_a", "2_da"}, optional
+        order of the derivative
     Returns
     -------
 
     """
-    return 3 / 8 / np.pi * (penetration - contact_radius**2)**2 \
-        / contact_radius
+    prefactor = radius * contact_modulus / (2 * np.pi)
+    if der == "0":
+        return prefactor * (penetration - contact_radius ** 2) ** 2 / contact_radius
+    elif der == "1_a":
+        return prefactor * (4 * (contact_radius ** 2 - penetration)
+                            - (penetration - contact_radius ** 2) ** 2 / contact_radius ** 2)
+    elif der == "1_d":
+        return prefactor * 2 * (penetration / contact_radius - contact_radius)
+    elif der == "2_da" or der == "2_ad":
+        return - prefactor * 2 * (1 + penetration / contact_radius ** 2)
+    elif der == "2_a":
+        return prefactor * (8 * contact_radius
+                            + 4 * (penetration - contact_radius ** 2) / contact_radius
+                            + 2 * (penetration - contact_radius ** 2) ** 2 / contact_radius ** 3)
+    else:
+        raise ValueError(der)
 
 
 def stress_intensity_factor(contact_radius, penetration, der="0",
-                            radius=1, contact_modulus=3./4):
+                            radius=1, contact_modulus=3. / 4):
     r"""
 
     if R is not given, the length and the penetration
@@ -410,13 +436,17 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
 
     Parameters
     ----------
-    a: contact radius
-    d: penetration
+    contact_radius: float or ndarray of floats
+        radius of the contact area
+    penetration: float or ndarray of floats
+        rigid body penetration
     der: {"0", "1_a", "2_a", "1_d", "2_ad"}
-    R: default 1, optional
-    radius of the sphere
-    Es: default 3/4, optional
-    johnson's contact modulus
+    R: float
+        default 1, optional
+        radius of the sphere
+    Es: float
+        default 3/4, optional
+        johnson's contact modulus
 
     Returns
     -------
@@ -495,13 +525,38 @@ def displacement_field(r, contact_radius,
     return u
 
 
-def deformed_profile(r, contact_radius, radius, contact_modulus,
-                     work_of_adhesion):
+def deformed_profile(r, contact_radius, radius=1., contact_modulus=3./4,
+                     work_of_adhesion=1/np.pi):
+    r"""
+    Computes the gap in the JKR contact at radius r
+    Parameters
+    ----------
+    r: float or array of floats
+        radius at which to compute the gap
+    contact_radius : float or array of floats
+        Normal force.
+    radius : float, optional
+        Sphere (actually paraboloid) radius.
+        Default 1.
+    contact_modulus : float, optional
+        Contact modulus: :math:`E^* = E/(1-\nu^2)`
+        with Young's modulus E and Poisson number :math:`\nu`.
+        The default value is so that Maugis's contact Modulus is one
+        (:math:`K = 4 / 3 E^*`)
+    work_of_adhesion : float, optional
+        Work of adhesion.
+        Default :math:`1 / \pi`
+    Returns
+    -------
+    ndarray
+        gaps at radius r
+    """
     return 1 / (2 * radius) * r ** 2 \
-           - penetration(radius, contact_modulus, work_of_adhesion) \
-           + displacement_field(r,
-                                contact_radius, radius, contact_modulus,
-                                work_of_adhesion)
+        - penetration(contact_radius=contact_radius,
+                      radius=radius, contact_modulus=contact_modulus, work_of_adhesion=work_of_adhesion) \
+        + displacement_field(r,
+                             contact_radius, radius, contact_modulus,
+                             work_of_adhesion)
 
 
 def stress_distribution(r, contact_radius, radius, contact_modulus,

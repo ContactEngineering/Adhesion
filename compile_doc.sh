@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source venv/bin/activate
+#source venv/bin/activate
 source env.sh
 python setup.py build
 cd docs/
