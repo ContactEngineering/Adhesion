@@ -5,7 +5,7 @@ from SurfaceTopography.Generation import fourier_synthesis
 from ContactMechanics.Tools.Logger import Logger
 from Adhesion.Interactions import Exponential
 from Adhesion.System import BoundedSmoothContactSystem
-from NuMPI.Optimization import bugnicourt_cg
+from NuMPI.Optimization import ccg_without_restart
 import numpy as np
 import scipy.optimize as optim
 import pytest
@@ -66,7 +66,7 @@ def test_force_computation_mean_gap_constrained():
     init_gap = init_disp - topography.heights() - penetration
     init_gap[init_gap < 0] = 0
 
-    res = bugnicourt_cg.constrained_conjugate_gradients(
+    res = ccg_without_restart.constrained_conjugate_gradients(
         system.primal_objective(penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap,
@@ -99,7 +99,7 @@ def test_force_computation_mean_gap_constrained():
     init_gap = init_disp - topography.heights() - _penetration
     init_gap[init_gap < 0] = 0
 
-    res = bugnicourt_cg.constrained_conjugate_gradients(
+    res = ccg_without_restart.constrained_conjugate_gradients(
         system.primal_objective(_penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
@@ -179,7 +179,7 @@ def test_mean_value_mode_is_penetration_indepentent():
 
     ca = []
     arbitrary_penetration = 0
-    res = bugnicourt_cg.constrained_conjugate_gradients(
+    res = ccg_without_restart.constrained_conjugate_gradients(
         system.primal_objective(arbitrary_penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
@@ -192,7 +192,7 @@ def test_mean_value_mode_is_penetration_indepentent():
 
     ca = []
     arbitrary_penetration = 100
-    res = bugnicourt_cg.constrained_conjugate_gradients(
+    res = ccg_without_restart.constrained_conjugate_gradients(
         system.primal_objective(arbitrary_penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
@@ -206,7 +206,7 @@ def test_mean_value_mode_is_penetration_indepentent():
 
     ca = []
     arbitrary_penetration = -100
-    res = bugnicourt_cg.constrained_conjugate_gradients(
+    res = ccg_without_restart.constrained_conjugate_gradients(
         system.primal_objective(arbitrary_penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
@@ -283,7 +283,7 @@ def test_bugnicourt_free_system(comm):
 
     lbounds_parallel = system._lbounds_from_heights(penetration)
 
-    res = bugnicourt_cg.constrained_conjugate_gradients(
+    res = ccg_without_restart.constrained_conjugate_gradients(
         system.objective(penetration, gradient=True, logger=Logger("test_bugnicourt_free_system_cg.log")),
         # We also test that the logger and the postprocessing involved work properly in parallel
         system.hessian_product_function(penetration),

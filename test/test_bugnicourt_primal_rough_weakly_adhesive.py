@@ -14,7 +14,7 @@ from Adhesion.Interactions import Exponential
 from ContactMechanics.Systems import NonSmoothContactSystem
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from Adhesion.System import make_system, BoundedSmoothContactSystem
-from NuMPI.Optimization.bugnicourt_cg import constrained_conjugate_gradients
+from NuMPI.Optimization.ccg_without_restart import constrained_conjugate_gradients
 from NuMPI.Tools import Reduction
 
 import os

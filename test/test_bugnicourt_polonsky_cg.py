@@ -2,7 +2,7 @@ from SurfaceTopography import make_sphere
 import ContactMechanics as Solid
 from Adhesion.Interactions import Exponential
 from Adhesion.System import BoundedSmoothContactSystem
-from NuMPI.Optimization import bugnicourt_cg, polonsky_keer
+from NuMPI.Optimization import ccg_without_restart, ccg_with_restart
 import numpy as np
 import scipy.optimize as optim
 import pytest
@@ -39,7 +39,7 @@ def test_primal_obj(offset):
     init_gap = init_disp - surface.heights() - offset
 
     # ####################POLONSKY-KEER##############################
-    res = polonsky_keer.constrained_conjugate_gradients(
+    res = ccg_with_restart.constrained_conjugate_gradients(
         system.primal_objective(offset, gradient=True),
         system.primal_hessian_product, x0=init_gap, gtol=gtol)
 
@@ -47,7 +47,7 @@ def test_primal_obj(offset):
     polonsky_gap = res.x.reshape((nx, ny))
 
     # ####################BUGNICOURT###################################
-    res = bugnicourt_cg.constrained_conjugate_gradients(
+    res = ccg_without_restart.constrained_conjugate_gradients(
         system.primal_objective(offset, gradient=True),
         system.primal_hessian_product, x0=init_gap, mean_val=None, gtol=gtol)
     assert res.success
@@ -71,7 +71,7 @@ def test_primal_obj(offset):
     # ##########TEST MEAN VALUES#######################################
     mean_val = np.mean(lbfgsb_gap)
     # ####################POLONSKY-KEER##############################
-    res = polonsky_keer.constrained_conjugate_gradients(
+    res = ccg_with_restart.constrained_conjugate_gradients(
         system.primal_objective(offset, gradient=True),
         system.primal_hessian_product, init_gap, gtol=gtol,
         mean_value=mean_val)
@@ -80,7 +80,7 @@ def test_primal_obj(offset):
     polonsky_gap_mean_cons = res.x.reshape((nx, ny))
 
     # ####################BUGNICOURT###################################
-    bugnicourt_cg.constrained_conjugate_gradients(system.primal_objective
+    ccg_without_restart.constrained_conjugate_gradients(system.primal_objective
                                                   (offset, gradient=True),
                                                   system.
                                                   primal_hessian_product,
