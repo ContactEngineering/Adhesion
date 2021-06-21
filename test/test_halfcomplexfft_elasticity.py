@@ -101,20 +101,14 @@ def test_sinewave_(k):
 
     np.testing.assert_allclose(
         mw_energy, refenergy, rtol=1e-10,
-        err_msg="wavevektor {} for nb_domain_grid_pts "
-                "{}, subdomain nb_grid_pts {}, "
-                "nb_fourier_grid_pts {}".format(
-                    k,
-                    substrate.nb_domain_grid_pts,
-                    substrate.nb_subdomain_grid_pts,
-                    substrate.nb_fourier_grid_pts))
+        err_msg=f"wavevektor {k} for "
+                f"nb_domain_grid_pts {substrate.nb_domain_grid_pts},"
+                f" subdomain nb_grid_pts {substrate.nb_subdomain_grid_pts}, "
+                f"nb_fourier_grid_pts {substrate.nb_fourier_grid_pts}")
 
     np.testing.assert_allclose(
         fourier_energy, refenergy, rtol=1e-10,
-        err_msg="wavevektor {} for nb_domain_grid_pts "
-                "{}, subdomain nb_grid_pts {}, "
-                "nb_fourier_grid_pts {}".format(
-            k,
-            substrate.nb_domain_grid_pts,
-            substrate.nb_subdomain_grid_pts,
-            substrate.nb_fourier_grid_pts))
+        err_msg=f"wavevektor {k} for "
+                f"nb_domain_grid_pts {substrate.nb_domain_grid_pts},"
+                f" subdomain nb_grid_pts {substrate.nb_subdomain_grid_pts}, "
+                f"nb_fourier_grid_pts {substrate.nb_fourier_grid_pts}")
