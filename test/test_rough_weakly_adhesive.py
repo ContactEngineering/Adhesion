@@ -92,9 +92,9 @@ def test_bugnicourt_weakly_adhesive(comm, verbose=False):
         # (Only valid in the DMT regime, i.e. until the onset of stickiness)
         # If this value is smaller then 1 the surfaces are sticky and
         # normal CG's might not work anymore
-        print("P&R stickiness criterion: {}".format(topography.rms_slope() *
+        print("P&R stickiness criterion: {}".format(topography.rms_gradient() *
                                                     Es * rho / 2 / w *
-              (topography.rms_slope() ** 2 / topography.rms_curvature() / rho)
+              (topography.rms_gradient() ** 2 / topography.rms_curvature() / rho)
                                                     ** (2 / 3)))
         R = 1 / topography.rms_curvature()
         print("Generalized Tabor parameter à la Martin Müser")

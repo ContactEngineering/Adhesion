@@ -143,7 +143,7 @@ def test_bugnicourt_weakly_adhesive(comm,
         nb_subdomain_grid_pts=substrate.nb_subdomain_grid_pts,
         subdomain_locations=substrate.subdomain_locations)
 
-    tol = 1e-5 * topography.rms_height()
+    tol = 1e-5 * topography.rms_height_from_area()
     forcetol = 10 * gtol * max(Es * rms_slope, abs(
             interaction.max_tensile)) * topography.area_per_pt
     system = make_system(interaction=interaction,

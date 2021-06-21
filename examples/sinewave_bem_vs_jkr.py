@@ -63,7 +63,7 @@ for p in [6, 8, 10, 12]:
             disp0 += offset - offset_prev  # noqa: F821
         sol = system.minimize_proxy(
             disp0=disp0,
-            options=dict(gtol=gtol * max(Es * surface.rms_slope(), abs(
+            options=dict(gtol=gtol * max(Es * surface.rms_gradient(), abs(
                 inter.max_tensile)) * surface.area_per_pt,
                          # max absolute value of the gradient
                          # of the objective for convergence
@@ -145,7 +145,7 @@ for p in [6, 8, 10, 12]:
             disp0 += offset - offset_prev
         sol = system.minimize_proxy(
             disp0=disp0,
-            options=dict(gtol=gtol * max(Es * surface.rms_slope(), abs(
+            options=dict(gtol=gtol * max(Es * surface.rms_gradient(), abs(
                 inter.max_tensile)) * surface.area_per_pt,
                          # max absolute value of the gradient
                          # of the objective for convergence

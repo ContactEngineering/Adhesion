@@ -103,7 +103,7 @@ def test_1d():
                              short_cutoff=short_cutoff,
                              )
 
-    Rc = 1 / topo.rms_curvature()
+    Rc = 1 / topo.rms_curvature_from_profile()
     interaction_length = 2.56e-2 * Rc
 
     gam_att = 2.05 * Es * Rc
@@ -112,7 +112,7 @@ def test_1d():
     interaction = RepulsiveExponential(gam_rep, interaction_length / 2,
                                        gam_att,
                                        interaction_length).linearize_core(
-        hardness=1000 * Es * topo.rms_slope())
+        hardness=1000 * Es * topo.rms_slope_from_profile())
 
     # w = abs(interaction.v_min)
 

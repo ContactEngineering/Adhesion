@@ -55,7 +55,7 @@ def test_1d_sinewave_smooth_against_jkr():
             sol = system.minimize_proxy(
                 initial_displacements=disp0,
                 options=dict(
-                    gtol=gtol * max(Es * surface.rms_slope(),
+                    gtol=gtol * max(Es * surface.rms_slope_from_profile(),
                                     abs(inter.max_tensile))
                     * surface.area_per_pt,
                     # max absolute value of the gradient
@@ -120,7 +120,7 @@ def test_1d_sinewave_hardwall_against_jkr():
                 disp0 += offset - offset_prev  # noqa: F821
             sol = system.minimize_proxy(
                 initial_displacements=disp0,
-                options=dict(gtol=gtol * max(Es * surface.rms_slope(),
+                options=dict(gtol=gtol * max(Es * surface.rms_slope_from_profile(),
                                              abs(inter.max_tensile))
                              * surface.area_per_pt,
                              # max absolute value of the gradient
