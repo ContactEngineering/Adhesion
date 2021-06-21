@@ -75,7 +75,7 @@ def test_force_computation_mean_gap_constrained():
         )
 
     assert res.success
-    print("bugnicourt nit: {}".format(res.nit))
+    print("ccg_without_restart nit: {}".format(res.nit))
     gap = res.x.reshape(substrate.nb_subdomain_grid_pts)
 
     grad = system.primal_objective(penetration, gradient=True)(
@@ -108,7 +108,7 @@ def test_force_computation_mean_gap_constrained():
         )
 
     assert res.success
-    print("bugnicourt nit: {}".format(res.nit))
+    print("ccg_without_restart nit: {}".format(res.nit))
     gap = res.x.reshape(substrate.nb_subdomain_grid_pts)
 
     np.testing.assert_allclose(gap, gap_lbfgs,
@@ -202,7 +202,7 @@ def test_mean_value_mode_is_penetration_indepentent():
         )
     assert ca[0] == first_ca
     assert res.success
-    print("bugnicourt nit: {}".format(res.nit))
+    print("ccg_without_restart nit: {}".format(res.nit))
 
     ca = []
     arbitrary_penetration = -100
@@ -216,10 +216,10 @@ def test_mean_value_mode_is_penetration_indepentent():
         )
     assert ca[0] == first_ca
     assert res.success
-    print("bugnicourt nit: {}".format(res.nit))
+    print("ccg_without_restart nit: {}".format(res.nit))
 
 
-def test_bugnicourt_free_system(comm):
+def test_ccg_without_restart_free_system(comm):
     pnp = Reduction(comm)
 
     nx, ny = 32, 21
@@ -254,7 +254,7 @@ def test_bugnicourt_free_system(comm):
     init_disp[bounded.filled(False)] = lbounds[bounded.filled(False)]
 
     res = optim.minimize(system.objective(penetration, gradient=True,
-                                          logger=Logger("test_bugnicourt_free_system_lbfgsb.log")),
+                                          logger=Logger("test_ccg_without_restart_free_system_lbfgsb.log")),
                          init_disp,
                          method='L-BFGS-B', jac=True,
                          bounds=bnds,
@@ -284,7 +284,7 @@ def test_bugnicourt_free_system(comm):
     lbounds_parallel = system._lbounds_from_heights(penetration)
 
     res = ccg_without_restart.constrained_conjugate_gradients(
-        system.objective(penetration, gradient=True, logger=Logger("test_bugnicourt_free_system_cg.log")),
+        system.objective(penetration, gradient=True, logger=Logger("test_ccg_without_restart_free_system_cg.log")),
         # We also test that the logger and the postprocessing involved work properly in parallel
         system.hessian_product_function(penetration),
         init_disp[substrate.subdomain_slices].reshape(-1),

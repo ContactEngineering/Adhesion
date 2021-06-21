@@ -44,7 +44,7 @@ def test_primal_obj(offset):
         system.primal_hessian_product, x0=init_gap, gtol=gtol)
 
     assert res.success
-    polonsky_gap = res.x.reshape((nx, ny))
+    ccg_with_restart_gap = res.x.reshape((nx, ny))
 
     # ####################BUGNICOURT###################################
     res = ccg_without_restart.constrained_conjugate_gradients(
@@ -52,7 +52,7 @@ def test_primal_obj(offset):
         system.primal_hessian_product, x0=init_gap, mean_val=None, gtol=gtol)
     assert res.success
 
-    bugnicourt_gap = res.x.reshape((nx, ny))
+    ccg_without_restart_gap = res.x.reshape((nx, ny))
 
     # #####################LBFGSB#####################################
     res = optim.minimize(system.primal_objective(offset, gradient=True),
@@ -64,9 +64,9 @@ def test_primal_obj(offset):
     assert res.success
     lbfgsb_gap = res.x.reshape((nx, ny))
 
-    np.testing.assert_allclose(polonsky_gap, bugnicourt_gap, atol=1e-3)
-    np.testing.assert_allclose(polonsky_gap, lbfgsb_gap, atol=1e-3)
-    np.testing.assert_allclose(lbfgsb_gap, bugnicourt_gap, atol=1e-3)
+    np.testing.assert_allclose(ccg_with_restart_gap, ccg_without_restart_gap, atol=1e-3)
+    np.testing.assert_allclose(ccg_with_restart_gap, lbfgsb_gap, atol=1e-3)
+    np.testing.assert_allclose(lbfgsb_gap, ccg_without_restart_gap, atol=1e-3)
 
     # ##########TEST MEAN VALUES#######################################
     mean_val = np.mean(lbfgsb_gap)
@@ -77,7 +77,7 @@ def test_primal_obj(offset):
         mean_value=mean_val)
 
     assert res.success
-    polonsky_gap_mean_cons = res.x.reshape((nx, ny))
+    ccg_with_restart_gap_mean_cons = res.x.reshape((nx, ny))
 
     # ####################BUGNICOURT###################################
     ccg_without_restart.constrained_conjugate_gradients(system.primal_objective
@@ -90,9 +90,9 @@ def test_primal_obj(offset):
                                                   )
     assert res.success
 
-    bugnicourt_gap_mean_cons = res.x.reshape((nx, ny))
+    ccg_without_restart_gap_mean_cons = res.x.reshape((nx, ny))
 
-    np.testing.assert_allclose(polonsky_gap_mean_cons, lbfgsb_gap, atol=1e-3)
-    np.testing.assert_allclose(bugnicourt_gap_mean_cons, lbfgsb_gap, atol=1e-3)
-    np.testing.assert_allclose(lbfgsb_gap, bugnicourt_gap, atol=1e-3)
-    np.testing.assert_allclose(lbfgsb_gap, bugnicourt_gap_mean_cons, atol=1e-3)
+    np.testing.assert_allclose(ccg_with_restart_gap_mean_cons, lbfgsb_gap, atol=1e-3)
+    np.testing.assert_allclose(ccg_without_restart_gap_mean_cons, lbfgsb_gap, atol=1e-3)
+    np.testing.assert_allclose(lbfgsb_gap, ccg_without_restart_gap, atol=1e-3)
+    np.testing.assert_allclose(lbfgsb_gap, ccg_without_restart_gap_mean_cons, atol=1e-3)

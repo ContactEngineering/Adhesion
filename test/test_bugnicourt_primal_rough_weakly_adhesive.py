@@ -1,6 +1,6 @@
 """
 
-Runs the  primal (gap as DOFS) bugnicourt algorithm with fixed penetration
+Runs the  primal (gap as DOFS) ccg_without_restart algorithm with fixed penetration
 and with constrained mean gap. Compares the gaps with the old serial lbfgsb
 code with displacements as variables
 
@@ -113,7 +113,7 @@ def get_reference_data_file(_comm):
     return path
 
 
-def test_bugnicourt_weakly_adhesive(comm,
+def test_ccg_without_restart_weakly_adhesive(comm,
                                     verbose=False):
 
     topography_file = get_topography_file(comm)

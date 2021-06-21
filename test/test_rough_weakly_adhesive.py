@@ -17,7 +17,7 @@ pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
                                        "please execute with pytest")
 
 
-def test_bugnicourt_weakly_adhesive(comm, verbose=False):
+def test_ccg_without_restart_weakly_adhesive(comm, verbose=False):
     Es = 1.
     gtol = 1e-8
     n = 512
