@@ -48,7 +48,7 @@ def test_bug_bench():
                              short_cutoff=short_cutoff,
                              )
 
-    topo = topo.scale(1 / topo.rms_curvature()).squeeze()
+    topo = topo.scale(1 / topo.rms_curvature_from_area()).squeeze()
 
     # Adhesion parameters:
 
@@ -82,7 +82,7 @@ def test_bug_bench():
 
     sol = optim.minimize(system.primal_objective(penetration, gradient=True), init_gap,
                          method='L-BFGS-B', jac=True, bounds=bnds_gap,
-                         options=dict(gtol=gtol * max(Es * topo.rms_slope(),
+                         options=dict(gtol=gtol * max(Es * topo.rms_gradient(),
                                                       abs(interaction.max_tensile)) * topo.area_per_pt, ftol=0,
                                       maxcor=3), callback=None)
 
