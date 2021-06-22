@@ -81,13 +81,13 @@ def test_primal_obj(offset):
 
     # ####################BUGNICOURT###################################
     ccg_without_restart.constrained_conjugate_gradients(system.primal_objective
-                                                  (offset, gradient=True),
-                                                  system.
-                                                  primal_hessian_product,
-                                                  x0=init_gap,
-                                                  mean_val=mean_val,
-                                                  gtol=gtol
-                                                  )
+                                                        (offset, gradient=True),
+                                                        system.
+                                                        primal_hessian_product,
+                                                        x0=init_gap,
+                                                        mean_val=mean_val,
+                                                        gtol=gtol
+                                                        )
     assert res.success
 
     ccg_without_restart_gap_mean_cons = res.x.reshape((nx, ny))

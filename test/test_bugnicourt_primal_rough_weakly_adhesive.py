@@ -6,7 +6,6 @@ code with displacements as variables
 
 """
 
-
 from NuMPI.IO import load_npy
 from SurfaceTopography import NPYReader
 from SurfaceTopography.Generation import fourier_synthesis
@@ -113,9 +112,7 @@ def get_reference_data_file(_comm):
     return path
 
 
-def test_ccg_without_restart_weakly_adhesive(comm,
-                                    verbose=False):
-
+def test_ccg_without_restart_weakly_adhesive(comm, verbose=False):
     topography_file = get_topography_file(comm)
     reference_data_file = get_reference_data_file(comm)
     _penetration = penetration
@@ -145,7 +142,7 @@ def test_ccg_without_restart_weakly_adhesive(comm,
 
     tol = 1e-5 * topography.rms_height_from_area()
     forcetol = 10 * gtol * max(Es * rms_slope, abs(
-            interaction.max_tensile)) * topography.area_per_pt
+        interaction.max_tensile)) * topography.area_per_pt
     system = make_system(interaction=interaction,
                          surface=topography,
                          substrate=substrate,
@@ -269,8 +266,7 @@ def test_ccg_without_restart_weakly_adhesive(comm,
     nb_nc_points = pnp.sum(np.count_nonzero(nc_points))
     lagrange_mean_gap = pnp.sum(grad[nc_points]) / nb_nc_points
 
-    forces = substrate.evaluate_force(gap + topography.heights()) \
-        + lagrange_mean_gap
+    forces = substrate.evaluate_force(gap + topography.heights()) + lagrange_mean_gap
 
     max_abs_error = pnp.max(abs(forces - forces_ref))
     assert max_abs_error < forcetol, \
