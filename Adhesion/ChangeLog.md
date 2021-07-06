@@ -1,14 +1,17 @@
 
-Change log for PyCo
-===================
+Change log for Adhesion
+=======================
 
-v0.90.0 (???)
--------------
+v0.90.0 (210706)
+----------------
 
-- Dropped support for python3.5 and scipy < 0.16.0
-
-- Refactored PyCo code into three separate Python modules:
+- ENH: preconditionned contact mechanics in fourier space
+- MAINT: Dropped support for python3.5 and scipy < 0.16.0
+- MAINT: Refactored PyCo code into three separate Python modules:
   SurfaceTopography, ContactMechanics and Adhesion
+
+Change log for PyCo (previous name of the package)
+==================================================
 
 v0.57.0 (15May20)
 -----------------
