@@ -425,10 +425,12 @@ class SmoothContactSystem(SystemBase):
         _____
 
         Objective:
+
         .. math ::
-            min_u f = 1/2u_i*K_{ij}*u_j + \phi (u_{ij})\\
+
+            \min_u f = \frac{1}{2} u_i K_{ij} u_j + \phi (u_{ij})\\
             \\
-            gradient = K_{ij}*u_j + \phi^{\prime} which is, Force. \\
+            \nabla f = K_{ij} u_j + \phi^{\prime} \text{    which is the force} \\
 
         """
 
@@ -708,19 +710,21 @@ class SmoothContactSystem(SystemBase):
         formulated using,
 
         original problem:
+
         .. math ::
 
-            \frac{1}{2(nx*ny)} \tilde{u}\tilde{K}\tilde{u} +
+            \frac{1}{2(n_x n_y)} \tilde{u}\tilde{K} \bar{\tilde{u}} +
             \phi(F^{-1}(\tilde{u} - \tilde{h}))
 
         preconditioned problem:
+
         .. math ::
              \tilde{v} = \tilde{k}^{\frac{1}{2}} \tilde{u} \\
 
-             \frac{1}{2(nx*ny)} \tilde{v}\tilde{v} +
+             \frac{1}{2(n_x n_y)} \tilde{v}\bar{\tilde{v}} +
             \phi(F^{-1}(\frac{\tilde{v}}{\tilde{k}^{\frac{1}{2}}} - \tilde{h}))
 
-        we solve for variable \tilde{v}.
+        we solve for variable :math:`\tilde{v}`.
 
         Parameters:
         -----------
@@ -813,19 +817,22 @@ class SmoothContactSystem(SystemBase):
         formulated using, \\
 
         original problem:
+
         .. math ::
 
-            \frac{1}{2(nx*ny)} \tilde{u}\tilde{K}\tilde{u} +
+            \frac{1}{2(n_x n_y)} \tilde{u}\tilde{K} \bar{\tilde{u}} +
             \phi(F^{-1}(\tilde{u} - \tilde{h}))  \\
 
         preconditioned problem:
+
         .. math ::
+
              \tilde{v} = \tilde{k}^{\frac{1}{2}} \tilde{u} \\
 
-             \frac{1}{2(nx*ny)} \tilde{v}\tilde{v} +
+             \frac{1}{2(n_x n_y)} \tilde{v} \bar{\tilde{v}} +
             \phi(F^{-1}(\frac{\tilde{v}}{\tilde{k}^{\frac{1}{2}}} - \tilde{h}))
         \\
-        we solve for variable \tilde{v}.
+        we solve for variable :math:`\tilde{v}`.
 
         Parameters:
         -----------
