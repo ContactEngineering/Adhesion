@@ -482,7 +482,7 @@ class SmoothContactSystem(SystemBase):
 
         return hessp
 
-    def fourier_coefficients(self):
+    def _fourier_coefficients(self):
         """
         Returns the coefficients for elasticity matrix when working in fourier
         space for both 1D and 2D system.
@@ -570,7 +570,7 @@ class SmoothContactSystem(SystemBase):
 
         self.grad_k = np.zeros(self.substrate.nb_grid_pts)
 
-        coeff = self.fourier_coefficients()
+        coeff = self._fourier_coefficients()
 
         if mw:
             self.grad_k = disp_k * coeff
@@ -597,7 +597,7 @@ class SmoothContactSystem(SystemBase):
             self.engine.hcfft(self.real_buffer, self.fourier_buffer)
             interaction_force_float_k = self.fourier_buffer.array()[...].copy()
 
-            adh_coeffs = self.fourier_coefficients()
+            adh_coeffs = self._fourier_coefficients()
             interaction_force_float_k *= adh_coeffs
 
             if mw:
@@ -673,7 +673,7 @@ class SmoothContactSystem(SystemBase):
     #             self.interaction.evaluate(gap,
     #                                       curvature=True)
     #
-    #         coeff = self.fourier_coefficients()
+    #         coeff = self._fourier_coefficients()
     #
     #         el_hess_k = coeff @ coeff
     #         el_hess_k *= self.area_per_pt
