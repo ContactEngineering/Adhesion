@@ -34,7 +34,6 @@ import ContactMechanics
 import SurfaceTopography
 from ContactMechanics.Tools import compare_containers
 from ContactMechanics.Systems import IncompatibleResolutionError, SystemBase
-import muFFT
 
 
 class SmoothContactSystem(SystemBase):
@@ -75,7 +74,6 @@ class SmoothContactSystem(SystemBase):
         self.interaction_force = None
         self.heights_k = None
         self.engine = self.substrate.fftengine
-
 
         if hasattr(substrate.fftengine, "register_halfcomplex_field"):
             # avoids the initialization to fail if we use an fftengine without these hcffts implemnented
@@ -789,35 +787,19 @@ class SmoothContactSystem(SystemBase):
 
                 return (self.energy, -self.force_h.reshape(orig_shape))
         else:
-            def fun(disp_k):
-                raise Exception("I thought this is never called")
-                # pylint: disable=missing-docstring
-                disp_float_k = disp_k.copy()
-                gap_float_k = (disp_float_k / np.sqrt(
-                    self.stiffness_k * self.area_per_pt)) - \
-                    self.heights_k_float - offset_k
-
-                gap_k = self.substrate.float_to_k(gap_float_k)
-                self.substrate.fourier_buffer.array()[...] = \
-                    gap_k.copy()
-                self.substrate.fftengine.ifft(self.substrate.fourier_buffer,
-                                              self.substrate.real_buffer)
-
-                gap = self.substrate.real_buffer.array()[...].copy() \
-                    * self.substrate.fftengine.normalisation
-
-                return self.evaluate_k(disp_float_k, gap, offset, mw=True,
-                                       forces=True, logger=logger)[0]
+            raise NotImplementedError
 
         return fun
 
     def objective_k_float(self, offset, gradient=False, logger=None):
         r"""
-        This helper method interface to the evaluate_k() method without
-        preconditioning active. That is, it tries to solve a simpler problem
-        formulated using, \\
 
-        original problem:
+        Returns callable objective as needed by scipy minimizers.
+
+        The optimisation varialbe is the halfcomplex fourier transform of the gap.
+
+        This helper method interface to the evaluate_k() method without
+        preconditioning active.
 
         .. math ::
 
