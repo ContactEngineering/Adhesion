@@ -75,7 +75,7 @@ class SmoothContactSystem(SystemBase):
         self.heights_k = None
         self.engine = self.substrate.fftengine
 
-        if hasattr(substrate.fftengine, "register_halfcomplex_field"):
+        if hasattr(substrate.fftengine, "register_halfcomplex_field") and self.engine.communicator.size == 1:
             # avoids the initialization to fail if we use an fftengine without these hcffts implemnented
             # preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet
             self.real_buffer = self.engine.register_halfcomplex_field("hc-real-space", 1)
