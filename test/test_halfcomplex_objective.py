@@ -193,7 +193,7 @@ def test_preconditioned_hessian():
 
     system = SmoothContactSystem(substrate, inter, surface)
 
-    penetrations = np.linspace(-np.max(surface.heights()), 0, 10)
+    # penetrations = np.linspace(-np.max(surface.heights()), 0, 10)
     offset = 0  # penetrations[5]
 
     engine = muFFT.FFT(substrate.nb_grid_pts, fft='fftw',
@@ -241,8 +241,7 @@ def test_preconditioned_hessian():
         # What is the precision with which the hessian product is made ?
         import matplotlib.pyplot as plt
         fig, ax = plt.subplots()
-        ax.plot(hs, rms_errors / hs ** 2
-                , "+-")
+        ax.plot(hs, rms_errors / hs ** 2, "+-")
         ax.set_xscale("log")
         ax.set_yscale("log")
         ax.grid(True)

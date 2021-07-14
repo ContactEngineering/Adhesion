@@ -43,8 +43,6 @@ def test_sinewave_(k, nx, ny):
     sx = 2.45  # 30.0
     sy = 1.0
 
-    #nx = ny = 8
-
     # equivalent Young's modulus
     E_s = 1.0
 
