@@ -7,7 +7,7 @@ code with displacements as variables
 """
 
 from NuMPI.IO import load_npy
-from SurfaceTopography import NPYReader
+from SurfaceTopography.IO.NPY import NPYReader
 from SurfaceTopography.Generation import fourier_synthesis
 from Adhesion.Interactions import Exponential
 from ContactMechanics.Systems import NonSmoothContactSystem
