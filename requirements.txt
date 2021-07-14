@@ -6,7 +6,7 @@ scipy>=1.2.0
 netCDF4>=1.5.3
 h5py
 sphinx>=1.8.2
-git+https://github.com/IMTEK-Simulation/NuMPI.git@feat/20_optimizer
+NuMPI>=0.1.6
 pytest>=4
 pytest-flake8
 flake8
