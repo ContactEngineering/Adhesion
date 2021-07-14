@@ -7,6 +7,8 @@
 # https://doi.org/10.1007/s11249-017-0980-z
 import pytest
 from SurfaceTopography.Generation import fourier_synthesis
+from matplotlib import pyplot as plt
+
 from Adhesion.Interactions import Exponential
 from Adhesion.System import make_system, BoundedSmoothContactSystem
 import numpy as np
@@ -14,20 +16,24 @@ from NuMPI.Optimization import ccg_without_restart
 from NuMPI import MPI
 import scipy.optimize as optim
 
-np.random.seed(0)
-
-
 pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
                                 reason="tests only serial funcionalities, "
                                        "please execute with pytest")
 
 
 def test_bug_bench():
+    # Remark:
+    #
+    # This test fails right now.
+    # But my guess is that the contact is multistable and LBFGS-B and Bugnicourt sample different metastable states.
+    #
+    # For lower adhesion the two algorithms are in good agreement.
+
+    np.random.seed(0)
     # nondim we use
     Es = 1.
     # rms_curvature = 1.
     w = 1.
-
     n = 2048
 
     # Rc ** 2/3 (w / Es)**(1/3)
@@ -90,8 +96,9 @@ def test_bug_bench():
     assert sol.success, sol.message
     # sol_lbfgs = sol
     mask = sol.x == 0
-    print('lbfgsb frac ar. {}'.format(mask.sum() / (n * n)))
-    sol_lbfgs_smooth = sol.x
+    area_lbfgs = mask.sum()
+    print('lbfgsb frac ar. {}'.format(area_lbfgs / n ** 2))
+    sol_lbfgs = sol.x
     # iter_lbfgsb = sol.nfev
     # mean_val_lbfgs = np.mean(sol.x)
 
@@ -99,15 +106,28 @@ def test_bug_bench():
         system.primal_objective(penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=None,
-        gtol=gtol * max(Es * topo.rms_slope(), abs(
-            interaction.max_tensile)) * topo.area_per_pt,
+        gtol=gtol * max(Es * topo.rms_gradient(), abs(interaction.max_tensile)) * topo.area_per_pt,
         maxiter=1000)
 
     print(res.message, res.nit)
     assert res.success
     sol_bug = res.x
+    mask = sol_bug == 0
+    area_cg = mask.sum()
+    print('cg frac ar. {}'.format(area_cg / n ** 2))
 
-    print('min {} and max {} lbfgs'.format(np.min(sol_lbfgs_smooth), np.max(sol_lbfgs_smooth)))
+    print('min {} and max {} lbfgs'.format(np.min(sol_lbfgs), np.max(sol_lbfgs)))
     print('min {} and max {} bug'.format(np.min(sol_bug), np.max(sol_bug)))
 
-    np.testing.assert_allclose(sol_lbfgs_smooth, sol_bug, atol=1e-2)
+    fig, ax = plt.subplots()
+    ax.set_aspect("equal")
+
+    levels = np.linspace(0, np.max(sol_lbfgs), 5)
+    plt.colorbar(ax.contour(sol_lbfgs.reshape((n, n)), linewidths=0.1, levels=levels))
+    ax.contour(sol_bug.reshape((n, n)), linestyles="dashed", linewidths=0.1, levels=levels)
+
+    fig.savefig("gaps.pdf")
+
+    assert area_cg == area_lbfgs
+
+    np.testing.assert_allclose(sol_lbfgs, sol_bug, atol=1e-2)
