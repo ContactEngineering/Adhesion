@@ -5,13 +5,17 @@ from ContactMechanics import PeriodicFFTElasticHalfSpace
 from SurfaceTopography.Generation import fourier_synthesis
 from Adhesion.Interactions import RepulsiveExponential
 from Adhesion.System import make_system, SmoothContactSystem
+from NuMPI import MPI
+
+pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
+                                reason="tests only serial funcionalities, "
+                                       "please execute with pytest")
 
 
-# @pytest.mark.parametrize("nx, ny", [(15, 15),
-#                                     (8, 8),
-#                                     (9, 9),
-#                                     (113, 113)])
-
+@pytest.mark.parametrize("nx, ny", [(15, 15),
+                                    (8, 8),
+                                    (9, 9),
+                                    (113, 113)])
 @pytest.mark.parametrize("k", [(1, 0),
                                (0, 1),
                                (1, 2),
@@ -20,7 +24,7 @@ from Adhesion.System import make_system, SmoothContactSystem
                                (0, 2),
                                (4, 4),
                                (0, 4)])
-def test_sinewave_(k):
+def test_sinewave_(k, nx, ny):
     """
     for given sinusoidal displacements, compares the energies
     to the analytical solutions
@@ -39,7 +43,7 @@ def test_sinewave_(k):
     sx = 2.45  # 30.0
     sy = 1.0
 
-    nx = ny = 8
+    #nx = ny = 8
 
     # equivalent Young's modulus
     E_s = 1.0
