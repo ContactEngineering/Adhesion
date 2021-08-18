@@ -91,11 +91,11 @@ class LinearCorePotential(DecoratedPotential):
                 sol = scipy.optimize.root_scalar(
                     f, x0=self.r_ti,
                     fprime=fprime,
-                    options=dict(maxiter=50,
+                    options=dict(maxiter=4000,
                                  tol=htol / abs(fprime(self.r_ti)))
                     # this is the tolerance in |x - x0|
                     )
-                assert sol.converged, sol.message
+                assert sol.converged, sol.flag
                 self.r_ti = sol.root
             except FinfinityError as err:
                 # print("encountered infinity, make use of tweaky method")
@@ -119,7 +119,8 @@ class LinearCorePotential(DecoratedPotential):
                     left, self.r_ti,
                     xtol=1e-10 / abs(fprime(
                         self.r_ti)) * hardness,
-                    full_output=True)
+                    full_output=True,
+                    maxiter=1000)
                 # conversion from htol to xtol using the curvature
 
             # since the curvature was not necessarily close to
@@ -129,7 +130,7 @@ class LinearCorePotential(DecoratedPotential):
                 sol = scipy.optimize.root_scalar(
                     f, x0=self.r_ti,
                     fprime=fprime,
-                    options=dict(maxiter=50,
+                    options=dict(maxiter=1000,
                                  tol=1e-1 * htol / abs(
                                      fprime(
                                          self.r_ti)) * hardness)
@@ -204,7 +205,7 @@ class LinearCorePotential(DecoratedPotential):
                 dV if gradient else None,
                 ddV if curvature else None)
 
-    def _lin_pot(self, gap, pot=True, gradient=False, curvature=False):
+    def _lin_pot(self, gap, potential=True, gradient=False, curvature=False):
         """ Evaluates the linear part and its derivatives of the potential.
         Parameters:
         -----------
@@ -217,7 +218,7 @@ class LinearCorePotential(DecoratedPotential):
         curvature: bool, optional
             if true, returns second derivative (default False)
         """
-        V = None if pot is False else self.lin_part(gap)
+        V = None if potential is False else self.lin_part(gap)
         dV = None if gradient is False else self.lin_part[1]
         ddV = None if curvature is False else 0.
         return V, dV, ddV

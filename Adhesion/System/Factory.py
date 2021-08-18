@@ -35,14 +35,20 @@ def make_system(substrate, interaction, surface, communicator=MPI.COMM_WORLD,
     """
     Factory function for contact systems. The returned object is always
     of a subtype of SystemBase.
+
     Parameters:
     -----------
-    substrate   -- An instance of HalfSpace. Defines the solid mechanics in
-                   the substrate
-    interaction -- An instance of Interaction. Defines the contact formulation
-    surface     -- An instance of SurfaceTopography, defines the profile.
+    substrate : ContactMechanics.Substrate
+        Defines the solid mechanics in the substrate
+    interaction : Adhesion.Interaction
+        Defines the contact formulation
+    surface : SurfaceTopography.Topography
+        Defines the profile.
+
     Returns
     -------
+    system: child class of SystemBase
+
     """
 
     if interaction == "hardwall":
@@ -57,7 +63,7 @@ def make_system(substrate, interaction, surface, communicator=MPI.COMM_WORLD,
                                                physical_sizes=physical_sizes,
                                                **kwargs)
         # make shure the interaction has the correcrt communicator
-        interaction.pnp = Reduction(communicator)
+        interaction.reduction = Reduction(communicator)
         interaction.communicator = communicator
 
         return system_class(substrate, interaction, surface)
