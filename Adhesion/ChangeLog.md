@@ -5,7 +5,11 @@ Change log for Adhesion
 v0.90.0 (210706)
 ----------------
 
-- ENH: preconditionned contact mechanics in fourier space
+- ENH: preconditionned unconstrained contact mechanics in fourier space
+- ENH: use of bound constraint optimizer for adhesion
+- ENH: Powerlaw attractive interaction potential
+- ENH: Morse Potential
+- ENH: More analytical solutions for JKR contacts: stress intensity factors and derivatives 
 - MAINT: Dropped support for python3.5 and scipy < 0.16.0
 - MAINT: Refactored PyCo code into three separate Python modules:
   SurfaceTopography, ContactMechanics and Adhesion
