@@ -124,7 +124,6 @@ Usage
 
 The code is documented via Python's documentation strings that can be accesses via the `help` command or by appending a questions mark `?` in ipython/jupyter. There are two command line tools available that may be a good starting point. They are in the `commandline` subdirectory:
 
-- `hard_wall.py`: Command line front end for calculations with hard, impenetrable walls between rigid and elastic flat. This front end exclusively uses Polonsky & Keer's constrained conjugate gradient solver to find the deformation of the substrate under the additional contact constraints. Run `hard_wall.py --help` to get a list of command line options.
 - `soft_wall.py`: Command line front end for calculations with soft (possibly adhesive) interactions between rigid and elastic flat. This is a stub rather than a fully featured command line tool that can be used as a starting point for modified script. The present implementation is set up for a solution of Martin Müser's contact mechanics challenge.
 
 Compiling the documentation
@@ -136,6 +135,8 @@ Compiling the documentation
 Do just once, or if you have added/removed classes or methods. In case of the latter, be sure to remove the previous source before: ```rm -rf source/```
 - Build html files: ```make html```
 - The resulting html files can be found in the ```Adhesion/docs/_build/html/``` folder. Root is ```Adhesion/docs/_build/html/index.html```.
+
+For convenience, all these steps are implemented in `compile_doc.sh`.
 
 Funding
 -------
