@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to Adhesion’s documentation! &mdash; Adhesion 0.1.dev1850+g1960fbf documentation</title>
+  <title>Usage &mdash; Adhesion 0.1.dev1850+g1960fbf documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -15,10 +15,12 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Installation" href="installation.html" /> 
+    <link rel="next" title="Development" href="development.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -26,7 +28,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="#" class="icon icon-home"> Adhesion
+            <a href="index.html" class="icon icon-home"> Adhesion
           </a>
               <div class="version">
                 0.1.dev1850+g1960fbf
@@ -40,9 +42,15 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Notes</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#conventions">Conventions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#coordinate-system">Coordinate system</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to Adhesion</a></li>
 </ul>
@@ -59,17 +67,17 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">Adhesion</a>
+          <a href="index.html">Adhesion</a>
       </nav>
 
       <div class="wy-nav-content">
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="#" class="icon icon-home"></a> &raquo;</li>
-      <li>Welcome to Adhesion’s documentation!</li>
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Usage</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/usage.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -77,55 +85,40 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-adhesion-s-documentation">
-<h1>Welcome to Adhesion’s documentation!<a class="headerlink" href="#welcome-to-adhesion-s-documentation" title="Permalink to this headline"></a></h1>
-<p>Adhesive Contact mechanics with Python.
-This code implements computation of contact geometry and pressure
-of a rigid object on a flat elastic half-space.
-All calculations assume small deformations;
-in that limit, the contact of any two objects of arbitrary
-geometry and elastic moduli can be mapped on that of a
-rigid on an elastic flat.</p>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Notes</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage.html#conventions">Conventions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="development.html">Development</a></li>
-<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing to Adhesion</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#code-style">Code style</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#development-branches">Development branches</a></li>
-<li class="toctree-l2"><a class="reference internal" href="contributing.html#commits">Commits</a></li>
-</ul>
-</li>
-</ul>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="source/Adhesion.Interactions.html">Adhesion.Interactions package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/Adhesion.System.html">Adhesion.System package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="source/Adhesion.ReferenceSolutions.html">Adhesion.ReferenceSolutions package</a></li>
-</ul>
-</div>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline"></a></h1>
+  <section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline"></a></h1>
+<p>The code is documented via Python’s documentation strings that can be
+accesses via the <cite>help</cite> command
+or by appending a questions mark <cite>?</cite> in ipython/jupyter.
+There are two command line tools available that may be a good starting point.
+They are in the <cite>commandline</cite> subdirectory:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+<li><p><cite>soft_wall.py</cite>: Command line front end for calculations with soft (possibly adhesive) interactions between rigid and elastic flat. This is a stub rather than a fully featured command line tool that can be used as a starting point for modified script. The present implementation is set up for a solution of Martin Müser’s contact mechanics challenge.</p></li>
 </ul>
+<p>Have a look in the <cite>examples</cite> folder as well as in the tests.</p>
+<section id="conventions">
+<h2>Conventions<a class="headerlink" href="#conventions" title="Permalink to this headline"></a></h2>
+<section id="coordinate-system">
+<h3>Coordinate system<a class="headerlink" href="#coordinate-system" title="Permalink to this headline"></a></h3>
+<p>Definition of gap, heights and displacements</p>
+<img alt="_images/geometry_pdf_tex.svg" src="_images/geometry_pdf_tex.svg" /><p><span class="math notranslate nohighlight">\(h_0(x)\)</span> is the content of the topography.</p>
+<p><span class="math notranslate nohighlight">\(\delta\)</span>: rigid body penetration</p>
+<p><span class="math notranslate nohighlight">\(h(x) = \delta + h_0(x)\)</span> is the height of the indenter with respect to the surface of the undeformed halfspace</p>
+<p><span class="math notranslate nohighlight">\(u(x)\)</span> displacement of the halfspace</p>
+<p><span class="math notranslate nohighlight">\(g(x) = u(x) - h(x) = u(x) - (\delta + h_0(x))\)</span>: gap</p>
+<p>The simulation models the indentation of an elastic halfspace (flat) with a rigid indenter whose geometry is given by the topography.</p>
+<p>In the picture above the maximum value of the topography <span class="math notranslate nohighlight">\(h_0(x)\)</span> is 0. First contact occurs at <span class="math notranslate nohighlight">\(\delta = 0 \)</span> increases.</p>
+<p>If <span class="math notranslate nohighlight">\(h_0(x)\)</span> contains positive values the first contact will occur at <span class="math notranslate nohighlight">\(\delta &lt; 0\)</span></p>
+</section>
+</section>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="installation.html" class="btn btn-neutral float-right" title="Installation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="installation.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="development.html" class="btn btn-neutral float-right" title="Development" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

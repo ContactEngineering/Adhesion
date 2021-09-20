@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adhesion.Interactions.Lj93 &mdash; Adhesion 0.1.dev1850+g1960fbf documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Adhesion
+          </a>
+              <div class="version">
+                0.1.dev1850+g1960fbf
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to Adhesion</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.Interactions.html">Adhesion.Interactions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.System.html">Adhesion.System package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.ReferenceSolutions.html">Adhesion.ReferenceSolutions package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Adhesion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>Adhesion.Interactions.Lj93</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Adhesion.Interactions.Lj93</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright 2020 Antoine Sanner</span>
+<span class="c1">#           2020 Lars Pastewka</span>
+<span class="c1">#</span>
+<span class="c1"># ### MIT license</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c1"># all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">9-3 Lennard-Jones potential for wall interactions</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="k">import</span> <span class="n">Potential</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">NuMPI</span> <span class="k">import</span> <span class="n">MPI</span>
+
+
+<div class="viewcode-block" id="LJ93"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Lj93.LJ93">[docs]</a><span class="k">class</span> <span class="nc">LJ93</span><span class="p">(</span><span class="n">Potential</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; 9-3 Lennard-Jones potential with optional cutoff radius.</span>
+
+<span class="sd">        9-3 Lennard-Jones potential:</span>
+<span class="sd">        V_l (r) = ε[ 2/15 (σ/r)**9 - (σ/r)**3]</span>
+
+
+<span class="sd">                         ⎛   3       9⎞</span>
+<span class="sd">                         ⎜  σ     2⋅σ ⎟</span>
+<span class="sd">            V_l(r) =   ε⋅⎜- ── + ─────⎟</span>
+<span class="sd">                         ⎜   3       9⎟</span>
+<span class="sd">                         ⎝  r    15⋅r ⎠</span>
+
+<span class="sd">                         ⎛   3       9⎞</span>
+<span class="sd">                         ⎜3⋅σ     6⋅σ ⎟</span>
+<span class="sd">            V_l&#39;(r) =  ε⋅⎜──── - ─────⎟</span>
+<span class="sd">                         ⎜  4       10⎟</span>
+<span class="sd">                         ⎝ r     5⋅r  ⎠</span>
+
+<span class="sd">                         ⎛      3       9⎞</span>
+<span class="sd">                         ⎜  12⋅σ    12⋅σ ⎟</span>
+<span class="sd">            V_l&#39;&#39;(r) = ε⋅⎜- ───── + ─────⎟</span>
+<span class="sd">                         ⎜     5      11 ⎟</span>
+<span class="sd">                         ⎝    r      r   ⎠</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;lj-93&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        epsilon: float</span>
+<span class="sd">            Lennard-Jones potential well ε</span>
+<span class="sd">        sigma: float</span>
+<span class="sd">            Lennard-Jones distance parameter σ</span>
+<span class="sd">        communicator: not used</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">epsilon</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">sigma</span><span class="p">)</span>
+        <span class="n">Potential</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="n">communicator</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">superstate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">(</span><span class="n">superstate</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;Potential &#39;</span><span class="si">{0.name}</span><span class="s2">&#39;: ε = </span><span class="si">{0.eps}</span><span class="s2">, σ = </span><span class="si">{0.sig}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">r_min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;convenience function returning the location of the energy minimum</span>
+
+<span class="sd">                6 ___  5/6</span>
+<span class="sd">        r_min = ╲╱ 2 ⋅5   ⋅σ</span>
+<span class="sd">                ────────────</span>
+<span class="sd">                     5</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="mi">5</span><span class="o">**</span><span class="mi">5</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="mi">6</span><span class="p">)</span><span class="o">/</span><span class="mf">5.</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">r_infl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;convenience function returning the location of the potential&#39;s</span>
+<span class="sd">        inflection point (if applicable)</span>
+
+<span class="sd">        r_infl = σ</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">sig</span>
+
+<div class="viewcode-block" id="LJ93.evaluate"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Lj93.LJ93.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span>
+
+        <span class="n">V</span> <span class="o">=</span> <span class="n">dV</span> <span class="o">=</span> <span class="n">ddV</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">sig_r3</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sig</span> <span class="o">/</span> <span class="n">r</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span>
+        <span class="n">sig_r9</span> <span class="o">=</span> <span class="n">sig_r3</span> <span class="o">**</span> <span class="mi">3</span>
+
+        <span class="k">if</span> <span class="n">potential</span><span class="p">:</span>
+            <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">*</span> <span class="p">(</span><span class="mf">2.</span> <span class="o">/</span> <span class="mi">15</span> <span class="o">*</span> <span class="n">sig_r9</span> <span class="o">-</span> <span class="n">sig_r3</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gradient</span> <span class="ow">or</span> <span class="n">curvature</span><span class="p">:</span>
+            <span class="n">eps_r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eps</span> <span class="o">/</span> <span class="n">r</span>
+        <span class="k">if</span> <span class="n">gradient</span><span class="p">:</span>
+            <span class="n">dV</span> <span class="o">=</span> <span class="o">-</span> <span class="n">eps_r</span> <span class="o">*</span> <span class="p">(</span><span class="mf">6.</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">sig_r9</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">sig_r3</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">curvature</span><span class="p">:</span>
+            <span class="n">ddV</span> <span class="o">=</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">eps_r</span> <span class="o">/</span> <span class="n">r</span> <span class="o">*</span> <span class="p">(</span><span class="n">sig_r9</span> <span class="o">-</span> <span class="n">sig_r3</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">dV</span><span class="p">,</span> <span class="n">ddV</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2015-2020 The Authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

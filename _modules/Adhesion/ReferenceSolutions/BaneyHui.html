@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adhesion.ReferenceSolutions.BaneyHui &mdash; Adhesion 0.1.dev1850+g1960fbf documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Adhesion
+          </a>
+              <div class="version">
+                0.1.dev1850+g1960fbf
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to Adhesion</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.Interactions.html">Adhesion.Interactions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.System.html">Adhesion.System package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.ReferenceSolutions.html">Adhesion.ReferenceSolutions package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Adhesion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>Adhesion.ReferenceSolutions.BaneyHui</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Adhesion.ReferenceSolutions.BaneyHui</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright 2020 Antoine Sanner</span>
+<span class="c1">#           2016, 2020 Lars Pastewka</span>
+<span class="c1">#</span>
+<span class="c1"># ### MIT license</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c1"># all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Maugis-Dugdale (cohesive zone) model for a cylinder contacting an</span>
+<span class="sd">elastic flat.</span>
+<span class="sd">See: J.M. Baney, C.-Y. Hui, J. Adhesion Sci. Technol. 11, 393 (1997)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">Adhesion.ReferenceSolutions.MaugisDugdale</span> <span class="k">import</span> <span class="n">afindroot</span>
+
+
+<span class="c1">###</span>
+
+<div class="viewcode-block" id="maugis_parameter"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.BaneyHui.maugis_parameter">[docs]</a><span class="k">def</span> <span class="nf">maugis_parameter</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">elastic_modulus</span><span class="p">,</span> <span class="n">work_of_adhesion</span><span class="p">,</span>
+                     <span class="n">cohesive_stress</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">cohesive_stress</span> <span class="o">/</span> <span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">elastic_modulus</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">/</span> <span class="n">radius</span>
+    <span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span></div>
+
+
+<span class="c1"># Dimensionless quantities</span>
+
+<div class="viewcode-block" id="fm"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.BaneyHui.fm">[docs]</a><span class="k">def</span> <span class="nf">fm</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># This is Eq. (23) from Baney and Hui&#39;s paper</span>
+    <span class="k">return</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">mu</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">mu</span><span class="p">))</span> <span class="o">+</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span>
+                <span class="n">mu</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">m</span> <span class="o">+</span> <span class="n">mu</span><span class="p">)</span> <span class="o">-</span> <span class="n">m</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">m</span><span class="p">))</span> <span class="o">-</span> <span class="mi">1</span></div>
+
+
+<span class="k">def</span> <span class="nf">_cohesive_zone</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the width of the cohesive zone m=b/a, where b is the cohesive zone</span>
+<span class="sd">    edge and a is the contact radius.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : array_like</span>
+<span class="sd">        Dimensionless contact radius</span>
+<span class="sd">    lam : float</span>
+<span class="sd">        Maugis parameter</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    P : array</span>
+<span class="sd">        Cohesive zone width</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">afindroot</span><span class="p">(</span><span class="n">fm</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1e12</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">return_m</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Compute load for the Maugis-Dugdale model given the dimensionless contact</span>
+<span class="sd">    radius and Maugis parameter.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    a : array_like</span>
+<span class="sd">        Dimensionless contact radius</span>
+<span class="sd">    lam : float</span>
+<span class="sd">        Maugis parameter</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    P : array</span>
+<span class="sd">        Non-dimensional load</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">_cohesive_zone</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">a</span> <span class="o">-</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="n">mu</span>
+    <span class="k">if</span> <span class="n">return_m</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">P</span><span class="p">,</span> <span class="n">m</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">P</span>
+
+
+<span class="k">def</span> <span class="nf">_contact_radius</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">return_cohesive_zone</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">afindroot</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">:</span> <span class="n">_load</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span> <span class="o">-</span> <span class="n">P</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">,</span> <span class="mf">1e12</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">return_cohesive_zone</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span><span class="p">,</span> <span class="n">_cohesive_zone</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">a</span>
+
+
+<span class="k">def</span> <span class="nf">_pressure</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">_cohesive_zone</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span>
+    <span class="n">p</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span> <span class="o">-</span> <span class="n">lam</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">m</span> <span class="o">*</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">])))</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">m</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">lam</span> <span class="o">/</span> <span class="mi">4</span>
+    <span class="k">return</span> <span class="n">p</span>
+
+
+<span class="c1"># Dimensional quantities</span>
+
+<div class="viewcode-block" id="load"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.BaneyHui.load">[docs]</a><span class="k">def</span> <span class="nf">load</span><span class="p">(</span><span class="n">contact_radius</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">elastic_modulus</span><span class="p">,</span> <span class="n">work_of_adhesion</span><span class="p">,</span>
+         <span class="n">cohesive_stress</span><span class="p">):</span>
+    <span class="n">lam</span> <span class="o">=</span> <span class="n">maugis_parameter</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">elastic_modulus</span><span class="p">,</span> <span class="n">work_of_adhesion</span><span class="p">,</span>
+                           <span class="n">cohesive_stress</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">contact_radius</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">elastic_modulus</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">_load</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">P</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">elastic_modulus</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span>
+                <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2015-2020 The Authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

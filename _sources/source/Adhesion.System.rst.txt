@@ -1,0 +1,45 @@
+Adhesion.System package
+=======================
+
+Submodules
+----------
+
+Adhesion.System.Factory module
+------------------------------
+
+.. automodule:: Adhesion.System.Factory
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Adhesion.System.PlasticSystemSpecialisations module
+---------------------------------------------------
+
+.. automodule:: Adhesion.System.PlasticSystemSpecialisations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Adhesion.System.SmoothSystemSpecialisations module
+--------------------------------------------------
+
+.. automodule:: Adhesion.System.SmoothSystemSpecialisations
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Adhesion.System.Systems module
+------------------------------
+
+.. automodule:: Adhesion.System.Systems
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: Adhesion.System
+   :members:
+   :undoc-members:
+   :show-inheritance:

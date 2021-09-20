@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adhesion.System.SmoothSystemSpecialisations &mdash; Adhesion 0.1.dev1850+g1960fbf documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Adhesion
+          </a>
+              <div class="version">
+                0.1.dev1850+g1960fbf
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to Adhesion</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.Interactions.html">Adhesion.Interactions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.System.html">Adhesion.System package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.ReferenceSolutions.html">Adhesion.ReferenceSolutions package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Adhesion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>Adhesion.System.SmoothSystemSpecialisations</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Adhesion.System.SmoothSystemSpecialisations</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright 2018, 2020 Antoine Sanner</span>
+<span class="c1">#           2016, 2018, 2020 Lars Pastewka</span>
+<span class="c1">#           2015-2016 Till Junge</span>
+<span class="c1">#           2015 junge@Festwemse-3</span>
+<span class="c1">#</span>
+<span class="c1"># ### MIT license</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c1"># all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">implements the periodic and non-periodic smooth contact systems</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+
+<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="k">import</span> <span class="n">SmoothContactSystem</span>
+<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="k">import</span> <span class="n">IncompatibleResolutionError</span>
+<span class="kn">from</span> <span class="nn">SurfaceTopography</span> <span class="k">import</span> <span class="n">Topography</span>
+<span class="kn">import</span> <span class="nn">Adhesion</span>
+<span class="kn">import</span> <span class="nn">ContactMechanics</span>
+
+
+<span class="c1"># convenient container for storing correspondences betwees small and large</span>
+<span class="c1"># system</span>
+<span class="n">BndSet</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;BndSet&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;large&#39;</span><span class="p">,</span> <span class="s1">&#39;small&#39;</span><span class="p">))</span>
+
+
+<div class="viewcode-block" id="FastSmoothContactSystem"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem">[docs]</a><span class="k">class</span> <span class="nc">FastSmoothContactSystem</span><span class="p">(</span><span class="n">SmoothContactSystem</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This proxy class tries to take advantage of the system-physical_sizes</span>
+<span class="sd">    independence of non-periodic FFT-solved systems by determining the required</span>
+<span class="sd">    minimum system physical_sizes, encapsulating a SmoothContactSystem of</span>
+<span class="sd">    that physical_sizes and run it almost transparently instead of the full</span>
+<span class="sd">    system.</span>
+<span class="sd">    It&#39;s almost transparent, because by its nature, the small system does not</span>
+<span class="sd">    compute displacements everywhere the large system exists. Therefore, for</span>
+<span class="sd">    full-domain output, an extra evaluation step must be taken. But since using</span>
+<span class="sd">    the small system significantly increases optimisation speed, this tradeoff</span>
+<span class="sd">    seems to be well worth the trouble.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># declare that this class is only a proxy</span>
+    <span class="n">_proxyclass</span> <span class="o">=</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.FreeBoundaryError"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.FreeBoundaryError">[docs]</a>    <span class="k">class</span> <span class="nc">FreeBoundaryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        called when the supplied system cannot be computed with the current</span>
+<span class="sd">        constraints</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">disp</span><span class="p">):</span>
+            <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">disp</span> <span class="o">=</span> <span class="n">disp</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.BabushkaBoundaryError"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.BabushkaBoundaryError">[docs]</a>    <span class="k">class</span> <span class="nc">BabushkaBoundaryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Called when the choosen physical_sizes of the Babushka System</span>
+<span class="sd">        had an Influence on the Solution. In the Future, one may catch</span>
+<span class="sd">        this error, increase the margin and restart minimization</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Represents a contact problem</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        substrate: An instance of HalfSpace.</span>
+<span class="sd">            Defines the solid mechanics in the substrate</span>
+<span class="sd">        interaction: An instance of Interaction.</span>
+<span class="sd">            Defines the contact</span>
+<span class="sd">            formulation. If this computes interaction energies,</span>
+<span class="sd">            forces etc, these are supposed to be expressed per unit</span>
+<span class="sd">            area in whatever units you use. The conversion is</span>
+<span class="sd">            performed by the system</span>
+<span class="sd">        surface:     An instance of SurfaceTopography, defines the profile.</span>
+<span class="sd">        margin:      (default 4) safety margin (in pixels) around the initial</span>
+<span class="sd">                     contact area bounding box</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+        <span class="c1"># create empty encapsulated system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">margin</span> <span class="o">=</span> <span class="n">margin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># coordinates of the bottom-right corner of the small scale domain in</span>
+        <span class="c1"># the large scale domain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__babushka_offset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># This is the vertical offset between surface and substrate. Determined</span>
+        <span class="c1"># indentation depth. This class needs to keep track of the offsets for</span>
+        <span class="c1"># which its babuška has been evaluated, in order to have the ability</span>
+        <span class="c1"># to interpolate the babuška-results onto the domain</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;Class &#39;</span><span class="si">{}</span><span class="s2">&#39; is not fully implemented for 1D. Please help!&quot;</span>
+                 <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.shape_minimisation_input"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.shape_minimisation_input">[docs]</a>    <span class="k">def</span> <span class="nf">shape_minimisation_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        For minimisation of smart systems, the initial guess array (e.g.</span>
+<span class="sd">        displacement) may have a non-intuitive shape and physical_sizes</span>
+<span class="sd">        (The problem physical_sizes</span>
+<span class="sd">        may be decreased, as for free, non-periodic systems, or increased as</span>
+<span class="sd">        with augmented-lagrangian-type issues). Use the output of this function</span>
+<span class="sd">        as argument x0 for scipy minimisation functions. Also, if your initial</span>
+<span class="sd">        guess has a shape that makes no sense, this will tell you before you</span>
+<span class="sd">        get caught in debugging scipy-code</span>
+
+<span class="sd">        Arguments:</span>
+<span class="sd">        in_array -- array with the initial guess. has the intuitive shape you</span>
+<span class="sd">                    think it has</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_domain_grid_pts</span><span class="p">)</span> <span class="o">==</span> <span class="n">in_array</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_babushka_array</span><span class="p">(</span><span class="n">in_array</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_domain_grid_pts</span><span class="p">)</span> <span class="o">==</span>
+              <span class="n">in_array</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">in_array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="n">IncompatibleResolutionError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.check_margins"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.check_margins">[docs]</a>    <span class="k">def</span> <span class="nf">check_margins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Checks whether the safety margin is sufficient (i.e. the outer ring of</span>
+<span class="sd">        the force array equals zero</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">is_ok</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_ok</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deproxified</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">FreeBoundaryError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;Small system probably too small, increase the margins and &quot;</span>
+                 <span class="s2">&quot;reevaluate self.objective(...).&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">disp</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.check_margins_babushka"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.check_margins_babushka">[docs]</a>    <span class="k">def</span> <span class="nf">check_margins_babushka</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Inspired from check_margins but acts on the babushka System:</span>
+<span class="sd">        When the pressures are non-zero at the boundary of the babushka-area,</span>
+<span class="sd">        boundaries have an effect on the Solution</span>
+<span class="sd">        this raises an error because the area has been chosen too small and the</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">is_ok</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="c1"># Sometimes, the Topograsphy.__h is a masked array,</span>
+            <span class="c1"># where the masked values represent infinite heights</span>
+            <span class="c1"># At this points there is no interaction</span>
+
+            <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span>
+                                  <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span>
+                                  <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span>
+                                  <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+            <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span>
+                                  <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_ok</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deproxified</span><span class="p">()</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">BabushkaBoundaryError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;Babushka Area has been chosen too small: &quot;</span>
+                 <span class="s2">&quot;Pressure is non-zero at the bounds of the Babushka System&quot;</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.handles"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.handles">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">handles</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span> <span class="n">interaction_type</span><span class="p">,</span> <span class="n">surface_type</span><span class="p">,</span>
+                <span class="n">is_domain_decomposed</span><span class="p">):</span>
+        <span class="n">is_ok</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># any periodic type of substrate formulation should do</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span>
+                            <span class="n">ContactMechanics</span><span class="o">.</span><span class="n">Substrate</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">is_ok</span><span class="p">:</span>
+            <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">substrate_type</span><span class="o">.</span><span class="n">is_periodic</span><span class="p">()</span>
+        <span class="c1"># only soft interactions allowed</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">interaction_type</span><span class="p">,</span>
+                            <span class="n">Adhesion</span><span class="o">.</span><span class="n">SoftWall</span><span class="p">)</span>
+
+        <span class="c1"># any surface should do</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">surface_type</span><span class="p">,</span>
+                            <span class="n">Topography</span><span class="p">)</span>
+
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="ow">not</span> <span class="n">is_domain_decomposed</span>
+        <span class="k">return</span> <span class="n">is_ok</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.objective"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.objective">[docs]</a>    <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">disp_scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        See super().objective for general description this method&#39;s purpose.</span>
+<span class="sd">        Difference for this class wrt &#39;dumb&#39; systems:</span>
+<span class="sd">        Needs an initial guess for the displacement field in order to estimate</span>
+<span class="sd">        the contact area. returns both the objective and the adapted ininial</span>
+<span class="sd">        guess as a tuple</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        offset: float</span>
+<span class="sd">            determines indentation depth</span>
+<span class="sd">        gradient: bool, optional</span>
+<span class="sd">            whether the gradient is supposed to be used (default False)</span>
+<span class="sd">        disp0: ndarray of float, optional</span>
+<span class="sd">            initial guess for displacement field. If</span>
+<span class="sd">            not chosen appropriately, results may be unreliable. (default zero)</span>
+<span class="sd">        disp_scale : float, optional</span>
+<span class="sd">            (default 1.) allows to specify a scaling of the</span>
+<span class="sd">            dislacement before evaluation. This can be necessary when</span>
+<span class="sd">            using dumb minimizers with hardcoded convergence criteria</span>
+<span class="sd">            such as scipy&#39;s L-BFGS-B.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_babushka</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="p">,</span> <span class="n">disp_scale</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">objective</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">disp_scale</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.create_babushka"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.create_babushka">[docs]</a>    <span class="k">def</span> <span class="nf">create_babushka</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">disp_scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create a (much smaller) system with just the contacting patch plus the</span>
+<span class="sd">        margin</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># this class needs to remember its offset since the evaluate method</span>
+        <span class="c1"># does not accept it as argument anymore</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="k">if</span> <span class="n">disp0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">disp0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_domain_grid_pts</span><span class="p">)</span>
+        <span class="n">gap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_gap</span><span class="p">(</span><span class="n">disp_scale</span><span class="o">*</span><span class="n">disp0</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="n">contact</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">gap</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction</span><span class="o">.</span><span class="n">cutoff_radius</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">contact</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">contact</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">gap</span><span class="p">),</span> <span class="n">gap</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="c1"># Lower bounds by dimension of the indices of contacting cells</span>
+        <span class="n">bnd_lo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">contact</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># Upper bounds by dimension of the indices of contacting cells</span>
+        <span class="n">bnd_up</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">contact</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__babushka_offset</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">bnd</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">margin</span> <span class="k">for</span> <span class="n">bnd</span> <span class="ow">in</span> <span class="n">bnd_lo</span><span class="p">)</span>
+        <span class="n">sm_res</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">hi</span><span class="o">-</span><span class="n">lo</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">margin</span> <span class="k">for</span> <span class="p">(</span><span class="n">hi</span><span class="p">,</span> <span class="n">lo</span><span class="p">)</span> <span class="ow">in</span>
+                        <span class="nb">zip</span><span class="p">(</span><span class="n">bnd_up</span><span class="p">,</span> <span class="n">bnd_lo</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">bnd</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">bnd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__babushka_offset</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">FreeBoundaryError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;With the current margin of </span><span class="si">{}</span><span class="s2">, the system overlaps the lower&quot;</span>
+                 <span class="s2">&quot; bounds by </span><span class="si">{}</span><span class="s2">. Total nb_grid_pts is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                     <span class="bp">self</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__babushka_offset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">),</span>
+                <span class="n">disp0</span><span class="p">)</span>  <span class="c1"># nopep8</span>
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">res</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__babushka_offset</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">res</span>
+               <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sm_res</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">FreeBoundaryError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;With the current margin of </span><span class="si">{}</span><span class="s2">, the system overlaps the upper&quot;</span>
+                 <span class="s2">&quot; bounds by </span><span class="si">{}</span><span class="s2">. Total nb_grid_pts is </span><span class="si">{}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">margin</span><span class="p">,</span>
+                    <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__babushka_offset</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                          <span class="o">+</span> <span class="n">res</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                          <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">res</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sm_res</span><span class="p">)),</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">),</span> <span class="n">disp0</span><span class="p">)</span>  <span class="c1"># nopep8</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">compute_babushka_bounds</span><span class="p">(</span><span class="n">sm_res</span><span class="p">)</span>
+        <span class="n">sm_surf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_babushka_array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">heights</span><span class="p">(),</span>
+                                           <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">sm_res</span><span class="p">))</span>
+
+        <span class="n">sm_substrate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">spawn_child</span><span class="p">(</span><span class="n">sm_res</span><span class="p">)</span>
+        <span class="n">sm_surface</span> <span class="o">=</span> <span class="n">Topography</span><span class="p">(</span><span class="n">sm_surf</span><span class="p">,</span> <span class="n">sm_surf</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="c1"># It is necessary to copy the interaction, or else deproxifying an</span>
+        <span class="c1"># instance of this class changes the babushka!</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span> <span class="o">=</span> <span class="n">SmoothContactSystem</span><span class="p">(</span>
+            <span class="n">sm_substrate</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction</span><span class="p">),</span> <span class="n">sm_surface</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.compute_normal_force"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.compute_normal_force">[docs]</a>    <span class="k">def</span> <span class="nf">compute_normal_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">interaction_force</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.callback"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.callback">[docs]</a>    <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.evaluate"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disp</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">pot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+            <span class="s2">&quot;This proxy-class cannot be evaluated. If you do not understand &quot;</span>
+            <span class="s2">&quot;this, use the base-class instead&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.deproxified"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.deproxified">[docs]</a>    <span class="k">def</span> <span class="nf">deproxified</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Extrapolates the state of the babushka system onto the proxied sytem</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_full_array</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_full_array</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">energy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">interaction</span><span class="o">.</span><span class="n">energy</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">energy</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">-=</span> \
+              <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span>   <span class="c1"># nopep8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">evaluate_disp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">disp</span></div>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.compute_babushka_bounds"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.compute_babushka_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">compute_babushka_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">babushka_nb_grid_pts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        returns a list of tuples that contain the equivalent slices in the</span>
+<span class="sd">        small and the large array. It differentiates between nb_grid_pts and</span>
+<span class="sd">        nb_domain_grid_pts.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        babushka_nb_grid_pts -- nb_grid_pts of smaller scale</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="nf">boundary_generator</span><span class="p">():</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            computes slices for the boundaries. helps translating between large</span>
+<span class="sd">            and small arrays using copy-less ndarray views</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="n">sm_res</span> <span class="o">=</span> <span class="n">babushka_nb_grid_pts</span>
+            <span class="n">lg_res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">sm_slice</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="nb">slice</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">sm_res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">sm_res</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                                      <span class="nb">slice</span><span class="p">(</span><span class="n">j</span><span class="o">*</span><span class="n">sm_res</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">sm_res</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+                    <span class="n">lg_slice</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span>
+                        <span class="nb">slice</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">lg_res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">__babushka_offset</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                              <span class="n">i</span><span class="o">*</span><span class="n">lg_res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">sm_res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">__babushka_offset</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+                        <span class="nb">slice</span><span class="p">(</span><span class="n">j</span> <span class="o">*</span> <span class="n">lg_res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">__babushka_offset</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                              <span class="n">j</span> <span class="o">*</span> <span class="n">lg_res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">sm_res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                              <span class="bp">self</span><span class="o">.</span><span class="n">__babushka_offset</span><span class="p">[</span><span class="mi">1</span><span class="p">])))</span>
+                    <span class="k">yield</span> <span class="n">BndSet</span><span class="p">(</span><span class="n">large</span><span class="o">=</span><span class="n">lg_slice</span><span class="p">,</span> <span class="n">small</span><span class="o">=</span><span class="n">sm_slice</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">bnd</span> <span class="k">for</span> <span class="n">bnd</span> <span class="ow">in</span> <span class="n">boundary_generator</span><span class="p">()))</span></div>
+
+    <span class="k">def</span> <span class="nf">_get_babushka_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_array</span><span class="p">,</span> <span class="n">babushka_array</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        returns the equivalent small-scale array representation of a given</span>
+<span class="sd">        large-scale array. In the case of nb_domain_grid_pts arrays, this</span>
+<span class="sd">        is a copy. Else a view.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        full_array     -- large-scale input array</span>
+<span class="sd">        babushka_array -- optional small-scale output array to overwrite</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># pylint: disable=unused-argument</span>
+        <span class="k">def</span> <span class="nf">nb_domain_grid_pts</span><span class="p">():</span>
+            <span class="s2">&quot;used when arrays correspond to the substrate&quot;</span>
+            <span class="k">nonlocal</span> <span class="n">babushka_array</span>
+            <span class="k">if</span> <span class="n">babushka_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">babushka_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_domain_grid_pts</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">bnd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">:</span>
+                <span class="n">babushka_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">small</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">large</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">babushka_array</span>
+
+        <span class="k">def</span> <span class="nf">normal_nb_grid_pts</span><span class="p">():</span>
+            <span class="s2">&quot;used when arrays correspond to the interaction or the surface&quot;</span>
+            <span class="k">nonlocal</span> <span class="n">babushka_array</span>
+            <span class="k">if</span> <span class="n">babushka_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">babushka_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+            <span class="n">bnd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">babushka_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">small</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">large</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">babushka_array</span>
+        <span class="k">if</span> <span class="n">full_array</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">normal_nb_grid_pts</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">nb_domain_grid_pts</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_get_full_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">babushka_array</span><span class="p">,</span> <span class="n">full_array</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        returns the equivalent large-scale array representation of a given</span>
+<span class="sd">        Small-scale array.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        full_array     -- optional large-scale output array to overwrite</span>
+<span class="sd">        babushka_array -- small-scale input array</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># pylint: disable=unused-argument</span>
+        <span class="k">def</span> <span class="nf">nb_domain_grid_pts</span><span class="p">():</span>
+            <span class="s2">&quot;used when arrays correspond to the substrate&quot;</span>
+            <span class="k">nonlocal</span> <span class="n">full_array</span>
+            <span class="k">if</span> <span class="n">full_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">full_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_domain_grid_pts</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">bnd</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">:</span>
+                <span class="n">full_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">large</span><span class="p">]</span> <span class="o">=</span> <span class="n">babushka_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">small</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">full_array</span>
+
+        <span class="k">def</span> <span class="nf">normal_nb_grid_pts</span><span class="p">():</span>
+            <span class="s2">&quot;used when arrays correspond to the interaction or the surface&quot;</span>
+            <span class="k">nonlocal</span> <span class="n">full_array</span>
+            <span class="k">if</span> <span class="n">full_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">full_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+            <span class="n">bnd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">full_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">large</span><span class="p">]</span> <span class="o">=</span> <span class="n">babushka_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">small</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">full_array</span>
+
+        <span class="k">if</span> <span class="n">babushka_array</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">normal_nb_grid_pts</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">nb_domain_grid_pts</span><span class="p">()</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.minimize_proxy"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.minimize_proxy">[docs]</a>    <span class="k">def</span> <span class="nf">minimize_proxy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;L-BFGS-B&#39;</span><span class="p">,</span>
+                       <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lbounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ubounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                       <span class="n">tol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">disp_scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                       <span class="n">deproxify_everytime</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Convenience function. Eliminates boilerplate code for most minimisation</span>
+<span class="sd">        problems by encapsulating the use of scipy.minimize for common default</span>
+<span class="sd">        options. In the case of smart proxy systems, this may also encapsulate</span>
+<span class="sd">        things like dynamics computation of safety margins, extrapolation of</span>
+<span class="sd">        results onto the proxied system, etc.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        offset     -- determines indentation depth</span>
+<span class="sd">        disp0      -- (default zero) initial guess for displacement field. If</span>
+<span class="sd">                      not chosen appropriately, results may be unreliable.</span>
+<span class="sd">        method     -- (defaults to L-BFGS-B, see scipy documentation). Be sure</span>
+<span class="sd">                      to choose method that can handle high-dimensional</span>
+<span class="sd">                      parameter spaces.</span>
+<span class="sd">        options    -- (default None) options to be passed to the minimizer</span>
+<span class="sd">                      method</span>
+<span class="sd">        gradient   -- (default True) whether to use the gradient or not</span>
+<span class="sd">        tol        -- (default None) tolerance for termination. For detailed</span>
+<span class="sd">                      control, use solver-specific options.</span>
+<span class="sd">        callback   -- (default None) callback function to be at each iteration</span>
+<span class="sd">                      as callback(disp_k) where disp_k is the current</span>
+<span class="sd">                      displacement vector. Instead of a callable, it can be set</span>
+<span class="sd">                      to &#39;True&#39;, in which case the system&#39;s default callback</span>
+<span class="sd">                      function is called.</span>
+<span class="sd">        disp_scale -- (default 1.) allows to specify a scaling of the</span>
+<span class="sd">                      dislacement before evaluation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=arguments-differ</span>
+        <span class="n">fun</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">objective</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span>
+                             <span class="n">disp_scale</span><span class="o">=</span><span class="n">disp_scale</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">disp0</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">disp0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_domain_grid_pts</span><span class="p">)</span>
+        <span class="n">disp0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_minimisation_input</span><span class="p">(</span><span class="n">disp0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">use_callback</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="n">gradient</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">callback</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">use_callback</span><span class="p">(</span><span class="n">disp_k</span><span class="p">):</span>
+                <span class="c1"># pylint: disable=missing-docstring</span>
+                <span class="c1"># pylint: disable=unused-argument</span>
+                <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">use_callback</span> <span class="o">=</span> <span class="n">callback</span>
+
+        <span class="k">def</span> <span class="nf">compound_callback</span><span class="p">(</span><span class="n">disp_k</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            The callback first check whether the new state of the system</span>
+<span class="sd">            violates the physical_sizes restrictions of the babuška</span>
+<span class="sd">            system before calling the user-provided callback function</span>
+<span class="sd">            Parameter:</span>
+<span class="sd">            disp_k -- flattened displacement vector at the current optimization</span>
+<span class="sd">                      step</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="n">deproxify_everytime</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">deproxified</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_margins</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_margins_babushka</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">use_callback</span><span class="p">(</span><span class="n">disp_k</span><span class="p">)</span>
+
+        <span class="n">bnds</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">lbounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ubounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ubounds</span> <span class="o">=</span> <span class="n">disp_scale</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_minimisation_input</span><span class="p">(</span><span class="n">ubounds</span><span class="p">)</span>
+            <span class="n">lbounds</span> <span class="o">=</span> <span class="n">disp_scale</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_minimisation_input</span><span class="p">(</span><span class="n">lbounds</span><span class="p">)</span>
+            <span class="n">bnds</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">lbounds</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">ubounds</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+        <span class="k">elif</span> <span class="n">lbounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">lbounds</span> <span class="o">=</span> <span class="n">disp_scale</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_minimisation_input</span><span class="p">(</span><span class="n">lbounds</span><span class="p">)</span>
+            <span class="n">bnds</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">lbounds</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="p">[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lbounds</span><span class="p">))]))</span>
+        <span class="k">elif</span> <span class="n">ubounds</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">ubounds</span> <span class="o">=</span> <span class="n">disp_scale</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape_minimisation_input</span><span class="p">(</span><span class="n">ubounds</span><span class="p">)</span>
+            <span class="n">bnds</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+                <span class="nb">zip</span><span class="p">([</span><span class="kc">None</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ubounds</span><span class="p">))],</span> <span class="n">ubounds</span><span class="o">.</span><span class="n">tolist</span><span class="p">()))</span>
+        <span class="c1"># Scipy minimizers that accept bounds</span>
+        <span class="n">bounded_minimizers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;L-BFGS-B&#39;</span><span class="p">,</span> <span class="s1">&#39;TNC&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSQP&#39;</span><span class="p">}</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">bounded_minimizers</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
+                    <span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">disp0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+                    <span class="n">bounds</span><span class="o">=</span><span class="n">bnds</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">compound_callback</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
+                    <span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">disp0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span>
+                    <span class="n">callback</span><span class="o">=</span><span class="n">compound_callback</span><span class="p">,</span>
+                    <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+                <span class="c1"># if deproxify_everytime:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">deproxified</span><span class="p">()</span>
+        <span class="k">except</span> <span class="bp">self</span><span class="o">.</span><span class="n">FreeBoundaryError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Caught FreeBoundaryError. Reevaluating margins&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">check_margins</span><span class="p">()</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimize_proxy</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">disp</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span>
+                                       <span class="n">gradient</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2015-2020 The Authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

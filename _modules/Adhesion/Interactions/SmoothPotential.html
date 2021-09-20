@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adhesion.Interactions.SmoothPotential &mdash; Adhesion 0.1.dev1850+g1960fbf documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Adhesion
+          </a>
+              <div class="version">
+                0.1.dev1850+g1960fbf
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to Adhesion</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.Interactions.html">Adhesion.Interactions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.System.html">Adhesion.System package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.ReferenceSolutions.html">Adhesion.ReferenceSolutions package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Adhesion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>Adhesion.Interactions.SmoothPotential</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Adhesion.Interactions.SmoothPotential</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright 2020 Antoine Sanner</span>
+<span class="c1">#</span>
+<span class="c1"># ### MIT license</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c1"># all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+<span class="kn">from</span> <span class="nn">Adhesion.Interactions.Potentials</span> <span class="k">import</span> <span class="n">DecoratedPotential</span><span class="p">,</span> <span class="n">Potential</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.optimize</span>
+
+
+<div class="viewcode-block" id="SmoothPotential"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.SmoothPotential.SmoothPotential">[docs]</a><span class="k">class</span> <span class="nc">SmoothPotential</span><span class="p">(</span><span class="n">DecoratedPotential</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    implements the splining of the potential tail using a fourth order</span>
+<span class="sd">    polynomial than reaches zero within a finite cutoff radius</span>
+
+<span class="sd">    decoupled potential:</span>
+<span class="sd">    V_lγ (r) = V_l(r) - V_l(r_t) + γ</span>
+
+<span class="sd">    spline: (Δr = r-r_t)</span>
+<span class="sd">                                2        3        4</span>
+<span class="sd">                           C₂⋅Δr    C₃⋅Δr    C₄⋅Δr</span>
+<span class="sd">    V_s(Δr) = C₀ - C₁⋅Δr - ────── - ────── - ──────</span>
+<span class="sd">                             2        3        4</span>
+
+<span class="sd">    The formulation allows to choose the contact stiffness (the original</span>
+<span class="sd">    repulsive zone) independently from the work of adhesion (the energy</span>
+<span class="sd">    well). By default, the work of adhesion equals -min(V(r)) and the</span>
+<span class="sd">    transition point r_t between the naive potential and the  spline is at the</span>
+<span class="sd">    minimumm, however they can be chosen freely.</span>
+
+<span class="sd">    The spline is chosen to guarantee continuity of the second derivative</span>
+<span class="sd">    of the potential, leading to the following conditions:</span>
+<span class="sd">    (1): V_s&#39; (Δr_t)    =  V_lγ&#39; (r_t)</span>
+<span class="sd">    (2): V_s&#39;&#39;(Δr_t)    =  V_lγ&#39;&#39;(r_t)</span>
+<span class="sd">    (3): V_s  (Δr_c) =  0, where Δr_c = r_c-r_o</span>
+<span class="sd">    (4): V_s&#39; (Δr_c) =  0</span>
+<span class="sd">    (5): V_s&#39;&#39;(Δr_c) =  0</span>
+<span class="sd">    (6): V_s  (Δr_m) = -γ, where Δr_m = r_min-r_o</span>
+<span class="sd">    The unknowns are C_i (i in {0,..4}) and r_c</span>
+<span class="sd">    r_o is the origin for the spline, which can be chosen freely. The original</span>
+<span class="sd">    choice was r_o = r_t, but it turned out to be a bad choice, leading to a</span>
+<span class="sd">    system of nonlinear equation in which only two of the six unknowns can be</span>
+<span class="sd">    eliminated.</span>
+
+<span class="sd">    With r_o = r_c, all coefficients C_i can be eliminated and a good initial</span>
+<span class="sd">    guess for the remaining scalar nonlinear equation can be computed. see</span>
+<span class="sd">    _eval_poly_and_cutoff</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_potential</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">r_t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        parent_potential: Potential instance</span>
+<span class="sd">            Potential which the spline cutoff should be applied</span>
+<span class="sd">        gamma: (default -V_min)</span>
+<span class="sd">            Work of adhesion, defaults to the norm of</span>
+<span class="sd">            minimum of the potential. Note the sign. γ is assumed to be</span>
+<span class="sd">            non-negative value</span>
+<span class="sd">        r_t: (default r_min)</span>
+<span class="sd">            transition point, defaults to r_min (argmin</span>
+<span class="sd">            of pontential) can also be &#39;inflection&#39; to transition at the</span>
+<span class="sd">            inflection point</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent_potential</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">=</span> <span class="n">gamma</span> <span class="k">if</span> <span class="n">gamma</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
+            <span class="k">else</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">v_min</span>
+        <span class="c1"># Warning: this assumes that the minimum of the potential is a negative</span>
+        <span class="c1"># value. This will fail curiously if you use this class to implement a</span>
+        <span class="c1"># potential with a positive minimum</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">PotentialError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;γ should be a positive value.&quot;</span>
+                 <span class="s2">&quot;you specified and γ = </span><span class="si">{}</span><span class="s2">.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">))</span>  <span class="c1"># nopep8</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">r_t</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">r_t</span> <span class="o">==</span> <span class="s1">&#39;inflection&#39;</span><span class="p">:</span>
+                <span class="n">r_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_infl</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;only &#39;inflection&#39; &quot;</span>
+                                 <span class="s2">&quot;is allowed as string input&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span> <span class="o">=</span> <span class="n">r_t</span> <span class="k">if</span> <span class="n">r_t</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_min</span>
+        <span class="c1"># coefficients of the spline</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpoly</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ddpoly</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_eval_poly_and_cutoff</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">,</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">poly</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpoly</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ddpoly</span><span class="p">,</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
+        <span class="k">return</span> <span class="n">state</span>
+
+    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">superstate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly</span><span class="p">,</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">dpoly</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ddpoly</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">state</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">(</span><span class="n">superstate</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> -&gt; SmoothPotential: gamma = </span><span class="si">{1.gamma}</span><span class="s2">, r_t = </span><span class="si">{1.r_t}</span><span class="s2">&quot;</span> \
+            <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span> <span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SmoothPotential.get_r_infl_spline"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.SmoothPotential.SmoothPotential.get_r_infl_spline">[docs]</a>    <span class="k">def</span> <span class="nf">get_r_infl_spline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        compute the inflection Point of the spline. The inflexion Point of the</span>
+<span class="sd">        smoothed potential could be below r_t and so staying the original one</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;poly&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">C4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">C3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_radius</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">C3</span> <span class="o">/</span> <span class="n">C4</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">r_infl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        convenience function returning the location of the potential&#39;s</span>
+<span class="sd">        inflection point</span>
+<span class="sd">        Depending on where the transition between the parent_potential and the</span>
+<span class="sd">        spline has been made this returns the inflection point of the spline or</span>
+<span class="sd">        of the parent_potential</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">r_infl_poly</span> <span class="o">=</span> <span class="n">SmoothPotential</span><span class="o">.</span><span class="n">get_r_infl_spline</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r_infl_poly</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r_infl_poly</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">r_infl</span>
+                <span class="c1"># This is the property implementation in the parent_potential</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">r_infl_poly</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># The Spline wasn&#39;t determined already</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">r_infl</span>
+            <span class="c1"># This is the old property implementation</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">r_min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        convenience function returning the location of the enery minimum</span>
+<span class="sd">        of the parent potential. (The spline begins at radii above r_min)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">r_min</span>
+
+<div class="viewcode-block" id="SmoothPotential.evaluate"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.SmoothPotential.SmoothPotential.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># if np.isscalar(r):</span>
+        <span class="c1">#     r = np.asarray(r)</span>
+        <span class="c1"># nb_dim = len(r.shape)</span>
+        <span class="c1"># if nb_dim == 0:</span>
+        <span class="c1">#     r.shape = (1,)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">if</span> <span class="n">potential</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">SliceableNone</span><span class="p">()</span>
+        <span class="n">dV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">if</span> <span class="n">gradient</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">SliceableNone</span><span class="p">()</span>
+        <span class="n">ddV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="k">if</span> <span class="n">curvature</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">SliceableNone</span><span class="p">()</span>
+
+        <span class="n">sl_inner</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="n">r</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">sl_rest</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">sl_inner</span><span class="p">)</span>
+        <span class="c1"># little hack to work around numpy bug</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">sl_inner</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">True</span><span class="p">])):</span>
+            <span class="c1">#            raise AssertionError(&quot; I thought this code is never</span>
+            <span class="c1">#            executed&quot;)</span>
+            <span class="n">V</span><span class="p">,</span> <span class="n">dV</span><span class="p">,</span> <span class="n">ddV</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">r</span><span class="p">,</span>
+                                                        <span class="n">potential</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span>
+                                                        <span class="n">curvature</span><span class="p">)</span>
+            <span class="n">V</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
+            <span class="k">return</span> <span class="p">(</span><span class="n">V</span> <span class="k">if</span> <span class="n">potential</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">dV</span> <span class="k">if</span> <span class="n">gradient</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">ddV</span> <span class="k">if</span> <span class="n">curvature</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">V</span><span class="p">[</span><span class="n">sl_inner</span><span class="p">],</span> <span class="n">dV</span><span class="p">[</span><span class="n">sl_inner</span><span class="p">],</span> <span class="n">ddV</span><span class="p">[</span><span class="n">sl_inner</span><span class="p">]</span> <span class="o">=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">sl_inner</span><span class="p">],</span>
+                                               <span class="n">potential</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">curvature</span><span class="p">)</span>
+        <span class="n">V</span><span class="p">[</span><span class="n">sl_inner</span><span class="p">]</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
+
+        <span class="n">sl_outer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="n">r</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_radius</span><span class="p">,</span> <span class="n">fill_value</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+            <span class="n">sl_rest</span><span class="p">)</span>
+        <span class="c1"># little hack to work around numpy bug</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">sl_outer</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">True</span><span class="p">])):</span>
+            <span class="n">V</span><span class="p">,</span> <span class="n">dV</span><span class="p">,</span> <span class="n">ddV</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spline_pot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">potential</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">curvature</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">V</span><span class="p">[</span><span class="n">sl_outer</span><span class="p">],</span> <span class="n">dV</span><span class="p">[</span><span class="n">sl_outer</span><span class="p">],</span> <span class="n">ddV</span><span class="p">[</span><span class="n">sl_outer</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spline_pot</span><span class="p">(</span>
+                <span class="n">r</span><span class="p">[</span><span class="n">sl_outer</span><span class="p">],</span> <span class="n">potential</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">curvature</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">V</span> <span class="k">if</span> <span class="n">potential</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">dV</span> <span class="k">if</span> <span class="n">gradient</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">ddV</span> <span class="k">if</span> <span class="n">curvature</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_spline_pot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Evaluates the spline part and its derivatives of the potential.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        gap: array_like of float</span>
+<span class="sd">            array of distances between the two surfaces</span>
+<span class="sd">        potential: bool, optional</span>
+<span class="sd">            if true, returns potential energy (default True)</span>
+<span class="sd">        gradient: bool, optional</span>
+<span class="sd">            if true, returns gradient (default False)</span>
+<span class="sd">        curvature: bool, optional</span>
+<span class="sd">            if true, returns second derivative (default False)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">V</span> <span class="o">=</span> <span class="n">dV</span> <span class="o">=</span> <span class="n">ddV</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">r</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_radius</span>
+        <span class="k">if</span> <span class="n">potential</span><span class="p">:</span>
+            <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">poly</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gradient</span><span class="p">:</span>
+            <span class="n">dV</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpoly</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">curvature</span><span class="p">:</span>
+            <span class="n">ddV</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ddpoly</span><span class="p">(</span><span class="n">dr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">dV</span><span class="p">,</span> <span class="n">ddV</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_eval_poly_and_cutoff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the coefficients C_i of the spline and the cutoff radius r_c</span>
+<span class="sd">        based on the work of adhesion γ and the slope V&#39;(r_t) and curvature</span>
+<span class="sd">        V&quot;(r_t) at the transition point. The calculations leading to the</span>
+<span class="sd">        formulation I use here are done symbolically in SplineHelper.py. Check</span>
+<span class="sd">        there for details. Short version:</span>
+
+
+<span class="sd">                                     2        3        4</span>
+<span class="sd">                                C₂⋅Δr    C₃⋅Δr    C₄⋅Δr</span>
+<span class="sd">        V_s(Δr) = C₀ - C₁⋅Δr - ────── - ────── - ──────</span>
+<span class="sd">                                  2        3        4</span>
+
+<span class="sd">                                      2        3</span>
+<span class="sd">        V_s&#39;(Δr) = -C₁ - C₂⋅Δr - C₃⋅Δr  - C₄⋅Δr</span>
+
+
+<span class="sd">                                          2</span>
+<span class="sd">        V_s&quot;(Δr) = -C₂ - 2⋅C₃⋅Δr - 3⋅C₄⋅Δr</span>
+
+<span class="sd">        By applying the following boundary conditions</span>
+<span class="sd">        (1): V_s&#39;(Δr_t)    =  V_lγ&#39;(r_t)</span>
+<span class="sd">        (2): V_s&quot;(Δr_t)    =  V_lγ&quot;(r_t)</span>
+<span class="sd">        (3): V_s (Δr_c) =  0, where Δr_c = r_c-r_o</span>
+<span class="sd">        (4): V_s&#39;(Δr_c) =  0</span>
+<span class="sd">        (5): V_s&quot;(Δr_c) =  0</span>
+<span class="sd">        (6): V_s (Δr_m) = -γ, where Δr_m = r_min-r_o,           if r_t &lt; r_m</span>
+<span class="sd">             V_s (Δr_t) = -γ + Δγ, where Δγ = V_lγ(r_t) - V_lγ(r_m) else</span>
+
+<span class="sd">        The unknowns are C_i (i in {0,..4}) and r_c</span>
+<span class="sd">        and choosing the origin of the spline r_o at the cut-off r_c, the</span>
+<span class="sd">        coefficients C_i can be determined explicitly (see SplineHelper.py):</span>
+
+<span class="sd">        C₀: 0, C₁: 0, C₂: 0,</span>
+
+<span class="sd">            -3⋅V&#39;(r_t) + V&quot;(r_t)⋅Δrt      2⋅V&#39;(r_t) - V&quot;(r_t)⋅Δrt</span>
+<span class="sd">        C₃: ────────────────────────, C₄: ───────────────────────</span>
+<span class="sd">                            2                            3</span>
+<span class="sd">                         Δrt                          Δrt</span>
+<span class="sd">        The remaining unknown is Δr_t (our proxy for r_c) but that equation has</span>
+<span class="sd">        no analytical solution (I think), except for r_t = r_m. The equation</span>
+<span class="sd">        is:</span>
+<span class="sd">                                               4</span>
+<span class="sd">                  Δrt⋅(3⋅V&#39;(r_t) - V&quot;(r_t)⋅Δrt)</span>
+<span class="sd">        f(Δrt) = ────────────────────────────── + γ = 0</span>
+<span class="sd">                                              3</span>
+<span class="sd">                  12⋅(2⋅V&#39;(r_t) - V&quot;(r_t)⋅Δrt)</span>
+
+<span class="sd">        When r_t = r_m (the default); the solution is</span>
+<span class="sd">                      _________</span>
+<span class="sd">                     ╱   3γ</span>
+<span class="sd">        Δr_t = -2⋅  ╱  ───────</span>
+<span class="sd">                  ╲╱   V&quot;(r_m)</span>
+
+<span class="sd">        this can be used as initial guess for solving f(Δrt). If r_t &lt;= r_min.</span>
+<span class="sd">        The derivative f&#39;(Δrt) is to bulky to pretty-print here, so look at</span>
+<span class="sd">        SplineHelper.py if</span>
+<span class="sd">        you wish to see it.</span>
+
+<span class="sd">        If r_t &gt; r_min, the solution is explicit (see SplineHelper.py):</span>
+
+<span class="sd">                            ____________________________</span>
+<span class="sd">                           ╱                          2</span>
+<span class="sd">                3⋅dV_t - ╲╱  -12⋅(Δγ-γ)⋅ddV_t + 9⋅dV_t</span>
+<span class="sd">        Δr_t = ────────────────────────────────────────, for r_t &gt; r_min</span>
+<span class="sd">                                 ddV_t</span>
+
+<span class="sd">        The expressions for C₃ and C₄ remain the same.  This expression may</span>
+<span class="sd">        have numerical stability issues around the inflection point, where</span>
+<span class="sd">        ddV_t is close to zero and the fraction is essentially 0/0. At the</span>
+<span class="sd">        exact location of the the inflection point, the solution is</span>
+
+<span class="sd">               2⋅(Δγ-γ)</span>
+<span class="sd">        Δr_t = ────────, for r_t = r_infl.</span>
+<span class="sd">                 dV_t</span>
+
+<span class="sd">        In order to express the solution close to the inflection point, this</span>
+<span class="sd">        method uses the first order Taylor expansion. The derivative is</span>
+
+<span class="sd">        ∂(Δr_t)/∂(ddV_t) at zero :</span>
+
+<span class="sd">                           2</span>
+<span class="sd">                   2⋅(Δγ-γ)</span>
+<span class="sd">        Δr_t&#39;(0) = ─────────</span>
+<span class="sd">                          3</span>
+<span class="sd">                    3⋅dV_t</span>
+
+<span class="sd">        In conclusion, with the inputs of r_t, γ, V&#39;(r_t) and V&quot;(r_t), we can</span>
+<span class="sd">        conpute the objective function f(Δrt) and its derivative f&#39;(Δrt), which</span>
+<span class="sd">        should be roughly constant around the solution (inspect output of</span>
+<span class="sd">        SplineHelper.py). If r_m = r_t, we can directly compute Δrt. Else, with</span>
+<span class="sd">        the additional input of V&quot;(r_m), we can compute a good initial guess to</span>
+<span class="sd">        solve the problem numerically.</span>
+
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        xtol: float, optional</span>
+<span class="sd">             tolerance for numerical solution. Is scaled</span>
+<span class="sd">             by γ internally. (default 1e-10)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dummy</span><span class="p">,</span> <span class="n">gradient_t</span><span class="p">,</span> <span class="n">ddV_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">dV_t</span> <span class="o">=</span> <span class="n">gradient_t</span>
+
+        <span class="k">def</span> <span class="nf">spline</span><span class="p">(</span><span class="n">Δrt</span><span class="p">):</span>
+            <span class="s2">&quot; from SplineHelper.py&quot;</span>
+            <span class="n">C_i</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">+</span> <span class="n">ddV_t</span> <span class="o">*</span> <span class="n">Δrt</span><span class="p">)</span> <span class="o">/</span> <span class="n">Δrt</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+                   <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">-</span> <span class="n">ddV_t</span> <span class="o">*</span> <span class="n">Δrt</span><span class="p">)</span> <span class="o">/</span> <span class="n">Δrt</span> <span class="o">**</span> <span class="mi">3</span><span class="p">]</span>
+            <span class="c1"># in numpy polynomial form</span>
+            <span class="n">polycoeffs</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">C_i</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span>
+                          <span class="o">-</span><span class="n">C_i</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span>
+                          <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">polycoeffs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_min</span><span class="p">:</span>
+            <span class="n">dummy</span><span class="p">,</span> <span class="n">dummy</span><span class="p">,</span> <span class="n">ddV_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">r_min</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">def</span> <span class="nf">inner_obj_fun</span><span class="p">(</span><span class="n">Δrt</span><span class="p">,</span> <span class="n">gam_star</span><span class="p">):</span>
+                <span class="s2">&quot; from SplineHelper.py&quot;</span>
+                <span class="k">return</span> <span class="p">(</span><span class="n">Δrt</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">-</span> <span class="n">ddV_t</span> <span class="o">*</span> <span class="n">Δrt</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">/</span>
+                        <span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">-</span> <span class="n">ddV_t</span> <span class="o">*</span> <span class="n">Δrt</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span>
+                        <span class="n">gam_star</span><span class="p">)</span>
+
+            <span class="k">def</span> <span class="nf">inner_obj_derivative</span><span class="p">(</span><span class="n">Δrt</span><span class="p">,</span> <span class="n">dummy</span><span class="p">):</span>
+                <span class="s2">&quot; from SplineHelper.py&quot;</span>
+                <span class="k">return</span> <span class="p">((</span><span class="mi">3</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">-</span> <span class="n">ddV_t</span> <span class="o">*</span> <span class="n">Δrt</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">*</span>
+                        <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">ddV_t</span> <span class="o">*</span> <span class="n">Δrt</span> <span class="o">*</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">-</span> <span class="n">ddV_t</span> <span class="o">*</span> <span class="n">Δrt</span><span class="p">)</span> <span class="o">+</span>
+                         <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">-</span> <span class="n">ddV_t</span> <span class="o">*</span> <span class="n">Δrt</span><span class="p">)</span> <span class="o">*</span>
+                         <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">ddV_t</span> <span class="o">*</span> <span class="n">Δrt</span><span class="p">))</span> <span class="o">/</span>
+                        <span class="p">(</span><span class="mi">12</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">-</span> <span class="n">ddV_t</span> <span class="o">*</span> <span class="n">Δrt</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span><span class="p">))</span>
+
+            <span class="c1"># start with initial guess:</span>
+            <span class="n">Δrt0</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">/</span> <span class="n">ddV_m</span><span class="p">)</span>
+            <span class="n">gam_star0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span>
+
+            <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">xtol</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span> <span class="o">*</span> <span class="n">xtol</span><span class="p">)</span>
+            <span class="n">Δrt</span> <span class="o">=</span> <span class="kc">None</span>
+
+            <span class="k">def</span> <span class="nf">outer_obj_fun</span><span class="p">(</span><span class="n">gam</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">                Outer loop of minimization, finds the work of adhesion γ.</span>
+<span class="sd">                Convergence of Δr_t (the proxy for the cutoff) is assured by</span>
+<span class="sd">                the inner loop defined by inner_obj_fun.&quot;&quot;&quot;</span>
+                <span class="n">sol</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">root</span><span class="p">(</span>
+                    <span class="n">inner_obj_fun</span><span class="p">,</span> <span class="n">Δrt0</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">gam</span><span class="p">,),</span>
+                    <span class="n">jac</span><span class="o">=</span><span class="n">inner_obj_derivative</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+                <span class="k">nonlocal</span> <span class="n">Δrt</span>
+                <span class="k">if</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                    <span class="n">Δrt</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                    <span class="n">offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> \
+                        <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">spline</span><span class="p">(</span><span class="n">Δrt</span><span class="p">)(</span><span class="n">Δrt</span><span class="p">))</span>
+                    <span class="n">error</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_min</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> \
+                        <span class="o">-</span> <span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span>
+
+                    <span class="k">return</span> <span class="n">error</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">err_str</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Evaluation of spline for potential &#39;</span><span class="si">{}</span><span class="s2">&#39; &quot;</span>
+                               <span class="s2">&quot;failed. Please check whether the inputs make &quot;</span>
+                               <span class="s2">&quot;sense&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">PotentialError</span><span class="p">(</span><span class="n">err_str</span><span class="p">)</span>
+
+            <span class="k">def</span> <span class="nf">outer_obj_derivative</span><span class="p">(</span><span class="n">dummy</span><span class="p">):</span>
+                <span class="s2">&quot; Jacobian of outer loop, see SplineHelper.py for details&quot;</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.</span><span class="p">])</span>
+
+            <span class="n">sol</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">root</span><span class="p">(</span>
+                <span class="n">outer_obj_fun</span><span class="p">,</span> <span class="n">gam_star0</span><span class="p">,</span>
+                <span class="n">jac</span><span class="o">=</span><span class="n">outer_obj_derivative</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                <span class="n">err_str</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Evaluation of spline for potential &#39;</span><span class="si">{}</span><span class="s2">&#39; failed. &quot;</span>
+                           <span class="s2">&quot;Please check whether the inputs make &quot;</span>
+                           <span class="s2">&quot;sense&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">PotentialError</span><span class="p">(</span><span class="n">err_str</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">V_m_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_min</span><span class="p">]))[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">Δgamma</span> <span class="o">=</span> <span class="n">V_m_t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">V_m_t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">dgam</span> <span class="o">=</span> <span class="p">(</span><span class="n">Δgamma</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">gamma</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ddV_t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+                <span class="c1"># general case</span>
+                <span class="n">Δrt</span> <span class="o">=</span> <span class="p">((</span><span class="mi">3</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                    <span class="mi">9</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">12</span> <span class="o">*</span> <span class="n">dgam</span> <span class="o">*</span> <span class="n">ddV_t</span><span class="p">))</span> <span class="o">/</span>
+                       <span class="n">ddV_t</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># close to numerically difficult inflection point: Taylor</span>
+                <span class="n">val</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dgam</span> <span class="o">/</span> <span class="n">dV_t</span>
+                <span class="n">derivative</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dgam</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">dV_t</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="n">Δrt</span> <span class="o">=</span> <span class="n">val</span> <span class="o">+</span> <span class="n">derivative</span> <span class="o">*</span> <span class="n">ddV_t</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span> <span class="o">-</span> <span class="n">Δrt</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">spline</span><span class="p">(</span><span class="n">Δrt</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpoly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">poly</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ddpoly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpoly</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_spline_pot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span> <span class="nf">__eval_poly_and_cutoff_legacy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Seems to be a bad method, do not use in general, will likely</span>
+<span class="sd">            disappear.</span>
+
+<span class="sd">            Computes the coefficients of the spline and the cutoff based on σ</span>
+<span class="sd">            and ε. Since this is a non-linear system of equations, this</span>
+<span class="sd">            requires some numerics.</span>
+<span class="sd">            The equations derive from the continuity conditions in the class&#39;s</span>
+<span class="sd">            docstring. A few simplifications can be made to conditions (1),</span>
+<span class="sd">            (2), and (6):</span>
+
+<span class="sd">            (1): C_1 = -V_l&#39; (r_t)</span>
+
+<span class="sd">            (2): C_2 = -V_l&#39;&#39;(r_t)</span>
+
+<span class="sd">            (6): C_0 = + γ + C_1*Δr_m + C_2/2*Δr_m^2</span>
+<span class="sd">                       + C_3/3*Δr_m^3 + C_4/4*Δr_m^4</span>
+<span class="sd">            Also, we have some info about the shape of the spline:</span>
+<span class="sd">            since Δr_c is both an inflection point and an extremum and it has</span>
+<span class="sd">            to be on the right of the minimum, the minimum has to be the</span>
+<span class="sd">            leftmost extremum of the spline and therefore the global minimum.</span>
+<span class="sd">            It follows:</span>
+
+<span class="sd">            1) C_4 &lt; 0</span>
+<span class="sd">            2) we know sgn(C_1) and sgn(C_2)</span>
+<span class="sd">            3) any reasonable choice of r_t leads to a Δr_c &gt; 0</span>
+
+<span class="sd">            from (5), we get the 2 possible solutions for Δr_c(C_2, C_3, C_4):</span>
+<span class="sd">                   ⎡         ________________   ⎛        ________________⎞ ⎤</span>
+<span class="sd">                   ⎢        ╱              2    ⎜       ╱              2 ⎟ ⎥</span>
+<span class="sd">            Δr_c = ⎢-C₃ + ╲╱  -3⋅C₂⋅C₄ + C₃    -⎝C₃ + ╲╱  -3⋅C₂⋅C₄ + C₃  ⎠ ⎥</span>
+<span class="sd">                   ⎢─────────────────────────, ────────────────────────────⎥</span>
+<span class="sd">                   ⎣           3⋅C₄                        3⋅C₄            ⎦</span>
+<span class="sd">            This however seems to lead to intractable polynomial equations</span>
+<span class="sd">            (minutes of sympy without finding a solution, ran out of patience)</span>
+
+<span class="sd">            Numerical approach: equations (1) and (2) are evauated immediately,</span>
+<span class="sd">            Then the system of equations</span>
+
+<span class="sd">                   ⎡                                   2         ⎤</span>
+<span class="sd">                   ⎢          -C₂ - 2⋅C₃⋅Δrc - 3⋅C₄⋅Δrc          ⎥</span>
+<span class="sd">                   ⎢                                             ⎥</span>
+<span class="sd">                   ⎢                            2         3      ⎥</span>
+<span class="sd">                   ⎢       -C₁ - C₂⋅Δrc - C₃⋅Δrc  - C₄⋅Δrc       ⎥</span>
+<span class="sd">                   ⎢                                             ⎥</span>
+<span class="sd">                   ⎢                       2         3         4 ⎥</span>
+<span class="sd">            F(x) = ⎢                 C₂⋅Δrc    C₃⋅Δrc    C₄⋅Δrc  ⎥ = 0</span>
+<span class="sd">                   ⎢   C₀ - C₁⋅Δrc - ─────── - ─────── - ─────── ⎥</span>
+<span class="sd">                   ⎢                    2         3         4    ⎥</span>
+<span class="sd">                   ⎢                                             ⎥</span>
+<span class="sd">                   ⎢                    2         3         4    ⎥</span>
+<span class="sd">                   ⎢              C₂⋅Δrm    C₃⋅Δrm    C₄⋅Δrm     ⎥</span>
+<span class="sd">                   ⎢C₀ - C₁⋅Δrm - ─────── - ─────── - ─────── - γ⎥</span>
+<span class="sd">                   ⎣                 2         3         4       ⎦</span>
+<span class="sd">            is solved. Note that a positive work of adhesion (sticky surface)</span>
+<span class="sd">            has a negative value for γ. The jacobian is:</span>
+<span class="sd">                   ⎡                 2                                  ⎤</span>
+<span class="sd">                   ⎢0  -2⋅Δrc  -3⋅Δrc           -2⋅C₃ - 6⋅C₄⋅Δrc        ⎥</span>
+<span class="sd">                   ⎢                                                    ⎥</span>
+<span class="sd">                   ⎢       2        3                               2   ⎥</span>
+<span class="sd">                   ⎢0  -Δrc     -Δrc       -C₂ - 2⋅C₃⋅Δrc - 3⋅C₄⋅Δrc    ⎥</span>
+<span class="sd">                   ⎢                                                    ⎥</span>
+<span class="sd">                   ⎢       3       4                                    ⎥</span>
+<span class="sd">            G(x) = ⎢   -Δrc    -Δrc                          2         3⎥</span>
+<span class="sd">                   ⎢1  ──────  ──────   -C₁ - C₂⋅Δrc - C₃⋅Δrc  - C₄⋅Δrc ⎥</span>
+<span class="sd">                   ⎢     3       4                                      ⎥</span>
+<span class="sd">                   ⎢                                                    ⎥</span>
+<span class="sd">                   ⎢       3       4                                    ⎥</span>
+<span class="sd">                   ⎢   -Δrm    -Δrm                                     ⎥</span>
+<span class="sd">                   ⎢1  ──────  ──────                  0                ⎥</span>
+<span class="sd">                   ⎣     3       4                                      ⎦</span>
+
+<span class="sd">            with x = [C₀  C₃  C₄  Δrc]</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        xtol: float, optional</span>
+<span class="sd">            tolerance for numerical solution. Is multiplied by ε</span>
+<span class="sd">            internally.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># pylint: disable=bad-whitespace</span>
+        <span class="c1"># pylint: disable=bad-continuation</span>
+        <span class="c1"># pylint: disable=invalid-name</span>
+        <span class="c1"># known coeffs</span>
+        <span class="n">dummy</span><span class="p">,</span> <span class="n">dV</span><span class="p">,</span> <span class="n">ddV</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">C1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">dV</span>
+        <span class="n">C2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">ddV</span>
+        <span class="n">gam</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">gamma</span>
+        <span class="n">r_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span>
+        <span class="n">dr_m</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_min</span> <span class="o">-</span> <span class="n">r_t</span>
+
+        <span class="k">def</span> <span class="nf">obj_fun</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="s2">&quot;the root of this function defined the spline coefficients&quot;</span>
+            <span class="n">C0</span><span class="p">,</span> <span class="n">C3</span><span class="p">,</span> <span class="n">C4</span><span class="p">,</span> <span class="n">dr_c</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[</span><span class="o">-</span> <span class="n">C2</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">C3</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">C4</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+                 <span class="o">-</span> <span class="n">C1</span> <span class="o">-</span> <span class="n">C2</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">-</span> <span class="n">C3</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">C4</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">**</span> <span class="mi">3</span><span class="p">,</span>
+                 <span class="n">C0</span> <span class="o">-</span> <span class="n">C1</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">-</span> <span class="n">C2</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">C3</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">-</span>
+                 <span class="n">C4</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">**</span> <span class="mi">4</span><span class="p">,</span>
+                 <span class="n">C0</span> <span class="o">-</span> <span class="n">C1</span> <span class="o">*</span> <span class="n">dr_m</span> <span class="o">-</span> <span class="n">C2</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">dr_m</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">C3</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">dr_m</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">-</span>
+                 <span class="n">C4</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">dr_m</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">-</span> <span class="n">gam</span><span class="p">])</span>
+
+        <span class="k">def</span> <span class="nf">jacobian</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+            <span class="s2">&quot;evaluate the gradient of the objetive function&quot;</span>
+            <span class="n">dummy</span><span class="p">,</span> <span class="n">C3</span><span class="p">,</span> <span class="n">C4</span><span class="p">,</span> <span class="n">dr_c</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+                <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">dr_c</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+                  <span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">C3</span> <span class="o">-</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">C4</span> <span class="o">*</span> <span class="n">dr_c</span><span class="p">],</span>
+                 <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">dr_c</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="n">dr_c</span> <span class="o">**</span> <span class="mi">3</span><span class="p">,</span>
+                  <span class="o">-</span><span class="n">C2</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">C3</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">C4</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">**</span> <span class="mi">2</span><span class="p">],</span>
+                 <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">dr_c</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="n">dr_c</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span>
+                  <span class="o">-</span><span class="n">C1</span> <span class="o">-</span> <span class="n">C2</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">-</span> <span class="n">C3</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">C4</span> <span class="o">*</span> <span class="n">dr_c</span> <span class="o">**</span> <span class="mi">3</span><span class="p">],</span>
+                 <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="n">dr_m</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="n">dr_m</span> <span class="o">**</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span>
+                  <span class="mi">0</span><span class="p">]])</span>
+
+        <span class="n">C3guess</span> <span class="o">=</span> <span class="o">-</span><span class="n">C2</span>
+
+        <span class="n">x0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="n">gam</span><span class="p">,</span> <span class="n">C3guess</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_min</span><span class="p">])</span>
+        <span class="n">options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">xtol</span><span class="o">=-</span><span class="n">gam</span> <span class="o">*</span> <span class="n">xtol</span><span class="p">)</span>
+        <span class="n">sol</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">root</span><span class="p">(</span><span class="n">obj_fun</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">jacobian</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span>
+                <span class="mi">4</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_radius</span> <span class="o">=</span> <span class="n">sol</span><span class="o">.</span><span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_radius</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_t</span>
+            <span class="c1"># !!WARNING!! poly is &#39;backwards&#39;: poly = [C4, C3, C2, C1, C0] and</span>
+            <span class="c1"># all coeffs except C0 have the wrong sign, furthermore they are</span>
+            <span class="c1"># divided by their order</span>
+            <span class="n">polycoeffs</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span>
+                          <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span>
+                          <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+                          <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                          <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">poly1d</span><span class="p">(</span><span class="n">polycoeffs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dpoly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">poly</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ddpoly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyder</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dpoly</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_spline_pot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">err_str</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Evaluation of spline for potential &#39;</span><span class="si">{}</span><span class="s2">&#39; failed. Please&quot;</span>
+                       <span class="s2">&quot; check whether the inputs make sense&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="bp">self</span><span class="o">.</span><span class="n">PotentialError</span><span class="p">(</span><span class="n">err_str</span><span class="p">)</span></div>
+
+
+<span class="n">Potential</span><span class="o">.</span><span class="n">register_function</span><span class="p">(</span><span class="s2">&quot;spline_cutoff&quot;</span><span class="p">,</span> <span class="n">SmoothPotential</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2015-2020 The Authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

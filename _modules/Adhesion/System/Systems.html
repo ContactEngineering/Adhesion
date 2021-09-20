@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adhesion.System.Systems &mdash; Adhesion 0.1.dev1850+g1960fbf documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> Adhesion
+          </a>
+              <div class="version">
+                0.1.dev1850+g1960fbf
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to Adhesion</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.Interactions.html">Adhesion.Interactions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.System.html">Adhesion.System package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.ReferenceSolutions.html">Adhesion.ReferenceSolutions package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Adhesion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+      <li>Adhesion.System.Systems</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for Adhesion.System.Systems</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright 2020 Antoine Sanner</span>
+<span class="c1">#           2020 Lars Pastewka</span>
+<span class="c1">#</span>
+<span class="c1"># ### MIT license</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c1"># all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Defines the interface for Adhesion systems</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">Adhesion</span>
+<span class="kn">import</span> <span class="nn">ContactMechanics</span>
+<span class="kn">import</span> <span class="nn">SurfaceTopography</span>
+<span class="kn">from</span> <span class="nn">ContactMechanics.Tools</span> <span class="k">import</span> <span class="n">compare_containers</span>
+<span class="kn">from</span> <span class="nn">ContactMechanics.Systems</span> <span class="k">import</span> <span class="n">IncompatibleResolutionError</span><span class="p">,</span> <span class="n">SystemBase</span>
+
+
+<div class="viewcode-block" id="SmoothContactSystem"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem">[docs]</a><span class="k">class</span> <span class="nc">SmoothContactSystem</span><span class="p">(</span><span class="n">SystemBase</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    For smooth contact mechanics (i.e. the ones for which optimization is only</span>
+<span class="sd">    kinda-hell</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Represents a contact problem</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        substrate: An instance of HalfSpace.</span>
+<span class="sd">            Defines the solid mechanics in the substrate</span>
+<span class="sd">        interaction: Adhesion.Interactions.SoftWall</span>
+<span class="sd">            Defines the contact formulation.</span>
+<span class="sd">            If this computes interaction energies, forces etc,</span>
+<span class="sd">            these are supposed to be expressed per unit area in whatever units</span>
+<span class="sd">             you use. The conversion is performed by the system</span>
+<span class="sd">        surface: SurfaceTopography.Topography</span>
+<span class="sd">            Defines the profile.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">surface</span><span class="o">.</span><span class="n">has_undefined_data</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;The topography you provided contains undefined &quot;</span>
+                             <span class="s2">&quot;data&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">substrate</span><span class="o">=</span><span class="n">substrate</span><span class="p">,</span> <span class="n">surface</span><span class="o">=</span><span class="n">surface</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction</span> <span class="o">=</span> <span class="n">interaction</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">compare_containers</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">,</span> <span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">IncompatibleResolutionError</span><span class="p">(</span>
+                <span class="p">(</span><span class="s2">&quot;the substrate (</span><span class="si">{}</span><span class="s2">) and the surface (</span><span class="si">{}</span><span class="s2">) have incompatible &quot;</span>
+                 <span class="s2">&quot;nb_grid_ptss.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">,</span> <span class="n">surface</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">))</span>  <span class="c1"># nopep8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">force_h</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_energy</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heights_k</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span>
+
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span><span class="p">,</span> <span class="s2">&quot;register_halfcomplex_field&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">communicator</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># avoids the initialization to fail if we use an fftengine without these hcffts implemnented</span>
+            <span class="c1"># preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-real-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-fourier-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_stiffness_k</span><span class="p">()</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nb_grid_pts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">nb_grid_pts</span>
+
+<div class="viewcode-block" id="SmoothContactSystem.handles"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.handles">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">handles</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span> <span class="n">interaction_type</span><span class="p">,</span> <span class="n">surface_type</span><span class="p">,</span> <span class="n">comm</span><span class="p">):</span>
+        <span class="n">is_ok</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># any periodic type of substrate formulation should do</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span>
+                            <span class="n">ContactMechanics</span><span class="o">.</span><span class="n">Substrate</span><span class="p">)</span>
+
+        <span class="c1"># only soft interactions allowed</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">interaction_type</span><span class="p">,</span>
+                            <span class="n">Adhesion</span><span class="o">.</span><span class="n">SoftWall</span><span class="p">)</span>
+
+        <span class="c1"># any surface should do</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">surface_type</span><span class="p">,</span>
+                            <span class="n">SurfaceTopography</span><span class="o">.</span><span class="n">UniformTopographyInterface</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">is_ok</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_repulsive_force"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_repulsive_force">[docs]</a>    <span class="k">def</span> <span class="nf">compute_repulsive_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;computes and returns the sum of all repulsive forces&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="p">))</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_attractive_force"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_attractive_force">[docs]</a>    <span class="k">def</span> <span class="nf">compute_attractive_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;computes and returns the sum of all attractive forces&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">,</span> <span class="mi">0</span>
+        <span class="p">))</span></div>
+
+    <span class="k">def</span> <span class="nf">_compute_stiffness_k</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        computes and returns the wavevectors q that exist for the surfaces</span>
+<span class="sd">        physical_sizes and nb_grid_pts as one vector of components per</span>
+<span class="sd">        dimension</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">vectors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nb_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+        <span class="c1"># if nb_dims == 1:</span>
+        <span class="c1">#     nb_grid_pts = [self.substrate.nb_grid_pts]</span>
+        <span class="c1">#     physical_sizes = [self.substrate.physical_sizes]</span>
+        <span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nb_dims</span><span class="p">):</span>
+            <span class="n">vectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">[</span><span class="n">dim</span><span class="p">],</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">[</span><span class="n">dim</span><span class="p">]</span> <span class="o">/</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">[</span><span class="n">dim</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">nb_dims</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">nb_dims</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">qx</span> <span class="o">=</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">qy</span> <span class="o">=</span> <span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">qx</span> <span class="o">*</span> <span class="n">qx</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">qy</span> <span class="o">*</span> <span class="n">qy</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+            <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+
+        <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">contact_modulus</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_normal_force"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_normal_force">[docs]</a>    <span class="k">def</span> <span class="nf">compute_normal_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;computes and returns the sum of all forces&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_repulsive_contact_area"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_repulsive_contact_area">[docs]</a>    <span class="k">def</span> <span class="nf">compute_repulsive_contact_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;computes and returns the area where contact pressure is repulsive&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nb_repulsive_pts</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_attractive_contact_area"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_attractive_contact_area">[docs]</a>    <span class="k">def</span> <span class="nf">compute_attractive_contact_area</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;computes and returns the are where contact pressure is attractive&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nb_attractive_pts</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_nb_contact_pts"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_nb_contact_pts">[docs]</a>    <span class="k">def</span> <span class="nf">compute_nb_contact_pts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        compute and return the number of contact points. Note that this is of</span>
+<span class="sd">        no physical interest, as it is a purely numerical artefact</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">!=</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_nb_repulsive_pts"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_nb_repulsive_pts">[docs]</a>    <span class="k">def</span> <span class="nf">compute_nb_repulsive_pts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        compute and return the number of contact points under repulsive</span>
+<span class="sd">        pressure. Note that this is of no physical interest, as it is a</span>
+<span class="sd">        purely numerical artefact</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_nb_attractive_pts"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_nb_attractive_pts">[docs]</a>    <span class="k">def</span> <span class="nf">compute_nb_attractive_pts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        compute and return the number of contact points under attractive</span>
+<span class="sd">        pressure. Note that this is of no physical interest, as it is a</span>
+<span class="sd">        purely numerical artefact</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_repulsive_coordinates"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_repulsive_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">compute_repulsive_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        returns an array of all coordinates, where contact pressure is</span>
+<span class="sd">        repulsive. Useful for evaluating the number of contact islands etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_attractive_coordinates"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_attractive_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">compute_attractive_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        returns an array of all coordinates, where contact pressure is</span>
+<span class="sd">        attractive. Useful for evaluating the number of contact islands etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.compute_mean_gap"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_mean_gap">[docs]</a>    <span class="k">def</span> <span class="nf">compute_mean_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        mean of the gap in the the physical domain (means excluding padding</span>
+<span class="sd">        region for the FreeFFTElasticHalfspace)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.logger_input"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.logger_input">[docs]</a>    <span class="k">def</span> <span class="nf">logger_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        headers: list of strings</span>
+<span class="sd">        values: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tot_nb_grid_pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+        <span class="n">rel_rep_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nb_repulsive_pts</span><span class="p">()</span> <span class="o">/</span> <span class="n">tot_nb_grid_pts</span>
+        <span class="n">rel_att_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nb_attractive_pts</span><span class="p">()</span> <span class="o">/</span> <span class="n">tot_nb_grid_pts</span>
+        <span class="c1"># TODO: eventually put a flag to turn</span>
+        <span class="c1">#  reductions off since this is an additional communication.</span>
+        <span class="k">return</span> <span class="p">([</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;max. abs. grad.&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;mean gap&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;frac. rep. area&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;frac. att. area&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;frac. int. area&#39;</span><span class="p">,</span> <span class="s1">&#39;substrate force&#39;</span><span class="p">,</span> <span class="s1">&#39;interaction force&#39;</span><span class="p">],</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">)),</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">compute_mean_gap</span><span class="p">(),</span>
+                 <span class="n">rel_rep_area</span><span class="p">,</span>
+                 <span class="n">rel_att_area</span><span class="p">,</span>
+                 <span class="n">rel_rep_area</span> <span class="o">+</span> <span class="n">rel_att_area</span><span class="p">,</span>
+                 <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">),</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.evaluate"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disp</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">pot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the energies and forces in the system for a given displacement</span>
+<span class="sd">        field</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        disp: ndarray</span>
+<span class="sd">            displacement field, in the shape of</span>
+<span class="sd">            system.substrate.nb_subdomain_grid_pts</span>
+<span class="sd">        offset: float</span>
+<span class="sd">            determines indentation depth,</span>
+<span class="sd">            constant value added to the heights (system.topography)</span>
+<span class="sd">        pot: bool, optional</span>
+<span class="sd">            Wether to evaluate the energy, default True</span>
+<span class="sd">        forces: bool, optional</span>
+<span class="sd">            Wether to evaluate the forces, default False</span>
+<span class="sd">        logger: ContactMechanics.Tools.Logger</span>
+<span class="sd">            informations of current state of the system will be passed to</span>
+<span class="sd">            logger at every evaluation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># attention: the substrate may have a higher nb_grid_pts than the gap</span>
+        <span class="c1"># and the interaction (e.g. FreeElasticHalfSpace)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_gap</span><span class="p">(</span><span class="n">disp</span><span class="p">,</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="n">interaction_energies</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">interaction</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">,</span>
+                                      <span class="n">potential</span><span class="o">=</span><span class="n">pot</span><span class="p">,</span>
+                                      <span class="n">gradient</span><span class="o">=</span><span class="n">forces</span><span class="p">,</span>
+                                      <span class="n">curvature</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_energy</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">interaction_energies</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">disp</span><span class="p">,</span> <span class="n">pot</span><span class="p">,</span> <span class="n">forces</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_energy</span> <span class="o">+</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">energy</span>
+                       <span class="k">if</span> <span class="n">pot</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">forces</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">*=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span>
+            <span class="c1">#                       ^ gradient to force per pixel</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comp_slice</span><span class="p">]</span> <span class="o">+=</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">st</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">logger_input</span><span class="p">())</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.objective"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.objective">[docs]</a>    <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">disp_scale</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                  <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This helper method exposes a scipy.optimize-friendly interface to the</span>
+<span class="sd">        evaluate() method. Use this for optimization purposes, it makes sure</span>
+<span class="sd">        that the shape of disp is maintained and lets you set the offset and</span>
+<span class="sd">        &#39;forces&#39; flag without using scipy&#39;s cumbersome argument passing</span>
+<span class="sd">        interface. Returns a function of only disp</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        disp0: ndarray</span>
+<span class="sd">            unused variable, present only for interface compatibility</span>
+<span class="sd">            with inheriting classes</span>
+<span class="sd">        offset: float</span>
+<span class="sd">            determines indentation depth,</span>
+<span class="sd">            constant value added to the heights (system.topography)</span>
+<span class="sd">        gradient: bool, optional</span>
+<span class="sd">            Wether to evaluate the gradient, default False</span>
+<span class="sd">        disp_scale : float, optional</span>
+<span class="sd">            (default 1.) allows to specify a scaling of the</span>
+<span class="sd">            dislacement before evaluation. This can be necessary when</span>
+<span class="sd">            using dumb minimizers with hardcoded convergence criteria</span>
+<span class="sd">            such as scipy&#39;s L-BFGS-B.</span>
+<span class="sd">        logger: ContactMechanics.Tools.Logger</span>
+<span class="sd">            informations of current state of the system will be passed to</span>
+<span class="sd">            logger at every evaluation</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            function(disp)</span>
+<span class="sd">                Parameters:</span>
+<span class="sd">                disp: an ndarray of shape</span>
+<span class="sd">                      `system.substrate.nb_subdomain_grid_pts`</span>
+<span class="sd">                      displacements</span>
+<span class="sd">                Returns:</span>
+<span class="sd">                    energy or energy, gradient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_subdomain_grid_pts</span>
+        <span class="k">if</span> <span class="n">gradient</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">disp</span><span class="p">):</span>
+                <span class="c1"># pylint: disable=missing-docstring</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                        <span class="n">disp_scale</span> <span class="o">*</span> <span class="n">disp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">res</span><span class="p">),</span> <span class="n">offset</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: disp.shape: </span><span class="si">{}</span><span class="s2">, res: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">err</span><span class="p">,</span> <span class="n">disp</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">res</span><span class="p">))</span>
+                <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">disp_scale</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">disp</span><span class="p">):</span>
+                <span class="c1"># pylint: disable=missing-docstring</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
+                    <span class="n">disp_scale</span> <span class="o">*</span> <span class="n">disp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">res</span><span class="p">),</span> <span class="n">offset</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">fun</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.primal_evaluate"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.primal_evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">primal_evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disp</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">pot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the energies and forces in the system for a given</span>
+<span class="sd">        displacement and gap..</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+<span class="sd">        disp: ndarray</span>
+<span class="sd">            displacement field, in the shape of</span>
+<span class="sd">            system.substrate.nb_subdomain_grid_pts</span>
+<span class="sd">        gap: ndarray</span>
+<span class="sd">            gap , in the shape of</span>
+<span class="sd">            system.substrate.nb_subdomain_grid_pts</span>
+<span class="sd">        pot: bool, optional</span>
+<span class="sd">            Whether to evaluate the energy, default True</span>
+<span class="sd">        forces: bool, optional</span>
+<span class="sd">            Whether to evaluate the forces, default False</span>
+<span class="sd">        logger: ContactMechanics.Tools.Logger</span>
+<span class="sd">            information of current state of the system will be</span>
+<span class="sd">            passed to</span>
+<span class="sd">            logger at every evaluation</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># attention: the substrate may have a higher nb_grid_pts than the gap</span>
+        <span class="c1"># and the interaction (e.g. FreeElasticHalfSpace)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">=</span> <span class="n">gap</span>
+        <span class="n">interaction_energies</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">interaction</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">,</span>
+                                      <span class="n">potential</span><span class="o">=</span><span class="n">pot</span><span class="p">,</span>
+                                      <span class="n">gradient</span><span class="o">=</span><span class="n">forces</span><span class="p">,</span>
+                                      <span class="n">curvature</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_energy</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">interaction_energies</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">compute</span><span class="p">(</span><span class="n">disp</span><span class="p">,</span> <span class="n">pot</span><span class="p">,</span> <span class="n">forces</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_energy</span> <span class="o">+</span>
+                       <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">energy</span>
+                       <span class="k">if</span> <span class="n">pot</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">forces</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">*=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span>
+            <span class="c1">#                       ^ gradient to force per pixel</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comp_slice</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">st</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">logger_input</span><span class="p">())</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.primal_objective"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.primal_objective">[docs]</a>    <span class="k">def</span> <span class="nf">primal_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                         <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;To solve the primal objective using gap as the variable.</span>
+<span class="sd">        Can be fed directly to standard solvers ex: scipy solvers etc</span>
+<span class="sd">        and returns the elastic energy and it&#39;s gradient (negative of</span>
+<span class="sd">        the forces) as a function of the gap.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        __________</span>
+
+<span class="sd">        gap : float</span>
+<span class="sd">              gap between the contact surfaces.</span>
+<span class="sd">        offset : float</span>
+<span class="sd">                constant value to add to the surface heights</span>
+<span class="sd">        pot : (default False)</span>
+
+<span class="sd">        gradient : (default True)</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        _______</span>
+<span class="sd">        energy : float</span>
+<span class="sd">                value of energy(scalar value).</span>
+<span class="sd">        force : float,array</span>
+<span class="sd">                value of force(array).</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        _____</span>
+
+<span class="sd">        Objective:</span>
+
+<span class="sd">        .. math ::</span>
+
+<span class="sd">            \min_u f = \frac{1}{2} u_i K_{ij} u_j + \phi (u_{ij})\\</span>
+<span class="sd">            \\</span>
+<span class="sd">            \nabla f = K_{ij} u_j + \phi^{\prime} \text{    which is the force} \\</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_subdomain_grid_pts</span>
+        <span class="k">if</span> <span class="n">gradient</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">gap</span><span class="p">):</span>
+                <span class="n">disp</span> <span class="o">=</span> <span class="n">gap</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">heights</span><span class="p">()</span> <span class="o">+</span> <span class="n">offset</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">primal_evaluate</span><span class="p">(</span>
+                        <span class="n">disp</span><span class="p">,</span> <span class="n">gap</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">res</span><span class="p">),</span> <span class="n">forces</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: gap.shape: </span><span class="si">{}</span><span class="s2">, res: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                            <span class="n">err</span><span class="p">,</span> <span class="n">gap</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">res</span><span class="p">))</span>
+                <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">gap</span><span class="p">):</span>
+                <span class="n">disp</span> <span class="o">=</span> <span class="n">gap</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">res</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">heights</span><span class="p">()</span> <span class="o">+</span> <span class="n">offset</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">primal_evaluate</span><span class="p">(</span>
+                    <span class="n">disp</span><span class="p">,</span> <span class="n">gap</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">res</span><span class="p">),</span> <span class="n">forces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">fun</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.primal_hessian_product"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.primal_hessian_product">[docs]</a>    <span class="k">def</span> <span class="nf">primal_hessian_product</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">des_dir</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the hessian product of the primal_objective function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">adh_curv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">gap</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">hessp_val</span> <span class="o">=</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">evaluate_force</span><span class="p">(</span>
+            <span class="n">des_dir</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_subdomain_grid_pts</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">des_dir</span><span class="p">))</span> \
+            <span class="o">+</span> <span class="n">adh_curv</span> <span class="o">*</span> <span class="n">des_dir</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">area_per_pt</span>
+
+        <span class="k">return</span> <span class="n">hessp_val</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">des_dir</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.hessian_product_function"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.hessian_product_function">[docs]</a>    <span class="k">def</span> <span class="nf">hessian_product_function</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">hessp</span><span class="p">(</span><span class="n">disp</span><span class="p">,</span> <span class="n">des_dir</span><span class="p">):</span>
+            <span class="n">gap</span> <span class="o">=</span> <span class="n">disp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_subdomain_grid_pts</span>
+                               <span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">comp_slice</span><span class="p">]</span> \
+                  <span class="o">-</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">heights</span><span class="p">()</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">adh_curv</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">gap</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">hessp_val</span> <span class="o">=</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">evaluate_force</span><span class="p">(</span>
+                <span class="n">des_dir</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_subdomain_grid_pts</span><span class="p">)</span>
+            <span class="p">)</span>
+
+            <span class="n">hessp_val</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comp_slice</span><span class="p">]</span> <span class="o">+=</span> <span class="n">adh_curv</span> \
+                <span class="o">*</span> <span class="n">des_dir</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_subdomain_grid_pts</span><span class="p">)[</span><span class="bp">self</span><span class="o">.</span><span class="n">comp_slice</span><span class="p">]</span> <span class="o">*</span> \
+                <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">area_per_pt</span>
+            <span class="k">return</span> <span class="n">hessp_val</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">des_dir</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">hessp</span></div>
+
+    <span class="k">def</span> <span class="nf">_fourier_coefficients</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the coefficients for elasticity matrix when working in fourier</span>
+<span class="sd">        space for both 1D and 2D system.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">nx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">nb_dims</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">nb_dims</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">ny</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">((</span><span class="n">nx</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">ny</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)):</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[:</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:,</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="p">:</span><span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:</span><span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:,</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">:,</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">/</span> <span class="p">(</span><span class="n">nx</span> <span class="o">*</span> <span class="n">ny</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">nb_dims</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">nx</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">nx</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">nx</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">nx</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="n">nx</span> <span class="o">//</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">nx</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">nx</span>
+                <span class="n">coeffs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">nx</span>
+
+        <span class="k">return</span> <span class="n">coeffs</span>
+
+<div class="viewcode-block" id="SmoothContactSystem.evaluate_k"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.evaluate_k">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate_k</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disp_k</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">mw</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                   <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the energies and forces in the system for a given displacement</span>
+<span class="sd">        field in fourier space.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        -----------</span>
+
+<span class="sd">        disp_k: ndarray</span>
+<span class="sd">            displacement field in fourier space.</span>
+<span class="sd">        gap:  ndarray</span>
+<span class="sd">            displacement field in real space, in the shape of</span>
+<span class="sd">            system.substrate.nb_subdomain_grid_pts</span>
+<span class="sd">        offset: float</span>
+<span class="sd">            determines indentation depth,</span>
+<span class="sd">            constant value added to the heights (system.topography)</span>
+<span class="sd">        mw: bool, optional</span>
+<span class="sd">            when mass weighting is required then set this to TRUE.</span>
+<span class="sd">        pot: bool, optional</span>
+<span class="sd">            Wether to evaluate the energy, default True</span>
+<span class="sd">        forces: bool, optional</span>
+<span class="sd">            Wether to evaluate the forces, default False</span>
+<span class="sd">        logger: ContactMechanics.Tools.Logger</span>
+<span class="sd">            informations of current state of the system will be passed to</span>
+<span class="sd">            logger at every evaluation.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># self.gap = self.compute_gap(disp, offset)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">=</span> <span class="n">gap</span>
+        <span class="n">interaction_energies</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">interaction</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">,</span>
+                                      <span class="n">potential</span><span class="o">=</span><span class="n">pot</span><span class="p">,</span>
+                                      <span class="n">gradient</span><span class="o">=</span><span class="n">forces</span><span class="p">,</span>
+                                      <span class="n">curvature</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_energy</span> <span class="o">=</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">interaction_energies</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">grad_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+
+        <span class="n">coeff</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fourier_coefficients</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">mw</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grad_k</span> <span class="o">=</span> <span class="n">disp_k</span> <span class="o">*</span> <span class="n">coeff</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">grad_k</span> <span class="o">=</span> <span class="n">disp_k</span> <span class="o">*</span> <span class="n">coeff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">grad_k</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span>
+
+        <span class="c1"># ENERGY FROM SUBSTRATE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grad_k</span> <span class="o">*</span> <span class="n">disp_k</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">energy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">force_h</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">grad_k</span>
+
+        <span class="c1"># TOTAL ENERGY</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">energy</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_energy</span>
+
+        <span class="k">if</span> <span class="n">forces</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">*=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span>
+            <span class="c1">#                     ^ gradient to force per pixel</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">hcfft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="p">)</span>
+            <span class="n">interaction_force_float_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+            <span class="n">adh_coeffs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fourier_coefficients</span><span class="p">()</span>
+            <span class="n">interaction_force_float_k</span> <span class="o">*=</span> <span class="n">adh_coeffs</span>
+
+            <span class="k">if</span> <span class="n">mw</span><span class="p">:</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span><span class="p">)</span>
+                <span class="n">interaction_force_float_k</span> <span class="o">=</span> <span class="n">interaction_force_float_k</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">k</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">force_h</span> <span class="o">+=</span> <span class="n">interaction_force_float_k</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">force_h</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">disp_real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">heights</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="o">+</span> <span class="n">offset</span>
+            <span class="n">force_real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">evaluate_force</span><span class="p">(</span><span class="n">disp_real</span><span class="p">)</span>
+            <span class="n">force_real</span> <span class="o">=</span> <span class="n">force_real</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">st</span><span class="p">(</span><span class="o">*</span><span class="p">([</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;max. abs. grad.&#39;</span><span class="p">,</span>
+                         <span class="s1">&#39;max. abs. grad. real&#39;</span><span class="p">],</span>
+                        <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force_h</span><span class="p">)),</span>
+                         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">force_real</span><span class="p">))</span>
+                         <span class="p">]))</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_h</span><span class="p">)</span></div>
+
+    <span class="c1"># def hessian_product_k(self, dispk, des_dir_k):</span>
+    <span class="c1">#     &quot;&quot;&quot;Returns the hessian product of the fourier space</span>
+    <span class="c1">#     objective_k function.</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     self.substrate.fourier_buffer.array()[...] = dispk.copy()</span>
+    <span class="c1">#     self.substrate.fftengine.ifft(self.substrate.fourier_buffer,</span>
+    <span class="c1">#                                   self.substrate.real_buffer)</span>
+    <span class="c1">#     disp = self.substrate.real_buffer.array()[...].copy() \</span>
+    <span class="c1">#         * self.substrate.fftengine.normalisation</span>
+    <span class="c1">#</span>
+    <span class="c1">#     gap = self.compute_gap(disp)</span>
+    <span class="c1">#     _, _, adh_curv = self.interaction.evaluate(gap, curvature=True)</span>
+    <span class="c1">#</span>
+    <span class="c1">#     self.substrate.real_buffer.array()[...] = adh_curv.reshape(</span>
+    <span class="c1">#         self.substrate.nb_grid_pts).copy()</span>
+    <span class="c1">#     self.substrate.fftengine.fft(self.substrate.real_buffer,</span>
+    <span class="c1">#                                  self.substrate.fourier_buffer)</span>
+    <span class="c1">#     adh_curv_k = self.substrate.fourier_buffer.array()[...].copy()</span>
+    <span class="c1">#</span>
+    <span class="c1">#     hessp_val_k = -self.substrate.evaluate_k_force_k(des_dir_k) + \</span>
+    <span class="c1">#         adh_curv_k * des_dir_k * self.substrate.area_per_pt</span>
+    <span class="c1">#</span>
+    <span class="c1">#     return hessp_val_k</span>
+
+    <span class="c1"># def hessian_product_preconditioned(self, offset):</span>
+
+    <span class="c1">#     def hessp_precond(disp_h, des_dir):</span>
+    <span class="c1">#</span>
+    <span class="c1">#         self.real_buffer.array()[...] = offset</span>
+    <span class="c1">#         self.engine.hcfft(self.real_buffer, self.fourier_buffer)</span>
+    <span class="c1">#         offset_k = self.fourier_buffer.array()[...].copy()</span>
+    <span class="c1">#</span>
+    <span class="c1">#         self.real_buffer.array()[...] = self.surface.heights().copy()</span>
+    <span class="c1">#         self.engine.hcfft(self.real_buffer, self.fourier_buffer)</span>
+    <span class="c1">#         self.heights_k_float = self.fourier_buffer.array()[...].copy()</span>
+    <span class="c1">#</span>
+    <span class="c1">#         disp_float_k = disp_h.copy()</span>
+    <span class="c1">#         disp_float_k = disp_float_k.reshape(self.substrate.nb_grid_pts)</span>
+    <span class="c1">#         gap_float_k = (disp_float_k / np.sqrt(self.stiffness_k *</span>
+    <span class="c1">#                                               self.area_per_pt)) - \</span>
+    <span class="c1">#                       self.heights_k_float - offset_k</span>
+    <span class="c1">#</span>
+    <span class="c1">#         self.fourier_buffer.array()[...] = gap_float_k.copy()</span>
+    <span class="c1">#         self.engine.ihcfft(self.fourier_buffer, self.real_buffer)</span>
+    <span class="c1">#         gap = self.real_buffer.array()[...].copy() * \</span>
+    <span class="c1">#               self.engine.normalisation</span>
+    <span class="c1">#</span>
+    <span class="c1">#         _, _, adh_curv = \</span>
+    <span class="c1">#             self.interaction.evaluate(gap,</span>
+    <span class="c1">#                                       curvature=True)</span>
+    <span class="c1">#</span>
+    <span class="c1">#         coeff = self._fourier_coefficients()</span>
+    <span class="c1">#</span>
+    <span class="c1">#         el_hess_k = coeff @ coeff</span>
+    <span class="c1">#         el_hess_k *= self.area_per_pt</span>
+    <span class="c1">#</span>
+    <span class="c1">#         orig_shape = np.shape(des_dir)</span>
+    <span class="c1">#</span>
+    <span class="c1">#         el_hess_k *= des_dir #.reshape(el_hess_k)</span>
+    <span class="c1">#</span>
+    <span class="c1">#         adh_curv *= self.area_per_pt</span>
+    <span class="c1">#</span>
+    <span class="c1">#         self.real_buffer.array()[...] = adh_curv</span>
+    <span class="c1">#         self.engine.hcfft(self.real_buffer, self.fourier_buffer)</span>
+    <span class="c1">#         adh_curv_float_k = self.fourier_buffer.array()[...].copy()</span>
+    <span class="c1">#</span>
+    <span class="c1">#         adh_curv_float_k *= coeff @ coeff</span>
+    <span class="c1">#</span>
+    <span class="c1">#         k = np.sqrt(self.stiffness_k.copy() * self.area_per_pt)</span>
+    <span class="c1">#</span>
+    <span class="c1">#         adh_hess_k = adh_curv_float_k * des_dir * (1 / k) * (1 / k)</span>
+    <span class="c1">#</span>
+    <span class="c1">#         hess_k = el_hess_k.reshape(orig_shape) + \</span>
+    <span class="c1">#                  adh_hess_k.reshape(orig_shape)</span>
+    <span class="c1">#</span>
+    <span class="c1">#         return hess_k</span>
+    <span class="c1">#</span>
+    <span class="c1">#     return hessp_precond</span>
+
+<div class="viewcode-block" id="SmoothContactSystem.preconditioned_objective"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.preconditioned_objective">[docs]</a>    <span class="k">def</span> <span class="nf">preconditioned_objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This helper method interface to the evaluate_k() method with</span>
+<span class="sd">        preconditioning active. That is, it tries to solve a simpler problem</span>
+<span class="sd">        formulated using,</span>
+
+<span class="sd">        original problem:</span>
+
+<span class="sd">        .. math ::</span>
+
+<span class="sd">            \frac{1}{2(n_x n_y)} \tilde{u}\tilde{K} \bar{\tilde{u}} +</span>
+<span class="sd">            \phi(F^{-1}(\tilde{u} - \tilde{h}))</span>
+
+<span class="sd">        preconditioned problem:</span>
+
+<span class="sd">        .. math ::</span>
+<span class="sd">             \tilde{v} = \tilde{k}^{\frac{1}{2}} \tilde{u} \\</span>
+
+<span class="sd">             \frac{1}{2(n_x n_y)} \tilde{v}\bar{\tilde{v}} +</span>
+<span class="sd">            \phi(F^{-1}(\frac{\tilde{v}}{\tilde{k}^{\frac{1}{2}}} - \tilde{h}))</span>
+
+<span class="sd">        we solve for variable :math:`\tilde{v}`.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+
+<span class="sd">        offset: float</span>
+<span class="sd">            determines indentation depth,</span>
+<span class="sd">            constant value added to the heights (system.topography)</span>
+<span class="sd">        gradient: bool, optional</span>
+<span class="sd">            Whether to evaluate the gradient, default False</span>
+<span class="sd">        logger: ContactMechanics.Tools.Logger</span>
+<span class="sd">            information of current state of the system will be passed to</span>
+<span class="sd">            logger at every evaluation</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        _______</span>
+
+<span class="sd">            function(disp_k)</span>
+
+<span class="sd">                Parameters</span>
+<span class="sd">                __________</span>
+
+<span class="sd">                disp_k: an ndarray in fourier halfcomplex space</span>
+
+<span class="sd">                Returns</span>
+<span class="sd">                _______</span>
+
+<span class="sd">                energy: scalar</span>
+<span class="sd">                        energy of the system</span>
+
+<span class="sd">                force_h: an halfcomplex array of shape(disp_k)</span>
+<span class="sd">                        force of the system</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">hcfft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="p">)</span>
+        <span class="n">offset_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">heights</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">hcfft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heights_k_float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">gradient</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">disp_</span><span class="p">):</span>
+                <span class="n">disp_float_k</span> <span class="o">=</span> <span class="n">disp_</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">orig_shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">disp_float_k</span><span class="p">)</span>
+                <span class="n">disp_float_k</span> <span class="o">=</span> <span class="n">disp_float_k</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+                <span class="n">gap_float_k</span> <span class="o">=</span> <span class="p">(</span><span class="n">disp_float_k</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span> <span class="o">*</span>
+                                                      <span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span><span class="p">))</span> <span class="o">-</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">heights_k_float</span> <span class="o">-</span> <span class="n">offset_k</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">gap_float_k</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">ihcfft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="p">)</span>
+                <span class="n">gap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="o">*</span> \
+                    <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">normalisation</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_k</span><span class="p">(</span><span class="n">disp_float_k</span><span class="p">,</span>
+                                                            <span class="n">gap</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
+                                                            <span class="n">mw</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                            <span class="n">forces</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
+                                                            <span class="p">)</span>
+
+                <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">force_h</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">orig_shape</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="k">return</span> <span class="n">fun</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.objective_k_float"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.objective_k_float">[docs]</a>    <span class="k">def</span> <span class="nf">objective_k_float</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Returns callable objective as needed by scipy minimizers.</span>
+
+<span class="sd">        The optimisation varialbe is the halfcomplex fourier transform of the gap.</span>
+
+<span class="sd">        This helper method interface to the evaluate_k() method without</span>
+<span class="sd">        preconditioning active.</span>
+
+<span class="sd">        .. math ::</span>
+
+<span class="sd">            \frac{1}{2(n_x n_y)} \tilde{u}\tilde{K} \bar{\tilde{u}} +</span>
+<span class="sd">            \phi(F^{-1}(\tilde{u} - \tilde{h}))  \\</span>
+
+<span class="sd">        preconditioned problem:</span>
+
+<span class="sd">        .. math ::</span>
+
+<span class="sd">             \tilde{v} = \tilde{k}^{\frac{1}{2}} \tilde{u} \\</span>
+
+<span class="sd">             \frac{1}{2(n_x n_y)} \tilde{v} \bar{\tilde{v}} +</span>
+<span class="sd">            \phi(F^{-1}(\frac{\tilde{v}}{\tilde{k}^{\frac{1}{2}}} - \tilde{h}))</span>
+<span class="sd">        \\</span>
+<span class="sd">        we solve for variable :math:`\tilde{v}`.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">        -----------</span>
+
+<span class="sd">        offset: float</span>
+<span class="sd">            determines indentation depth,</span>
+<span class="sd">            constant value added to the heights (system.topography)</span>
+<span class="sd">        gradient: bool, optional</span>
+<span class="sd">            Whether to evaluate the gradient, default False</span>
+<span class="sd">        logger: ContactMechanics.Tools.Logger</span>
+<span class="sd">            information of current state of the system will be passed to</span>
+<span class="sd">            logger at every evaluation</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        _______</span>
+
+<span class="sd">            function(disp_k)</span>
+
+<span class="sd">                Parameters</span>
+<span class="sd">                __________</span>
+
+<span class="sd">                disp_k: an ndarray in fourier space</span>
+
+<span class="sd">                Returns</span>
+<span class="sd">                _______</span>
+
+<span class="sd">                    energy, gradient_k_float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">hcfft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="p">)</span>
+        <span class="n">offset_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">heights</span><span class="p">()</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">hcfft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">heights_k_float</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">gradient</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">disp_k</span><span class="p">):</span>
+                <span class="n">disp_float_k</span> <span class="o">=</span> <span class="n">disp_k</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">orig_shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">disp_float_k</span><span class="p">)</span>
+                <span class="n">disp_float_k</span> <span class="o">=</span> <span class="n">disp_float_k</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+                <span class="n">gap_float_k</span> <span class="o">=</span> <span class="n">disp_float_k</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights_k_float</span> <span class="o">-</span> <span class="n">offset_k</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">gap_float_k</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">ihcfft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="p">)</span>
+                <span class="n">gap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> \
+                    <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">normalisation</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force_h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_k</span><span class="p">(</span><span class="n">disp_float_k</span><span class="p">,</span>
+                                                            <span class="n">gap</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span>
+                                                            <span class="n">forces</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                                            <span class="n">logger</span><span class="o">=</span><span class="n">logger</span>
+                                                            <span class="p">)</span>
+                <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">force_h</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">orig_shape</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">disp_k</span><span class="p">):</span>
+                <span class="c1"># pylint: disable=missing-docstring</span>
+                <span class="n">disp_float_k</span> <span class="o">=</span> <span class="n">disp_k</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">disp_float_k</span> <span class="o">=</span> <span class="n">disp_float_k</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+                <span class="n">gap_float_k</span> <span class="o">=</span> <span class="n">disp_float_k</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">heights_k_float</span> <span class="o">-</span> <span class="n">offset_k</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">gap_float_k</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">ihcfft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="p">)</span>
+                <span class="n">gap</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> \
+                    <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">normalisation</span>
+
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_k</span><span class="p">(</span><span class="n">disp_float_k</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                                       <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">return</span> <span class="n">fun</span></div>
+
+<div class="viewcode-block" id="SmoothContactSystem.callback"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.callback">[docs]</a>    <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Simple callback function that can be handed over to scipy&#39;s minimize to</span>
+<span class="sd">        get updates during minimisation</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">        ----------</span>
+<span class="sd">        force: bool, optional</span>
+<span class="sd">            whether to include the norm of the force</span>
+<span class="sd">            vector in the update message</span>
+<span class="sd">            (default False)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">force</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">dummy</span><span class="p">):</span>
+                <span class="s2">&quot;includes the force norm in its output&quot;</span>
+                <span class="k">nonlocal</span> <span class="n">counter</span>
+                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;at it </span><span class="si">{}</span><span class="s2">, e = </span><span class="si">{}</span><span class="s2">, |f| = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">counter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span>
+                    <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">))))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">def</span> <span class="nf">fun</span><span class="p">(</span><span class="n">dummy</span><span class="p">):</span>
+                <span class="s2">&quot;prints messages without force information&quot;</span>
+                <span class="k">nonlocal</span> <span class="n">counter</span>
+                <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;at it </span><span class="si">{}</span><span class="s2">, e = </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">counter</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">fun</span></div></div>
+
+
+<div class="viewcode-block" id="BoundedSmoothContactSystem"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem">[docs]</a><span class="k">class</span> <span class="nc">BoundedSmoothContactSystem</span><span class="p">(</span><span class="n">SmoothContactSystem</span><span class="p">):</span>
+<div class="viewcode-block" id="BoundedSmoothContactSystem.handles"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.handles">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">handles</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># FIXME work around, see issue #208</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="BoundedSmoothContactSystem.compute_nb_contact_pts"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_nb_contact_pts">[docs]</a>    <span class="k">def</span> <span class="nf">compute_nb_contact_pts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        compute and return the number of contact points.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BoundedSmoothContactSystem.logger_input"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.logger_input">[docs]</a>    <span class="k">def</span> <span class="nf">logger_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        headers: list of strings</span>
+<span class="sd">        values: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tot_nb_grid_pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
+        <span class="n">rel_rep_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nb_repulsive_pts</span><span class="p">()</span> <span class="o">/</span> <span class="n">tot_nb_grid_pts</span>
+        <span class="n">rel_att_area</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_nb_attractive_pts</span><span class="p">()</span> <span class="o">/</span> <span class="n">tot_nb_grid_pts</span>
+        <span class="c1"># TODO: eventually put a flag to turn</span>
+        <span class="c1">#  reductions off since this is an additional communication.</span>
+
+        <span class="n">contacting_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">==</span> <span class="mf">0.</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_subdomain_grid_pts</span><span class="p">)</span>
+        <span class="n">mask</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">][</span>
+            <span class="n">contacting_points</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">max_proj_grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">mask</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="p">([</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;max. proj. grad.&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;mean gap&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;frac. cont. area&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;frac. rep. area&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;frac. att. area&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;frac. int. area&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;substrate force&#39;</span><span class="p">,</span>
+                 <span class="s1">&#39;interaction force&#39;</span><span class="p">],</span>
+                <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span>
+                 <span class="n">max_proj_grad</span><span class="p">,</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">compute_mean_gap</span><span class="p">(),</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">compute_nb_contact_pts</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">),</span>
+                 <span class="n">rel_rep_area</span><span class="p">,</span>
+                 <span class="n">rel_att_area</span><span class="p">,</span>
+                 <span class="n">rel_rep_area</span> <span class="o">+</span> <span class="n">rel_att_area</span><span class="p">,</span>
+                 <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">),</span>
+                 <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">)])</span></div>
+
+<div class="viewcode-block" id="BoundedSmoothContactSystem.compute_normal_force"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_normal_force">[docs]</a>    <span class="k">def</span> <span class="nf">compute_normal_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;computes and returns the sum of all forces&quot;</span>
+
+        <span class="c1"># sum of the jacobian in the contact area (Lagrange multiplier)</span>
+        <span class="c1"># and the ineraction forces.</span>
+        <span class="c1"># can also be computed easily from the substrate forces,</span>
+        <span class="c1"># what we do here</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="BoundedSmoothContactSystem.compute_repulsive_force"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_repulsive_force">[docs]</a>    <span class="k">def</span> <span class="nf">compute_repulsive_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;computes and returns the sum of all repulsive forces</span>
+
+<span class="sd">        Assumptions: there</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">],</span> <span class="mf">0.</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BoundedSmoothContactSystem.compute_attractive_force"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_attractive_force">[docs]</a>    <span class="k">def</span> <span class="nf">compute_attractive_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s2">&quot;computes and returns the sum of all attractive forces&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">],</span>
+                <span class="mf">0.</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BoundedSmoothContactSystem.compute_nb_repulsive_pts"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_nb_repulsive_pts">[docs]</a>    <span class="k">def</span> <span class="nf">compute_nb_repulsive_pts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        compute and return the number of contact points under repulsive</span>
+<span class="sd">        pressure.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span>
+                    <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">),</span>
+                <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BoundedSmoothContactSystem.compute_nb_attractive_pts"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_nb_attractive_pts">[docs]</a>    <span class="k">def</span> <span class="nf">compute_nb_attractive_pts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        compute and return the number of contact points under attractive</span>
+<span class="sd">        pressure.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute points where substrate force is negative</span>
+        <span class="c1"># or there is no contact</span>
+        <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span><span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+
+        <span class="c1"># exclude points where there is no contact</span>
+        <span class="c1"># and the interaction force is 0.</span>
+        <span class="n">pts</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BoundedSmoothContactSystem.compute_repulsive_coordinates"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_repulsive_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">compute_repulsive_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        returns an array of all coordinates, where contact pressure is</span>
+<span class="sd">        repulsive. Useful for evaluating the number of contact islands etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span>
+                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">]</span>
+                <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="BoundedSmoothContactSystem.compute_attractive_coordinates"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_attractive_coordinates">[docs]</a>    <span class="k">def</span> <span class="nf">compute_attractive_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        returns an array of all coordinates, where contact pressure is</span>
+<span class="sd">        attractive. Useful for evaluating the number of contact islands etc.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Compute points where substrate force is negative</span>
+        <span class="c1"># or there is no contact</span>
+        <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_or</span><span class="p">(</span>
+            <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">]</span>
+            <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+
+        <span class="c1"># exclude points where there is no contact</span>
+        <span class="c1"># and the interaction force is 0.</span>
+        <span class="n">pts</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">,</span>
+                           <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
+
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2015-2020 The Authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

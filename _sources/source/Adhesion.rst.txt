@@ -1,0 +1,20 @@
+Adhesion package
+================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   Adhesion.Interactions
+   Adhesion.ReferenceSolutions
+   Adhesion.System
+
+Module contents
+---------------
+
+.. automodule:: Adhesion
+   :members:
+   :undoc-members:
+   :show-inheritance:

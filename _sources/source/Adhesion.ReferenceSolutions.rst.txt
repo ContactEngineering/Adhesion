@@ -1,0 +1,61 @@
+Adhesion.ReferenceSolutions package
+===================================
+
+Subpackages
+-----------
+
+.. toctree::
+   :maxdepth: 4
+
+   Adhesion.ReferenceSolutions.sinewave
+
+Submodules
+----------
+
+Adhesion.ReferenceSolutions.BaneyHui module
+-------------------------------------------
+
+.. automodule:: Adhesion.ReferenceSolutions.BaneyHui
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Adhesion.ReferenceSolutions.DMT module
+--------------------------------------
+
+.. automodule:: Adhesion.ReferenceSolutions.DMT
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Adhesion.ReferenceSolutions.JKR module
+--------------------------------------
+
+.. automodule:: Adhesion.ReferenceSolutions.JKR
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Adhesion.ReferenceSolutions.MaugisDugdale module
+------------------------------------------------
+
+.. automodule:: Adhesion.ReferenceSolutions.MaugisDugdale
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Adhesion.ReferenceSolutions.PastewkaRobbins module
+--------------------------------------------------
+
+.. automodule:: Adhesion.ReferenceSolutions.PastewkaRobbins
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: Adhesion.ReferenceSolutions
+   :members:
+   :undoc-members:
+   :show-inheritance:
