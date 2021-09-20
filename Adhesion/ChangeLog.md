@@ -2,9 +2,12 @@
 Change log for Adhesion
 =======================
 
-v0.90.0 (210706)
+v0.90.0 (210920)
 ----------------
 
+- MAINT: automatic publication to PyPI on release
+- CI: move tests to github
+- ENH: singularity container definition files
 - ENH: preconditionned unconstrained contact mechanics in fourier space
 - ENH: use of bound constraint optimizer for adhesion
 - ENH: Powerlaw attractive interaction potential
