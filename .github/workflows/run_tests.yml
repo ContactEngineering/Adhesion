@@ -6,6 +6,7 @@ on:
       - '*'
     tags:
       - '*'
+  repository_dispatch
 
 jobs:
   tests:
