@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.Interactions package &mdash; Adhesion 0.90.0 documentation</title>
+  <title>Adhesion.Interactions package &mdash; Adhesion 0.90.1.dev4+g0a901bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -15,7 +15,7 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,7 +31,7 @@
             <a href="../index.html" class="icon icon-home"> Adhesion
           </a>
               <div class="version">
-                0.90.0
+                0.90.1.dev4+g0a901bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -102,7 +102,7 @@
 <p>Exponential attraction.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.Exponential">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Exponential.</span></span><span class="sig-name descname"><span class="pre">Exponential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">gamma0</span></em>, <em class="sig-param"><span class="pre">rho</span></em>, <em class="sig-param"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Exponential.html#Exponential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Exponential.</span></span><span class="sig-name descname"><span class="pre">Exponential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamma0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Exponential.html#Exponential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.Potential" title="Adhesion.Interactions.Potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.Potential</span></code></a></p>
 <p>V(g) = -gamma0*e^(-g(r)/rho)</p>
 <p>V(g) = -gamma0*e^(-g(r)/rho)
@@ -129,26 +129,26 @@ this property is used by the child potential</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.Exponential.max_tensile">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">max_tensile</span></span><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential.max_tensile" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_tensile</span></span><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential.max_tensile" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the value of the maximum stress
 (i.e. the value of the gradient at the inflexion point pot.r_infl)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.Exponential.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'exp'</span></em><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'exp'</span></em><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.Exponential.r_infl">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the potential’s
 inflection point (if applicable)</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.Exponential.r_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential.r_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the energy minimum</p>
 </dd></dl>
 
@@ -156,18 +156,18 @@ inflection point (if applicable)</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.Morse">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Exponential.</span></span><span class="sig-name descname"><span class="pre">Morse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">work_of_adhesion</span></em>, <em class="sig-param"><span class="pre">interaction_range</span></em>, <em class="sig-param"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Exponential.html#Morse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Exponential.Morse" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Exponential.</span></span><span class="sig-name descname"><span class="pre">Morse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">work_of_adhesion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction_range</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Exponential.html#Morse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Exponential.Morse" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Exponential.RepulsiveExponential" title="Adhesion.Interactions.Exponential.RepulsiveExponential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Exponential.RepulsiveExponential</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.Morse.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'morse'</span></em><a class="headerlink" href="#Adhesion.Interactions.Exponential.Morse.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'morse'</span></em><a class="headerlink" href="#Adhesion.Interactions.Exponential.Morse.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.RepulsiveExponential">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Exponential.</span></span><span class="sig-name descname"><span class="pre">RepulsiveExponential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">gamma_rep</span></em>, <em class="sig-param"><span class="pre">rho_rep</span></em>, <em class="sig-param"><span class="pre">gamma_att</span></em>, <em class="sig-param"><span class="pre">rho_att</span></em>, <em class="sig-param"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Exponential.html#RepulsiveExponential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Exponential.RepulsiveExponential" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Exponential.</span></span><span class="sig-name descname"><span class="pre">RepulsiveExponential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gamma_rep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_rep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma_att</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_att</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Exponential.html#RepulsiveExponential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Exponential.RepulsiveExponential" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.Potential" title="Adhesion.Interactions.Potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.Potential</span></code></a></p>
 <p>V(g) = -gamma_{rep}*e^(-r/rho_{rep}) - gamma_{att}*e^(-r/rho_{att})</p>
 <dl class="py method">
@@ -191,19 +191,19 @@ this property is used by the child potential</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.RepulsiveExponential.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'repulsive_exp'</span></em><a class="headerlink" href="#Adhesion.Interactions.Exponential.RepulsiveExponential.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'repulsive_exp'</span></em><a class="headerlink" href="#Adhesion.Interactions.Exponential.RepulsiveExponential.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.RepulsiveExponential.r_infl">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Exponential.RepulsiveExponential.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Exponential.RepulsiveExponential.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the potential’s
 inflection point (if applicable)</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.RepulsiveExponential.r_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Exponential.RepulsiveExponential.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Exponential.RepulsiveExponential.r_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the energy minimum</p>
 </dd></dl>
 
@@ -215,7 +215,7 @@ inflection point (if applicable)</p>
 <p>Harmonic potential for wall interaction</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Harmonic.Harmonic">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Harmonic.</span></span><span class="sig-name descname"><span class="pre">Harmonic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">spring_constant</span></em>, <em class="sig-param"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Harmonic.html#Harmonic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Harmonic.Harmonic" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Harmonic.</span></span><span class="sig-name descname"><span class="pre">Harmonic</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spring_constant</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Harmonic.html#Harmonic"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Harmonic.Harmonic" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.Potential" title="Adhesion.Interactions.Potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.Potential</span></code></a></p>
 <p>Repulsive harmonic potential.</p>
 <p>Harmonic potential:
@@ -241,19 +241,19 @@ this property is used by the child potential</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Harmonic.Harmonic.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'harmonic'</span></em><a class="headerlink" href="#Adhesion.Interactions.Harmonic.Harmonic.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'harmonic'</span></em><a class="headerlink" href="#Adhesion.Interactions.Harmonic.Harmonic.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Harmonic.Harmonic.r_infl">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Harmonic.Harmonic.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Harmonic.Harmonic.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the potential’s
 inflection point (if applicable)</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Harmonic.Harmonic.r_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Harmonic.Harmonic.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Harmonic.Harmonic.r_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the energy minimum</p>
 </dd></dl>
 
@@ -265,7 +265,7 @@ inflection point (if applicable)</p>
 <p>Defines the base class for contact description</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Interactions.Dugdale">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Interactions.</span></span><span class="sig-name descname"><span class="pre">Dugdale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Interactions.html#Dugdale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Interactions.Dugdale" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Interactions.</span></span><span class="sig-name descname"><span class="pre">Dugdale</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stress</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Interactions.html#Dugdale"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Interactions.Dugdale" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Interactions.HardWall" title="Adhesion.Interactions.Interactions.HardWall"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Interactions.HardWall</span></code></a></p>
 <p>Potential class representing a Dugdale cohesive zone model</p>
 <dl class="py method">
@@ -275,19 +275,19 @@ inflection point (if applicable)</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Interactions.Dugdale.length">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#Adhesion.Interactions.Interactions.Dugdale.length" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">length</span></span><a class="headerlink" href="#Adhesion.Interactions.Interactions.Dugdale.length" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Interactions.Dugdale.stress">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">stress</span></span><a class="headerlink" href="#Adhesion.Interactions.Interactions.Dugdale.stress" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">stress</span></span><a class="headerlink" href="#Adhesion.Interactions.Interactions.Dugdale.stress" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Interactions.HardWall">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Interactions.</span></span><span class="sig-name descname"><span class="pre">HardWall</span></span><a class="reference internal" href="../_modules/Adhesion/Interactions/Interactions.html#HardWall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Interactions.HardWall" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Interactions.</span></span><span class="sig-name descname"><span class="pre">HardWall</span></span><a class="reference internal" href="../_modules/Adhesion/Interactions/Interactions.html#HardWall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Interactions.HardWall" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Interactions.Interaction" title="Adhesion.Interactions.Interactions.Interaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Interactions.Interaction</span></code></a></p>
 <p>base class for non-smooth contact mechanics</p>
 <dl class="py method">
@@ -305,14 +305,14 @@ inflection point (if applicable)</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Interactions.Interaction">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Interactions.</span></span><span class="sig-name descname"><span class="pre">Interaction</span></span><a class="reference internal" href="../_modules/Adhesion/Interactions/Interactions.html#Interaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Interactions.Interaction" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Interactions.</span></span><span class="sig-name descname"><span class="pre">Interaction</span></span><a class="reference internal" href="../_modules/Adhesion/Interactions/Interactions.html#Interaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Interactions.Interaction" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>base class for all interactions, e.g. interatomic potentials</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Interactions.SoftWall">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Interactions.</span></span><span class="sig-name descname"><span class="pre">SoftWall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Interactions.html#SoftWall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Interactions.SoftWall" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Interactions.</span></span><span class="sig-name descname"><span class="pre">SoftWall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Interactions.html#SoftWall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Interactions.SoftWall" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Interactions.Interaction" title="Adhesion.Interactions.Interactions.Interaction"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Interactions.Interaction</span></code></a></p>
 <p>base class for smooth contact mechanics</p>
 <dl class="py method">
@@ -347,7 +347,7 @@ gap: array like</p>
 <p>9-3 Lennard-Jones potential for wall interactions</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Lj93.LJ93">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Lj93.</span></span><span class="sig-name descname"><span class="pre">LJ93</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">epsilon</span></em>, <em class="sig-param"><span class="pre">sigma</span></em>, <em class="sig-param"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Lj93.html#LJ93"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Lj93.LJ93" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Lj93.</span></span><span class="sig-name descname"><span class="pre">LJ93</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epsilon</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sigma</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Lj93.html#LJ93"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Lj93.LJ93" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.Potential" title="Adhesion.Interactions.Potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.Potential</span></code></a></p>
 <p>9-3 Lennard-Jones potential with optional cutoff radius.</p>
 <p>9-3 Lennard-Jones potential:
@@ -394,12 +394,12 @@ this property is used by the child potential</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Lj93.LJ93.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'lj-93'</span></em><a class="headerlink" href="#Adhesion.Interactions.Lj93.LJ93.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'lj-93'</span></em><a class="headerlink" href="#Adhesion.Interactions.Lj93.LJ93.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Lj93.LJ93.r_infl">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Lj93.LJ93.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Lj93.LJ93.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the potential’s
 inflection point (if applicable)</p>
 <p>r_infl = σ</p>
@@ -407,7 +407,7 @@ inflection point (if applicable)</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Lj93.LJ93.r_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Lj93.LJ93.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Lj93.LJ93.r_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the energy minimum</p>
 <blockquote>
 <div><p>6 ___  5/6</p>
@@ -429,7 +429,7 @@ inflection point (if applicable)</p>
 <p>Generic potential class, all potentials inherit it</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.DecoratedPotential">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Potentials.</span></span><span class="sig-name descname"><span class="pre">DecoratedPotential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_potential</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potentials.html#DecoratedPotential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potentials.DecoratedPotential" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Potentials.</span></span><span class="sig-name descname"><span class="pre">DecoratedPotential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_potential</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potentials.html#DecoratedPotential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potentials.DecoratedPotential" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.Potential" title="Adhesion.Interactions.Potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.Potential</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.DecoratedPotential.pipeline">
@@ -440,7 +440,7 @@ inflection point (if applicable)</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.Potential">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Potentials.</span></span><span class="sig-name descname"><span class="pre">Potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potentials.html#Potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Potentials.</span></span><span class="sig-name descname"><span class="pre">Potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potentials.html#Potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Interactions.SoftWall" title="Adhesion.Interactions.Interactions.SoftWall"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Interactions.SoftWall</span></code></a></p>
 <p>Describes the minimum interface to interaction potentials for
 Adhesion. These potentials are purely 1D, which allows for a few
@@ -449,14 +449,14 @@ computed at any point in the problem from just the one-dimensional gap
 (h(x,y)-z(x,y)) at that point</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.Potential.PotentialError">
-<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">PotentialError</span></span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potentials.html#Potential.PotentialError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.PotentialError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PotentialError</span></span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potentials.html#Potential.PotentialError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.PotentialError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>umbrella exception for potential-related issues</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.Potential.SliceableNone">
-<em class="property"><span class="pre">class</span> </em><span class="sig-name descname"><span class="pre">SliceableNone</span></span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potentials.html#Potential.SliceableNone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.SliceableNone" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SliceableNone</span></span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potentials.html#Potential.SliceableNone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.SliceableNone" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>small helper class to remedy numpy’s lack of views on
 index-sliced array views. This construction avoid the computation
@@ -484,19 +484,19 @@ this property is used by the child potential</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.Potential.has_cutoff">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">has_cutoff</span></span><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.has_cutoff" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_cutoff</span></span><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.has_cutoff" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.Potential.max_tensile">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">max_tensile</span></span><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.max_tensile" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_tensile</span></span><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.max_tensile" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the value of the maximum stress
 (i.e. the value of the gradient at the inflexion point pot.r_infl)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.Potential.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'generic_potential'</span></em><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'generic_potential'</span></em><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -506,25 +506,25 @@ this property is used by the child potential</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.Potential.r_infl">
-<em class="property"><span class="pre">abstract</span> <span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the potential’s
 inflection point (if applicable)</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.Potential.r_min">
-<em class="property"><span class="pre">abstract</span> <span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.r_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the energy minimum</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.Potential.register_function">
-<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">register_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potentials.html#Potential.register_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.register_function" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">register_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potentials.html#Potential.register_function"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.register_function" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potentials.Potential.v_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">v_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.v_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">v_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Potentials.Potential.v_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the value of the energy minimum</p>
 </dd></dl>
 
@@ -535,7 +535,7 @@ inflection point (if applicable)</p>
 <span id="adhesion-interactions-powerlaw-module"></span><h2>Adhesion.Interactions.PowerLaw module<a class="headerlink" href="#module-Adhesion.Interactions.PowerLaw" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.PowerLaw.PowerLaw">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.PowerLaw.</span></span><span class="sig-name descname"><span class="pre">PowerLaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">work_of_adhesion</span></em>, <em class="sig-param"><span class="pre">cutoff_radius</span></em>, <em class="sig-param"><span class="pre">exponent=3</span></em>, <em class="sig-param"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/PowerLaw.html#PowerLaw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.PowerLaw.</span></span><span class="sig-name descname"><span class="pre">PowerLaw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">work_of_adhesion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent=3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/PowerLaw.html#PowerLaw"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.Potential" title="Adhesion.Interactions.Potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.Potential</span></code></a></p>
 <p>Polynomial interaction wiches value, first and second derivatives are
 0 at the cutoff radius <span class="math notranslate nohighlight">\(r_c\)</span></p>
@@ -563,31 +563,31 @@ this property is used by the child potential</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.PowerLaw.PowerLaw.has_cutoff">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">has_cutoff</span></span><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.has_cutoff" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_cutoff</span></span><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.has_cutoff" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.PowerLaw.PowerLaw.max_tensile">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">max_tensile</span></span><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.max_tensile" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max_tensile</span></span><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.max_tensile" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the value of the maximum stress
 (i.e. the value of the gradient at the inflexion point pot.r_infl)</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Adhesion.Interactions.PowerLaw.PowerLaw.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'PowerLaw'</span></em><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'PowerLaw'</span></em><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.PowerLaw.PowerLaw.r_infl">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the potential’s
 inflection point (if applicable)</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.PowerLaw.PowerLaw.r_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.r_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the energy minimum</p>
 </dd></dl>
 
@@ -598,7 +598,7 @@ inflection point (if applicable)</p>
 <span id="adhesion-interactions-smoothpotential-module"></span><h2>Adhesion.Interactions.SmoothPotential module<a class="headerlink" href="#module-Adhesion.Interactions.SmoothPotential" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.SmoothPotential.SmoothPotential">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.SmoothPotential.</span></span><span class="sig-name descname"><span class="pre">SmoothPotential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_potential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/SmoothPotential.html#SmoothPotential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.SmoothPotential.SmoothPotential" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.SmoothPotential.</span></span><span class="sig-name descname"><span class="pre">SmoothPotential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_potential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/SmoothPotential.html#SmoothPotential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.SmoothPotential.SmoothPotential" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.DecoratedPotential" title="Adhesion.Interactions.Potentials.DecoratedPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.DecoratedPotential</span></code></a></p>
 <p>implements the splining of the potential tail using a fourth order
 polynomial than reaches zero within a finite cutoff radius</p>
@@ -662,7 +662,7 @@ smoothed potential could be below r_t and so staying the original one</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.SmoothPotential.SmoothPotential.r_infl">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.SmoothPotential.SmoothPotential.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.SmoothPotential.SmoothPotential.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the potential’s
 inflection point
 Depending on where the transition between the parent_potential and the
@@ -672,7 +672,7 @@ of the parent_potential</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.SmoothPotential.SmoothPotential.r_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.SmoothPotential.SmoothPotential.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.SmoothPotential.SmoothPotential.r_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the enery minimum
 of the parent potential. (The spline begins at radii above r_min)</p>
 </dd></dl>
@@ -691,7 +691,7 @@ of the parent potential. (The spline begins at radii above r_min)</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.VdW82.VDW82">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.VdW82.</span></span><span class="sig-name descname"><span class="pre">VDW82</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">c_sr</span></em>, <em class="sig-param"><span class="pre">hamaker</span></em>, <em class="sig-param"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/VdW82.html#VDW82"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.VdW82.VDW82" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.VdW82.</span></span><span class="sig-name descname"><span class="pre">VDW82</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c_sr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hamaker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/VdW82.html#VDW82"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.VdW82.VDW82" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.Potential" title="Adhesion.Interactions.Potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.Potential</span></code></a></p>
 <p>Van der Waals-type attractive potential with a fantasy repulsive model
 (like Lennard-Jones). The potential uses the formulation of Lessel et al.
@@ -744,12 +744,12 @@ this property is used by the child potential</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Adhesion.Interactions.VdW82.VDW82.name">
-<span class="sig-name descname"><span class="pre">name</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'v-d-Waals82'</span></em><a class="headerlink" href="#Adhesion.Interactions.VdW82.VDW82.name" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'v-d-Waals82'</span></em><a class="headerlink" href="#Adhesion.Interactions.VdW82.VDW82.name" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.VdW82.VDW82.r_infl">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.VdW82.VDW82.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.VdW82.VDW82.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the potential’s
 inflection point (if applicable)</p>
 <blockquote>
@@ -765,7 +765,7 @@ inflection point (if applicable)</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.VdW82.VDW82.r_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.VdW82.VDW82.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.VdW82.VDW82.r_min" title="Permalink to this definition"></a></dt>
 <dd><dl>
 <dt>convenience function returning the location of the enery minimum</dt><dd><blockquote>
 <div></div></blockquote>
@@ -783,7 +783,7 @@ inflection point (if applicable)</p>
 <span id="adhesion-interactions-cutoffs-module"></span><h2>Adhesion.Interactions.cutoffs module<a class="headerlink" href="#module-Adhesion.Interactions.cutoffs" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.CutoffPotential">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.cutoffs.</span></span><span class="sig-name descname"><span class="pre">CutoffPotential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_potential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff_radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/cutoffs.html#CutoffPotential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.cutoffs.CutoffPotential" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.cutoffs.</span></span><span class="sig-name descname"><span class="pre">CutoffPotential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_potential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff_radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/cutoffs.html#CutoffPotential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.cutoffs.CutoffPotential" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.DecoratedPotential" title="Adhesion.Interactions.Potentials.DecoratedPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.DecoratedPotential</span></code></a></p>
 <p>sets the potential to 0 above the cutoff radius and shifts it up to
 enforce continuity of the potential. This potential hence has a
@@ -809,19 +809,19 @@ this property is used by the child potential</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.CutoffPotential.has_cutoff">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">has_cutoff</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.CutoffPotential.has_cutoff" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_cutoff</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.CutoffPotential.has_cutoff" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.CutoffPotential.r_infl">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.CutoffPotential.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.CutoffPotential.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the potential’s
 inflection point (if applicable)</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.CutoffPotential.r_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.CutoffPotential.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.CutoffPotential.r_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the enery minimum</p>
 </dd></dl>
 
@@ -829,7 +829,7 @@ inflection point (if applicable)</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.LinearCorePotential">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.cutoffs.</span></span><span class="sig-name descname"><span class="pre">LinearCorePotential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_potential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_ti</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hardness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">htol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/cutoffs.html#LinearCorePotential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.cutoffs.LinearCorePotential" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.cutoffs.</span></span><span class="sig-name descname"><span class="pre">LinearCorePotential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_potential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_ti</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hardness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">htol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/cutoffs.html#LinearCorePotential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.cutoffs.LinearCorePotential" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.DecoratedPotential" title="Adhesion.Interactions.Potentials.DecoratedPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.DecoratedPotential</span></code></a></p>
 <p>Replaces the singular repulsive part of potentials by a linear part. This
 makes potentials maximally robust for the use with very bad initial
@@ -858,14 +858,14 @@ this property is used by the child potential</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.LinearCorePotential.r_infl">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.LinearCorePotential.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.LinearCorePotential.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the potential’s
 inflection point (if applicable)</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.LinearCorePotential.r_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.LinearCorePotential.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.LinearCorePotential.r_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the enery minimum</p>
 </dd></dl>
 
@@ -873,7 +873,7 @@ inflection point (if applicable)</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.ParabolicCutoffPotential">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.cutoffs.</span></span><span class="sig-name descname"><span class="pre">ParabolicCutoffPotential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_potential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff_radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/cutoffs.html#ParabolicCutoffPotential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.cutoffs.ParabolicCutoffPotential" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.cutoffs.</span></span><span class="sig-name descname"><span class="pre">ParabolicCutoffPotential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent_potential</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cutoff_radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/cutoffs.html#ParabolicCutoffPotential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.cutoffs.ParabolicCutoffPotential" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.DecoratedPotential" title="Adhesion.Interactions.Potentials.DecoratedPotential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.Interactions.Potentials.DecoratedPotential</span></code></a></p>
 <p>Implements a very simple smoothing of a potential, by complementing the
 functional form of the potential with a parabola that brings to zero the
@@ -900,18 +900,18 @@ this property is used by the child potential</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.ParabolicCutoffPotential.has_cutoff">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">has_cutoff</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.ParabolicCutoffPotential.has_cutoff" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">has_cutoff</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.ParabolicCutoffPotential.has_cutoff" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.ParabolicCutoffPotential.r_infl">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.ParabolicCutoffPotential.r_infl" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.ParabolicCutoffPotential.r_infl" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the inflection point</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.Interactions.cutoffs.ParabolicCutoffPotential.r_min">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.ParabolicCutoffPotential.r_min" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.cutoffs.ParabolicCutoffPotential.r_min" title="Permalink to this definition"></a></dt>
 <dd><p>convenience function returning the location of the energy minimum</p>
 </dd></dl>
 

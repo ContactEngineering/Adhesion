@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.System package &mdash; Adhesion 0.90.0 documentation</title>
+  <title>Adhesion.System package &mdash; Adhesion 0.90.1.dev4+g0a901bc documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -15,7 +15,7 @@
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
         <script src="../_static/doctools.js"></script>
-        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,7 +31,7 @@
             <a href="../index.html" class="icon icon-home"> Adhesion
           </a>
               <div class="version">
-                0.90.0
+                0.90.1.dev4+g0a901bc
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -96,7 +96,7 @@
 <span id="adhesion-system-factory-module"></span><h2>Adhesion.System.Factory module<a class="headerlink" href="#module-Adhesion.System.Factory" title="Permalink to this headline"></a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="Adhesion.System.Factory.make_system">
-<span class="sig-prename descclassname"><span class="pre">Adhesion.System.Factory.</span></span><span class="sig-name descname"><span class="pre">make_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">substrate</span></em>, <em class="sig-param"><span class="pre">interaction</span></em>, <em class="sig-param"><span class="pre">surface</span></em>, <em class="sig-param"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></em>, <em class="sig-param"><span class="pre">physical_sizes=None</span></em>, <em class="sig-param"><span class="pre">system_class=None</span></em>, <em class="sig-param"><span class="pre">**kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Factory.html#make_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Factory.make_system" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Adhesion.System.Factory.</span></span><span class="sig-name descname"><span class="pre">make_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_sizes=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_class=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Factory.html#make_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Factory.make_system" title="Permalink to this definition"></a></dt>
 <dd><p>Factory function for contact systems. The returned object is always
 of a subtype of SystemBase.</p>
 <dl class="simple">
@@ -123,12 +123,12 @@ of a subtype of SystemBase.</p>
 <p>implements plastic mapping algorithms for contact systems</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.System.PlasticSystemSpecialisations.PlasticSmoothContactSystem">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.System.PlasticSystemSpecialisations.</span></span><span class="sig-name descname"><span class="pre">PlasticSmoothContactSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/PlasticSystemSpecialisations.html#PlasticSmoothContactSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.PlasticSystemSpecialisations.PlasticSmoothContactSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.System.PlasticSystemSpecialisations.</span></span><span class="sig-name descname"><span class="pre">PlasticSmoothContactSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/PlasticSystemSpecialisations.html#PlasticSmoothContactSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.PlasticSystemSpecialisations.PlasticSmoothContactSystem" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.System.Systems.SmoothContactSystem" title="Adhesion.System.Systems.SmoothContactSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.System.Systems.SmoothContactSystem</span></code></a></p>
 <p>This system implements a simple penetration hardness model.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="Adhesion.System.PlasticSystemSpecialisations.PlasticSmoothContactSystem.handles">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">handles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_domain_decomposed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/PlasticSystemSpecialisations.html#PlasticSmoothContactSystem.handles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.PlasticSystemSpecialisations.PlasticSmoothContactSystem.handles" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_domain_decomposed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/PlasticSystemSpecialisations.html#PlasticSmoothContactSystem.handles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.PlasticSystemSpecialisations.PlasticSmoothContactSystem.handles" title="Permalink to this definition"></a></dt>
 <dd><p>determines whether this class can handle the proposed system
 composition
 Keyword Arguments:
@@ -150,7 +150,7 @@ surface_type     –</p>
 <p>implements the periodic and non-periodic smooth contact systems</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.System.SmoothSystemSpecialisations.BndSet">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.System.SmoothSystemSpecialisations.</span></span><span class="sig-name descname"><span class="pre">BndSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">large</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">small</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Adhesion.System.SmoothSystemSpecialisations.BndSet" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.System.SmoothSystemSpecialisations.</span></span><span class="sig-name descname"><span class="pre">BndSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">large</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">small</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Adhesion.System.SmoothSystemSpecialisations.BndSet" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="Adhesion.System.SmoothSystemSpecialisations.BndSet.large">
@@ -168,7 +168,7 @@ surface_type     –</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.System.SmoothSystemSpecialisations.</span></span><span class="sig-name descname"><span class="pre">FastSmoothContactSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/SmoothSystemSpecialisations.html#FastSmoothContactSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.System.SmoothSystemSpecialisations.</span></span><span class="sig-name descname"><span class="pre">FastSmoothContactSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/SmoothSystemSpecialisations.html#FastSmoothContactSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.System.Systems.SmoothContactSystem" title="Adhesion.System.Systems.SmoothContactSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.System.Systems.SmoothContactSystem</span></code></a></p>
 <p>This proxy class tries to take advantage of the system-physical_sizes
 independence of non-periodic FFT-solved systems by determining the required
@@ -182,7 +182,7 @@ the small system significantly increases optimisation speed, this tradeoff
 seems to be well worth the trouble.</p>
 <dl class="py exception">
 <dt class="sig sig-object py" id="Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.BabushkaBoundaryError">
-<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">BabushkaBoundaryError</span></span><a class="reference internal" href="../_modules/Adhesion/System/SmoothSystemSpecialisations.html#FastSmoothContactSystem.BabushkaBoundaryError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.BabushkaBoundaryError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">BabushkaBoundaryError</span></span><a class="reference internal" href="../_modules/Adhesion/System/SmoothSystemSpecialisations.html#FastSmoothContactSystem.BabushkaBoundaryError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.BabushkaBoundaryError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Called when the choosen physical_sizes of the Babushka System
 had an Influence on the Solution. In the Future, one may catch
@@ -191,7 +191,7 @@ this error, increase the margin and restart minimization</p>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.FreeBoundaryError">
-<em class="property"><span class="pre">exception</span> </em><span class="sig-name descname"><span class="pre">FreeBoundaryError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/SmoothSystemSpecialisations.html#FastSmoothContactSystem.FreeBoundaryError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.FreeBoundaryError" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">FreeBoundaryError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">disp</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/SmoothSystemSpecialisations.html#FastSmoothContactSystem.FreeBoundaryError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.FreeBoundaryError" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>called when the supplied system cannot be computed with the current
 constraints</p>
@@ -281,7 +281,7 @@ logger at every evaluation</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.handles">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">handles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_domain_decomposed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/SmoothSystemSpecialisations.html#FastSmoothContactSystem.handles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.handles" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_domain_decomposed</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/SmoothSystemSpecialisations.html#FastSmoothContactSystem.handles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.handles" title="Permalink to this definition"></a></dt>
 <dd><p>returns whether this class (in practice a subclass) handles this
 combination of types
 Keyword Arguments:
@@ -381,7 +381,7 @@ in_array – array with the initial guess. has the intuitive shape you</p>
 <p>Defines the interface for Adhesion systems</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.System.Systems.BoundedSmoothContactSystem">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.System.Systems.</span></span><span class="sig-name descname"><span class="pre">BoundedSmoothContactSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Systems.html#BoundedSmoothContactSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Systems.BoundedSmoothContactSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.System.Systems.</span></span><span class="sig-name descname"><span class="pre">BoundedSmoothContactSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Systems.html#BoundedSmoothContactSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Systems.BoundedSmoothContactSystem" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#Adhesion.System.Systems.SmoothContactSystem" title="Adhesion.System.Systems.SmoothContactSystem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Adhesion.System.Systems.SmoothContactSystem</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="Adhesion.System.Systems.BoundedSmoothContactSystem.compute_attractive_coordinates">
@@ -438,7 +438,7 @@ repulsive. Useful for evaluating the number of contact islands etc.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Adhesion.System.Systems.BoundedSmoothContactSystem.handles">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">handles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Systems.html#BoundedSmoothContactSystem.handles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.handles" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Systems.html#BoundedSmoothContactSystem.handles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.handles" title="Permalink to this definition"></a></dt>
 <dd><p>returns whether this class (in practice a subclass) handles this
 combination of types
 Keyword Arguments:
@@ -465,7 +465,7 @@ is_domain_decomposed: some systems cannot handle parallel computation</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="Adhesion.System.Systems.SmoothContactSystem">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">Adhesion.System.Systems.</span></span><span class="sig-name descname"><span class="pre">SmoothContactSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Systems.html#SmoothContactSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Systems.SmoothContactSystem" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.System.Systems.</span></span><span class="sig-name descname"><span class="pre">SmoothContactSystem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Systems.html#SmoothContactSystem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Systems.SmoothContactSystem" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ContactMechanics.Systems.SystemBase</span></code></p>
 <p>For smooth contact mechanics (i.e. the ones for which optimization is only
 kinda-hell</p>
@@ -605,7 +605,7 @@ logger at every evaluation.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="Adhesion.System.Systems.SmoothContactSystem.handles">
-<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">handles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Systems.html#SmoothContactSystem.handles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Systems.SmoothContactSystem.handles" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Systems.html#SmoothContactSystem.handles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Systems.SmoothContactSystem.handles" title="Permalink to this definition"></a></dt>
 <dd><p>returns whether this class (in practice a subclass) handles this
 combination of types
 Keyword Arguments:
@@ -635,7 +635,7 @@ is_domain_decomposed: some systems cannot handle parallel computation</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="Adhesion.System.Systems.SmoothContactSystem.nb_grid_pts">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">nb_grid_pts</span></span><a class="headerlink" href="#Adhesion.System.Systems.SmoothContactSystem.nb_grid_pts" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nb_grid_pts</span></span><a class="headerlink" href="#Adhesion.System.Systems.SmoothContactSystem.nb_grid_pts" title="Permalink to this definition"></a></dt>
 <dd><p>For systems, nb_grid_pts can become non-trivial</p>
 </dd></dl>
 
@@ -727,8 +727,8 @@ logger at every evaluation</p>
 </dl>
 </p>
 </dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>function(disp_k)</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>function(disp_k)</p>
 </dd>
 </dl>
 </dd></dl>
