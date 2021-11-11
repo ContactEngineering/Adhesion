@@ -756,6 +756,7 @@ class SmoothContactSystem(SystemBase):
                         force of the system
         """
 
+        # TODO: fourier transforming the offset is useless
         self.real_buffer.array()[...] = offset
         self.engine.hcfft(self.real_buffer, self.fourier_buffer)
         offset_k = self.fourier_buffer.array()[...].copy()
@@ -775,8 +776,7 @@ class SmoothContactSystem(SystemBase):
 
                 self.fourier_buffer.array()[...] = gap_float_k.copy()
                 self.engine.ihcfft(self.fourier_buffer, self.real_buffer)
-                gap = self.real_buffer.array()[...].copy() * \
-                    self.engine.normalisation
+                gap = self.real_buffer.array()[...].copy() * self.engine.normalisation
 
                 self.energy, self.force_h = self.evaluate_k(disp_float_k,
                                                             gap, offset,
