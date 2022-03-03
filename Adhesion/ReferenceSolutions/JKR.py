@@ -213,7 +213,7 @@ def contact_radius(force=None,
         else:
             return _contact_radius_from_penetration_force(
                 penetration=penetration, force=force, contact_modulus=contact_modulus, radius=radius)
-    else:
+    elif work_of_adhesion is None:
         work_of_adhesion = 1 / np.pi
 
     if force is not None:
@@ -505,7 +505,34 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radi
         raise ValueError(der)
 
 
-def stress_intensity_factor(contact_radius, penetration,
+def _stress_intensity_factor_from_force_radius(
+    contact_radius, force,
+    radius=1.,
+    contact_modulus=0.75,
+    ):
+    """
+    Parameters
+    ----------
+    force: float or np.array
+        Normal force
+    contact_radius: float or np.array
+    radius: float
+        default 1, optional
+        radius of the sphere
+    contact_modulus: float
+        default 3/4, optional
+        johnsons contact modulus
+    """
+
+    force_hertz = contact_radius ** 3 * 4 * contact_modulus / (3 * radius)
+    force_fp = force - force_hertz
+
+    # Flatpunch SIF under load at infinity Tada p.377
+
+    return - force_fp / (2 * np.sqrt(np.pi * contact_radius ** 3))
+
+
+def _stress_intensity_factor_from_penetration_radius(contact_radius, penetration,
                             der="0", radius=1, contact_modulus=3. / 4):
     r"""
 
@@ -554,6 +581,55 @@ def stress_intensity_factor(contact_radius, penetration,
         return Es / (2 * np.sqrt(np.pi)) * a ** (-3 / 2)
     else:
         raise ValueError()
+
+
+def stress_intensity_factor(contact_radius, penetration=None, force=None,
+                            der="0", radius=1, contact_modulus=3. / 4):
+    r"""
+
+    if R is not given, the length and the penetration
+    are epressed in units of R
+
+    Parameters
+    ----------
+    contact_radius: float or ndarray of floats
+        radius of the contact area
+    penetration: float or ndarray of floats
+        rigid body penetration
+    der: {"0", "1_a", "2_a", "1_d", "2_ad"}
+    R: float
+        default 1, optional
+        radius of the sphere
+    Es: float
+        default 3/4, optional
+        johnson's contact modulus
+
+    Returns
+    -------
+    stress intensity factor K or it's first derivative according to the
+    contact_radius
+
+    if R and Es are not given it is in units of 4 / 3 Es \sqrt{R} / R^{der}
+    """
+    if force is not None and penetration is not None:
+        raise ValueError("can't specify contact radius , force and penetration")
+    if force is not None:
+        if der != "0":
+            raise NotImplementedError("didn't implement derivatives")
+        return _stress_intensity_factor_from_force_radius(
+            contact_radius=contact_radius,
+            force=force,
+            radius=radius,
+            contact_modulus=contact_modulus)
+    elif penetration is not None:
+        return _stress_intensity_factor_from_penetration_radius(
+            contact_radius=contact_radius,
+            penetration=penetration,
+            der=der,
+            radius=radius,
+            contact_modulus=contact_modulus)
+    else:
+        raise ValueError
 
 
 def displacement_field(r, contact_radius,
