@@ -506,10 +506,10 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radi
 
 
 def _stress_intensity_factor_from_force_radius(
-    contact_radius, force,
-    radius=1.,
-    contact_modulus=0.75,
-    ):
+        contact_radius, force,
+        radius=1.,
+        contact_modulus=0.75,
+        ):
     """
     Parameters
     ----------
@@ -533,7 +533,7 @@ def _stress_intensity_factor_from_force_radius(
 
 
 def _stress_intensity_factor_from_penetration_radius(contact_radius, penetration,
-                            der="0", radius=1, contact_modulus=3. / 4):
+                                                     der="0", radius=1, contact_modulus=3. / 4):
     r"""
 
     if R is not given, the length and the penetration
