@@ -102,18 +102,89 @@ def load_unit(radius, work_of_adhesion):
     return np.pi * work_of_adhesion * radius
 
 
+def _contact_radius_from_penetration_force(
+        penetration,
+        force,
+        contact_modulus=0.75,
+        radius=1.,
+        ):
+    r"""
+    Computes the contact radius predicted by JKR
+    for a given penetration and force and unknown energy release rate (work of adhesion).
+
+    For given force :math:`F` and penetration :math:`\delta`, we solve
+
+    .. math ::
+
+        F = 2 a E^\prime (\delta - \frac{1}{3} \frac{a^2}{R})
+
+    for the contact radius :math:`a`.
+
+    If you want to determine the energy release rate, call `JKR.nonequilibrium_elastic_energy_release_rate`
+    using the penetration and the contact radius afterwards.
+
+    Parameters
+    ----------
+    force : float or array of floats, optional
+        Normal force.
+    penetration : float, optional
+        rigid body penetration
+    radius : float, optional
+        Sphere (actually paraboloid) radius.
+    contact_modulus : float, optional
+        Contact modulus: :math:`E^* = E/(1-\nu^2)`
+        with Young's modulus E and Poisson number :math:`\nu`.
+        The default value is so that Maugis's contact Modulus is one
+        (:math:`K = 4 / 3 E^*`)
+    Returns
+    -------
+    Contact Radius :math:`a`: float
+        If no root is found returns np.nan
+    """
+    p = np.polynomial.Polynomial([
+        - force,                            # a^0
+        2 * contact_modulus * penetration,  # a^1
+        0,                                  # a^2
+        -2 / 3 * contact_modulus / radius   # a^3
+        ])
+
+    roots = p.roots()
+
+    a = roots[(roots.imag == 0) & (roots.real >= 0)].real
+    if len(set(a)) == 0:
+        return np.nan
+    elif len(set(a)) == 1:
+        return a[0]
+    else:
+        # print(f"Didn't expect that: roots {roots}") # TODO: remove that warning
+        return np.nan
+
+
 def contact_radius(force=None,
                    penetration=None,
                    radius=1.,
                    contact_modulus=3. / 4,
-                   work_of_adhesion=1 / np.pi):
+                   work_of_adhesion=None):
     r"""
     Given normal load or rigid body penetration, sphere radius and contact
     modulus compute contact radius on the stable branch.
 
-    if only force or penetration is provided, it is assumed that the
-    nondimensionalisation
-    from Maugis's book is used.
+    - If only force or penetration is provided, it is assumed that the
+      nondimensionalisation from Maugis's book is used.
+
+    - If force and penetration are given the work of adhesion results
+      from these values and the provided value will be ignored.
+
+      For given force :math:`F` and penetration :math:`\delta`, we solve
+
+      .. math ::
+
+          F = 2 a E^\prime (\delta - \frac{1}{3} \frac{a^2}{R})
+
+      for the contact radius :math:`a`.
+
+      If you want to determine the energy release rate, call `JKR.nonequilibrium_elastic_energy_release_rate`
+      using the penetration and the contact radius afterwards.
 
     Parameters
     ----------
@@ -134,9 +205,16 @@ def contact_radius(force=None,
     if force is None and penetration is None:
         raise ValueError("either force or penetration "
                          "should be provided")
-    elif force is not None and penetration is not None:
-        raise ValueError("only one of force or penetration "
-                         "should be provided")
+
+    if force is not None and penetration is not None:
+        if work_of_adhesion is not None:
+            raise ValueError("only one of force or penetration "
+                             "should be provided if you prescribe the work of adhesion")
+        else:
+            return _contact_radius_from_penetration_force(
+                penetration=penetration, force=force, contact_modulus=contact_modulus, radius=radius)
+    else:
+        work_of_adhesion = 1 / np.pi
 
     if force is not None:
         A = force + 3 * work_of_adhesion * np.pi * radius
@@ -427,8 +505,8 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radi
         raise ValueError(der)
 
 
-def stress_intensity_factor(contact_radius, penetration, der="0",
-                            radius=1, contact_modulus=3. / 4):
+def stress_intensity_factor(contact_radius, penetration,
+                            der="0", radius=1, contact_modulus=3. / 4):
     r"""
 
     if R is not given, the length and the penetration
