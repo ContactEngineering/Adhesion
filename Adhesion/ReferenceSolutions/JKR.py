@@ -487,20 +487,20 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radi
     -------
 
     """
-    prefactor = radius * contact_modulus / (2 * np.pi)
+    prefactor = contact_modulus / (2 * np.pi)
     if der == "0":
-        return prefactor * (penetration - contact_radius ** 2) ** 2 / contact_radius
+        return prefactor * (penetration - contact_radius ** 2 / radius) ** 2 / contact_radius
     elif der == "1_a":
-        return prefactor * (4 * (contact_radius ** 2 - penetration)
-                            - (penetration - contact_radius ** 2) ** 2 / contact_radius ** 2)
+        return prefactor * (4 * (contact_radius ** 2 / radius - penetration) / radius
+                            - (penetration - contact_radius ** 2 / radius) ** 2 / contact_radius ** 2)
     elif der == "1_d":
-        return prefactor * 2 * (penetration / contact_radius - contact_radius)
+        return prefactor * 2 * (penetration / contact_radius - contact_radius / radius)
     elif der == "2_da" or der == "2_ad":
-        return - prefactor * 2 * (1 + penetration / contact_radius ** 2)
+        return - prefactor * 2 * (1 / radius + penetration / contact_radius ** 2)
     elif der == "2_a":
-        return prefactor * (8 * contact_radius
-                            + 4 * (penetration - contact_radius ** 2) / contact_radius
-                            + 2 * (penetration - contact_radius ** 2) ** 2 / contact_radius ** 3)
+        return prefactor * (8 * contact_radius / radius ** 2
+                            + 4 * (penetration - contact_radius ** 2 / radius) / radius / contact_radius
+                            + 2 * (penetration - contact_radius ** 2 / radius) ** 2 / contact_radius ** 3)
     else:
         raise ValueError(der)
 
