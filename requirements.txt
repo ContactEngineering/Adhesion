@@ -14,4 +14,4 @@ sphinx_rtd_theme
 setuptools_scm>=3.5.0
 muFFT>=0.14.0
 runtests>=0.0.28
-git+https://github.com/ComputationalMechanics/ContactMechanics.git@feat/20_objective
+ContactMechanics
