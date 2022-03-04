@@ -450,8 +450,14 @@ def nonequilibrium_elastic_energy(penetration, contact_radius):
 def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radius=1, contact_modulus=3./4, der="0"):
     r"""
 
-    Returns the nondimensional energy release rate
-    (with respect to the nondimensional area)
+    Returns the energy release rate
+    (with respect to the contact area)
+
+    .. math ::
+
+        \frac{\partial U_\mathrm{el}(\delta, a)}{\partial (\pi a^2)} = \frac{R E^\prime}{2\pi a} \left(\delta - \frac{a^2}{R}\right)^2
+
+    In Maugis's units:
 
     .. math ::
           \frac{\partial U_{el}}{\partial \pi A^2}
