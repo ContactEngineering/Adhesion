@@ -280,3 +280,20 @@ def test_deformed_profile():
         plt.show()
 
     np.testing.assert_allclose(g, np.sqrt(rho / (2 * np.pi)) * 4 * sif / Es, atol=1e-4)
+
+
+# In JKR units
+@pytest.mark.parametrize("contact_radius", [
+    0.05, 0.5, 1., 1.5, 1.8,  # negative forces
+    1.9, 2., 20.  # positive forces
+    ])
+def test_contact_radius_from_penetration_force(contact_radius):
+    # ISSUE: seems to be broken for positive forces.
+
+    penetration = JKR.penetration(contact_radius=contact_radius)
+    force = JKR.force(contact_radius=contact_radius)
+    contact_radius_computed = JKR._contact_radius_from_penetration_force(
+        penetration=penetration,
+        force=force
+        )
+    assert abs(contact_radius_computed - contact_radius) < 1e-10, f"force={force}"

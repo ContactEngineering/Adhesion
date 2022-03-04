@@ -156,8 +156,9 @@ def _contact_radius_from_penetration_force(
     elif len(set(a)) == 1:
         return a[0]
     else:
-        # print(f"Didn't expect that: roots {roots}") # TODO: remove that warning
-        return np.nan
+        # For positive forces, there are three roots, but only the largest one corresponds to a meaningful SIF
+        # sif = stress_intensity_factor(contact_radius=a, penetration=penetration, radius=radius, contact_modulus=contact_modulus)
+        return a[-1]
 
 
 def contact_radius(force=None,
