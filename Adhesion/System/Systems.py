@@ -282,8 +282,7 @@ class SmoothContactSystem(SystemBase):
             logger.st(*self.logger_input())
         return (self.energy, self.force)
 
-    def objective(self, offset, disp0=None, gradient=False, disp_scale=1.,
-                  logger=None):
+    def objective(self, offset, disp0=None, gradient=False, logger=None):
         r"""
         This helper method exposes a scipy.optimize-friendly interface to the
         evaluate() method. Use this for optimization purposes, it makes sure
@@ -301,11 +300,6 @@ class SmoothContactSystem(SystemBase):
             constant value added to the heights (system.topography)
         gradient: bool, optional
             Wether to evaluate the gradient, default False
-        disp_scale : float, optional
-            (default 1.) allows to specify a scaling of the
-            dislacement before evaluation. This can be necessary when
-            using dumb minimizers with hardcoded convergence criteria
-            such as scipy's L-BFGS-B.
         logger: ContactMechanics.Tools.Logger
             informations of current state of the system will be passed to
             logger at every evaluation
@@ -325,18 +319,18 @@ class SmoothContactSystem(SystemBase):
                 # pylint: disable=missing-docstring
                 try:
                     self.evaluate(
-                        disp_scale * disp.reshape(res), offset, forces=True,
+                        disp.reshape(res), offset, forces=True,
                         logger=logger)
                 except ValueError as err:
                     raise ValueError(
                         "{}: disp.shape: {}, res: {}".format(
                             err, disp.shape, res))
-                return (self.energy, -self.force.reshape(-1) * disp_scale)
+                return (self.energy, -self.force.reshape(-1))
         else:
             def fun(disp):
                 # pylint: disable=missing-docstring
                 return self.evaluate(
-                    disp_scale * disp.reshape(res), offset, forces=False,
+                    disp.reshape(res), offset, forces=False,
                     logger=logger)[0]
 
         return fun
