@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.ReferenceSolutions package &mdash; Adhesion 0.90.1.dev10+gd4f0742 documentation</title>
+  <title>Adhesion.ReferenceSolutions package &mdash; Adhesion 0.90.1.dev12+g88fba3e documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -14,6 +14,7 @@
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
         <script src="../_static/jquery.js"></script>
         <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
@@ -31,7 +32,7 @@
             <a href="../index.html" class="icon icon-home"> Adhesion
           </a>
               <div class="version">
-                0.90.1.dev10+gd4f0742
+                0.90.1.dev12+g88fba3e
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -100,9 +101,9 @@
            <div itemprop="articleBody">
              
   <section id="adhesion-referencesolutions-package">
-<h1>Adhesion.ReferenceSolutions package<a class="headerlink" href="#adhesion-referencesolutions-package" title="Permalink to this headline"></a></h1>
+<h1>Adhesion.ReferenceSolutions package<a class="headerlink" href="#adhesion-referencesolutions-package" title="Permalink to this heading"></a></h1>
 <section id="subpackages">
-<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline"></a></h2>
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this heading"></a></h2>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html">Adhesion.ReferenceSolutions.sinewave package</a><ul>
@@ -120,10 +121,10 @@
 </div>
 </section>
 <section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
 <section id="module-Adhesion.ReferenceSolutions.BaneyHui">
-<span id="adhesion-referencesolutions-baneyhui-module"></span><h2>Adhesion.ReferenceSolutions.BaneyHui module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.BaneyHui" title="Permalink to this headline"></a></h2>
+<span id="adhesion-referencesolutions-baneyhui-module"></span><h2>Adhesion.ReferenceSolutions.BaneyHui module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.BaneyHui" title="Permalink to this heading"></a></h2>
 <p>Maugis-Dugdale (cohesive zone) model for a cylinder contacting an
 elastic flat.
 See: J.M. Baney, C.-Y. Hui, J. Adhesion Sci. Technol. 11, 393 (1997)</p>
@@ -144,7 +145,7 @@ See: J.M. Baney, C.-Y. Hui, J. Adhesion Sci. Technol. 11, 393 (1997)</p>
 
 </section>
 <section id="module-Adhesion.ReferenceSolutions.DMT">
-<span id="adhesion-referencesolutions-dmt-module"></span><h2>Adhesion.ReferenceSolutions.DMT module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.DMT" title="Permalink to this headline"></a></h2>
+<span id="adhesion-referencesolutions-dmt-module"></span><h2>Adhesion.ReferenceSolutions.DMT module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.DMT" title="Permalink to this heading"></a></h2>
 <p>Helper tools for Adhesion</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.DMT.radius_and_pressure">
@@ -152,7 +153,7 @@ See: J.M. Baney, C.-Y. Hui, J. Adhesion Sci. Technol. 11, 393 (1997)</p>
 <dd><p>Given normal load, sphere radius and contact modulus compute contact radius
 and peak pressure.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>N</strong> (<em>float</em>) – Normal force.</p></li>
 <li><p><strong>R</strong> (<em>float</em>) – Sphere radius.</p></li>
@@ -175,14 +176,14 @@ number nu.</p></li>
 <dd><p>Given distance from the center of the sphere, contact radius and Poisson
 number contact, compute the stress at the surface.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array_like</em>) – Array of distance (from the center of the sphere).</p></li>
 <li><p><strong>a</strong> (<em>float</em>) – Contact radius.</p></li>
 <li><p><strong>nu</strong> (<em>float</em>) – Poisson number.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><strong>pz</strong> (<em>array</em>) – Contact pressure.</p></li>
 <li><p><strong>sr</strong> (<em>array</em>) – Radial stress.</p></li>
@@ -195,11 +196,11 @@ number contact, compute the stress at the surface.</p>
 
 </section>
 <section id="module-Adhesion.ReferenceSolutions.JKR">
-<span id="adhesion-referencesolutions-jkr-module"></span><h2>Adhesion.ReferenceSolutions.JKR module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.JKR" title="Permalink to this headline"></a></h2>
+<span id="adhesion-referencesolutions-jkr-module"></span><h2>Adhesion.ReferenceSolutions.JKR module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.JKR" title="Permalink to this heading"></a></h2>
 <p>JKR solutions for the indentation of an elastic halfspace by a paraboloid
 indenter.</p>
 <section id="physical-quantities">
-<h3>Physical quantities:<a class="headerlink" href="#physical-quantities" title="Permalink to this headline"></a></h3>
+<h3>Physical quantities:<a class="headerlink" href="#physical-quantities" title="Permalink to this heading"></a></h3>
 <p>The parameters of the system are:</p>
 <ul class="simple">
 <li><dl class="simple">
@@ -227,7 +228,7 @@ and the radius of the contact disk (<code class="code docutils literal notransla
 <p>If the parameters are not provided, the relations are nondimensional.</p>
 </section>
 <section id="nondimensional-units">
-<h3>Nondimensional units<a class="headerlink" href="#nondimensional-units" title="Permalink to this headline"></a></h3>
+<h3>Nondimensional units<a class="headerlink" href="#nondimensional-units" title="Permalink to this heading"></a></h3>
 <p>The nondimensionalisation follows
 Maugis’s book (p.290):</p>
 <ul class="simple">
@@ -251,7 +252,7 @@ are in units of</p>
 <div class="math notranslate nohighlight">
 \[\pi w R\]</div>
 <section id="function-reference">
-<h4>Function reference:<a class="headerlink" href="#function-reference" title="Permalink to this headline"></a></h4>
+<h4>Function reference:<a class="headerlink" href="#function-reference" title="Permalink to this heading"></a></h4>
 <dl class="py function">
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.contact_radius">
 <span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">contact_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penetration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_of_adhesion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3183098861837907</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#contact_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.contact_radius" title="Permalink to this definition"></a></dt>
@@ -261,7 +262,7 @@ modulus compute contact radius on the stable branch.</p>
 nondimensionalisation
 from Maugis’s book is used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>force</strong> (<em>float</em><em> or </em><em>array of floats</em><em>, </em><em>optional</em>) – Normal force.</p></li>
 <li><p><strong>penetration</strong> (<em>float</em><em>, </em><em>optional</em>) – rigid body penetration</p></li>
@@ -289,7 +290,7 @@ The default value is so that Maugis’s contact Modulus is one
 <div><p>Default 1.</p>
 </div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>contact_modulus</strong> (<em>float</em><em>, </em><em>optional</em>) – Contact modulus: <span class="math notranslate nohighlight">\(E^* = E/(1-\nu^2)\)</span>
 with Young’s modulus E and Poisson number <span class="math notranslate nohighlight">\(\nu\)</span>.
@@ -299,10 +300,10 @@ The default value is so that Maugis’s contact Modulus is one
 Default <span class="math notranslate nohighlight">\(1 / \pi\)</span></p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>gaps at radius r</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
@@ -313,7 +314,7 @@ Default <span class="math notranslate nohighlight">\(1 / \pi\)</span></p></li>
 <span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">displacement_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_of_adhesion</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#displacement_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.displacement_field" title="Permalink to this definition"></a></dt>
 <dd><p>a function of the distance from the contact center giving the displacement</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>contact_radius</strong> (<em>contact radius</em>) – </p></li>
 <li><p><strong>radius</strong> (<em>float</em>) – Sphere radius.</p></li>
@@ -322,10 +323,10 @@ modulus E and Poisson number <span class="math notranslate nohighlight">\(\nu\)<
 <li><p><strong>work_of_adhesion</strong> (<em>float</em>) – Work of adhesion.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>displacements</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>ndarray</p>
 </dd>
 </dl>
@@ -340,7 +341,7 @@ modulus E and Poisson number <span class="math notranslate nohighlight">\(\nu\)<
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.force">
 <span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">force</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penetration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_of_adhesion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#force"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.force" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>contact_radius</strong> (<em>float</em><em> or </em><em>array of floats</em><em>, </em><em>optional</em>) – Normal force.</p></li>
 <li><p><strong>penetration</strong> (<em>float</em><em>, </em><em>optional</em>) – rigid body penetration</p></li>
@@ -387,13 +388,13 @@ instead of the work of adhesion</p>
 = \frac{3}{4} A \left(\Delta - \frac{A^2}{3}\right)^2 + \frac{A^5}{15}\]</div>
 <p>For the units, see maugis p.290</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>penetration</strong> (<span class="math notranslate nohighlight">\(\Delta\)</span> in maugis) – </p></li>
 <li><p><strong>contact_radius</strong> (<span class="math notranslate nohighlight">\(A\)</span> in maugis) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>elastic energy in units of <span class="math notranslate nohighlight">\(\pi w R (\pi^2 w^2 R / K^2)^{1/3}\)</span></p>
 </dd>
 </dl>
@@ -419,7 +420,7 @@ of</p>
 <p>Note that I think perfect consistent use of the maugis-JKR units would require to express the energy release rate
 in units of <span class="math notranslate nohighlight">\(\pi w\)</span> instead of just <span class="math notranslate nohighlight">\(w\)</span>. I might need to change this at some point.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>penetration</strong> (<em>float</em><em> or </em><em>np.array</em>) – <span class="math notranslate nohighlight">\(\Delta\)</span> in maugis</p></li>
 <li><p><strong>contact_radius</strong> (<em>float</em><em> or </em><em>np.array</em>) – in units of <span class="math notranslate nohighlight">\(R\)</span></p></li>
@@ -442,7 +443,7 @@ modulus compute contact radius.</p>
 nondimensionalisation
 from Maugis’s book is used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>force</strong> (<em>float</em><em> or </em><em>array of floats</em><em>, </em><em>optional</em>) – Normal force.</p></li>
 <li><p><strong>penetration</strong> (<em>float</em><em>, </em><em>optional</em>) – rigid body penetration</p></li>
@@ -461,7 +462,7 @@ The default value is so that Maugis’s contact Modulus is one
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.penetration">
 <span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">penetration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_of_adhesion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3183098861837907</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#penetration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.penetration" title="Permalink to this definition"></a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>contact_radius</strong> (<em>float</em><em> or </em><em>array of floats</em><em>, </em><em>optional</em>) – Normal force.</p></li>
 <li><p><strong>penetration</strong> (<em>float</em><em>, </em><em>optional</em>) – rigid body penetration</p></li>
@@ -492,7 +493,7 @@ The default value is so that Maugis’s contact Modulus is one
 <dd><p>if R is not given, the length and the penetration
 are epressed in units of R</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>contact_radius</strong> (<em>float</em><em> or </em><em>ndarray of floats</em>) – radius of the contact area</p></li>
 <li><p><strong>penetration</strong> (<em>float</em><em> or </em><em>ndarray of floats</em>) – rigid body penetration</p></li>
@@ -503,7 +504,7 @@ radius of the sphere</p></li>
 johnson’s contact modulus</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><ul class="simple">
 <li><p><em>stress intensity factor K or it’s first derivative according to the</em></p></li>
 <li><p><em>contact_radius</em></p></li>
@@ -518,7 +519,7 @@ johnson’s contact modulus</p></li>
 </section>
 </section>
 <section id="module-Adhesion.ReferenceSolutions.MaugisDugdale">
-<span id="adhesion-referencesolutions-maugisdugdale-module"></span><h2>Adhesion.ReferenceSolutions.MaugisDugdale module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.MaugisDugdale" title="Permalink to this headline"></a></h2>
+<span id="adhesion-referencesolutions-maugisdugdale-module"></span><h2>Adhesion.ReferenceSolutions.MaugisDugdale module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.MaugisDugdale" title="Permalink to this heading"></a></h2>
 <p>Maugis-Dugdale cohesive zone model for a sphere (paraboloid) contacting an
 elastic flat.
 See: D. Maugis, J. Colloid Interf. Sci. 150, 243 (1992)</p>
@@ -544,7 +545,7 @@ See: D. Maugis, J. Colloid Interf. Sci. 150, 243 (1992)</p>
 
 </section>
 <section id="module-Adhesion.ReferenceSolutions.PastewkaRobbins">
-<span id="adhesion-referencesolutions-pastewkarobbins-module"></span><h2>Adhesion.ReferenceSolutions.PastewkaRobbins module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.PastewkaRobbins" title="Permalink to this headline"></a></h2>
+<span id="adhesion-referencesolutions-pastewkarobbins-module"></span><h2>Adhesion.ReferenceSolutions.PastewkaRobbins module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.PastewkaRobbins" title="Permalink to this heading"></a></h2>
 <p>Maugis-Dugdale (cohesive zone) model for a wedge contacting an elastic
 flat.
 See: L. Pastewka, M.O. Robbins, unpublished</p>
@@ -565,7 +566,7 @@ See: L. Pastewka, M.O. Robbins, unpublished</p>
 
 </section>
 <section id="module-Adhesion.ReferenceSolutions">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Adhesion.ReferenceSolutions" title="Permalink to this headline"></a></h2>
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Adhesion.ReferenceSolutions" title="Permalink to this heading"></a></h2>
 <p>Analytical or semi-analytical reference solutions</p>
 </section>
 </section>
