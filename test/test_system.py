@@ -250,6 +250,7 @@ def test_unconfirmed_minimization(self):
                "'").format(result_grad, result_simple)
     assert result_grad.success and result_simple.success, message
 
+
 @pytest.mark.skip("uses deprecated disp scale. TODO: is this test useful at all ?")
 def test_minimize_proxy(self):
     res = self.res
