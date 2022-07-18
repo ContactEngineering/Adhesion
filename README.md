@@ -22,14 +22,8 @@ You need Python 3 and [FFTW3](http://www.fftw.org/) to run Adhesion. All Python 
 #### Installation directly with pip
 
 ```bash
-# dependencies not installable with requirements.txt
-pip install [--user] numpy
-pip install [--user] pylint
-pip install [--user] cython
-pip install [--user] mpi4py #optional
-
 # install Adhesion
-pip  install [--user]  git+https://github.com/ComputationalMechanics/Adhesion.git
+pip  install Adhesion
 ```
 
 The last command will install other dependencies including 
