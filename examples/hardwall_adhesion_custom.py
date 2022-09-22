@@ -1,3 +1,4 @@
+# %% [markdown]
 #
 # Copyright 2020 Antoine Sanner
 #           2020 Lars Pastewka
@@ -24,38 +25,47 @@
 #
 
 
+# %%
 import scipy.optimize
 import matplotlib.pyplot as plt
 import numpy as np
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 
+# %%
 from Adhesion.Interactions import Exponential
-from muFFT.NetCDF import NCStructuredGrid
+from NuMPI.IO.NetCDF import NCStructuredGrid
 
+# %%
 from ContactMechanics.Tools.Logger import Logger
 from Adhesion.System import BoundedSmoothContactSystem
 import time
 import datetime
 from SurfaceTopography import make_sphere
 
+# %% [markdown]
 # These Parameters are one because of nondimensionalisation,
 # this way the typical displacements, forces and contact areas are of order 1
 
+# %%
 maugis_K = 1.
 Es = 3 / 4  # maugis K = 1.
 R = 1.
 work_of_adhesion = 1 / np.pi
 
+# %%
 #  the shorter ranged thew potential, the finer the discretisation needed
 # and the more difficult the minimisation
 length_parameter = 0.2
 
+# %%
 # discretisation: too high dx leads to artificial hysteresis
 dx = .025
 
+# %%
 # how much to increment the indentation depth at each simulation step
 delta_d = 0.01
 
+# %%
 nx, ny = 256, 256  # should be choosen so that the system size
 # is bigger then the jump in radius
 sx, sy = (nx * dx, ny * dx)
@@ -64,10 +74,12 @@ interaction = Exponential(work_of_adhesion, length_parameter)
 substrate = PeriodicFFTElasticHalfSpace((nx, ny), Es, (sx, sy), )
 system = BoundedSmoothContactSystem(substrate, interaction, topography)
 
+# %%
 starting_penetration = - 2 * length_parameter  # rigid body penetration
 max_stress = abs(interaction.max_tensile)
 
 
+# %%
 # demo how to plot things. You can import this from outside !
 def plot_result(filename="data.nc"):
     nc = NCStructuredGrid(filename)
@@ -88,6 +100,7 @@ def plot_result(filename="data.nc"):
     nc.close()
 
 
+# %%
 gtol = 1e-4
 if __name__ == '__main__':
     pulloff_force = 0
@@ -136,7 +149,7 @@ if __name__ == '__main__':
 
             # REPLACE THIS WITH CUSTOM MINIMIZER
             sol = scipy.optimize.minimize(
-                system.objective(penetration, gradient=True),
+                system.primal_objective(penetration, gradient=True),
                 x0=disp0,
                 method="L-BFGS-B",
                 jac=True,
@@ -201,3 +214,5 @@ if __name__ == '__main__':
         "elapsed time: {} \n= {}"
         "".format(elapsed_time,
                   datetime.timedelta(seconds=elapsed_time)))
+
+# %%
