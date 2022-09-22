@@ -1,3 +1,4 @@
+# %%
 import numpy as np
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from SurfaceTopography import UniformLineScan
@@ -62,8 +63,8 @@ for p in [6, 8, 10, 12]:
         if disp0 is not None:
             disp0 += offset - offset_prev  # noqa: F821
         sol = system.minimize_proxy(
-            disp0=disp0,
-            options=dict(gtol=gtol * max(Es * surface.rms_gradient(), abs(
+            initial_displacements=disp0,
+            options=dict(gtol=gtol * max(Es * surface.rms_slope_from_profile(), abs(
                 inter.max_tensile)) * surface.area_per_pt,
                          # max absolute value of the gradient
                          # of the objective for convergence
@@ -144,8 +145,8 @@ for p in [6, 8, 10, 12]:
         if disp0 is not None:
             disp0 += offset - offset_prev
         sol = system.minimize_proxy(
-            disp0=disp0,
-            options=dict(gtol=gtol * max(Es * surface.rms_gradient(), abs(
+            initial_displacements=disp0,
+            options=dict(gtol=gtol * max(Es * surface.rms_slope_from_profile(), abs(
                 inter.max_tensile)) * surface.area_per_pt,
                          # max absolute value of the gradient
                          # of the objective for convergence
@@ -175,3 +176,5 @@ for p in [6, 8, 10, 12]:
 ax.grid()
 ax.legend()
 plt.show()
+
+# %%
