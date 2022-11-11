@@ -12,9 +12,9 @@ Build status
 
 The following badge should say _build passing_. This means that all automated tests completed successfully for the master branch.
 
-[![CI](https://github.com/ContactEngineering/Adhesion/actions/workflows/publish.yml/badge.svg)](https://github.com/ContactEngineering/Adhesion/actions/workflows/publish.yml)
+Release: [![CI](https://github.com/ContactEngineering/Adhesion/actions/workflows/publish.yml/badge.svg)](https://github.com/ContactEngineering/Adhesion/actions/workflows/publish.yml)
 
-[![Weekly tests](https://github.com/ContactEngineering/Adhesion/actions/workflows/tests.yml/badge.svg)](https://github.com/ContactEngineering/Adhesion/actions/workflows/tests.yml)
+Weekly tests: [![Weekly tests](https://github.com/ContactEngineering/Adhesion/actions/workflows/tests.yml/badge.svg)](https://github.com/ContactEngineering/Adhesion/actions/workflows/tests.yml)
 
 Installation
 ------------
