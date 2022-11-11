@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.Interactions.SmoothPotential &mdash; Adhesion 0.90.1.dev31+g7ae8a8b documentation</title>
+  <title>Adhesion.Interactions.SmoothPotential &mdash; Adhesion 0.90.1.dev32+gb412372 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -15,6 +15,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -28,7 +29,7 @@
             <a href="../../../index.html" class="icon icon-home"> Adhesion
           </a>
               <div class="version">
-                0.90.1.dev31+g7ae8a8b
+                0.90.1.dev32+gb412372
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -65,9 +66,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>Adhesion.Interactions.SmoothPotential</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">Adhesion.Interactions.SmoothPotential</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -100,7 +101,7 @@
 <span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
 <span class="c1"># SOFTWARE.</span>
 <span class="c1">#</span>
-<span class="kn">from</span> <span class="nn">Adhesion.Interactions.Potentials</span> <span class="k">import</span> <span class="n">DecoratedPotential</span><span class="p">,</span> <span class="n">Potential</span>
+<span class="kn">from</span> <span class="nn">Adhesion.Interactions.Potentials</span> <span class="kn">import</span> <span class="n">DecoratedPotential</span><span class="p">,</span> <span class="n">Potential</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy.optimize</span>
 
@@ -144,7 +145,7 @@
 <span class="sd">    _eval_poly_and_cutoff</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_potential</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">r_t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_potential</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">r_t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">        -----------</span>
@@ -195,7 +196,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">dpoly</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ddpoly</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cutoff_radius</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">state</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">(</span><span class="n">superstate</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> -&gt; SmoothPotential: gamma = </span><span class="si">{1.gamma}</span><span class="s2">, r_t = </span><span class="si">{1.r_t}</span><span class="s2">&quot;</span> \
             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span> <span class="bp">self</span><span class="p">)</span>
 
