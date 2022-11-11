@@ -14,6 +14,8 @@ The following badge should say _build passing_. This means that all automated te
 
 [![CI](https://github.com/ContactEngineering/Adhesion/actions/workflows/publish.yml/badge.svg)](https://github.com/ContactEngineering/Adhesion/actions/workflows/publish.yml)
 
+[![Weekly tests](https://github.com/ContactEngineering/Adhesion/actions/workflows/tests.yml/badge.svg)](https://github.com/ContactEngineering/Adhesion/actions/workflows/tests.yml)
+
 Installation
 ------------
 
