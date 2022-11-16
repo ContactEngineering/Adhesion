@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.ReferenceSolutions.sinewave package &mdash; Adhesion 0.90.1.dev35+g0a521b3 documentation</title>
+  <title>Adhesion.ReferenceSolutions.sinewave package &mdash; Adhesion 0.90.1.dev36+gbb7d810 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -17,6 +17,7 @@
         <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -31,7 +32,7 @@
             <a href="../index.html" class="icon icon-home"> Adhesion
           </a>
               <div class="version">
-                0.90.1.dev35+g0a521b3
+                0.90.1.dev36+gbb7d810
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -56,15 +57,15 @@
 <li class="toctree-l2 current"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#subpackages">Subpackages</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Adhesion.ReferenceSolutions.sinewave package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#adhesion-referencesolutions-sinewave-jkr-module">Adhesion.ReferenceSolutions.sinewave.JKR module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-Adhesion.ReferenceSolutions.sinewave.JKR">Adhesion.ReferenceSolutions.sinewave.JKR module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-Adhesion.ReferenceSolutions.sinewave">Module contents</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#module-Adhesion.ReferenceSolutions.BaneyHui">Adhesion.ReferenceSolutions.BaneyHui module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#adhesion-referencesolutions-dmt-module">Adhesion.ReferenceSolutions.DMT module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#module-Adhesion.ReferenceSolutions.DMT">Adhesion.ReferenceSolutions.DMT module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#module-Adhesion.ReferenceSolutions.JKR">Adhesion.ReferenceSolutions.JKR module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#module-Adhesion.ReferenceSolutions.MaugisDugdale">Adhesion.ReferenceSolutions.MaugisDugdale module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#module-Adhesion.ReferenceSolutions.PastewkaRobbins">Adhesion.ReferenceSolutions.PastewkaRobbins module</a></li>
@@ -103,11 +104,216 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading"></a></h2>
 </section>
-<section id="adhesion-referencesolutions-sinewave-jkr-module">
-<h2>Adhesion.ReferenceSolutions.sinewave.JKR module<a class="headerlink" href="#adhesion-referencesolutions-sinewave-jkr-module" title="Permalink to this heading"></a></h2>
+<section id="module-Adhesion.ReferenceSolutions.sinewave.JKR">
+<span id="adhesion-referencesolutions-sinewave-jkr-module"></span><h2>Adhesion.ReferenceSolutions.sinewave.JKR module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.sinewave.JKR" title="Permalink to this heading"></a></h2>
+<section id="references">
+<h3>References:<a class="headerlink" href="#references" title="Permalink to this heading"></a></h3>
+<p>Original paper</p>
+<p>Johnson, K. L. The adhesion of two elastic bodies with slightly wavy surfaces.
+International Journal of Solids and Structures 32, 423–430 (1995)
+DOI: 10.1016/0020-7683(94)00111-9</p>
+<p>Asymmetric case and stress intensity factor:</p>
+<p>Carbone, G. et al.
+Journal of the Mechanics and Physics of Solids 52, 1267–1287 (2004)
+DOI: 10.1016/j.jmps.2003.12.001</p>
 </section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this heading"></a></h2>
+<section id="physical-quantities">
+<h3>Physical quantities:<a class="headerlink" href="#physical-quantities" title="Permalink to this heading"></a></h3>
+<p>The geometry of the sinusoidal indenter is</p>
+<div class="math notranslate nohighlight">
+\[2\ h\ sin^2(\pi\ a\ / \lambda )\]</div>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(\lambda\)</span>: wavelength of the sinusoidal indenter</p></li>
+<li><p><span class="math notranslate nohighlight">\(h\)</span>: half peak to tale distance</p></li>
+<li><p><span class="math notranslate nohighlight">\(E^*\)</span>: contact modulus</p></li>
+</ul>
+</section>
+<section id="nondimensional-units">
+<h3>Nondimensional units<a class="headerlink" href="#nondimensional-units" title="Permalink to this heading"></a></h3>
+<ul class="simple">
+<li><p>lateral lengths are in unit of <span class="math notranslate nohighlight">\(\lambda\)</span></p></li>
+<li><p>vertical lengths and displacements are in unit of <span class="math notranslate nohighlight">\(h\)</span> (or :math:<a href="#id1"><span class="problematic" id="id2">`</span></a>2 h <a href="#id3"><span class="problematic" id="id4">`</span></a>)</p></li>
+<li><p>Pressures are in units of <span class="math notranslate nohighlight">\(p_{wfc} = \pi E^* h/\lambda\)</span> the amplitude</p></li>
+</ul>
+<p>of the sinusoidal pressures in the full contact.</p>
+<ul class="simple">
+<li><p>Johnson Parameter <span class="math notranslate nohighlight">\(\alpha\)</span>.</p></li>
+</ul>
+<div class="math notranslate nohighlight">
+\[\alpha = \frac{\sqrt{2}}{\pi} \frac{\lambda}{h} \sqrt{\frac{w}{E^* \lambda}}\]</div>
+<p><span class="math notranslate nohighlight">\(\alpha^2\)</span> can be interpreted as a ratio of surface energy
+and the elastic energy necessary for full contact.</p>
+<div class="math notranslate nohighlight">
+\[\alpha^2  = \frac{w}{h p_{wfc}} \frac{2}{\pi}\]</div>
+<p><span class="math notranslate nohighlight">\(\alpha\)</span> is also the stress intensity factor in nondimensional form</p>
+<div class="math notranslate nohighlight">
+\[\alpha = \frac{K}{p_{wfc} \sqrt{\lambda}} = \frac{K}{\pi E^* h / \sqrt{\lambda}}\]</div>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.sinewave.JKR.contact_radius">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.sinewave.JKR.</span></span><span class="sig-name descname"><span class="pre">contact_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mean_pressure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/sinewave/JKR.html#contact_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.sinewave.JKR.contact_radius" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean_pressure</strong> – mean pressure in units of <span class="math notranslate nohighlight">\(\pi Es h/\lambda\)</span></p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – johnson parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>half the contact width</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.sinewave.JKR.elastic_energy">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.sinewave.JKR.</span></span><span class="sig-name descname"><span class="pre">elastic_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_pressure</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/sinewave/JKR.html#elastic_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.sinewave.JKR.elastic_energy" title="Permalink to this definition"></a></dt>
+<dd><blockquote>
+<div><p><span class="math notranslate nohighlight">\(\frac{U - U_{flat}}{h p_{wfc} A}\)</span></p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mean_pressure</strong> (in units of <span class="math notranslate nohighlight">\(p_{wfc}\)</span>) – </p></li>
+<li><p><strong>a</strong> (in units of the period <span class="math notranslate nohighlight">\(\lambda\)</span>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>energy per unit area in units of <span class="math notranslate nohighlight">\(h p_{wfc}\)</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.sinewave.JKR.flatpunch_pressure">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.sinewave.JKR.</span></span><span class="sig-name descname"><span class="pre">flatpunch_pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/sinewave/JKR.html#flatpunch_pressure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.sinewave.JKR.flatpunch_pressure" title="Permalink to this definition"></a></dt>
+<dd><p>solution by koiter</p>
+<p>Flat punch solution (uniform deformation on periodic strides)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em><em>, </em><em>np.array</em>) – in units of lambda</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – half width of the flat punch</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Pressure distribution with mean -1</p>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Johnson, K. L. The adhesion of two elastic bodies with slightly wavy surfaces. International Journal of Solids and Structures 32, 423–430 (1995).</p>
+<p>Koiter, W. T. An infinite row of collinear cracks in an infinite elastic sheet. Ing. arch 28, 168–172 (1959).</p>
+<p>Zilberman, S. &amp; Persson, B. N. J. Adhesion between elastic bodies with rough surfaces. Solid State Communications 123, 173–177 (2002).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.sinewave.JKR.mean_gap">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.sinewave.JKR.</span></span><span class="sig-name descname"><span class="pre">mean_gap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/sinewave/JKR.html#mean_gap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.sinewave.JKR.mean_gap" title="Permalink to this definition"></a></dt>
+<dd><p>from carbon mangialardi equation (39)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>float</em>) – half contact width in units of lambda</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Johnson Parameter</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>mean gap in units of <span class="math notranslate nohighlight">\(h\)</span></p></li>
+<li><p><em>h is half the peak to valley distance</em></p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Examples</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span> <span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ls</span> <span class="o">=</span> <span class="p">[</span><span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">mean_gap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">alpha</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="p">)</span> <span class="k">for</span> <span class="n">alpha</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span><span class="mf">0.2</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">leg</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;contact radius $a$ ($\lambda$)&quot;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">_</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;mean gap ($h$)&quot;</span><span class="p">);</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.sinewave.JKR.mean_pressure">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.sinewave.JKR.</span></span><span class="sig-name descname"><span class="pre">mean_pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">der</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/sinewave/JKR.html#mean_pressure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.sinewave.JKR.mean_pressure" title="Permalink to this definition"></a></dt>
+<dd><p>mean pressure in units of <span class="math notranslate nohighlight">\(\pi E^* h/ \lambda\)</span></p>
+<p>and it’s derivatives</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> (<em>half contact width in units</em><em> of </em><em>lambda</em>) – </p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em> or </em><em>array</em>) – johnson parameter</p></li>
+<li><p><strong>der</strong> (<em>{&quot;0&quot;</em><em>, </em><em>&quot;1&quot;</em><em>, </em><em>&quot;2&quot;}</em>) – order of the derivative with respect to  (a/lambda)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>der=”0”</em> – mean pressure in units of pi Es h/lambda</p></li>
+<li><p><em>der=”1”</em> – d (mean pressure) / d (a) in units of  pi Es h / lambda^2</p></li>
+<li><p><em>der=”2”</em> – d (mean pressure)^2 / d^2 (a) in units of  pi Es h / lambda^3</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.sinewave.JKR.pressure">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.sinewave.JKR.</span></span><span class="sig-name descname"><span class="pre">pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mean_pressure</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/sinewave/JKR.html#pressure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.sinewave.JKR.pressure" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – position in units of the period <span class="math notranslate nohighlight">\(\lambda\)</span></p></li>
+<li><p><strong>a</strong> – half contact width in units of the period <span class="math notranslate nohighlight">\(\lambda\)</span></p></li>
+<li><p><strong>mean_pressure</strong> – externally applied mean pressure in units of
+the westergaard full contact pressure pi E^* h / lambda</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.sinewave.JKR.stress_intensity_factor_asymmetric">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.sinewave.JKR.</span></span><span class="sig-name descname"><span class="pre">stress_intensity_factor_asymmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_o</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">der</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/sinewave/JKR.html#stress_intensity_factor_asymmetric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.sinewave.JKR.stress_intensity_factor_asymmetric" title="Permalink to this definition"></a></dt>
+<dd><p>Stress intensity factor at the crack front at <cite>a_s</cite></p>
+<p>partial derivatives are taken at constant mean pressure P</p>
+<p>units for a_s and a_o: wavelength of the sinewave
+units of pressure: westergaard full contact pressure <span class="math notranslate nohighlight">\(\pi E^* h / \lambda\)</span></p>
+<p>returns the stress intensity factor in units of <span class="math notranslate nohighlight">\(\pi E^* h / \sqrt{\lambda}\)</span>
+or it’s partial derivative.</p>
+<p>Notation for the derivative flag:
+for example “1_a_s” returns the partial derivative according <cite>a_s</cite>, holding <cite>a_o</cite> and <cite>P</cite> constant</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a_s</strong> (<em>float between 0 and 0.5</em>) – position of the (positive x) crack front at which the SIF is computed</p></li>
+<li><p><strong>a_o</strong> (<em>float between 0 and 0.5</em>) – position of the (negative x) crack front opposite to where the SIF is computed</p></li>
+<li><p><strong>P</strong> – mean pressure</p></li>
+<li><p><strong>der</strong> (<em>string {&quot;0&quot;</em><em>, </em><em>&quot;1_a_s&quot;</em><em>, </em><em>&quot;1_a_o&quot;}</em>) – choose the partial derivative of K to be returned</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">References</p>
+<p>Carbone, G. et al.
+Journal of the Mechanics and Physics of Solids 52, 1267–1287 (2004)
+DOI: 10.1016/j.jmps.2003.12.001</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.sinewave.JKR.stress_intensity_factor_symmetric">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.sinewave.JKR.</span></span><span class="sig-name descname"><span class="pre">stress_intensity_factor_symmetric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">der</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/sinewave/JKR.html#stress_intensity_factor_symmetric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.sinewave.JKR.stress_intensity_factor_symmetric" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-Adhesion.ReferenceSolutions.sinewave">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.sinewave" title="Permalink to this heading"></a></h2>
+<p>Analytical or semi-analytical reference solutions</p>
+<p>for the periodic 2-dimensional contact of a sinusoidal indenter</p>
 </section>
 </section>
 

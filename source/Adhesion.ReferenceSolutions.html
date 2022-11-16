@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.ReferenceSolutions package &mdash; Adhesion 0.90.1.dev35+g0a521b3 documentation</title>
+  <title>Adhesion.ReferenceSolutions package &mdash; Adhesion 0.90.1.dev36+gbb7d810 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -33,7 +33,7 @@
             <a href="../index.html" class="icon icon-home"> Adhesion
           </a>
               <div class="version">
-                0.90.1.dev35+g0a521b3
+                0.90.1.dev36+gbb7d810
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -66,7 +66,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.BaneyHui.maugis_parameter"><code class="docutils literal notranslate"><span class="pre">maugis_parameter()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#adhesion-referencesolutions-dmt-module">Adhesion.ReferenceSolutions.DMT module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Adhesion.ReferenceSolutions.DMT">Adhesion.ReferenceSolutions.DMT module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.DMT.radius_and_pressure"><code class="docutils literal notranslate"><span class="pre">radius_and_pressure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.DMT.surface_displacements"><code class="docutils literal notranslate"><span class="pre">surface_displacements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.DMT.surface_stress"><code class="docutils literal notranslate"><span class="pre">surface_stress()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-Adhesion.ReferenceSolutions.JKR">Adhesion.ReferenceSolutions.JKR module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#physical-quantities">Physical quantities:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#nondimensional-units">Nondimensional units</a><ul>
@@ -139,8 +144,21 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html">Adhesion.ReferenceSolutions.sinewave package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#adhesion-referencesolutions-sinewave-jkr-module">Adhesion.ReferenceSolutions.sinewave.JKR module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#module-Adhesion.ReferenceSolutions.sinewave.JKR">Adhesion.ReferenceSolutions.sinewave.JKR module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#references">References:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#physical-quantities">Physical quantities:</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#nondimensional-units">Nondimensional units</a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.contact_radius"><code class="docutils literal notranslate"><span class="pre">contact_radius()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.elastic_energy"><code class="docutils literal notranslate"><span class="pre">elastic_energy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.flatpunch_pressure"><code class="docutils literal notranslate"><span class="pre">flatpunch_pressure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.mean_gap"><code class="docutils literal notranslate"><span class="pre">mean_gap()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.mean_pressure"><code class="docutils literal notranslate"><span class="pre">mean_pressure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.pressure"><code class="docutils literal notranslate"><span class="pre">pressure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.stress_intensity_factor_asymmetric"><code class="docutils literal notranslate"><span class="pre">stress_intensity_factor_asymmetric()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.stress_intensity_factor_symmetric"><code class="docutils literal notranslate"><span class="pre">stress_intensity_factor_symmetric()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#module-Adhesion.ReferenceSolutions.sinewave">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -170,8 +188,56 @@ See: J.M. Baney, C.-Y. Hui, J. Adhesion Sci. Technol. 11, 393 (1997)</p>
 <dd></dd></dl>
 
 </section>
-<section id="adhesion-referencesolutions-dmt-module">
-<h2>Adhesion.ReferenceSolutions.DMT module<a class="headerlink" href="#adhesion-referencesolutions-dmt-module" title="Permalink to this heading"></a></h2>
+<section id="module-Adhesion.ReferenceSolutions.DMT">
+<span id="adhesion-referencesolutions-dmt-module"></span><h2>Adhesion.ReferenceSolutions.DMT module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.DMT" title="Permalink to this heading"></a></h2>
+<p>Helper tools for Adhesion</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.DMT.radius_and_pressure">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.DMT.</span></span><span class="sig-name descname"><span class="pre">radius_and_pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">N</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">R</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Es</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/DMT.html#radius_and_pressure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.DMT.radius_and_pressure" title="Permalink to this definition"></a></dt>
+<dd><p>Given normal load, sphere radius and contact modulus compute contact radius
+and peak pressure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>N</strong> (<em>float</em>) – Normal force.</p></li>
+<li><p><strong>R</strong> (<em>float</em>) – Sphere radius.</p></li>
+<li><p><strong>Es</strong> (<em>float</em>) – Contact modulus: Es = E/(1-nu**2) with Young’s modulus E and Poisson
+number nu.</p></li>
+<li><p><strong>w</strong> (<em>float</em>) – Work of adhesion.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.DMT.surface_displacements">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.DMT.</span></span><span class="sig-name descname"><span class="pre">surface_displacements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/DMT.html#surface_displacements"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.DMT.surface_displacements" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.DMT.surface_stress">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.DMT.</span></span><span class="sig-name descname"><span class="pre">surface_stress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/DMT.html#surface_stress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.DMT.surface_stress" title="Permalink to this definition"></a></dt>
+<dd><p>Given distance from the center of the sphere, contact radius and Poisson
+number contact, compute the stress at the surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array_like</em>) – Array of distance (from the center of the sphere).</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Contact radius.</p></li>
+<li><p><strong>nu</strong> (<em>float</em>) – Poisson number.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>pz</strong> (<em>array</em>) – Contact pressure.</p></li>
+<li><p><strong>sr</strong> (<em>array</em>) – Radial stress.</p></li>
+<li><p><strong>stheta</strong> (<em>array</em>) – Azimuthal stress.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="module-Adhesion.ReferenceSolutions.JKR">
 <span id="adhesion-referencesolutions-jkr-module"></span><h2>Adhesion.ReferenceSolutions.JKR module<a class="headerlink" href="#module-Adhesion.ReferenceSolutions.JKR" title="Permalink to this heading"></a></h2>

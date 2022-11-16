@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion package &mdash; Adhesion 0.90.1.dev35+g0a521b3 documentation</title>
+  <title>Adhesion package &mdash; Adhesion 0.90.1.dev36+gbb7d810 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             <a href="../index.html" class="icon icon-home"> Adhesion
           </a>
               <div class="version">
-                0.90.1.dev35+g0a521b3
+                0.90.1.dev36+gbb7d810
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -231,8 +231,8 @@
 <li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#subpackages">Subpackages</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html">Adhesion.ReferenceSolutions.sinewave package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#adhesion-referencesolutions-sinewave-jkr-module">Adhesion.ReferenceSolutions.sinewave.JKR module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#module-contents">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#module-Adhesion.ReferenceSolutions.sinewave.JKR">Adhesion.ReferenceSolutions.sinewave.JKR module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.ReferenceSolutions.sinewave.html#module-Adhesion.ReferenceSolutions.sinewave">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -244,7 +244,12 @@
 <li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.BaneyHui.maugis_parameter"><code class="docutils literal notranslate"><span class="pre">maugis_parameter()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#adhesion-referencesolutions-dmt-module">Adhesion.ReferenceSolutions.DMT module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#module-Adhesion.ReferenceSolutions.DMT">Adhesion.ReferenceSolutions.DMT module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.DMT.radius_and_pressure"><code class="docutils literal notranslate"><span class="pre">radius_and_pressure()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.DMT.surface_displacements"><code class="docutils literal notranslate"><span class="pre">surface_displacements()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.DMT.surface_stress"><code class="docutils literal notranslate"><span class="pre">surface_stress()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#module-Adhesion.ReferenceSolutions.JKR">Adhesion.ReferenceSolutions.JKR module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#physical-quantities">Physical quantities:</a></li>
 <li class="toctree-l3"><a class="reference internal" href="Adhesion.ReferenceSolutions.html#nondimensional-units">Nondimensional units</a><ul>
@@ -285,11 +290,87 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="Adhesion.System.html">Adhesion.System package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#adhesion-system-factory-module">Adhesion.System.Factory module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#adhesion-system-plasticsystemspecialisations-module">Adhesion.System.PlasticSystemSpecialisations module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#adhesion-system-smoothsystemspecialisations-module">Adhesion.System.SmoothSystemSpecialisations module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#adhesion-system-systems-module">Adhesion.System.Systems module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#module-Adhesion.System.Factory">Adhesion.System.Factory module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Factory.make_system"><code class="docutils literal notranslate"><span class="pre">make_system()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#module-Adhesion.System.PlasticSystemSpecialisations">Adhesion.System.PlasticSystemSpecialisations module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.PlasticSystemSpecialisations.PlasticSmoothContactSystem"><code class="docutils literal notranslate"><span class="pre">PlasticSmoothContactSystem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.PlasticSystemSpecialisations.PlasticSmoothContactSystem.handles"><code class="docutils literal notranslate"><span class="pre">PlasticSmoothContactSystem.handles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.PlasticSystemSpecialisations.PlasticSmoothContactSystem.minimize_proxy"><code class="docutils literal notranslate"><span class="pre">PlasticSmoothContactSystem.minimize_proxy()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#module-Adhesion.System.SmoothSystemSpecialisations">Adhesion.System.SmoothSystemSpecialisations module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.BndSet"><code class="docutils literal notranslate"><span class="pre">BndSet</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.BndSet.large"><code class="docutils literal notranslate"><span class="pre">BndSet.large</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.BndSet.small"><code class="docutils literal notranslate"><span class="pre">BndSet.small</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.BabushkaBoundaryError"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.BabushkaBoundaryError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.FreeBoundaryError"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.FreeBoundaryError</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.callback"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.check_margins"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.check_margins()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.check_margins_babushka"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.check_margins_babushka()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.compute_babushka_bounds"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.compute_babushka_bounds()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.compute_normal_force"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.compute_normal_force()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.create_babushka"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.create_babushka()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.deproxified"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.deproxified()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.evaluate"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.handles"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.handles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.minimize_proxy"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.minimize_proxy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.objective"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.objective()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.shape_minimisation_input"><code class="docutils literal notranslate"><span class="pre">FastSmoothContactSystem.shape_minimisation_input()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#module-Adhesion.System.Systems">Adhesion.System.Systems module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_attractive_coordinates"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_attractive_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_attractive_force"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_attractive_force()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_nb_attractive_pts"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_nb_attractive_pts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_nb_contact_pts"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_nb_contact_pts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_nb_repulsive_pts"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_nb_repulsive_pts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_normal_force"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_normal_force()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_repulsive_coordinates"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_repulsive_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_repulsive_force"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_repulsive_force()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.handles"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.handles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.logger_input"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.logger_input()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.callback"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_attractive_contact_area"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_attractive_contact_area()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_attractive_coordinates"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_attractive_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_attractive_force"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_attractive_force()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_mean_gap"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_mean_gap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_nb_attractive_pts"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_nb_attractive_pts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_nb_contact_pts"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_nb_contact_pts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_nb_repulsive_pts"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_nb_repulsive_pts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_normal_force"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_normal_force()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_repulsive_contact_area"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_repulsive_contact_area()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_repulsive_coordinates"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_repulsive_coordinates()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_repulsive_force"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.compute_repulsive_force()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.evaluate"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.evaluate_k"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.evaluate_k()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.handles"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.handles()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.hessian_product_function"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.hessian_product_function()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.logger_input"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.logger_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.nb_grid_pts"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.nb_grid_pts</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.objective"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.objective()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.objective_k_float"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.objective_k_float()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.preconditioned_objective"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.preconditioned_objective()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.primal_evaluate"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.primal_evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.primal_hessian_product"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.primal_hessian_product()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.primal_objective"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem.primal_objective()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="Adhesion.System.html#module-Adhesion.System">Module contents</a></li>
 </ul>
 </li>
 </ul>

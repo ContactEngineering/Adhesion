@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.System.PlasticSystemSpecialisations &mdash; Adhesion 0.90.1.dev31+g7ae8a8b documentation</title>
+  <title>Adhesion.System.PlasticSystemSpecialisations &mdash; Adhesion 0.90.1.dev36+gbb7d810 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -15,6 +15,7 @@
         <script src="../../../_static/underscore.js"></script>
         <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -28,7 +29,7 @@
             <a href="../../../index.html" class="icon icon-home"> Adhesion
           </a>
               <div class="version">
-                0.90.1.dev31+g7ae8a8b
+                0.90.1.dev36+gbb7d810
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -65,9 +66,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="../../index.html">Module code</a> &raquo;</li>
-      <li>Adhesion.System.PlasticSystemSpecialisations</li>
+      <li><a href="../../../index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">Adhesion.System.PlasticSystemSpecialisations</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -111,7 +112,7 @@
 <span class="kn">import</span> <span class="nn">Adhesion</span>
 <span class="kn">import</span> <span class="nn">ContactMechanics</span>
 <span class="kn">import</span> <span class="nn">SurfaceTopography</span>
-<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="k">import</span> <span class="n">SmoothContactSystem</span>
+<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">SmoothContactSystem</span>
 
 
 <div class="viewcode-block" id="PlasticSmoothContactSystem"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.PlasticSystemSpecialisations.PlasticSmoothContactSystem">[docs]</a><span class="k">class</span> <span class="nc">PlasticSmoothContactSystem</span><span class="p">(</span><span class="n">SmoothContactSystem</span><span class="p">):</span>
@@ -119,7 +120,7 @@
 <span class="sd">    This system implements a simple penetration hardness model.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
         <span class="n">plastic_interaction</span> <span class="o">=</span> <span class="n">Adhesion</span><span class="o">.</span><span class="n">Interactions</span><span class="o">.</span><span class="n">LinearCorePotential</span><span class="p">(</span>
             <span class="n">interaction</span><span class="p">,</span>
             <span class="n">hardness</span><span class="o">=</span><span class="n">surface</span><span class="o">.</span><span class="n">hardness</span><span class="p">)</span>
