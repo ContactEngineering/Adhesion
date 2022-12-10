@@ -41,9 +41,7 @@ class PlasticSmoothContactSystem(SmoothContactSystem):
     """
 
     def __init__(self, substrate, interaction, surface):
-        plastic_interaction = Adhesion.Interactions.linearize_core(
-            interaction,
-            hardness=surface.hardness)
+        plastic_interaction = interaction.linearize_core(hardness=surface.hardness)
         super().__init__(substrate, plastic_interaction, surface)
 
     @staticmethod
