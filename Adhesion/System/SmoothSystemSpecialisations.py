@@ -204,7 +204,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
         is_ok &= not is_domain_decomposed
         return is_ok
 
-    def objective(self, offset, disp0=None, gradient=False, disp_scale=1.):
+    def objective(self, offset, disp0=None, gradient=False):
         """
         See super().objective for general description this method's purpose.
         Difference for this class wrt 'dumb' systems:
@@ -220,16 +220,11 @@ class FastSmoothContactSystem(SmoothContactSystem):
         disp0: ndarray of float, optional
             initial guess for displacement field. If
             not chosen appropriately, results may be unreliable. (default zero)
-        disp_scale : float, optional
-            (default 1.) allows to specify a scaling of the
-            dislacement before evaluation. This can be necessary when
-            using dumb minimizers with hardcoded convergence criteria
-            such as scipy's L-BFGS-B.
         """
-        self.create_babushka(offset, disp0, disp_scale)
-        return self.babushka.objective(offset, gradient, disp_scale)
+        self.create_babushka(offset, disp0)
+        return self.babushka.objective(offset, gradient)
 
-    def create_babushka(self, offset, disp0=None, disp_scale=1.):
+    def create_babushka(self, offset, disp0=None,):
         """
         Create a (much smaller) system with just the contacting patch plus the
         margin
@@ -239,7 +234,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
         self.offset = offset
         if disp0 is None:
             disp0 = np.zeros(self.substrate.nb_domain_grid_pts)
-        gap = self.compute_gap(disp_scale*disp0, offset)
+        gap = self.compute_gap(disp0, offset)
         contact = np.argwhere(gap < self.interaction.cutoff_radius)
         if contact.size == 0:
             contact = np.array(
@@ -412,7 +407,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
 
     def minimize_proxy(self, offset, disp0=None, method='L-BFGS-B',
                        options=None, gradient=True, lbounds=None, ubounds=None,
-                       tol=None, callback=None, disp_scale=1.,
+                       tol=None, callback=None,
                        deproxify_everytime=True):
         """
         Convenience function. Eliminates boilerplate code for most minimisation
@@ -438,12 +433,8 @@ class FastSmoothContactSystem(SmoothContactSystem):
                       displacement vector. Instead of a callable, it can be set
                       to 'True', in which case the system's default callback
                       function is called.
-        disp_scale -- (default 1.) allows to specify a scaling of the
-                      dislacement before evaluation.
         """
-        # pylint: disable=arguments-differ
-        fun = self.objective(offset, disp0, gradient=gradient,
-                             disp_scale=disp_scale)
+        fun = self.objective(offset, disp0, gradient=gradient,)
         if disp0 is None:
             disp0 = np.zeros(self.substrate.nb_domain_grid_pts)
         disp0 = self.shape_minimisation_input(disp0)
@@ -474,15 +465,15 @@ class FastSmoothContactSystem(SmoothContactSystem):
 
         bnds = None
         if lbounds is not None and ubounds is not None:
-            ubounds = disp_scale * self.shape_minimisation_input(ubounds)
-            lbounds = disp_scale * self.shape_minimisation_input(lbounds)
+            ubounds = self.shape_minimisation_input(ubounds)
+            lbounds = self.shape_minimisation_input(lbounds)
             bnds = tuple(zip(lbounds.tolist(), ubounds.tolist()))
         elif lbounds is not None:
-            lbounds = disp_scale * self.shape_minimisation_input(lbounds)
+            lbounds = self.shape_minimisation_input(lbounds)
             bnds = tuple(
                 zip(lbounds.tolist(), [None for i in range(len(lbounds))]))
         elif ubounds is not None:
-            ubounds = disp_scale * self.shape_minimisation_input(ubounds)
+            ubounds = self.shape_minimisation_input(ubounds)
             bnds = tuple(
                 zip([None for i in range(len(ubounds))], ubounds.tolist()))
         # Scipy minimizers that accept bounds
