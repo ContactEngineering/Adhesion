@@ -8,6 +8,7 @@ description = "Surface forces in contact calculations"
 readme = "README.md"
 license = { file = "LICENSE.md" }
 authors = [
+    { name = "Till Junge", email = "till.junge@altermail.ch" },
     { name = "Antoine Sanner", email = "antoine.sanner@imtek.uni-freiburg.de" },
     { name = "Lars Pastewka", email = "lars.pastewka@imtek.uni-freiburg.de" }
 ]
