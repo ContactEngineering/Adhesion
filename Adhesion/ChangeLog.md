@@ -2,7 +2,12 @@
 Change log for Adhesion
 =======================
 
-v0.90.0 (210920)
+v0.91.0 (not yet released)
+--------------------------
+
+- BUILD: Changed build system from setuptools to flit
+
+v0.90.0 (21Sep20)
 ----------------
 
 - MAINT: automatic publication to PyPI on release
