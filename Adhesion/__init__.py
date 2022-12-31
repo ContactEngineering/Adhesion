@@ -28,4 +28,4 @@
 Defines all interaction modes used in Adhesion
 """
 
-from .DiscoverVersion import __version__
+from .DiscoverVersion import __version__  # noqa: F401
