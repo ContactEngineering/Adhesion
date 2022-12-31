@@ -11,6 +11,17 @@ Subpackages
    Adhesion.ReferenceSolutions
    Adhesion.System
 
+Submodules
+----------
+
+Adhesion.DiscoverVersion module
+-------------------------------
+
+.. automodule:: Adhesion.DiscoverVersion
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
