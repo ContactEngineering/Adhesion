@@ -23,7 +23,7 @@ dependencies = [
     "NuMPI>=0.3.1",
     "muSpectre>=0.25.1",
     "SurfaceTopography>=1.3.0",
-    "ContactMechanics>=1.0.0",
+    "ContactMechanics>=1.1.0",
     "netCDF4"
 ]
 
