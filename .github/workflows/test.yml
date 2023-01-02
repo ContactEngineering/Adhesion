@@ -72,6 +72,9 @@ jobs:
           sudo apt-get install -y \
             libfftw3-dev \
             libnetcdf-dev
+          # Compute muSpectre version
+          pip-compile pyproject.toml
+          MUSPECTRE_VERSION=$(grep 'muspectre==' requirements.txt)
           # Manually install muSpectre with FFTW support
           echo "Installing ${MUSPECTRE_VERSION}"
           pip install -v --no-binary muspectre ${MUSPECTRE_VERSION}
