@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Adhesion.Interactions.Lj93 &mdash; Adhesion 0.90.0.dev53+gfccc4ce documentation</title>
+  <title>Adhesion.Interactions.Lj93 &mdash; Adhesion 0.90.0.dev53+g6dbbce3 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.90.0.dev53+gfccc4ce
+                0.90.0.dev53+g6dbbce3
               </div>
             
           
@@ -202,7 +202,7 @@
 
 
 <div class="viewcode-block" id="LJ93"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Lj93.LJ93">[docs]</a><span class="k">class</span> <span class="nc">LJ93</span><span class="p">(</span><span class="n">Potential</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; 9-3 Lennard-Jones potential with optional cutoff radius.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; 9-3 Lennard-Jones potential with optional cutoff radius.</span>
 
 <span class="sd">        9-3 Lennard-Jones potential:</span>
 <span class="sd">        V_l (r) = ε[ 2/15 (σ/r)**9 - (σ/r)**3]</span>
@@ -231,7 +231,7 @@
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;lj-93&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epsilon</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">        -----------</span>
 <span class="sd">        epsilon: float</span>
@@ -257,7 +257,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">r_min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;convenience function returning the location of the energy minimum</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;convenience function returning the location of the energy minimum</span>
 
 <span class="sd">                6 ___  5/6</span>
 <span class="sd">        r_min = ╲╱ 2 ⋅5   ⋅σ</span>
@@ -268,7 +268,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">r_infl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;convenience function returning the location of the potential&#39;s</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;convenience function returning the location of the potential&#39;s</span>
 <span class="sd">        inflection point (if applicable)</span>
 
 <span class="sd">        r_infl = σ</span>

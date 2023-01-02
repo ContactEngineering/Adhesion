@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Adhesion.Interactions.Harmonic &mdash; Adhesion 0.90.0.dev53+gfccc4ce documentation</title>
+  <title>Adhesion.Interactions.Harmonic &mdash; Adhesion 0.90.0.dev53+g6dbbce3 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.90.0.dev53+gfccc4ce
+                0.90.0.dev53+g6dbbce3
               </div>
             
           
@@ -200,7 +200,7 @@
 
 
 <div class="viewcode-block" id="Harmonic"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Harmonic.Harmonic">[docs]</a><span class="k">class</span> <span class="nc">Harmonic</span><span class="p">(</span><span class="n">Potential</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Repulsive harmonic potential.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; Repulsive harmonic potential.</span>
 
 <span class="sd">        Harmonic potential:</span>
 <span class="sd">        V (r) = 1/2 k r**2 for r &lt; 0</span>
@@ -209,7 +209,7 @@
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;harmonic&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spring_constant</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">        -----------</span>
 <span class="sd">        spring_constant: float</span>
@@ -223,12 +223,12 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">r_min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;convenience function returning the location of the energy minimum&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;convenience function returning the location of the energy minimum&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="mi">0</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">r_infl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;convenience function returning the location of the potential&#39;s</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;convenience function returning the location of the potential&#39;s</span>
 <span class="sd">        inflection point (if applicable)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="kc">None</span>

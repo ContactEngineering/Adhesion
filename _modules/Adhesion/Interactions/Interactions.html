@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Adhesion.Interactions.Interactions &mdash; Adhesion 0.90.0.dev53+gfccc4ce documentation</title>
+  <title>Adhesion.Interactions.Interactions &mdash; Adhesion 0.90.0.dev53+g6dbbce3 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.90.0.dev53+gfccc4ce
+                0.90.0.dev53+g6dbbce3
               </div>
             
           
@@ -202,20 +202,20 @@
 
 
 <div class="viewcode-block" id="Interaction"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Interactions.Interaction">[docs]</a><span class="k">class</span> <span class="nc">Interaction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;base class for all interactions, e.g. interatomic potentials&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;base class for all interactions, e.g. interatomic potentials&quot;&quot;&quot;</span>
     <span class="c1"># pylint: disable=too-few-public-methods</span>
     <span class="k">pass</span></div>
 
 
 <div class="viewcode-block" id="HardWall"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Interactions.HardWall">[docs]</a><span class="k">class</span> <span class="nc">HardWall</span><span class="p">(</span><span class="n">Interaction</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;base class for non-smooth contact mechanics&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;base class for non-smooth contact mechanics&quot;&quot;&quot;</span>
 
     <span class="c1"># pylint: disable=too-few-public-methods</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">penetration</span> <span class="o">=</span> <span class="kc">None</span>
 
 <div class="viewcode-block" id="HardWall.compute"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Interactions.HardWall.compute">[docs]</a>    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">        -----------</span>
 <span class="sd">        gap: array_like</span>
@@ -227,7 +227,7 @@
 
 
 <div class="viewcode-block" id="Dugdale"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Interactions.Dugdale">[docs]</a><span class="k">class</span> <span class="nc">Dugdale</span><span class="p">(</span><span class="n">HardWall</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Potential class representing a Dugdale cohesive zone model&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Potential class representing a Dugdale cohesive zone model&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stress</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -249,13 +249,13 @@
 
 
 <div class="viewcode-block" id="SoftWall"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Interactions.SoftWall">[docs]</a><span class="k">class</span> <span class="nc">SoftWall</span><span class="p">(</span><span class="n">Interaction</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;base class for smooth contact mechanics&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;base class for smooth contact mechanics&quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">communicator</span> <span class="o">=</span> <span class="n">communicator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">Reduction</span><span class="p">(</span><span class="n">communicator</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        makes a deepcopy of all the attributes except self.reduction,</span>
 <span class="sd">        where it stores the same reference</span>
 
@@ -293,7 +293,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="n">state</span>
 
 <div class="viewcode-block" id="SoftWall.evaluate"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Interactions.SoftWall.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        computes and returns the interaction energy and/or forces based on the</span>
 <span class="sd">        as fuction of the gap</span>
 <span class="sd">        Parameters:</span>

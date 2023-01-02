@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Adhesion.Interactions.SmoothPotential &mdash; Adhesion 0.90.0.dev53+gfccc4ce documentation</title>
+  <title>Adhesion.Interactions.SmoothPotential &mdash; Adhesion 0.90.0.dev53+g6dbbce3 documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.90.0.dev53+gfccc4ce
+                0.90.0.dev53+g6dbbce3
               </div>
             
           
@@ -195,7 +195,7 @@
 
 
 <div class="viewcode-block" id="SmoothPotential"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.SmoothPotential.SmoothPotential">[docs]</a><span class="k">class</span> <span class="nc">SmoothPotential</span><span class="p">(</span><span class="n">DecoratedPotential</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    implements the splining of the potential tail using a fourth order</span>
 <span class="sd">    polynomial than reaches zero within a finite cutoff radius</span>
 
@@ -234,7 +234,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent_potential</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">r_t</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">        -----------</span>
 <span class="sd">        parent_potential: Potential instance</span>
@@ -289,7 +289,7 @@
             <span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">(),</span> <span class="bp">self</span><span class="p">)</span>
 
 <div class="viewcode-block" id="SmoothPotential.get_r_infl_spline"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.SmoothPotential.SmoothPotential.get_r_infl_spline">[docs]</a>    <span class="k">def</span> <span class="nf">get_r_infl_spline</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        compute the inflection Point of the spline. The inflexion Point of the</span>
 <span class="sd">        smoothed potential could be below r_t and so staying the original one</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -302,7 +302,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">r_infl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        convenience function returning the location of the potential&#39;s</span>
 <span class="sd">        inflection point</span>
 <span class="sd">        Depending on where the transition between the parent_potential and the</span>
@@ -323,7 +323,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">r_min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        convenience function returning the location of the enery minimum</span>
 <span class="sd">        of the parent potential. (The spline begins at radii above r_min)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -374,7 +374,7 @@
                 <span class="n">ddV</span> <span class="k">if</span> <span class="n">curvature</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_spline_pot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Evaluates the spline part and its derivatives of the potential.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Evaluates the spline part and its derivatives of the potential.</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">        -----------</span>
 <span class="sd">        gap: array_like of float</span>
@@ -398,7 +398,7 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">dV</span><span class="p">,</span> <span class="n">ddV</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_eval_poly_and_cutoff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Computes the coefficients C_i of the spline and the cutoff radius r_c</span>
 <span class="sd">        based on the work of adhesion γ and the slope V&#39;(r_t) and curvature</span>
 <span class="sd">        V&quot;(r_t) at the transition point. The calculations leading to the</span>
@@ -539,7 +539,7 @@
             <span class="n">Δrt</span> <span class="o">=</span> <span class="kc">None</span>
 
             <span class="k">def</span> <span class="nf">outer_obj_fun</span><span class="p">(</span><span class="n">gam</span><span class="p">):</span>
-                <span class="sd">&quot;&quot;&quot;</span>
+<span class="w">                </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">                Outer loop of minimization, finds the work of adhesion γ.</span>
 <span class="sd">                Convergence of Δr_t (the proxy for the cutoff) is assured by</span>
 <span class="sd">                the inner loop defined by inner_obj_fun.&quot;&quot;&quot;</span>
@@ -598,7 +598,7 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">parent_potential</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_t</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">__eval_poly_and_cutoff_legacy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">xtol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Seems to be a bad method, do not use in general, will likely</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Seems to be a bad method, do not use in general, will likely</span>
 <span class="sd">            disappear.</span>
 
 <span class="sd">            Computes the coefficients of the spline and the cutoff based on σ</span>
