@@ -41,3 +41,6 @@ test = [
 documentation = "https://contactengineering.github.io/Adhesion/"
 repository = "https://github.com/ContactEngineering/Adhesion"
 changelog = "https://github.com/ContactEngineering/Adhesion/blob/master/Adhesion/ChangeLog.md"
+
+[project.scripts]
+ce_soft_wall = "Adhesion.CommandLineInterface.SoftWall:main"

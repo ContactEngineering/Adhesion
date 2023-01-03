@@ -2,9 +2,10 @@
 Change log for Adhesion
 =======================
 
-v0.91.0 (not yet released)
---------------------------
+v0.91.0 (03Jan23)
+-----------------
 
+- API: `soft_wall.py` is now installed as `ce_soft_wall`
 - BUILD: Changed build system from setuptools to flit
 
 v0.90.0 (21Sep20)
