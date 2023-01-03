@@ -1,0 +1,21 @@
+Adhesion.CommandLineInterface package
+=====================================
+
+Submodules
+----------
+
+Adhesion.CommandLineInterface.SoftWall module
+---------------------------------------------
+
+.. automodule:: Adhesion.CommandLineInterface.SoftWall
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: Adhesion.CommandLineInterface
+   :members:
+   :undoc-members:
+   :show-inheritance:

@@ -1,0 +1,330 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Adhesion.CommandLineInterface.SoftWall &mdash; Adhesion 0.90.0.dev58+g5b8aed7 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Adhesion
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.90.0.dev58+g5b8aed7
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to Adhesion</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.Interactions.html">Adhesion.Interactions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.System.html">Adhesion.System package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.ReferenceSolutions.html">Adhesion.ReferenceSolutions package</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Adhesion</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>Adhesion.CommandLineInterface.SoftWall</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for Adhesion.CommandLineInterface.SoftWall</h1><div class="highlight"><pre>
+<span></span><span class="c1">#</span>
+<span class="c1"># Copyright 2019-2020 Antoine Sanner</span>
+<span class="c1">#           2016, 2018, 2020 Lars Pastewka</span>
+<span class="c1">#</span>
+<span class="c1"># ### MIT license</span>
+<span class="c1">#</span>
+<span class="c1"># Permission is hereby granted, free of charge, to any person obtaining a copy</span>
+<span class="c1"># of this software and associated documentation files (the &quot;Software&quot;), to deal</span>
+<span class="c1"># in the Software without restriction, including without limitation the rights</span>
+<span class="c1"># to use, copy, modify, merge, publish, distribute, sublicense, and/or sell</span>
+<span class="c1"># copies of the Software, and to permit persons to whom the Software is</span>
+<span class="c1"># furnished to do so, subject to the following conditions:</span>
+<span class="c1">#</span>
+<span class="c1"># The above copyright notice and this permission notice shall be included in</span>
+<span class="c1"># all copies or substantial portions of the Software.</span>
+<span class="c1">#</span>
+<span class="c1"># THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR</span>
+<span class="c1"># IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,</span>
+<span class="c1"># FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE</span>
+<span class="c1"># AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER</span>
+<span class="c1"># LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,</span>
+<span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
+<span class="c1"># SOFTWARE.</span>
+<span class="c1">#</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Automatically compute contact area, load and displacement for a rough surface.</span>
+<span class="sd">Tries to guess displacements such that areas are equally spaced on a log scale.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">Exponential</span>
+<span class="kn">from</span> <span class="nn">ContactMechanics</span> <span class="kn">import</span> <span class="n">PeriodicFFTElasticHalfSpace</span>
+<span class="kn">from</span> <span class="nn">SurfaceTopography</span> <span class="kn">import</span> <span class="n">read_topography</span>
+<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">make_system</span>
+<span class="kn">from</span> <span class="nn">ContactMechanics.Tools.Logger</span> <span class="kn">import</span> <span class="n">screen</span>
+<span class="kn">from</span> <span class="nn">ContactMechanics.IO.NetCDF</span> <span class="kn">import</span> <span class="n">NetCDFContainer</span>
+
+
+<span class="c1">###</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../source/Adhesion.CommandLineInterface.html#Adhesion.CommandLineInterface.SoftWall.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Total number of area/load/displacements to use</span>
+    <span class="n">nsteps</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="c1"># Maximum number of iterations per data point</span>
+    <span class="n">maxiter</span> <span class="o">=</span> <span class="mi">1000</span>
+
+    <span class="c1"># gamma = 2e-5</span>
+    <span class="c1"># rho = 2.071e-5</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="mf">0.01</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+    <span class="c1">###</span>
+
+    <span class="c1"># Read a surface topography from a text file. Returns a SurfaceTopography.SurfaceTopography</span>
+    <span class="c1"># object.</span>
+    <span class="n">surface</span> <span class="o">=</span> <span class="n">read_topography</span><span class="p">(</span><span class="s1">&#39;surface1.out&#39;</span><span class="p">)</span>
+    <span class="c1"># Set the *physical* physical_sizes of the surface. We here set it to equal the shape,</span>
+    <span class="c1"># i.e. the nb_grid_pts of the surface just read. Size is returned by surface.physical_sizes</span>
+    <span class="c1"># and can be unknown, i.e. *None*.</span>
+    <span class="n">surface</span><span class="o">.</span><span class="n">set_size</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="c1"># Initialize elastic half-space. This one is periodic with contact modulus</span>
+    <span class="c1"># E*=1.0 and physical physical_sizes equal to the surface.</span>
+    <span class="n">substrate</span> <span class="o">=</span> <span class="n">PeriodicFFTElasticHalfSpace</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span>
+                                            <span class="n">surface</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">,</span>
+                                            <span class="n">stiffness_q0</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">interaction</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">rho</span><span class="p">)</span>
+    <span class="c1"># interaction = LJ93smoothMin(1.0, 1.0)</span>
+
+    <span class="c1"># Piece the full system together. In particular the System.SystemBase</span>
+    <span class="c1"># object knows how to optimize the problem. For the hard wall interaction it</span>
+    <span class="c1"># will always use Polonsky &amp; Keer&#39;s constrained conjugate gradient method.</span>
+    <span class="n">system</span> <span class="o">=</span> <span class="n">make_system</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+
+    <span class="c1">###</span>
+
+    <span class="c1"># Create a NetCDF container to dump displacements and forces to.</span>
+    <span class="n">container</span> <span class="o">=</span> <span class="n">NetCDFContainer</span><span class="p">(</span><span class="s1">&#39;traj_s.nc&#39;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">double</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">container</span><span class="o">.</span><span class="n">set_shape</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">u</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">tol</span> <span class="o">=</span> <span class="mf">1e-9</span>
+    <span class="k">for</span> <span class="n">disp0</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+        <span class="n">opt</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">minimize_proxy</span><span class="p">(</span><span class="n">disp0</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">lbounds</span><span class="o">=</span><span class="n">surface</span><span class="o">.</span><span class="n">heights</span><span class="p">()</span> <span class="o">+</span> <span class="n">disp0</span><span class="p">,</span>
+                                    <span class="n">method</span><span class="o">=</span><span class="s1">&#39;L-BFGS-B&#39;</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+        <span class="c1"># opt = system.minimize_proxy(disp0, x0, method=&#39;L-BFGS-B&#39;, tol=0.0001)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">x</span>
+        <span class="c1"># minimize_proxy returns a raveled array</span>
+        <span class="n">u</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">surface</span><span class="o">.</span><span class="n">shape</span>
+        <span class="c1"># We need to reevaluate the force. What the (bounded) optimizer returns as</span>
+        <span class="c1"># a jacobian is NOT the force.</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">substrate</span><span class="o">.</span><span class="n">evaluate_force</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+
+        <span class="n">gap</span> <span class="o">=</span> <span class="n">u</span> <span class="o">-</span> <span class="n">surface</span><span class="o">.</span><span class="n">heights</span><span class="p">()</span> <span class="o">-</span> <span class="n">disp0</span>
+        <span class="n">mean_gap</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span>
+        <span class="n">load</span> <span class="o">=</span> <span class="o">-</span><span class="n">f</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">)</span>
+        <span class="c1"># area = (f&gt;0).sum()/np.prod(surface.shape)</span>
+        <span class="n">area</span> <span class="o">=</span> <span class="p">(</span><span class="n">gap</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">opt</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+            <span class="n">screen</span><span class="o">.</span><span class="n">pr</span><span class="p">(</span><span class="s1">&#39;Minimization failed: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">opt</span><span class="o">.</span><span class="n">message</span><span class="p">))</span>
+
+        <span class="n">frame</span> <span class="o">=</span> <span class="n">container</span><span class="o">.</span><span class="n">get_next_frame</span><span class="p">()</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">displacements</span> <span class="o">=</span> <span class="n">u</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">gap</span> <span class="o">=</span> <span class="n">gap</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">forces</span> <span class="o">=</span> <span class="n">f</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">displacement</span> <span class="o">=</span> <span class="n">disp0</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">load</span> <span class="o">=</span> <span class="n">load</span>
+        <span class="n">frame</span><span class="o">.</span><span class="n">area</span> <span class="o">=</span> <span class="n">area</span>
+
+        <span class="n">screen</span><span class="o">.</span><span class="n">st</span><span class="p">([</span><span class="s1">&#39;displacement&#39;</span><span class="p">,</span> <span class="s1">&#39;load&#39;</span><span class="p">,</span> <span class="s1">&#39;area&#39;</span><span class="p">,</span> <span class="s1">&#39;mean gap&#39;</span><span class="p">],</span>
+                  <span class="p">[</span><span class="n">disp0</span><span class="p">,</span> <span class="n">load</span><span class="p">,</span> <span class="n">area</span><span class="p">,</span> <span class="n">mean_gap</span><span class="p">])</span>
+
+    <span class="n">container</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015-2020 The Authors.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
