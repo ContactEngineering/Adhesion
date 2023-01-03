@@ -40,14 +40,6 @@ from ContactMechanics.IO.NetCDF import NetCDFContainer
 ###
 
 def main():
-    # Total number of area/load/displacements to use
-    nsteps = 4
-
-    # Maximum number of iterations per data point
-    maxiter = 1000
-
-    # gamma = 2e-5
-    # rho = 2.071e-5
     gamma = 0.01
     rho = 1.0
 
