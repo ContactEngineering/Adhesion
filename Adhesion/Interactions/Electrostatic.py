@@ -189,25 +189,25 @@ class ChargePatternsInteraction(Potential):
             E_x = np.fft.ifft2(
                 np.einsum(
                     "pq, pq, pqz, pqz-> pqz",
-                    -complex("j") * q1_axis[:,:,0] / q_norm[:,:,0],
+                    -complex("j") * q1_axis[:, :, 0] / q_norm[:, :, 0],
                     fft_magnitude / (self.epsilon_material + self.epsilon_gap),
-                    1 + np.exp(-q_norm*gap_axis),
-                    1 / (1 - B*decay),
-                    ),
+                    1 + np.exp(-q_norm * gap_axis),
+                    1 / (1 - B * decay),
+                ),
                 s=self.num_grid_points,
                 axes=(0, 1),
                 )
             E_y = np.fft.ifft2(
                 np.einsum(
                     "pq, pq, pqz, pqz-> pqz",
-                    -complex("j") * q2_axis[:,:,0] / q_norm[:,:,0],
+                    -complex("j") * q2_axis[:, :, 0] / q_norm[:, :, 0],
                     fft_magnitude / (self.epsilon_material + self.epsilon_gap),
-                    1 + np.exp(-q_norm*gap_axis),
-                    1 / (1 - B*decay),
-                    ),
+                    1 + np.exp(-q_norm * gap_axis),
+                    1 / (1 - B * decay),
+                ),
                 s=self.num_grid_points,
                 axes=(0, 1),
-                )
+            )
 
             #                ϵ_m
             # T_zz(x1, x2) = ─── (E_normal^2 - E_tangential^2)
