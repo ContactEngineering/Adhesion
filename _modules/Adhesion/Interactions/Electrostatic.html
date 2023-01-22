@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Adhesion.Interactions.Electrostatic &mdash; Adhesion 0.91.0.dev8+gd05e923 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Adhesion
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.91.0.dev8+gd05e923
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to Adhesion</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.Interactions.html">Adhesion.Interactions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.System.html">Adhesion.System package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../source/Adhesion.ReferenceSolutions.html">Adhesion.ReferenceSolutions package</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Adhesion</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>Adhesion.Interactions.Electrostatic</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for Adhesion.Interactions.Electrostatic</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">Potential</span>
+<span class="kn">from</span> <span class="nn">NuMPI</span> <span class="kn">import</span> <span class="n">MPI</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="ChargePatternsInteraction"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Electrostatic.ChargePatternsInteraction">[docs]</a><span class="k">class</span> <span class="nc">ChargePatternsInteraction</span><span class="p">(</span><span class="n">Potential</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Potential for the interaction of charges</span>
+
+<span class="sd">    Please cite:</span>
+<span class="sd">    Persson, B. N. J. et al. EPL 103, 36003 (2013)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">charge_distribution</span><span class="p">,</span>
+                 <span class="n">physical_sizes</span><span class="p">,</span>
+                 <span class="n">dielectric_constant_material</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                 <span class="n">dielectric_constant_gap</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
+                 <span class="n">pixel_sizes</span><span class="o">=</span><span class="p">(</span><span class="mf">1e-9</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">),</span>
+                 <span class="n">communicator</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        charge_distribution: float ndarray</span>
+<span class="sd">            spatial distribution</span>
+<span class="sd">        physical_sizes: tuple</span>
+<span class="sd">            length and width of the plate</span>
+<span class="sd">        dielectric_constant_material: float</span>
+<span class="sd">        dielectric_constant_gap: float</span>
+<span class="sd">        pixel_sizes: tuple float</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">charge_distribution</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">charge_distribution</span> <span class="o">=</span> <span class="n">charge_distribution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">physical_sizes</span> <span class="o">=</span> <span class="n">physical_sizes</span>
+        <span class="n">epsilon0</span> <span class="o">=</span> <span class="mf">8.854e-12</span>  <span class="c1"># [C/m^2], permittivity in vacuum</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">=</span> <span class="n">dielectric_constant_material</span> <span class="o">*</span> <span class="n">epsilon0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_gap</span> <span class="o">=</span> <span class="n">dielectric_constant_gap</span> <span class="o">*</span> <span class="n">epsilon0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixel_area</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">pixel_sizes</span><span class="p">)</span>
+        <span class="n">Potential</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="n">communicator</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_grid_points</span> <span class="o">=</span> <span class="n">charge_distribution</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">r_min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">r_infl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="s2">&quot;Potential &#39;</span><span class="si">{0.name}</span><span class="s2">&#39;: ε = </span><span class="si">{0.eps}</span><span class="s2">, σ = </span><span class="si">{0.sig}</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ChargePatternsInteraction.evaluate"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Electrostatic.ChargePatternsInteraction.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">gap</span><span class="p">,</span>
+                 <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">curvature</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">stress_dist</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        gap: array_like</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+
+<span class="sd">        potential: float ndarray</span>
+
+<span class="sd">        gradient: ndarray</span>
+<span class="sd">            first derivative of the potential wrt. gap  (= - forces by pixel)</span>
+<span class="sd">        curvature: ndarray or linear operator (callable)</span>
+<span class="sd">            second derivative of the potential</span>
+<span class="sd">            # TODO: is that easy/possible/computationally tractable ?</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">ndim</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>  <span class="c1"># unit[m]</span>
+
+        <span class="c1"># fast Fourier transform, σ(x1, x2) -&gt; σ(q1, q2)</span>
+        <span class="n">fft_charge_distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fft2</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">charge_distribution</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_grid_points</span>
+            <span class="p">)</span>
+
+        <span class="c1"># According to sampling theory, the magnitude after discretization</span>
+        <span class="c1"># is not exactly the same as in the continuous cases. One must</span>
+        <span class="c1"># multiply the result by a sampling resolution to keep equivalent.</span>
+        <span class="n">fft_magnitude</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fft_charge_distribution</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_area</span>
+
+        <span class="c1"># q1 as first axis, q2 as second axis, z as third axis</span>
+        <span class="c1"># reshape to become three independent axes for easier handling</span>
+        <span class="n">size1</span><span class="p">,</span> <span class="n">size2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_grid_points</span>
+        <span class="n">q1_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span>
+            <span class="n">size1</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">size1</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">q2_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">fftfreq</span><span class="p">(</span>
+            <span class="n">size2</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">size2</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">gap_axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">gap</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="c1"># dq1, dq2 are assumed to be discretized as constants</span>
+        <span class="c1">#          2 π</span>
+        <span class="c1"># d_qi = ───────</span>
+        <span class="c1">#          L_i</span>
+        <span class="n">d_q1</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">d_q2</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1">#                          ϵ_m</span>
+        <span class="c1"># coefficient A = ─────────────────────</span>
+        <span class="c1">#                  2 π^2 (ϵ_m + ϵ_g)^2</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span>
+        <span class="n">A</span> <span class="o">/=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_gap</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+        <span class="c1">#                 A</span>
+        <span class="c1"># integral = - ─────── ∫∫ dq1 dq2  σ(q1, q2)^2  K(q1, q2, z)</span>
+        <span class="c1">#               L1 L2</span>
+        <span class="c1"># K is the kernel function, will be different in different cases</span>
+        <span class="k">def</span> <span class="nf">integral</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
+            <span class="k">return</span> <span class="o">-</span><span class="n">A</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
+                <span class="s2">&quot;..., ..., pq, pqz-&gt; z&quot;</span><span class="p">,</span> <span class="n">d_q1</span><span class="p">,</span> <span class="n">d_q2</span><span class="p">,</span> <span class="n">fft_magnitude</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">K</span>
+                <span class="p">)</span>  <span class="c1"># ... is used to handle constants (zero dimension arrays)</span>
+
+        <span class="c1"># q_norm = |q| = √(q1^2 + q2^2)</span>
+        <span class="n">q_norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">q1_axis</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">q2_axis</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="c1"># decay = exp(-|q|z)</span>
+        <span class="n">decay</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">q_norm</span> <span class="o">*</span> <span class="n">gap_axis</span><span class="p">)</span>
+
+        <span class="c1">#                  ϵ_m - ϵ_g</span>
+        <span class="c1"># coefficient B = ───────────</span>
+        <span class="c1">#                  ϵ_m + ϵ_g</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_gap</span>
+        <span class="n">B</span> <span class="o">/=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_gap</span>
+
+        <span class="k">if</span> <span class="n">potential</span><span class="p">:</span>  <span class="c1"># work of adhesion</span>
+            <span class="c1">#                     -exp(-|q|z)</span>
+            <span class="c1"># K(q1, q2, z) = ──────────────────────</span>
+            <span class="c1">#                |q| [1 - B exp(-|q|z)]</span>
+            <span class="n">kernel</span> <span class="o">=</span> <span class="o">-</span><span class="n">decay</span> <span class="o">/</span> <span class="n">q_norm</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">B</span><span class="o">*</span><span class="n">decay</span><span class="p">)</span>
+            <span class="n">potential</span> <span class="o">=</span> <span class="n">integral</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">potential</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">gradient</span><span class="p">:</span>  <span class="c1"># normal stress of adhesion</span>
+            <span class="c1">#                     exp(-|q|z)</span>
+            <span class="c1"># K(q1, q2, z) = ─────────────────────</span>
+            <span class="c1">#                [1 - B exp(-|q|z)]^2</span>
+            <span class="n">kernel</span> <span class="o">=</span> <span class="n">decay</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">B</span><span class="o">*</span><span class="n">decay</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">gradient</span> <span class="o">=</span> <span class="n">integral</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">gradient</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">curvature</span><span class="p">:</span>  <span class="c1"># change of normal stress</span>
+            <span class="c1">#                 -|q| exp(-|q|z) [1 + B exp(-|q|z)]</span>
+            <span class="c1"># K(q1, q2, z) = ────────────────────────────────────</span>
+            <span class="c1">#                        [1 - B exp(-|q|z)]^3</span>
+            <span class="n">kernel</span> <span class="o">=</span> <span class="o">-</span><span class="n">q_norm</span> <span class="o">*</span> <span class="n">decay</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">B</span><span class="o">*</span><span class="n">decay</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">B</span><span class="o">*</span><span class="n">decay</span><span class="p">)</span><span class="o">**</span><span class="mi">3</span>
+            <span class="n">curvature</span> <span class="o">=</span> <span class="n">integral</span><span class="p">(</span><span class="n">kernel</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">curvature</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="n">stress_dist</span><span class="p">:</span>
+            <span class="c1"># frequency spectrum for E_normal </span>
+            <span class="c1">#        σ(q1, q2) [1 - exp(-|q|d)]</span>
+            <span class="c1"># f =  ──────────────────────────────</span>
+            <span class="c1">#      (ϵ_m + ϵ_g) [1 - B exp(-|q|z)]</span>
+            <span class="c1"># where, q is vector, q1, q2 are components of vectors</span>
+            <span class="n">E_normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft2</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
+                    <span class="s2">&quot;pq, pqz pqz-&gt; pqz&quot;</span><span class="p">,</span>
+                    <span class="n">fft_magnitude</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_gap</span><span class="p">),</span>
+                    <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">q_norm</span><span class="o">*</span><span class="n">gap_axis</span><span class="p">),</span> 
+                    <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">B</span><span class="o">*</span><span class="n">decay</span><span class="p">),</span>
+                    <span class="p">),</span>
+                <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_grid_points</span><span class="p">,</span>
+                <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="p">)</span>
+
+            <span class="c1"># frequency spectrum for E_tangential</span>
+            <span class="c1">#      (-iq) σ(q1, q2) [1 + exp(-|q|d)]</span>
+            <span class="c1"># f = ──────────────────────────────────</span>
+            <span class="c1">#     |q| (ϵ_m + ϵ_g) [1 - B exp(-|q|z)]</span>
+            <span class="c1">#</span>
+            <span class="c1"># where, q is vector, q1, q2 are components of vectors</span>
+            <span class="c1">#        i is imaginary unit</span>
+            <span class="n">E_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft2</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span>
+                    <span class="s2">&quot;pq, pq, pqz, pqz-&gt; pqz&quot;</span><span class="p">,</span>
+                    <span class="o">-</span><span class="nb">complex</span><span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">q1_axis</span> <span class="o">/</span> <span class="n">q_norm</span><span class="p">,</span>
+                    <span class="n">fft_magnitude</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_gap</span><span class="p">),</span>
+                    <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">q_norm</span><span class="o">*</span><span class="n">gap_axis</span><span class="p">),</span>
+                    <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">B</span><span class="o">*</span><span class="n">decay</span><span class="p">),</span>
+                    <span class="p">),</span>
+                <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_grid_points</span><span class="p">,</span>
+                <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="p">)</span>
+            <span class="n">E_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft2</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span>
+                    <span class="s2">&quot;pq, pq, pqz, pqz-&gt; pqz&quot;</span><span class="p">,</span>
+                    <span class="o">-</span><span class="nb">complex</span><span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">q2_axis</span> <span class="o">/</span> <span class="n">q_norm</span><span class="p">,</span>
+                    <span class="n">fft_magnitude</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_gap</span><span class="p">),</span>
+                    <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">q_norm</span><span class="o">*</span><span class="n">gap_axis</span><span class="p">),</span>
+                    <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">B</span><span class="o">*</span><span class="n">decay</span><span class="p">),</span>
+                    <span class="p">),</span>
+                <span class="n">s</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_grid_points</span><span class="p">,</span>
+                <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                <span class="p">)</span>
+
+            <span class="c1">#                ϵ_m</span>
+            <span class="c1"># T_zz(x1, x2) = ─── (E_normal^2 - E_tangential^2)</span>
+            <span class="c1">#                 2</span>
+            <span class="n">T_zz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">/</span> <span class="mi">2</span>
+            <span class="n">T_zz</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">E_normal</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">E_x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">E_y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">stress_dist</span> <span class="o">=</span> <span class="n">T_zz</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">stress_dist</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">potential</span><span class="p">,</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">curvature</span><span class="p">,</span> <span class="n">stress_dist</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2015-2020 The Authors.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

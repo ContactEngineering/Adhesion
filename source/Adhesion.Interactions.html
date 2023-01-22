@@ -8,7 +8,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Adhesion.Interactions package &mdash; Adhesion 0.91.0.dev2+gf194865 documentation</title>
+  <title>Adhesion.Interactions package &mdash; Adhesion 0.91.0.dev8+gd05e923 documentation</title>
   
 
   
@@ -67,7 +67,7 @@
             
             
               <div class="version">
-                0.91.0.dev2+gf194865
+                0.91.0.dev8+gd05e923
               </div>
             
           
@@ -103,6 +103,15 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Adhesion.Interactions package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Adhesion.Interactions.Electrostatic">Adhesion.Interactions.Electrostatic module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Adhesion.Interactions.Electrostatic.ChargePatternsInteraction"><code class="docutils literal notranslate"><span class="pre">ChargePatternsInteraction</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Adhesion.Interactions.Electrostatic.ChargePatternsInteraction.evaluate"><code class="docutils literal notranslate"><span class="pre">ChargePatternsInteraction.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Adhesion.Interactions.Electrostatic.ChargePatternsInteraction.r_infl"><code class="docutils literal notranslate"><span class="pre">ChargePatternsInteraction.r_infl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Adhesion.Interactions.Electrostatic.ChargePatternsInteraction.r_min"><code class="docutils literal notranslate"><span class="pre">ChargePatternsInteraction.r_min</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#module-Adhesion.Interactions.Exponential">Adhesion.Interactions.Exponential module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.Interactions.Exponential.Exponential"><code class="docutils literal notranslate"><span class="pre">Exponential</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Adhesion.Interactions.Exponential.Exponential.evaluate"><code class="docutils literal notranslate"><span class="pre">Exponential.evaluate()</span></code></a></li>
@@ -317,6 +326,50 @@
 <h1>Adhesion.Interactions package<a class="headerlink" href="#adhesion-interactions-package" title="Permalink to this heading">¶</a></h1>
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">¶</a></h2>
+</section>
+<section id="module-Adhesion.Interactions.Electrostatic">
+<span id="adhesion-interactions-electrostatic-module"></span><h2>Adhesion.Interactions.Electrostatic module<a class="headerlink" href="#module-Adhesion.Interactions.Electrostatic" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Adhesion.Interactions.Electrostatic.ChargePatternsInteraction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Electrostatic.</span></span><span class="sig-name descname"><span class="pre">ChargePatternsInteraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">charge_distribution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dielectric_constant_material=1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dielectric_constant_gap=1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pixel_sizes=(1e-09</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">1e-09)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Electrostatic.html#ChargePatternsInteraction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Electrostatic.ChargePatternsInteraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potentials.Potential" title="Adhesion.Interactions.Potentials.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Potential</span></code></a></p>
+<p>Potential for the interaction of charges</p>
+<p>Please cite:
+Persson, B. N. J. et al. EPL 103, 36003 (2013)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Adhesion.Interactions.Electrostatic.ChargePatternsInteraction.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stress_dist</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Electrostatic.html#ChargePatternsInteraction.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Electrostatic.ChargePatternsInteraction.evaluate" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>gap</strong> (<em>array_like</em>) – </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>potential</strong> (<em>float ndarray</em>)</p></li>
+<li><p><strong>gradient</strong> (<em>ndarray</em>) – first derivative of the potential wrt. gap  (= - forces by pixel)</p></li>
+<li><p><strong>curvature</strong> (<em>ndarray or linear operator (callable)</em>) – second derivative of the potential
+# TODO: is that easy/possible/computationally tractable ?</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Adhesion.Interactions.Electrostatic.ChargePatternsInteraction.r_infl">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Electrostatic.ChargePatternsInteraction.r_infl" title="Permalink to this definition">¶</a></dt>
+<dd><p>convenience function returning the location of the potential’s
+inflection point (if applicable)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Adhesion.Interactions.Electrostatic.ChargePatternsInteraction.r_min">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Electrostatic.ChargePatternsInteraction.r_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>convenience function returning the location of the energy minimum</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-Adhesion.Interactions.Exponential">
 <span id="adhesion-interactions-exponential-module"></span><h2>Adhesion.Interactions.Exponential module<a class="headerlink" href="#module-Adhesion.Interactions.Exponential" title="Permalink to this heading">¶</a></h2>
