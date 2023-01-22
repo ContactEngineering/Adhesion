@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Adhesion.Interactions.Electrostatic &mdash; Adhesion 0.91.0.dev10+g47a20f4 documentation</title>
+  <title>Adhesion.Interactions.Electrostatic &mdash; Adhesion 0.91.0.dev11+g49a1f4f documentation</title>
   
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.91.0.dev10+g47a20f4
+                0.91.0.dev11+g49a1f4f
               </div>
             
           
@@ -338,7 +338,7 @@
             <span class="c1"># where, q is vector, q1, q2 are components of vectors</span>
             <span class="n">E_normal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft2</span><span class="p">(</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
-                    <span class="s2">&quot;pq, pqz pqz-&gt; pqz&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;pq, pqz, pqz-&gt; pqz&quot;</span><span class="p">,</span>
                     <span class="n">fft_magnitude</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_gap</span><span class="p">),</span>
                     <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">q_norm</span><span class="o">*</span><span class="n">gap_axis</span><span class="p">),</span> 
                     <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">B</span><span class="o">*</span><span class="n">decay</span><span class="p">),</span>
@@ -355,9 +355,9 @@
             <span class="c1"># where, q is vector, q1, q2 are components of vectors</span>
             <span class="c1">#        i is imaginary unit</span>
             <span class="n">E_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft2</span><span class="p">(</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
                     <span class="s2">&quot;pq, pq, pqz, pqz-&gt; pqz&quot;</span><span class="p">,</span>
-                    <span class="o">-</span><span class="nb">complex</span><span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">q1_axis</span> <span class="o">/</span> <span class="n">q_norm</span><span class="p">,</span>
+                    <span class="o">-</span><span class="nb">complex</span><span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">q1_axis</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">q_norm</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">],</span>
                     <span class="n">fft_magnitude</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_gap</span><span class="p">),</span>
                     <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">q_norm</span><span class="o">*</span><span class="n">gap_axis</span><span class="p">),</span>
                     <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">B</span><span class="o">*</span><span class="n">decay</span><span class="p">),</span>
@@ -366,9 +366,9 @@
                 <span class="n">axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
                 <span class="p">)</span>
             <span class="n">E_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fft</span><span class="o">.</span><span class="n">ifft2</span><span class="p">(</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">multiply</span><span class="p">(</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span>
                     <span class="s2">&quot;pq, pq, pqz, pqz-&gt; pqz&quot;</span><span class="p">,</span>
-                    <span class="o">-</span><span class="nb">complex</span><span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">q2_axis</span> <span class="o">/</span> <span class="n">q_norm</span><span class="p">,</span>
+                    <span class="o">-</span><span class="nb">complex</span><span class="p">(</span><span class="s2">&quot;j&quot;</span><span class="p">)</span> <span class="o">*</span> <span class="n">q2_axis</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">q_norm</span><span class="p">[:,:,</span><span class="mi">0</span><span class="p">],</span>
                     <span class="n">fft_magnitude</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">epsilon_material</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">epsilon_gap</span><span class="p">),</span>
                     <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">q_norm</span><span class="o">*</span><span class="n">gap_axis</span><span class="p">),</span>
                     <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">B</span><span class="o">*</span><span class="n">decay</span><span class="p">),</span>
