@@ -1,5 +1,6 @@
 #
 # Copyright 2020 Antoine Sanner
+#           2020 Lars Pastewka
 #
 # ### MIT license
 #
@@ -21,16 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+"""
+Testing Module for Adhesion
 
-from .Interactions import SoftWall, HardWall, Dugdale  # noqa: F401
-from .Potentials import Potential  # noqa: F401
-from .SmoothPotential import SmoothPotential  # noqa: F401
-
-from .Harmonic import Harmonic  # noqa: F401
-from .VdW82 import VDW82, Lj82  # noqa: F401
-from .Lj93 import LJ93  # noqa: F401
-from .PowerLaw import PowerLaw  # noqa: F401
-from .Exponential import Exponential, RepulsiveExponential, Morse  # noqa: F401
-
-import Adhesion.Interactions.cutoffs  # noqa: F401
-import Adhesion.Interactions.SmoothPotential  # noqa: F401
+These are long tests
+"""

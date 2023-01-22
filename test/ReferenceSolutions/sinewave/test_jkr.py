@@ -73,11 +73,11 @@ def test_sif_contact_radius_roundtrip(contact_radius, mean_pressure):
 def test_SIF_asymmetric_against_symmetric():
     a = 0.2
     P = 0.1
-    assert JKR.stress_intensity_factor_asymmetric(a, a, P=P) \
-           == JKR.stress_intensity_factor_symmetric(a, P, der="0")
-    assert JKR.stress_intensity_factor_asymmetric(a, a, P=P, der="1_a_o") \
-           + JKR.stress_intensity_factor_asymmetric(a, a, P=P, der="1_a_s") \
-           == JKR.stress_intensity_factor_symmetric(a, P, der="1_a")
+    np.testing.assert_allclose(JKR.stress_intensity_factor_asymmetric(a, a, P=P),
+                               JKR.stress_intensity_factor_symmetric(a, P, der="0"))
+    np.testing.assert_allclose(JKR.stress_intensity_factor_asymmetric(a, a, P=P, der="1_a_o")
+                               + JKR.stress_intensity_factor_asymmetric(a, a, P=P, der="1_a_s"),
+                               JKR.stress_intensity_factor_symmetric(a, P, der="1_a"))
 
 
 def test_stress_intensity_factor_derivative_1_a_s():

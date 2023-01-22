@@ -1,12 +1,30 @@
 
-Change log for PyCo
-===================
+Change log for Adhesion
+=======================
 
-v0.90.0 (???)
--------------
+v0.91.0 (03Jan23)
+-----------------
 
-- Refactored PyCo code into three separate Python modules:
+- API: `soft_wall.py` is now installed as `ce_soft_wall`
+- BUILD: Changed build system from setuptools to flit
+
+v0.90.0 (21Sep20)
+----------------
+
+- MAINT: automatic publication to PyPI on release
+- CI: move tests to github
+- ENH: singularity container definition files
+- ENH: preconditionned unconstrained contact mechanics in fourier space
+- ENH: use of bound constraint optimizer for adhesion
+- ENH: Powerlaw attractive interaction potential
+- ENH: Morse Potential
+- ENH: More analytical solutions for JKR contacts: stress intensity factors and derivatives 
+- MAINT: Dropped support for python3.5 and scipy < 0.16.0
+- MAINT: Refactored PyCo code into three separate Python modules:
   SurfaceTopography, ContactMechanics and Adhesion
+
+Change log for PyCo (previous name of the package)
+==================================================
 
 v0.57.0 (15May20)
 -----------------

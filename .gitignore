@@ -20,5 +20,4 @@ dist
 /notes/auto/biblio.el
 /helpers/.ipynb_checkpoints/
 *.pyc
-
-
+venv/

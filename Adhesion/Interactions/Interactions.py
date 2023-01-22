@@ -84,11 +84,11 @@ class SoftWall(Interaction):
     """base class for smooth contact mechanics"""
     def __init__(self, communicator=MPI.COMM_WORLD):
         self.communicator = communicator
-        self.pnp = Reduction(communicator)
+        self.reduction = Reduction(communicator)
 
     def __deepcopy__(self, memo):
         """
-        makes a deepcopy of all the attributes except self.pnp,
+        makes a deepcopy of all the attributes except self.reduction,
         where it stores the same reference
 
         Parameters
@@ -108,8 +108,8 @@ class SoftWall(Interaction):
         # exceptions
         # pnp is a module or a class impolenting computation methods,
         # it is not copied
-        result.pnp = self.pnp
-        keys.remove('pnp')
+        result.reduction = self.reduction
+        keys.remove('reduction')
         # same for communicator
         result.communicator = self.communicator
         keys.remove('communicator')
@@ -138,3 +138,31 @@ class SoftWall(Interaction):
             (default False) whether the gradient should be evaluated
         """
         raise NotImplementedError()
+
+    def plot(self):
+        import matplotlib.pyplot as plt
+        fig, (axpot, axf, axcurv) = plt.subplots(3, 1)
+        r = np.linspace(0.7 * self.r_min, 4 * self.r_min, 200)
+
+        v, dv, ddv = self.evaluate(r, True, True, True)
+
+        axpot.plot(r, v, )
+        axf.plot(r, dv, )
+        axcurv.plot(r, ddv, )
+
+        axpot.set_ylabel("Potential")
+        axf.set_ylabel("interaction stress")
+        axcurv.set_ylabel("curvature")
+
+        for a in (axpot, axf, axcurv):
+            a.grid()
+            a.axvline(self.r_min, label="r_min")
+            a.axvline(self.r_infl, label="r_infl")
+
+        axpot.axhline(self.v_min, c="k", label="v_min")
+        axf.axhline(self.max_tensile, c="k", label="maxtensile")
+
+        axcurv.set_xlabel("gap")
+        axpot.legend()
+
+        return fig, (axpot, axf, axcurv)

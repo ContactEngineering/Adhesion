@@ -36,7 +36,7 @@ from Adhesion.Interactions import LJ93
 from Adhesion.Interactions import VDW82
 from Adhesion.Interactions.cutoffs import LinearCorePotential
 
-from Adhesion.Interactions import Exponential
+from Adhesion.Interactions import Exponential, Morse
 from Adhesion.Interactions import RepulsiveExponential
 from Adhesion.Interactions import PowerLaw
 from Adhesion.Interactions import SmoothPotential
@@ -1067,3 +1067,10 @@ def test_pipeline():
 def test_cutoffs(pot):
     assert (np.array(
         pot.evaluate(2 * pot.cutoff_radius, True, True, True)) == 0).all()
+
+
+def test_morse():
+    w = 1.456
+    range = 7.56
+    pot = Morse(w, range)
+    assert pot.evaluate(0)[0] == - w

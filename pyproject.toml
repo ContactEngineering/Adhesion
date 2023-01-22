@@ -1,0 +1,46 @@
+[build-system]
+requires = ["flit_core>=3.2"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "Adhesion"
+description = "Surface forces in contact calculations"
+readme = "README.md"
+license = { file = "LICENSE.md" }
+authors = [
+    { name = "Till Junge", email = "till.junge@altermail.ch" },
+    { name = "Antoine Sanner", email = "antoine.sanner@imtek.uni-freiburg.de" },
+    { name = "Lars Pastewka", email = "lars.pastewka@imtek.uni-freiburg.de" }
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python"
+]
+requires-python = ">=3.7.0"
+dynamic = [ "version" ]
+dependencies = [
+    "numpy>=1.16.3",
+    "scipy>=1.9.0",
+    "NuMPI>=0.3.1",
+    "muSpectre>=0.25.1",
+    "SurfaceTopography>=1.3.0",
+    "ContactMechanics>=1.1.0",
+    "netCDF4"
+]
+
+[project.optional-dependencies]
+test = [
+    "flake8<5",
+    "pytest",
+    "pytest-cov",
+    "pytest-flake8",
+    "runtests"
+]
+
+[project.urls]
+documentation = "https://contactengineering.github.io/Adhesion/"
+repository = "https://github.com/ContactEngineering/Adhesion"
+changelog = "https://github.com/ContactEngineering/Adhesion/blob/master/Adhesion/ChangeLog.md"
+
+[project.scripts]
+ce_soft_wall = "Adhesion.CommandLineInterface.SoftWall:main"
