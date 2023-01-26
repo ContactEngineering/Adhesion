@@ -53,7 +53,7 @@ class ChargePatternsInteraction(Potential):
         return None
 
     def __repr__(self):
-        return ("Potential '{0.name}': ε = {0.eps}, σ = {0.sig}").format(self)
+        return "Potential '{0.name}': ε = {0.eps}, σ = {0.sig}".format(self)
 
     def evaluate(self,
                  gap,
@@ -218,4 +218,4 @@ class ChargePatternsInteraction(Potential):
         else:
             stress_dist = None
 
-        return (potential, gradient, curvature, stress_dist)
+        return potential, gradient, curvature, stress_dist
