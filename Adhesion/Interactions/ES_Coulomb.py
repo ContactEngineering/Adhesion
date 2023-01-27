@@ -24,7 +24,9 @@
 #
 
 """
-9-3 Lennard-Jones potential for wall interactions
+Electrostatic potential for Coulombic Interactions
+
+Persson, B.N.J., 2018. The dependency of adhesion and friction on electrostatic attraction. The Journal of chemical physics, 148(14), p.144701.
 """
 
 from Adhesion.Interactions import Potential
@@ -33,95 +35,62 @@ import numpy as np
 from NuMPI import MPI
 
 
-class LJ93(Potential):
-    """ 9-3 Lennard-Jones potential with optional cutoff radius.
-
-        9-3 Lennard-Jones potential:
-        V_l (r) = ε[ 2/15 (σ/r)**9 - (σ/r)**3]
-
-
-                         ⎛   3       9⎞
-                         ⎜  σ     2⋅σ ⎟
-            V_l(r) =   ε⋅⎜- ── + ─────⎟
-                         ⎜   3       9⎟
-                         ⎝  r    15⋅r ⎠
-
-                         ⎛   3       9⎞
-                         ⎜3⋅σ     6⋅σ ⎟
-            V_l'(r) =  ε⋅⎜──── - ─────⎟
-                         ⎜  4       10⎟
-                         ⎝ r     5⋅r  ⎠
-
-                         ⎛      3       9⎞
-                         ⎜  12⋅σ    12⋅σ ⎟
-            V_l''(r) = ε⋅⎜- ───── + ─────⎟
-                         ⎜     5      11 ⎟
-                         ⎝    r      r   ⎠
+class ES_C(Potential):
+    """ Electrostatic potential for Coulombic interaction when a voltage V is applied across an air gap between two perfect insulators of thicknesses d1,d2 and permittivities eps1,eps2
 
     """
 
-    name = "lj-93"
+    name = "es-c"
 
-    def __init__(self, eps1, eps2, d1, d2, Voltage, communicator=MPI.COMM_WORLD):
+    def __init__(self, eps1, eps2, d1, d2, V, communicator=MPI.COMM_WORLD):
         """
         Parameters:
         -----------
-        epsilon: float
-            Lennard-Jones potential well ε
-        sigma: float
-            Lennard-Jones distance parameter σ
+        eps1: float
+            Dielectric permittivity of bottom surface
+        eps2: float
+            Dielectric permittivity of top surface
+        d1: float
+            Thickness of bottom surface
+        d2: float
+            Thickness of top surface
+        V: float
+            Applied voltage
         communicator: not used
         """
-        self.eps = float(epsilon)
-        self.sig = float(sigma)
+        self.eps1 = float(eps1)
+        self.eps2 = float(eps2)
+        self.d1 = float(d1)
+        self.d2 = float(d2)
+        self.V = float(V)
+        
         Potential.__init__(self, communicator=communicator)
 
     def __getstate__(self):
-        state = super().__getstate__(), self.eps, self.sig
+        state = super().__getstate__(), self.eps1, self.eps2, self.d1, self.d2, self.V
         return state
 
     def __setstate__(self, state):
-        superstate, self.eps, self.sig = state
+        superstate, self.eps1, self.eps2, self.d1, self.d2, self.V = state
         super().__setstate__(superstate)
 
     def __repr__(self, ):
-        return ("Potential '{0.name}': ε = {0.eps}, σ = {0.sig}").format(self)
-
-    @property
-    def r_min(self):
-        """convenience function returning the location of the energy minimum
-
-                6 ___  5/6
-        r_min = ╲╱ 2 ⋅5   ⋅σ
-                ────────────
-                     5
-        """
-        return self.sig*(2*5**5)**(1./6)/5.
-
-    @property
-    def r_infl(self):
-        """convenience function returning the location of the potential's
-        inflection point (if applicable)
-
-        r_infl = σ
-        """
-        return self.sig
+        return ("Potential '{0.name}': eps1 = {0.eps1}, eps2 = {0.eps2}, d1 = {0.d1}, d2 = {0.d2}, V = {0.V},).format(self)
 
     def evaluate(self, gap, potential=True, gradient=False, curvature=False,
                  mask=None):
         r = np.asarray(gap)
 
         V = dV = ddV = None
-        sig_r3 = (self.sig / r) ** 3
-        sig_r9 = sig_r3 ** 3
-
+        
+        eps0 = 8.85e-12
+	h0 = (self.d1 / self.eps1) + (self.d2 / self.eps2)
+	
         if potential:
-            V = self.eps * (2. / 15 * sig_r9 - sig_r3)
-        if gradient or curvature:
-            eps_r = self.eps / r
+            V = 0.5 * self.eps0 * (self.V**2) * (1 ./ (r + h0))
         if gradient:
-            dV = - eps_r * (6. / 5 * sig_r9 - 3 * sig_r3)
+            dV = - 0.5 * self.eps0 * (self.V**2) * (1 ./ (r + h0))**2
         if curvature:
-            ddV = 12 * eps_r / r * (sig_r9 - sig_r3)
+            ddV = 2 * 0.5 * self.eps0 * (self.V**2) * (1 ./ (r + h0))**3
 
         return (V, dV, ddV)
