@@ -915,11 +915,20 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
     def handles(*args, **kwargs):  # FIXME work around, see issue #208
         return False
 
+    @property
+    def contact_zone(self):
+        """
+        returns an array of all coordinates, where contact pressure is
+        repulsive. Useful for evaluating the number of contact islands etc.
+        """
+
+        return np.where(self.gap == 0., 1., 0.)
+
     def compute_nb_contact_pts(self):
         """
         compute and return the number of contact points.
         """
-        return self.reduction.sum(np.where(self.gap == 0., 1., 0.))
+        return self.reduction.sum(self.contact_zone)
 
     def logger_input(self):
         """
@@ -1056,3 +1065,16 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
                            self.interaction_force == 0.)] = 0.
 
         return np.argwhere(pts)
+
+    def minimize_proxy(self, offset=0,
+                       initial_displacements=None, method='L-BFGS-B',
+                       gradient=True, lbounds=None, ubounds=None,
+                       callback=None,
+                       logger=None, **kwargs):
+        if lbounds is None:
+            lbounds = "auto"
+        return super().minimize_proxy(offset=offset,
+                       initial_displacements=initial_displacements, method=method,
+                       gradient=gradient, lbounds=lbounds, ubounds=ubounds,
+                       callback=callback,
+                       logger=logger, **kwargs)
