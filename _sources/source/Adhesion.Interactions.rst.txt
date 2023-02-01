@@ -4,14 +4,6 @@ Adhesion.Interactions package
 Submodules
 ----------
 
-Adhesion.Interactions.Electrostatic module
-------------------------------------------
-
-.. automodule:: Adhesion.Interactions.Electrostatic
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Adhesion.Interactions.Exponential module
 ----------------------------------------
 
