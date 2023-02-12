@@ -40,6 +40,7 @@ from Adhesion.Interactions import Exponential, Morse
 from Adhesion.Interactions import RepulsiveExponential
 from Adhesion.Interactions import PowerLaw
 from Adhesion.Interactions import SmoothPotential
+from Adhesion.Interactions import ES_C
 
 import ContactMechanics.Tools as Tools
 
@@ -1074,3 +1075,19 @@ def test_morse():
     range = 7.56
     pot = Morse(w, range)
     assert pot.evaluate(0)[0] == - w
+    
+def test_electrostatic_coulomb():
+ # all values taken from table 1 in https://doi.org/10.3389/fmech.2020.567386 , with units of distance in nm  
+    eps0 = 8.85e-12
+    eps1 = 3.9
+    epsg = 1
+    eps2 = 3000
+    d1 = 1e-3
+    d2 = 250e-3
+    voltage = 100
+    es_pot = ES_C(eps0,eps1,epsg,eps2,d1,d2,voltage)
+    r = np.linspace(0,5,1000)
+    p,f,c = es_pot.evaluate(r)
+    import matplotlib.pyplot as plt
+    plt.plot(r,f) #force curve should look like https://doi.org/10.3389/fmech.2020.00027 in normalized units
+    

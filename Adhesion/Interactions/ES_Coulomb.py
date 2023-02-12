@@ -1,4 +1,4 @@
-#
+# @@ -0,0 +1,96 @@
 # Copyright 2020 Antoine Sanner
 #           2020 Lars Pastewka
 #
@@ -26,7 +26,7 @@
 """
 Electrostatic potential for Coulombic Interactions
 
-Persson, B.N.J., 2018. The dependency of adhesion and friction on electrostatic attraction. The Journal of chemical physics, 148(14), p.144701.
+Heß, M. and Forsbach, F., 2020. Macroscopic modeling of fingerpad friction under electroadhesion: Possibilities and limitations. Frontiers in Mechanical Engineering, 6, p.567386.
 """
 
 from Adhesion.Interactions import Potential
@@ -36,61 +36,67 @@ from NuMPI import MPI
 
 
 class ES_C(Potential):
-    """ Electrostatic potential for Coulombic interaction when a voltage V is applied across an air gap between two perfect insulators of thicknesses d1,d2 and permittivities eps1,eps2
-
+    """ Electrostatic potential for Coulombic interaction when a voltage is applied across a gap between two perfect insulators
+@doi https://doi.org/10.3389/fmech.2020.567386
     """
 
     name = "es-c"
 
-    def __init__(self, eps1, eps2, d1, d2, V, communicator=MPI.COMM_WORLD):
+    def __init__(self, eps0, eps1, epsg = 1, eps2, d1, d2, voltage, communicator=MPI.COMM_WORLD):
         """
         Parameters:
         -----------
+        eps0: float
+            Permittivity of free space        
         eps1: float
-            Dielectric permittivity of bottom surface
+            Relative dielectric permittivity of bottom surface
+        epsg: float
+            Relative dielectric permittivity of gap (Default = 1 for air)         
         eps2: float
-            Dielectric permittivity of top surface
+            Relative dielectric permittivity of top surface
         d1: float
             Thickness of bottom surface
         d2: float
             Thickness of top surface
-        V: float
+        voltage: float
             Applied voltage
         communicator: not used
         """
+        self.eps0 = float(eps0)
         self.eps1 = float(eps1)
+        self.epsg = float(epsg)        
         self.eps2 = float(eps2)
         self.d1 = float(d1)
         self.d2 = float(d2)
-        self.V = float(V)
+        self.voltage = float(voltage)
         
         Potential.__init__(self, communicator=communicator)
 
     def __getstate__(self):
-        state = super().__getstate__(), self.eps1, self.eps2, self.d1, self.d2, self.V
+        state = super().__getstate__(), self.eps0, self.eps1, self.epsg, self.eps2, self.d1, self.d2, self.voltage
         return state
 
     def __setstate__(self, state):
-        superstate, self.eps1, self.eps2, self.d1, self.d2, self.V = state
+        superstate, self.eps1, self.epsg, self.eps0, self.eps2, self.d1, self.d2, self.voltage = state
         super().__setstate__(superstate)
 
     def __repr__(self, ):
-        return ("Potential '{0.name}': eps1 = {0.eps1}, eps2 = {0.eps2}, d1 = {0.d1}, d2 = {0.d2}, V = {0.V},).format(self)
+        return ("Potential '{0.name}': eps0 = {0.eps0}, eps1 = {0.eps1}, epsg = {0.epsg}, eps2 = {0.eps2}, d1 = {0.d1}, d2 = {0.d2}, voltage = {0.voltage},).format(self)
 
     def evaluate(self, gap, potential=True, gradient=False, curvature=False,
                  mask=None):
+                 
         r = np.asarray(gap)
 
         V = dV = ddV = None
         
-        eps0 = 8.85e-12
-	h0 = (self.d1 / self.eps1) + (self.d2 / self.eps2)
+	h0 = (self.d1 / self.eps1) + (r / self.epsg) + (self.d2 / self.eps2)
 	
         if potential:
-            V = 0.5 * self.eps0 * (self.V**2) * (1 ./ (r + h0))
+            V = 0.5 * self.eps0 * (self.voltage**2) * (1 / h0)
         if gradient:
-            dV = - 0.5 * self.eps0 * (self.V**2) * (1 ./ (r + h0))**2
+            dV = - 0.5 * self.eps0 * (self.voltage**2) * (1 / h0)**2
         if curvature:
-            ddV = 2 * 0.5 * self.eps0 * (self.V**2) * (1 ./ (r + h0))**3
+            ddV = 2 * 0.5 * self.eps0 * (self.voltage**2) * (1 / h0)**3
 
         return (V, dV, ddV)
