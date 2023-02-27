@@ -90,13 +90,13 @@ class ES_C(Potential):
 
         V = dV = ddV = None
         
-	h0 = (self.d1 / self.eps1) + (r / self.epsg) + (self.d2 / self.eps2)
+	h0 = (self.d1 / self.eps1) + (self.d2 / self.eps2)
 	
         if potential:
-            V = 0.5 * self.eps0 * (self.voltage**2) * (1 / h0)
+            V = 0.5 * self.eps0 * (self.voltage**2) * (1 / (r/self.epsg + h0))
         if gradient:
-            dV = - 0.5 * self.eps0 * (self.voltage**2) * (1 / h0)**2
+            dV = - 0.5 * self.eps0 * (self.voltage**2) * (1 / (r/self.epsg + h0))**2
         if curvature:
-            ddV = 2 * 0.5 * self.eps0 * (self.voltage**2) * (1 / h0)**3
+            ddV = 2 * 0.5 * self.eps0 * (self.voltage**2) * (1 / (r/self.epsg + h0))**3
 
         return (V, dV, ddV)
