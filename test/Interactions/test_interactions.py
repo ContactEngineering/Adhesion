@@ -29,7 +29,6 @@
 """
 Tests the potential classes
 """
-
 import unittest
 import numpy as np
 
