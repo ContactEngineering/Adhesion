@@ -1,5 +1,6 @@
 #
-# Copyright 2018, 2020 Antoine Sanner
+# Copyright 2023 Sitangshu Chatterjee
+#           2018, 2021 Antoine Sanner
 #           2016, 2019-2020 Lars Pastewka
 #           2019 Lintao Fang
 #           2015-2016 Till Junge
@@ -14,8 +15,8 @@
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
 #
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -1082,12 +1083,24 @@ def test_electrostatic_coulomb():
     eps1 = 3.9
     epsg = 1
     eps2 = 3000
-    d1 = 1e-3
-    d2 = 250e-3
+    d1 = 1e-6
+    d2 = 250e-6
     voltage = 100
     es_pot = ES_C(eps0,eps1,epsg,eps2,d1,d2,voltage)
-    r = np.linspace(0,5,1000)
+    h0 = (d1 / eps1) + (d2 / eps2)
+    sig0 = 0.5 * eps0 * (voltage**2) * (1/h0**2)
+    r = np.linspace(0*h0,5*h0,1000)
     p,f,c = es_pot.evaluate(r)
-    import matplotlib.pyplot as plt
-    plt.plot(r,f) #force curve should look like https://doi.org/10.3389/fmech.2020.00027 in normalized units
+    x = r/h0
+    y = dV/sig0	    
+    indices = [0,200, 400, 600, 800, 1000]; 
+    y_test = [] #values calculated based on given input
+    for i in indices:
+    y_test.append(y[i])
+    y_true = [1.0, 0.25, 0.12, 0.625, 0.04, 0.028]; #true values from paper
+    error = mean_squared_error(y_true, y_test)
+    assert error < 0.5, "error should be lower!" 
+    if False:
+    	import matplotlib.pyplot as plt
+    	plt.plot(x,y) #force curve as in https://doi.org/10.3389/fmech.2020.00027 in Fig.3
     
