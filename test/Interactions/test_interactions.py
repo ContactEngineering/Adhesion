@@ -1095,9 +1095,9 @@ def test_electrostatic_coulomb():
     indices = [0,200, 400, 600, 800, 1000]; 
     y_test = [] #values calculated based on given input
     for i in indices:
-    y_test.append(y[i])
+     y_test.append(y[i])
     y_true = [1.0, 0.25, 0.12, 0.625, 0.04, 0.028]; #true values from paper
-    error = mean_squared_error(y_true, y_test)
+    error = (np.square(np.array(y_true) - np.array(y_test))).mean(axis=0)
     assert error < 0.5, "error should be lower!" 
     if False:
     	import matplotlib.pyplot as plt
