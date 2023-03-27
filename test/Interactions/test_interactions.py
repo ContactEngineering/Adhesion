@@ -40,7 +40,7 @@ from Adhesion.Interactions import Exponential, Morse
 from Adhesion.Interactions import RepulsiveExponential
 from Adhesion.Interactions import PowerLaw
 from Adhesion.Interactions import SmoothPotential
-from Adhesion.Interactions import ES_C
+from Adhesion.Interactions import ES_Coulomb
 
 import ContactMechanics.Tools as Tools
 
