@@ -81,7 +81,7 @@ class ES_C(Potential):
         super().__setstate__(superstate)
 
     def __repr__(self, ):
-        return ("Potential '{0.name}': eps0 = {0.eps0}, eps1 = {0.eps1}, epsg = {0.epsg}, eps2 = {0.eps2}, d1 = {0.d1}, d2 = {0.d2}, voltage = {0.voltage},).format(self)
+        return ("Potential '{0.name}': eps0 = {0.eps0}, eps1 = {0.eps1}, epsg = {0.epsg}, eps2 = {0.eps2}, d1 = {0.d1}, d2 = {0.d2}, voltage = {0.voltage}").format(self)
 
     def evaluate(self, gap, potential=True, gradient=False, curvature=False,
                  mask=None):
