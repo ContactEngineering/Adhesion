@@ -34,7 +34,7 @@ import numpy as np
 
 from NuMPI import MPI
 
-from .Interactions import SoftWall
+from .Base import SoftWall
 
 
 class Potential(SoftWall, metaclass=abc.ABCMeta):

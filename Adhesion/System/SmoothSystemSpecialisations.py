@@ -35,11 +35,13 @@ import copy
 import numpy as np
 import scipy
 
-from Adhesion.System import SmoothContactSystem
-from Adhesion.System import IncompatibleResolutionError
 from SurfaceTopography import Topography
-import Adhesion
 import ContactMechanics
+
+from ..Interactions import SoftWall
+
+from .Systems import SmoothContactSystem
+from .Systems import IncompatibleResolutionError
 
 
 # convenient container for storing correspondences betwees small and large
@@ -189,17 +191,14 @@ class FastSmoothContactSystem(SmoothContactSystem):
                 is_domain_decomposed):
         is_ok = True
         # any periodic type of substrate formulation should do
-        is_ok &= issubclass(substrate_type,
-                            ContactMechanics.Substrate)
+        is_ok &= issubclass(substrate_type, ContactMechanics.Substrate)
         if is_ok:
             is_ok &= ~substrate_type.is_periodic()
         # only soft interactions allowed
-        is_ok &= issubclass(interaction_type,
-                            Adhesion.SoftWall)
+        is_ok &= issubclass(interaction_type, SoftWall)
 
         # any surface should do
-        is_ok &= issubclass(surface_type,
-                            Topography)
+        is_ok &= issubclass(surface_type, Topography)
 
         is_ok &= not is_domain_decomposed
         return is_ok

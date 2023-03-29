@@ -27,11 +27,10 @@
 9-3 Lennard-Jones potential for wall interactions
 """
 
-from Adhesion.Interactions import Potential
-
 import numpy as np
 from NuMPI import MPI
 
+from .Potential import Potential
 
 class LJ93(Potential):
     """ 9-3 Lennard-Jones potential with optional cutoff radius.

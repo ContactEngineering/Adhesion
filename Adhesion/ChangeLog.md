@@ -2,6 +2,12 @@
 Change log for Adhesion
 =======================
 
+v0.91.1 (01Feb23)
+-----------------
+
+- BUG: Fixed discover of version when in a git repository that is not the
+  source directory of SurfaceTopography
+
 v0.91.0 (03Jan23)
 -----------------
 
