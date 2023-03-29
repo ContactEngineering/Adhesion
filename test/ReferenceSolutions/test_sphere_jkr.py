@@ -64,7 +64,8 @@ def test_force_consistency_pen_w(w):
 
     assert force_from_w == force_r_pen
 
-@pytest.mark.parametrize("contact_modulus", [0.75,1.9])
+
+@pytest.mark.parametrize("contact_modulus", [0.75, 1.9])
 @pytest.mark.parametrize("radius", [1., 10.])
 def test_stress_intensity_factor_energy_release_rate(contact_modulus, radius):
     # tests that the implementation of the stress intensity factor and the
@@ -72,12 +73,8 @@ def test_stress_intensity_factor_energy_release_rate(contact_modulus, radius):
 
     a = np.linspace(0.5, 2)  # contact radius
     penetration = - 0.5
-    en_release_rate = JKR.nonequilibrium_elastic_energy_release_rate(
-        penetration=penetration,
-        contact_radius=a,
-        contact_modulus=contact_modulus,
-        radius=radius,
-        )
+    en_release_rate = JKR.elastic_energy_release_rate(contact_radius=a, penetration=penetration,
+                                                      contact_modulus=contact_modulus, radius=radius)
     stress_intensity_factor = JKR.stress_intensity_factor(
         penetration=penetration,
         contact_radius=a,
@@ -186,10 +183,10 @@ def test_stress_intensity_factor_second_derivative():
     np.testing.assert_allclose(dK_da2_analytical, dK_da2_num,
                                atol=1e-6, rtol=1e-4)
 
-@pytest.mark.parametrize("contact_modulus", [0.75,1.9])
+
+@pytest.mark.parametrize("contact_modulus", [0.75, 1.9])
 @pytest.mark.parametrize("radius", [1., 10.])
 def test_energy_release_rate_derivatives_against_sif_derivatives(radius, contact_modulus):
-
     contact_radius = np.random.uniform(0.1, 3)
     penetration = np.random.uniform(0.1, 3)
 
@@ -199,9 +196,8 @@ def test_energy_release_rate_derivatives_against_sif_derivatives(radius, contact
         radius=radius, contact_modulus=contact_modulus)
 
     np.testing.assert_allclose(
-        JKR.nonequilibrium_elastic_energy_release_rate(
-            penetration=penetration, contact_radius=contact_radius, der="1_a",
-            radius=radius, contact_modulus=contact_modulus),
+        JKR.elastic_energy_release_rate(contact_radius=contact_radius, penetration=penetration,
+                                        contact_modulus=contact_modulus, der="1_a", radius=radius),
         # Irwin:
         sif / contact_modulus
         * JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="1_a",
@@ -210,9 +206,8 @@ def test_energy_release_rate_derivatives_against_sif_derivatives(radius, contact
         )
 
     np.testing.assert_allclose(
-        JKR.nonequilibrium_elastic_energy_release_rate(
-            penetration=penetration, contact_radius=contact_radius, der="1_d",
-            radius=radius, contact_modulus=contact_modulus),
+        JKR.elastic_energy_release_rate(contact_radius=contact_radius, penetration=penetration,
+                                        contact_modulus=contact_modulus, der="1_d", radius=radius),
         # Irwin:
         sif / contact_modulus
         * JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="1_d",
@@ -221,9 +216,8 @@ def test_energy_release_rate_derivatives_against_sif_derivatives(radius, contact
         )
 
     np.testing.assert_allclose(
-        JKR.nonequilibrium_elastic_energy_release_rate(
-            penetration=penetration, contact_radius=contact_radius, der="2_da",
-            radius=radius, contact_modulus=contact_modulus),
+        JKR.elastic_energy_release_rate(contact_radius=contact_radius, penetration=penetration,
+                                        contact_modulus=contact_modulus, der="2_da", radius=radius),
         # Irwin:
         1 / contact_modulus * (
                 sif * JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="2_da",
@@ -236,9 +230,8 @@ def test_energy_release_rate_derivatives_against_sif_derivatives(radius, contact
         atol=1e-13, rtol=0
         )
     np.testing.assert_allclose(
-        JKR.nonequilibrium_elastic_energy_release_rate(
-            penetration=penetration, contact_radius=contact_radius, der="2_a",
-            radius=radius, contact_modulus=contact_modulus),
+        JKR.elastic_energy_release_rate(contact_radius=contact_radius, penetration=penetration,
+                                        contact_modulus=contact_modulus, der="2_a", radius=radius),
         # Irwin:
         1 / contact_modulus * (
                 sif * JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="2_a",
@@ -247,7 +240,24 @@ def test_energy_release_rate_derivatives_against_sif_derivatives(radius, contact
                                               radius=radius, contact_modulus=contact_modulus) ** 2
         ),
         atol=1e-13, rtol=0
-        )
+    )
+
+
+@pytest.mark.parametrize("contact_modulus", [0.75, 1.9])
+@pytest.mark.parametrize("radius", [1., 10.])
+@pytest.mark.parametrize("force", [0., 1.])
+def test_energy_release_rate_from_force(radius, contact_modulus, force):
+    work_of_adhesion = 2.
+    contact_radius = JKR.contact_radius(force=force,
+                                        contact_modulus=contact_modulus,
+                                        radius=radius,
+                                        work_of_adhesion=work_of_adhesion)
+
+    np.testing.assert_allclose(JKR.elastic_energy_release_rate(
+        contact_radius=contact_radius,
+        force=force,
+        contact_modulus=contact_modulus, radius=radius),
+        work_of_adhesion)
 
 
 def test_equilibrium_elastic_energy_vs_nonequilibrium():
