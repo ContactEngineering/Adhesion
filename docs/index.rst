@@ -21,9 +21,9 @@ rigid on an elastic flat.
    installation
    usage
    development
-   Testing
+   testing
    contributing
-
+   examples
 
 
 .. toctree::
