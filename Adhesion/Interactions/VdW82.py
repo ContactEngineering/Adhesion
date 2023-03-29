@@ -31,7 +31,7 @@ http://dx.doi.org/10.1103/PhysRevLett.111.035502
 import numpy as np
 from NuMPI import MPI
 
-from Adhesion.Interactions import Potential
+from .Potential import Potential
 
 
 class VDW82(Potential):

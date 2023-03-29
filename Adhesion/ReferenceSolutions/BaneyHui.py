@@ -29,11 +29,9 @@ elastic flat.
 See: J.M. Baney, C.-Y. Hui, J. Adhesion Sci. Technol. 11, 393 (1997)
 """
 
-from __future__ import division
-
 import numpy as np
 
-from Adhesion.ReferenceSolutions.MaugisDugdale import afindroot
+from .MaugisDugdale import afindroot
 
 
 ###

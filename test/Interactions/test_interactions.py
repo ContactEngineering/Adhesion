@@ -34,7 +34,7 @@ import numpy as np
 
 from Adhesion.Interactions import LJ93
 from Adhesion.Interactions import VDW82
-from Adhesion.Interactions.cutoffs import LinearCorePotential
+from Adhesion.Interactions.Cutoff import LinearCorePotential
 
 from Adhesion.Interactions import Exponential, Morse
 from Adhesion.Interactions import RepulsiveExponential

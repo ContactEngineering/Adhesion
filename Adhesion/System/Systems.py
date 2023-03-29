@@ -29,11 +29,12 @@ Defines the interface for Adhesion systems
 
 import numpy as np
 
-import Adhesion
 import ContactMechanics
 import SurfaceTopography
 from ContactMechanics.Tools import compare_containers
 from ContactMechanics.Systems import IncompatibleResolutionError, SystemBase
+
+from ..Interactions import SoftWall
 
 
 class SmoothContactSystem(SystemBase):
@@ -91,16 +92,13 @@ class SmoothContactSystem(SystemBase):
     def handles(substrate_type, interaction_type, surface_type, comm):
         is_ok = True
         # any periodic type of substrate formulation should do
-        is_ok &= issubclass(substrate_type,
-                            ContactMechanics.Substrate)
+        is_ok &= issubclass(substrate_type, ContactMechanics.Substrate)
 
         # only soft interactions allowed
-        is_ok &= issubclass(interaction_type,
-                            Adhesion.SoftWall)
+        is_ok &= issubclass(interaction_type, SoftWall)
 
         # any surface should do
-        is_ok &= issubclass(surface_type,
-                            SurfaceTopography.UniformTopographyInterface)
+        is_ok &= issubclass(surface_type, SurfaceTopography.UniformTopographyInterface)
         return is_ok
 
     def compute_repulsive_force(self):

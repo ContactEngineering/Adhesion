@@ -28,7 +28,7 @@ import pytest
 
 from SurfaceTopography import make_sphere
 from Adhesion.Interactions import Exponential, Lj82
-from Adhesion.Interactions.cutoffs import LinearCorePotential
+from Adhesion.Interactions.Cutoff import LinearCorePotential
 from ContactMechanics import (FreeFFTElasticHalfSpace)
 from Adhesion.System import SmoothContactSystem, BoundedSmoothContactSystem
 from NuMPI import MPI

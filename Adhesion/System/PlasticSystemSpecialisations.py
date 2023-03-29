@@ -29,10 +29,12 @@ implements plastic mapping algorithms for contact systems
 
 import numpy as np
 
-import Adhesion
 import ContactMechanics
 import SurfaceTopography
-from Adhesion.System import SmoothContactSystem
+
+from ..Interactions import SoftWall
+
+from .Systems import SmoothContactSystem
 
 
 class PlasticSmoothContactSystem(SmoothContactSystem):
@@ -57,15 +59,12 @@ class PlasticSmoothContactSystem(SmoothContactSystem):
         """
         is_ok = True
         # any type of substrate formulation should do
-        is_ok &= issubclass(substrate_type,
-                            ContactMechanics.ElasticSubstrate)
+        is_ok &= issubclass(substrate_type, ContactMechanics.ElasticSubstrate)
         # only hard interactions allowed
-        is_ok &= issubclass(interaction_type,
-                            Adhesion.SoftWall)
+        is_ok &= issubclass(interaction_type, SoftWall)
 
         # any surface should do
-        is_ok &= issubclass(surface_type,
-                            SurfaceTopography.PlasticTopography)
+        is_ok &= issubclass(surface_type, SurfaceTopography.PlasticTopography)
         return is_ok
 
     def minimize_proxy(self, **kwargs):

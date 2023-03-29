@@ -29,11 +29,9 @@ flat.
 See: L. Pastewka, M.O. Robbins, unpublished
 """
 
-from __future__ import division
-
 import numpy as np
 
-from Adhesion.ReferenceSolutions.MaugisDugdale import afindroot
+from .MaugisDugdale import afindroot
 
 
 ###
