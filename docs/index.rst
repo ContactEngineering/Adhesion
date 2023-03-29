@@ -23,7 +23,7 @@ rigid on an elastic flat.
    development
    testing
    contributing
-   examples
+   examples/index.rst
 
 
 .. toctree::

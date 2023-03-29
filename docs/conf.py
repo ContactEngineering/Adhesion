@@ -181,3 +181,5 @@ nb_custom_formats = {
     ".py": ["jupytext.reads", {"fmt": "py:percent"}],
 }
 
+
+nb_execution_timeout = 240
