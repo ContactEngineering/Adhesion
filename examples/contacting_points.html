@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>computing contact areas &mdash; Adhesion 0.91.0.dev20+g74fc9fb documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Adhesion.Interactions package" href="../source/Adhesion.Interactions.html" />
+    <link rel="prev" title="Smooth against JKR" href="sinewave_bem_vs_jkr.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            Adhesion
+          </a>
+              <div class="version">
+                0.91.0.dev20+g74fc9fb
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Notes</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to Adhesion</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="adhesive_simulation_sphere.html">Adhesive Simulation of the contact of a sphere</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adhesive_simulation_rough.html">Example of rough simulation with adhesion on the contact challenge 512x512 topography</a></li>
+<li class="toctree-l2"><a class="reference internal" href="adhesive_plastic_simulation_cone.html">Adhesive Plastic Simulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinewave_bem_vs_jkr.html">Smooth against JKR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sinewave_bem_vs_jkr.html#hardwall-against-jkr">Hardwall against JKR</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">computing contact areas</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../source/Adhesion.Interactions.html">Adhesion.Interactions package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/Adhesion.System.html">Adhesion.System package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/Adhesion.ReferenceSolutions.html">Adhesion.ReferenceSolutions package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Adhesion</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Examples</a></li>
+      <li class="breadcrumb-item active">computing contact areas</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/examples/contacting_points.py.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ---</span>
+<span class="c1"># jupyter:</span>
+<span class="c1">#   jupytext:</span>
+<span class="c1">#     formats: py:percent</span>
+
+<span class="c1">#     text_representation:</span>
+<span class="c1">#       extension: .py</span>
+<span class="c1">#       format_name: percent</span>
+<span class="c1">#       format_version: &#39;1.3&#39;</span>
+<span class="c1">#       jupytext_version: 1.14.4</span>
+<span class="c1">#   kernelspec:</span>
+<span class="c1">#     display_name: Python 3</span>
+<span class="c1">#     language: python</span>
+<span class="c1">#     name: python3</span>
+<span class="c1"># ---</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="computing-contact-areas">
+<h1>computing contact areas<a class="headerlink" href="#computing-contact-areas" title="Permalink to this heading"></a></h1>
+<p>This example is based on test_smooth_system</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">from</span> <span class="nn">SurfaceTopography</span> <span class="kn">import</span> <span class="n">make_sphere</span>
+<span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">Exponential</span><span class="p">,</span> <span class="n">Lj82</span>
+<span class="kn">from</span> <span class="nn">Adhesion.Interactions.cutoffs</span> <span class="kn">import</span> <span class="n">LinearCorePotential</span>
+<span class="kn">from</span> <span class="nn">ContactMechanics</span> <span class="kn">import</span> <span class="p">(</span><span class="n">FreeFFTElasticHalfSpace</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">SmoothContactSystem</span><span class="p">,</span> <span class="n">BoundedSmoothContactSystem</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">import</span> <span class="nn">pytest</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="kn">from</span> <span class="nn">SurfaceTopography</span> <span class="kn">import</span> <span class="n">make_sphere</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">Exponential</span><span class="p">,</span> <span class="n">Lj82</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;pytest&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+<span class="n">sx</span><span class="p">,</span> <span class="n">sy</span> <span class="o">=</span> <span class="p">[</span><span class="mi">30</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="n">E_s</span> <span class="o">=</span> <span class="mf">5.</span>
+<span class="n">R</span> <span class="o">=</span> <span class="mf">10.</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="mf">2.</span>
+<span class="n">w</span> <span class="o">=</span> <span class="mf">1.</span>
+
+<span class="n">surface</span> <span class="o">=</span> <span class="n">make_sphere</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">),</span> <span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sx</span><span class="p">),</span> <span class="n">standoff</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">))</span>
+<span class="c1"># ext_surface = make_sphere(R, (2 * nx, 2 * ny), (2 * sx, 2 * sx),</span>
+<span class="c1">#                          centre=(sx / 2, sx / 2), standoff=float(&#39;inf&#39;))</span>
+<span class="n">smoothsystem</span> <span class="o">=</span> <span class="n">SmoothContactSystem</span><span class="p">(</span>
+    <span class="n">FreeFFTElasticHalfSpace</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">),</span> <span class="n">E_s</span><span class="p">,</span> <span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sx</span><span class="p">)),</span>
+    <span class="n">LinearCorePotential</span><span class="p">(</span><span class="n">Lj82</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">rho</span><span class="p">)),</span> <span class="n">surface</span><span class="p">)</span>
+
+<span class="n">boundedsmoothsystem</span> <span class="o">=</span> <span class="n">BoundedSmoothContactSystem</span><span class="p">(</span>
+    <span class="n">FreeFFTElasticHalfSpace</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">),</span> <span class="n">E_s</span><span class="p">,</span> <span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sx</span><span class="p">)),</span> <span class="n">Exponential</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">rho</span><span class="p">),</span>
+    <span class="n">surface</span><span class="p">)</span>
+
+<span class="n">penetration</span> <span class="o">=</span> <span class="mf">2.</span>
+
+<span class="n">sol</span> <span class="o">=</span> <span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">minimize_proxy</span><span class="p">(</span>
+    <span class="n">penetration</span><span class="p">,</span>
+    <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">maxcor</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ftol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">gtol</span><span class="o">=</span><span class="mf">1e-6</span> <span class="o">*</span> <span class="p">(</span>
+                         <span class="n">w</span> <span class="o">/</span> <span class="n">rho</span><span class="p">)</span> <span class="o">*</span> <span class="n">surface</span><span class="o">.</span><span class="n">area_per_pt</span><span class="p">),</span>
+    <span class="n">lbounds</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span>
+<span class="n">sol</span> <span class="o">=</span> <span class="n">smoothsystem</span><span class="o">.</span><span class="n">minimize_proxy</span><span class="p">(</span>
+    <span class="n">penetration</span> <span class="o">-</span> <span class="n">rho</span><span class="p">,</span>
+    <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">maxcor</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">ftol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                 <span class="n">gtol</span><span class="o">=</span><span class="mf">1e-6</span> <span class="o">*</span> <span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="n">rho</span><span class="p">)</span> <span class="o">*</span> <span class="n">surface</span><span class="o">.</span><span class="n">area_per_pt</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="c1"># plt.colorbar(ax.contourf(</span>
+<span class="c1"># - smoothsystem.substrate.force[</span>
+<span class="c1">#       smoothsystem.substrate.topography_subdomain_slices],</span>
+<span class="c1">#       levels=(-w/rho,-0.01,0.01,10.)), )</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="o">-</span> <span class="n">smoothsystem</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+    <span class="n">smoothsystem</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">topography_subdomain_slices</span><span class="p">]))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="o">-</span> <span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+    <span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">topography_subdomain_slices</span><span class="p">]))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="o">-</span> <span class="n">smoothsystem</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+          <span class="n">smoothsystem</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">topography_subdomain_slices</span><span class="p">]</span>
+    <span class="p">[:,</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;smooth&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+    <span class="o">-</span> <span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">[</span>
+          <span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">topography_subdomain_slices</span><span class="p">]</span>
+    <span class="p">[:,</span> <span class="n">ny</span> <span class="o">//</span> <span class="mi">2</span><span class="p">],</span>
+    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;bounded smooth&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">compute_nb_attractive_pts</span><span class="p">(),</span>
+                           <span class="n">smoothsystem</span><span class="o">.</span><span class="n">compute_nb_attractive_pts</span><span class="p">(),</span>
+                           <span class="n">rtol</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">compute_nb_repulsive_pts</span><span class="p">(),</span>
+                           <span class="n">smoothsystem</span><span class="o">.</span><span class="n">compute_nb_repulsive_pts</span><span class="p">(),</span>
+                           <span class="n">rtol</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">compute_normal_force</span><span class="p">(),</span>
+                           <span class="n">smoothsystem</span><span class="o">.</span><span class="n">compute_normal_force</span><span class="p">(),</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">compute_repulsive_force</span><span class="p">(),</span>
+                           <span class="n">smoothsystem</span><span class="o">.</span><span class="n">compute_repulsive_force</span><span class="p">(),</span>
+                           <span class="n">rtol</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_allclose</span><span class="p">(</span><span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">compute_attractive_force</span><span class="p">(),</span>
+                           <span class="n">smoothsystem</span><span class="o">.</span><span class="n">compute_attractive_force</span><span class="p">(),</span>
+                           <span class="n">rtol</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The Bounded contact system has a very clear definition of contacting region</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">boundedsmoothsystem</span><span class="o">.</span><span class="n">contact_zone</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;contact&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The definition of contact area in the smooth system that is the closest to this “JKR definition is the gap where the interaction is maximal”</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gap_maxstress</span> <span class="o">=</span> <span class="n">smoothsystem</span><span class="o">.</span><span class="n">interaction</span><span class="o">.</span><span class="n">r_infl</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">smooth_contacting_zone</span> <span class="o">=</span> <span class="n">smoothsystem</span><span class="o">.</span><span class="n">gap</span> <span class="o">&lt;</span> <span class="n">gap_maxstress</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">smooth_contacting_zone</span><span class="o">.</span><span class="n">T</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;contact&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here it is slightly larger</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="sinewave_bem_vs_jkr.html" class="btn btn-neutral float-left" title="Smooth against JKR" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../source/Adhesion.Interactions.html" class="btn btn-neutral float-right" title="Adhesion.Interactions package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2015-2020 The Authors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

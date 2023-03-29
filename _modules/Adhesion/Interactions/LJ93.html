@@ -3,14 +3,18 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.Interactions.LJ93 &mdash; Adhesion 0.91.0.dev12+g713fa76 documentation</title>
+  <title>Adhesion.Interactions.LJ93 &mdash; Adhesion 0.91.0.dev20+g74fc9fb documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -30,7 +34,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev12+g713fa76
+                0.91.0.dev20+g74fc9fb
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -45,7 +49,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to Adhesion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
@@ -112,6 +118,7 @@
 <span class="kn">from</span> <span class="nn">NuMPI</span> <span class="kn">import</span> <span class="n">MPI</span>
 
 <span class="kn">from</span> <span class="nn">.Potential</span> <span class="kn">import</span> <span class="n">Potential</span>
+
 
 <div class="viewcode-block" id="LJ93"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.LJ93.LJ93">[docs]</a><span class="k">class</span> <span class="nc">LJ93</span><span class="p">(</span><span class="n">Potential</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot; 9-3 Lennard-Jones potential with optional cutoff radius.</span>

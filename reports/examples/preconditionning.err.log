@@ -1,0 +1,202 @@
+Traceback (most recent call last):
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 1204, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/util.py", line 84, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/util.py", line 62, in just_run
+    return loop.run_until_complete(coro)
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 616, in run_until_complete
+    return future.result()
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 663, in async_execute
+    await self.async_execute_cell(
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 965, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 862, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+gtol = 1e-5
+n = 128
+
+w = 0.05
+interaction_range = 1
+
+topography = fourier_synthesis(
+    (n, n),
+    (n, n),
+    hurst=0.8,
+    rms_slope=0.1,
+    short_cutoff=8,
+    long_cutoff=n/2,
+)
+topography = topography.scale(hprms / topography.rms_gradient()).squeeze()
+topography._heights = topography.heights() - np.max(topography.heights())
+
+print(np.max(topography.heights()))
+
+substrate = PeriodicFFTElasticHalfSpace(
+    (n,n), Es, physical_sizes=(n,n),
+    fft='serial')
+
+interaction = RepulsiveExponential(100 * w, 0.001 * interaction_range, w, interaction_range).linearize_core(hardness=1000)
+
+system = SmoothContactSystem(substrate, interaction, topography)
+
+# TODO: This should probably end up as a method of the system
+def fix_mw_sol(x):
+
+    var = x.copy()
+    K = np.sqrt(system.stiffness_k.reshape(np.shape(x)) * system.area_per_pt)
+    _fourier_sol_mw = var / K
+    fourier_sol_MW = fix_fourier_sol(_fourier_sol_mw)
+    return fourier_sol_MW
+
+def fix_fourier_sol(x):
+    var = x.copy()
+    fourier_buffer.array()[...] = var.reshape(system.nb_grid_pts)
+    engine.ihcfft(fourier_buffer,real_buffer)
+    real_sol = real_buffer.array()[...].copy()*engine.normalisation
+    return real_sol
+
+
+max_stress = np.max(abs(system.interaction.max_tensile))
+topography = system.surface
+nx, ny = system.nb_grid_pts
+sx, sy = topography.physical_sizes
+
+
+typical_stress_rep = hprms * Es
+typical_stress_adh = abs(system.interaction.max_tensile) #w / system.interaction.rho
+typical_stress = max(typical_stress_rep, typical_stress_adh)
+
+gtol_per_pixel = gtol * topography.area_per_pt #* typical_stress
+
+offset_temp = 1 * system.surface.rms_height_from_area()
+
+init_disp = np.zeros(system.substrate.nb_subdomain_grid_pts)
+
+engine = muFFT.FFT(system.substrate.nb_grid_pts, fft='fftw',
+                   allow_temporary_buffer=False,
+                   allow_destroy_input=True)
+
+real_buffer = engine.register_halfcomplex_field("real-space", 1)
+fourier_buffer = engine.register_halfcomplex_field("fourier-space", 1)
+real_buffer.array()[...] = init_disp
+engine.hcfft(real_buffer, fourier_buffer)
+k_float_disp = fourier_buffer.array()[...].copy()
+k_float_disp_mw = k_float_disp * np.sqrt(system.stiffness_k)
+
+
+
+print('############# PRECONDITIONED LBFGS RUNNING #######################')
+
+sol = scipy.optimize.minimize(
+    system.preconditioned_objective(offset_temp,gradient=True,
+                           logger=Logger("evaluations_mwlbfgs.log")),
+x0=k_float_disp_mw,
+method='L-BFGS-B', jac=True, bounds=None,
+options=dict(gtol=gtol_per_pixel,
+             ftol=0, maxcor=3,
+             maxiter=100000,
+             maxfun=300000,
+             ),
+            )
+
+print(sol.message)
+print(sol.nit)
+#assert sol.success
+
+#_dump(system, offset_temp, sol)
+
+disps = fix_mw_sol(sol.x)
+
+gap = system.compute_gap(disps, offset_temp)
+plt.figure()
+plt.colorbar(plt.imshow(gap), label="gap")
+
+print('################## LBFGS REAL RUNNING ############################')
+
+sol = scipy.optimize.minimize(system.objective(offset_temp, gradient=True,
+                                logger=Logger("evaluations_lbfgs.log")),
+    x0=init_disp,
+    method='L-BFGS-B', jac=True, bounds=None,
+    options=dict(gtol=gtol_per_pixel,
+                 ftol=0, maxcor=3,
+                 maxiter=100000,
+                 maxfun=300000,
+                 ),
+)
+
+print(sol.message)
+print(sol.nit)
+#assert sol.success
+
+#_dump_lbfgs(system, offset_temp, sol)
+disps = sol.x.reshape((n,n))
+
+gap = system.compute_gap(disps, offset_temp)
+plt.figure()
+plt.colorbar(plt.imshow(gap))
+
+print('################## LBFGS HC-FOURIER RUNNING ############################')
+
+sol = scipy.optimize.minimize(system.objective_k_float(offset_temp,
+                                                       gradient=True,
+                        logger=Logger("evaluations_lbfgs_fourier.log")),
+                              x0=k_float_disp,
+                              method='L-BFGS-B', jac=True, bounds=None,
+                              options=dict(gtol=gtol_per_pixel,
+                                           ftol=0, maxcor=3,
+                                           maxiter=100000,
+                                           maxfun=300000,
+                                           ),
+                              )
+
+print(sol.message)
+print(sol.nit)
+
+#assert sol.success
+disps = fix_fourier_sol(sol.x)
+
+gap = system.compute_gap(disps, offset_temp)
+plt.figure()
+plt.colorbar(plt.imshow(gap))
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mUnknownFFTEngineError[0m                     Traceback (most recent call last)
+Cell [0;32mIn[3], line 61[0m
+[1;32m     57[0m offset_temp [38;5;241m=[39m [38;5;241m1[39m [38;5;241m*[39m system[38;5;241m.[39msurface[38;5;241m.[39mrms_height_from_area()
+[1;32m     59[0m init_disp [38;5;241m=[39m np[38;5;241m.[39mzeros(system[38;5;241m.[39msubstrate[38;5;241m.[39mnb_subdomain_grid_pts)
+[0;32m---> 61[0m engine [38;5;241m=[39m [43mmuFFT[49m[38;5;241;43m.[39;49m[43mFFT[49m[43m([49m[43msystem[49m[38;5;241;43m.[39;49m[43msubstrate[49m[38;5;241;43m.[39;49m[43mnb_grid_pts[49m[43m,[49m[43m [49m[43mfft[49m[38;5;241;43m=[39;49m[38;5;124;43m'[39;49m[38;5;124;43mfftw[39;49m[38;5;124;43m'[39;49m[43m,[49m
+[1;32m     62[0m [43m                   [49m[43mallow_temporary_buffer[49m[38;5;241;43m=[39;49m[38;5;28;43;01mFalse[39;49;00m[43m,[49m
+[1;32m     63[0m [43m                   [49m[43mallow_destroy_input[49m[38;5;241;43m=[39;49m[38;5;28;43;01mTrue[39;49;00m[43m)[49m
+[1;32m     65[0m real_buffer [38;5;241m=[39m engine[38;5;241m.[39mregister_halfcomplex_field([38;5;124m"[39m[38;5;124mreal-space[39m[38;5;124m"[39m, [38;5;241m1[39m)
+[1;32m     66[0m fourier_buffer [38;5;241m=[39m engine[38;5;241m.[39mregister_halfcomplex_field([38;5;124m"[39m[38;5;124mfourier-space[39m[38;5;124m"[39m, [38;5;241m1[39m)
+
+File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/muFFT/__init__.py:189[0m, in [0;36mFFT[0;34m(nb_grid_pts, fft, communicator, **kwargs)[0m
+[1;32m    166[0m [38;5;28;01mdef[39;00m [38;5;21mFFT[39m(nb_grid_pts, fft[38;5;241m=[39m[38;5;124m'[39m[38;5;124mserial[39m[38;5;124m'[39m, communicator[38;5;241m=[39m[38;5;28;01mNone[39;00m, [38;5;241m*[39m[38;5;241m*[39mkwargs):
+[1;32m    167[0m [38;5;250m    [39m[38;5;124;03m"""[39;00m
+[1;32m    168[0m [38;5;124;03m    The FFT class handles forward and inverse transforms and instantiates[39;00m
+[1;32m    169[0m [38;5;124;03m    the correct engine object to carry out the transform.[39;00m
+[0;32m   (...)[0m
+[1;32m    187[0m [38;5;124;03m        Default: None[39;00m
+[1;32m    188[0m [38;5;124;03m    """[39;00m
+[0;32m--> 189[0m     factory, communicator [38;5;241m=[39m [43mget_engine_factory[49m[43m([49m[43mfft[49m[43m,[49m[43m [49m[43mcommunicator[49m[43m)[49m
+[1;32m    190[0m     [38;5;28;01mreturn[39;00m factory(nb_grid_pts, communicator, [38;5;241m*[39m[38;5;241m*[39mkwargs)
+
+File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/muFFT/__init__.py:157[0m, in [0;36mget_engine_factory[0;34m(fft, communicator)[0m
+[1;32m    154[0m     factory [38;5;241m=[39m [38;5;28;01mNone[39;00m
+[1;32m    156[0m [38;5;28;01mif[39;00m factory [38;5;129;01mis[39;00m [38;5;28;01mNone[39;00m:
+[0;32m--> 157[0m     [38;5;28;01mraise[39;00m UnknownFFTEngineError(
+[1;32m    158[0m         [38;5;124m"[39m[38;5;124mFFT engine with identifier [39m[38;5;124m'[39m[38;5;132;01m{}[39;00m[38;5;124m'[39m[38;5;124m (internally mangled to [39m[38;5;124m'[39m[38;5;132;01m{}[39;00m[38;5;124m'[39m[38;5;124m) [39m[38;5;124m"[39m
+[1;32m    159[0m         [38;5;124m"[39m[38;5;124mdoes not exist. If you believe this engine should exist, check [39m[38;5;124m"[39m
+[1;32m    160[0m         [38;5;124m"[39m[38;5;124mthat the code has been compiled with support for it.[39m[38;5;124m"[39m
+[1;32m    161[0m         [38;5;241m.[39mformat(original_identifier, fft))
+[1;32m    163[0m [38;5;28;01mreturn[39;00m factory, communicator
+
+[0;31mUnknownFFTEngineError[0m: FFT engine with identifier 'fftw' (internally mangled to 'fftw') does not exist. If you believe this engine should exist, check that the code has been compiled with support for it.
+UnknownFFTEngineError: FFT engine with identifier 'fftw' (internally mangled to 'fftw') does not exist. If you believe this engine should exist, check that the code has been compiled with support for it.
+
