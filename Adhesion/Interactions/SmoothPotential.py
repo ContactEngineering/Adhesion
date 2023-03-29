@@ -27,6 +27,7 @@ import scipy.optimize
 
 from .Potential import DecoratedPotential, Potential
 
+
 class SmoothPotential(DecoratedPotential):
     """
     implements the splining of the potential tail using a fourth order

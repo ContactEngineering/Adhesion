@@ -76,12 +76,13 @@ class Dugdale(HardWall):
 
     def evaluate(self, gap, tol=0.):
         return np.where(gap < self._length,
-                        self._stress*np.ones_like(gap),
+                        self._stress * np.ones_like(gap),
                         np.zeros_like(gap))
 
 
 class SoftWall(Interaction):
     """base class for smooth contact mechanics"""
+
     def __init__(self, communicator=MPI.COMM_WORLD):
         self.communicator = communicator
         self.reduction = Reduction(communicator)

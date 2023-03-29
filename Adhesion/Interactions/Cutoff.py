@@ -469,4 +469,6 @@ def _register_functions():
     Potential.register_function("linearize_core", LinearCorePotential)
     Potential.register_function("cutoff", CutoffPotential)
     Potential.register_function("parabolic_cutoff", ParabolicCutoffPotential)
+
+
 _register_functions()
