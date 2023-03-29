@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.ReferenceSolutions package &mdash; Adhesion 0.91.0.dev22+g097abcd documentation</title>
+  <title>Adhesion.ReferenceSolutions package &mdash; Adhesion 0.91.0.dev33+ga367336 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
@@ -38,7 +38,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev22+g097abcd
+                0.91.0.dev33+ga367336
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -88,12 +88,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.contact_radius"><code class="docutils literal notranslate"><span class="pre">contact_radius()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.deformed_profile"><code class="docutils literal notranslate"><span class="pre">deformed_profile()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.displacement_field"><code class="docutils literal notranslate"><span class="pre">displacement_field()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.elastic_energy_release_rate"><code class="docutils literal notranslate"><span class="pre">elastic_energy_release_rate()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.equilibrium_elastic_energy"><code class="docutils literal notranslate"><span class="pre">equilibrium_elastic_energy()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.force"><code class="docutils literal notranslate"><span class="pre">force()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.height_unit"><code class="docutils literal notranslate"><span class="pre">height_unit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.load_unit"><code class="docutils literal notranslate"><span class="pre">load_unit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.nonequilibrium_elastic_energy"><code class="docutils literal notranslate"><span class="pre">nonequilibrium_elastic_energy()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.nonequilibrium_elastic_energy_release_rate"><code class="docutils literal notranslate"><span class="pre">nonequilibrium_elastic_energy_release_rate()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.peak_pressure"><code class="docutils literal notranslate"><span class="pre">peak_pressure()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.penetration"><code class="docutils literal notranslate"><span class="pre">penetration()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.radius_unit"><code class="docutils literal notranslate"><span class="pre">radius_unit()</span></code></a></li>
@@ -308,12 +308,22 @@ are in units of</p>
 </section>
 <dl class="py function">
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.contact_radius">
-<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">contact_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penetration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_of_adhesion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3183098861837907</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#contact_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.contact_radius" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">contact_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penetration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_of_adhesion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#contact_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.contact_radius" title="Permalink to this definition"></a></dt>
 <dd><p>Given normal load or rigid body penetration, sphere radius and contact
 modulus compute contact radius on the stable branch.</p>
-<p>if only force or penetration is provided, it is assumed that the
-nondimensionalisation
-from Maugis’s book is used.</p>
+<ul>
+<li><p>If only force or penetration is provided, it is assumed that the
+nondimensionalisation from Maugis’s book is used.</p></li>
+<li><p>If force and penetration are given the work of adhesion results
+from these values and the provided value will be ignored.</p>
+<p>For given force <span class="math notranslate nohighlight">\(F\)</span> and penetration <span class="math notranslate nohighlight">\(\delta\)</span>, we solve</p>
+<div class="math notranslate nohighlight">
+\[F = 2 a E^\prime (\delta - \frac{1}{3} \frac{a^2}{R})\]</div>
+<p>for the contact radius <span class="math notranslate nohighlight">\(a\)</span>.</p>
+<p>If you want to determine the energy release rate, call <cite>JKR.nonequilibrium_elastic_energy_release_rate</cite>
+using the penetration and the contact radius afterwards.</p>
+</li>
+</ul>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -386,6 +396,93 @@ modulus E and Poisson number <span class="math notranslate nohighlight">\(\nu\)<
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.elastic_energy_release_rate">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">elastic_energy_release_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penetration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">der</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#elastic_energy_release_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.elastic_energy_release_rate" title="Permalink to this definition"></a></dt>
+<dd><p>Returns the energy release rate
+(with respect to the contact area)
+at either prescribed force or prescribed rigid body penetration</p>
+<section id="prescribed-rigid-body-penetration">
+<h3>Prescribed rigid body penetration:<a class="headerlink" href="#prescribed-rigid-body-penetration" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\frac{\partial U_\mathrm{el}(\delta, a)}{\partial (\pi a^2)} = \frac{R E^\prime}{2\pi a}
+\left(\delta - \frac{a^2}{R}\right)^2\]</div>
+<p>In Maugis’s units:</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial U_{el}}{\partial \pi a^2}
+= \frac{3}{8 \pi}  \frac{1}{a} (\Delta - a^2)^2\]</div>
+</div></blockquote>
+</section>
+<section id="prescribed-force">
+<h3>Prescribed force<a class="headerlink" href="#prescribed-force" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[K = \frac{F_H - F} {2 \sqrt{\pi a^3}}\]</div>
+<p>with <span class="math notranslate nohighlight">\(F_H = a^3 \frac{4E^\prime}{3R}\)</span></p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial U_\mathrm{el}(\delta, a)}{\partial (\pi a^2)} = K^2 / 2 E^\prime\]</div>
+</div></blockquote>
+</section>
+<section id="notation-and-units">
+<h3>Notation and units:<a class="headerlink" href="#notation-and-units" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><p><span class="math notranslate nohighlight">\(a\)</span> is the contact radius, <span class="math notranslate nohighlight">\(\Delta\)</span> is the penetration.</p>
+<p>With the default values of <cite>radius</cite> and <cite>contact_modulus</cite>,
+this function returns the energy release rate in units of</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(w\)</span> if <span class="math notranslate nohighlight">\(\Delta\)</span> and <span class="math notranslate nohighlight">\(a\)</span> are in maugis - JKR units.</p></li>
+<li><p><span class="math notranslate nohighlight">\(E_M R\)</span> if <span class="math notranslate nohighlight">\(\Delta\)</span> and <span class="math notranslate nohighlight">\(a\)</span> are in units of <span class="math notranslate nohighlight">\(R\)</span></p></li>
+</ul>
+</div></blockquote>
+<p>Note that I think perfect consistent use of the maugis-JKR units
+would require to express the energy release rate
+in units of <span class="math notranslate nohighlight">\(\pi w\)</span> instead of just <span class="math notranslate nohighlight">\(w\)</span>. I might need to change this at some point.</p>
+</div></blockquote>
+<dl class="field-list simple">
+<dt class="field-odd">param contact_radius<span class="colon">:</span></dt>
+<dd class="field-odd"><p>in units of <span class="math notranslate nohighlight">\(R\)</span></p>
+</dd>
+<dt class="field-even">type contact_radius<span class="colon">:</span></dt>
+<dd class="field-even"><p>float or np.array</p>
+</dd>
+<dt class="field-odd">param penetration<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rigid body penetration penetration, <span class="math notranslate nohighlight">\(\Delta\)</span> in maugis</p>
+</dd>
+<dt class="field-even">type penetration<span class="colon">:</span></dt>
+<dd class="field-even"><p>float or np.array, optional</p>
+</dd>
+<dt class="field-odd">param force<span class="colon">:</span></dt>
+<dd class="field-odd"><p>normal force (positive is compressive)</p>
+</dd>
+<dt class="field-even">type force<span class="colon">:</span></dt>
+<dd class="field-even"><p>float or np.ndarray, optional</p>
+</dd>
+<dt class="field-odd">param radius<span class="colon">:</span></dt>
+<dd class="field-odd"><p>default 1, optional
+radius of the sphere</p>
+</dd>
+<dt class="field-even">type radius<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">param contact_modulus<span class="colon">:</span></dt>
+<dd class="field-odd"><p>default 3/4, optional
+johnsons contact modulus</p>
+</dd>
+<dt class="field-even">type contact_modulus<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">param der<span class="colon">:</span></dt>
+<dd class="field-odd"><p>order of the derivative</p>
+</dd>
+<dt class="field-even">type der<span class="colon">:</span></dt>
+<dd class="field-even"><p>{“0”, “1_a”, “1_d”, “2_a”, “2_da”}, optional</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.equilibrium_elastic_energy">
 <span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">equilibrium_elastic_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#equilibrium_elastic_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.equilibrium_elastic_energy" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
@@ -454,40 +551,6 @@ instead of the work of adhesion</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.nonequilibrium_elastic_energy_release_rate">
-<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">nonequilibrium_elastic_energy_release_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">penetration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">der</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#nonequilibrium_elastic_energy_release_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.nonequilibrium_elastic_energy_release_rate" title="Permalink to this definition"></a></dt>
-<dd><p>Returns the nondimensional energy release rate
-(with respect to the nondimensional area)</p>
-<div class="math notranslate nohighlight">
-\[\frac{\partial U_{el}}{\partial \pi A^2}
-= \frac{3}{8 \pi}  \frac{1}{A} (\Delta - A^2)^2\]</div>
-<p><span class="math notranslate nohighlight">\(A\)</span> is the contact radius, <span class="math notranslate nohighlight">\(\Delta\)</span> is the penetration.</p>
-<p>With the default values of <cite>radius</cite> and <cite>contact_modulus</cite>, this function returns the energy release rate in units
-of</p>
-<blockquote>
-<div><ul class="simple">
-<li><p><span class="math notranslate nohighlight">\(w\)</span> if <span class="math notranslate nohighlight">\(\Delta\)</span> and <span class="math notranslate nohighlight">\(A\)</span> are in maugis - JKR units.</p></li>
-<li><p><span class="math notranslate nohighlight">\(E_M R\)</span> if <span class="math notranslate nohighlight">\(\Delta\)</span> and <span class="math notranslate nohighlight">\(A\)</span> are in units of <span class="math notranslate nohighlight">\(R\)</span></p></li>
-</ul>
-</div></blockquote>
-<p>Note that I think perfect consistent use of the maugis-JKR units would require to express the energy release rate
-in units of <span class="math notranslate nohighlight">\(\pi w\)</span> instead of just <span class="math notranslate nohighlight">\(w\)</span>. I might need to change this at some point.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>penetration</strong> (<em>float</em><em> or </em><em>np.array</em>) – <span class="math notranslate nohighlight">\(\Delta\)</span> in maugis</p></li>
-<li><p><strong>contact_radius</strong> (<em>float</em><em> or </em><em>np.array</em>) – in units of <span class="math notranslate nohighlight">\(R\)</span></p></li>
-<li><p><strong>radius</strong> (<em>float</em>) – default 1, optional
-radius of the sphere</p></li>
-<li><p><strong>contact_modulus</strong> (<em>float</em>) – default 3/4, optional
-johnsons contact modulus</p></li>
-<li><p><strong>der</strong> (<em>{&quot;0&quot;</em><em>, </em><em>&quot;1_a&quot;</em><em>, </em><em>&quot;1_d&quot;</em><em>, </em><em>&quot;2_a&quot;</em><em>, </em><em>&quot;2_da&quot;}</em><em>, </em><em>optional</em>) – order of the derivative</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.peak_pressure">
 <span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">peak_pressure</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penetration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_of_adhesion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3183098861837907</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#peak_pressure"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.peak_pressure" title="Permalink to this definition"></a></dt>
 <dd><p>Given normal load or rigid body penetration, sphere radius and contact
@@ -542,30 +605,58 @@ The default value is so that Maugis’s contact Modulus is one
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.stress_intensity_factor">
-<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">stress_intensity_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penetration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">der</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#stress_intensity_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.stress_intensity_factor" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">stress_intensity_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penetration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">der</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#stress_intensity_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.stress_intensity_factor" title="Permalink to this definition"></a></dt>
 <dd><p>if R is not given, the length and the penetration
 are epressed in units of R</p>
+<section id="prescribed-force-f">
+<h3>Prescribed force <span class="math notranslate nohighlight">\(F\)</span><a class="headerlink" href="#prescribed-force-f" title="Permalink to this heading"></a></h3>
+<blockquote>
+<div><p>Flatpunch SIF under load at infinity Tada p.377</p>
+<div class="math notranslate nohighlight">
+\[K = \frac{F_H - F} {2 \sqrt{\pi a^3}}\]</div>
+<p>with <span class="math notranslate nohighlight">\(F_H = a^3 \frac{4E^\prime}{3R}\)</span></p>
+</div></blockquote>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>contact_radius</strong> (<em>float</em><em> or </em><em>ndarray</em><em> of </em><em>floats</em>) – radius of the contact area</p></li>
-<li><p><strong>penetration</strong> (<em>float</em><em> or </em><em>ndarray</em><em> of </em><em>floats</em>) – rigid body penetration</p></li>
-<li><p><strong>der</strong> (<em>{&quot;0&quot;</em><em>, </em><em>&quot;1_a&quot;</em><em>, </em><em>&quot;2_a&quot;</em><em>, </em><em>&quot;1_d&quot;</em><em>, </em><em>&quot;2_ad&quot;}</em>) – </p></li>
-<li><p><strong>R</strong> (<em>float</em>) – default 1, optional
-radius of the sphere</p></li>
-<li><p><strong>Es</strong> (<em>float</em>) – default 3/4, optional
-johnson’s contact modulus</p></li>
-</ul>
+<dt class="field-odd">param contact_radius<span class="colon">:</span></dt>
+<dd class="field-odd"><p>radius of the contact area</p>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><ul class="simple">
+<dt class="field-even">type contact_radius<span class="colon">:</span></dt>
+<dd class="field-even"><p>float or ndarray of floats</p>
+</dd>
+<dt class="field-odd">param penetration<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rigid body penetration</p>
+</dd>
+<dt class="field-even">type penetration<span class="colon">:</span></dt>
+<dd class="field-even"><p>float or ndarray of floats</p>
+</dd>
+<dt class="field-odd">param der<span class="colon">:</span></dt>
+<dd class="field-odd"><p></p></dd>
+<dt class="field-even">type der<span class="colon">:</span></dt>
+<dd class="field-even"><p>{“0”, “1_a”, “2_a”, “1_d”, “2_ad”}</p>
+</dd>
+<dt class="field-odd">param R<span class="colon">:</span></dt>
+<dd class="field-odd"><p>default 1, optional
+radius of the sphere</p>
+</dd>
+<dt class="field-even">type R<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">param Es<span class="colon">:</span></dt>
+<dd class="field-odd"><p>default 3/4, optional
+johnson’s contact modulus</p>
+</dd>
+<dt class="field-even">type Es<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+<dt class="field-odd">returns<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
 <li><p><em>stress intensity factor K or it’s first derivative according to the</em></p></li>
 <li><p><em>contact_radius</em></p></li>
 <li><p><em>if R and Es are not given it is in units of 4 / 3 Es sqrt{R} / R^{der}</em></p></li>
 </ul>
-</p>
 </dd>
 </dl>
+</section>
 </dd></dl>
 
 </section>
