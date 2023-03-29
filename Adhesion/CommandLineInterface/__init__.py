@@ -1,7 +1,5 @@
 #
-# Copyright 2018, 2020 Antoine Sanner
-#           2016, 2020 Lars Pastewka
-#           2015-2016 Till Junge
+# Copyright 2022 Lars Pastewka
 #
 # ### MIT license
 #
@@ -23,37 +21,3 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-
-from setuptools import setup, find_packages
-
-scripts = [
-   'commandline/soft_wall.py',
-   ]
-
-setup(
-    name="Adhesion",
-    scripts=scripts,
-    packages=find_packages(),
-    package_data={'': ['ChangeLog.md']},
-    include_package_data=True,
-    # metadata for upload to PyPI
-    author="Lars Pastewka",
-    author_email="lars.pastewka@imtek.uni-freiburg.de",
-    description="Efficient contact mechanics with Python",
-    license="MIT",
-    test_suite='test',
-    # dependencies
-    python_requires='>=3.5.0',
-    use_scm_version=True,
-    zip_safe=False,
-    setup_requires=[
-        'setuptools_scm>=3.5.0'
-    ],
-    install_requires=[
-        'numpy>=1.11.0',
-        'NuMPI',
-        'muFFT>=0.14.0',
-        'SurfaceTopography',
-        'ContactMechanics',
-    ]
-)

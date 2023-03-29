@@ -86,11 +86,14 @@ def test_bug_bench():
     # lbounds = system._lbounds_from_heights(penetration)
     # bnds_disp = system._reshape_bounds(lbounds, )
 
-    sol = optim.minimize(system.primal_objective(penetration, gradient=True), init_gap,
-                         method='L-BFGS-B', jac=True, bounds=bnds_gap,
-                         options=dict(gtol=gtol * max(Es * topo.rms_gradient(),
-                                                      abs(interaction.max_tensile)) * topo.area_per_pt, ftol=0,
-                                      maxcor=3), callback=None)
+    sol = optim.minimize(
+        system.primal_objective(penetration, gradient=True),
+        system.shape_minimisation_input(init_gap),
+        method='L-BFGS-B', jac=True, bounds=bnds_gap,
+        options=dict(gtol=gtol * max(Es * topo.rms_gradient(), abs(interaction.max_tensile)) * topo.area_per_pt,
+                     ftol=0,
+                     maxcor=3),
+        callback=None)
 
     print(sol.message, sol.nfev)
     assert sol.success, sol.message

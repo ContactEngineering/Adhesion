@@ -51,7 +51,7 @@ for base_res in (64, ):#128, 256, 512, 1024):
     for factor in (.01, .1):#, 1.):
         epsilon = sigma * young*factor
         pot = LJ_pot(epsilon, sigma)
-        system = make_system(substrate, pot, surface)
+        system = make_system(substrate=substrate, interaction=pot, surface=surface)
         percent_min = .8
         offset = pot.r_min
         step = pot.r_min*.01

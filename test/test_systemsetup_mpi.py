@@ -238,6 +238,8 @@ def test_bounded_logger():
                                 options=dict(gtol=gtol, ftol=0),
                                 logger=Logger("test_logger.log"))
 
+    MPI.COMM_WORLD.barrier()  # Synchronize before reading log file
+
     log = np.loadtxt("test_logger.log")
 
     if False:
@@ -287,6 +289,8 @@ def test_smooth_logger():
     res = system.minimize_proxy(offset=offset,  # noqa: F841
                                 options=dict(gtol=gtol, ftol=0),
                                 logger=Logger("test_logger.log"))
+
+    MPI.COMM_WORLD.barrier()  # Synchronize before reading log file
 
     log = np.loadtxt("test_logger.log")
 

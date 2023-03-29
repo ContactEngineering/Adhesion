@@ -27,7 +27,7 @@ from ContactMechanics.Systems import IncompatibleResolutionError  # noqa: F401
 from .Systems import (  # noqa: F401
     SmoothContactSystem,
     BoundedSmoothContactSystem
-    )
+)
 from .SmoothSystemSpecialisations import FastSmoothContactSystem  # noqa: F401
 from .PlasticSystemSpecialisations import \
     PlasticSmoothContactSystem  # noqa: F401

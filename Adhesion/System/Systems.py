@@ -29,11 +29,12 @@ Defines the interface for Adhesion systems
 
 import numpy as np
 
-import Adhesion
 import ContactMechanics
 import SurfaceTopography
 from ContactMechanics.Tools import compare_containers
 from ContactMechanics.Systems import IncompatibleResolutionError, SystemBase
+
+from ..Interactions import SoftWall
 
 
 class SmoothContactSystem(SystemBase):
@@ -91,16 +92,13 @@ class SmoothContactSystem(SystemBase):
     def handles(substrate_type, interaction_type, surface_type, comm):
         is_ok = True
         # any periodic type of substrate formulation should do
-        is_ok &= issubclass(substrate_type,
-                            ContactMechanics.Substrate)
+        is_ok &= issubclass(substrate_type, ContactMechanics.Substrate)
 
         # only soft interactions allowed
-        is_ok &= issubclass(interaction_type,
-                            Adhesion.SoftWall)
+        is_ok &= issubclass(interaction_type, SoftWall)
 
         # any surface should do
-        is_ok &= issubclass(surface_type,
-                            SurfaceTopography.UniformTopographyInterface)
+        is_ok &= issubclass(surface_type, SurfaceTopography.UniformTopographyInterface)
         return is_ok
 
     def compute_repulsive_force(self):
@@ -367,8 +365,7 @@ class SmoothContactSystem(SystemBase):
                                       gradient=forces,
                                       curvature=False)
 
-        self.interaction_energy = \
-            self.reduction.sum(interaction_energies) * self.area_per_pt
+        self.interaction_energy = self.reduction.sum(interaction_energies) * self.area_per_pt
 
         self.substrate.compute(disp, pot, forces)
         self.energy = (self.interaction_energy +
@@ -453,7 +450,7 @@ class SmoothContactSystem(SystemBase):
 
         hessp_val = - self.substrate.evaluate_force(
             des_dir.reshape(self.substrate.nb_subdomain_grid_pts)
-        ).reshape(np.shape(des_dir)) \
+            ).reshape(np.shape(des_dir)) \
             + adh_curv * des_dir * self.substrate.area_per_pt
 
         return hessp_val.reshape(des_dir.shape)
@@ -470,8 +467,8 @@ class SmoothContactSystem(SystemBase):
 
             hessp_val[self.comp_slice] += adh_curv \
                 * des_dir.reshape(
-                self.substrate.nb_subdomain_grid_pts)[self.comp_slice] * \
-                self.substrate.area_per_pt
+                self.substrate.nb_subdomain_grid_pts)[self.comp_slice] \
+                * self.substrate.area_per_pt
             return hessp_val.reshape(des_dir.shape)
 
         return hessp
@@ -764,9 +761,8 @@ class SmoothContactSystem(SystemBase):
                 disp_float_k = disp_.copy()
                 orig_shape = np.shape(disp_float_k)
                 disp_float_k = disp_float_k.reshape(self.substrate.nb_grid_pts)
-                gap_float_k = (disp_float_k / np.sqrt(self.stiffness_k *
-                                                      self.area_per_pt)) - \
-                    self.heights_k_float - offset_k
+                gap_float_k = (disp_float_k / np.sqrt(self.stiffness_k * self.area_per_pt)) \
+                    - self.heights_k_float - offset_k
 
                 self.fourier_buffer.array()[...] = gap_float_k.copy()
                 self.engine.ihcfft(self.fourier_buffer, self.real_buffer)
@@ -915,11 +911,20 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
     def handles(*args, **kwargs):  # FIXME work around, see issue #208
         return False
 
+    @property
+    def contact_zone(self):
+        """
+        returns an array of all coordinates, where contact pressure is
+        repulsive. Useful for evaluating the number of contact islands etc.
+        """
+
+        return np.where(self.gap == 0., 1., 0.)
+
     def compute_nb_contact_pts(self):
         """
         compute and return the number of contact points.
         """
-        return self.reduction.sum(np.where(self.gap == 0., 1., 0.))
+        return self.reduction.sum(self.contact_zone)
 
     def logger_input(self):
         """
@@ -1056,3 +1061,16 @@ class BoundedSmoothContactSystem(SmoothContactSystem):
                            self.interaction_force == 0.)] = 0.
 
         return np.argwhere(pts)
+
+    def minimize_proxy(self, offset=0,
+                       initial_displacements=None, method='L-BFGS-B',
+                       gradient=True, lbounds=None, ubounds=None,
+                       callback=None,
+                       logger=None, **kwargs):
+        if lbounds is None:
+            lbounds = "auto"
+        return super().minimize_proxy(offset=offset,
+                                      initial_displacements=initial_displacements, method=method,
+                                      gradient=gradient, lbounds=lbounds, ubounds=ubounds,
+                                      callback=callback,
+                                      logger=logger, **kwargs)

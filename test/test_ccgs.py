@@ -55,11 +55,12 @@ def test_primal_obj(offset):
     ccg_without_restart_gap = res.x.reshape((nx, ny))
 
     # #####################LBFGSB#####################################
-    res = optim.minimize(system.primal_objective(offset, gradient=True),
-                         init_gap,
-                         method='L-BFGS-B', jac=True,
-                         bounds=bnds,
-                         options=dict(gtol=gtol, ftol=1e-20))
+    res = optim.minimize(
+        system.primal_objective(offset, gradient=True),
+        system.shape_minimisation_input(init_gap),
+        method='L-BFGS-B', jac=True,
+        bounds=bnds,
+        options=dict(gtol=gtol, ftol=1e-20))
 
     assert res.success
     lbfgsb_gap = res.x.reshape((nx, ny))
@@ -73,7 +74,9 @@ def test_primal_obj(offset):
     # ####################POLONSKY-KEER##############################
     res = ccg_with_restart.constrained_conjugate_gradients(
         system.primal_objective(offset, gradient=True),
-        system.primal_hessian_product, init_gap, gtol=gtol,
+        system.primal_hessian_product,
+        init_gap,
+        gtol=gtol,
         mean_value=mean_val)
 
     assert res.success

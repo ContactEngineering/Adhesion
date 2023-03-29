@@ -28,11 +28,7 @@
 Defines all interaction modes used in Adhesion
 """
 
-try:
-    from importlib.metadata import version
+from .DiscoverVersion import __version__  # noqa: F401
 
-    __version__ = version(__name__)
-except ImportError:
-    from pkg_resources import get_distribution
-
-    __version__ = get_distribution(__name__).version
+# These imports are required to register the analysis functions!
+from .System import Factory  # noqa: F401
