@@ -740,7 +740,7 @@ def displacement_field(r, contact_radius,
                                 radius=radius,
                                 contact_modulus=contact_modulus,
                                 work_of_adhesion=work_of_adhesion) \
-                  - 1 / (2 * R) * r[sl_inner] ** 2
+        - 1 / (2 * R) * r[sl_inner] ** 2
     return u
 
 
@@ -794,8 +794,8 @@ def stress_distribution(r, contact_radius, radius, contact_modulus,
 
     sig = np.zeros_like(r_a)
     sig[sl_inner] = P1mP / (2 * np.pi * a ** 2) \
-                    / np.sqrt(1 - r_a[sl_inner] ** 2) \
-                    - 1.5 * P1 / (np.pi * a ** 2) \
-                    * np.sqrt(1 - r_a[sl_inner] ** 2)
+        / np.sqrt(1 - r_a[sl_inner] ** 2) \
+        - 1.5 * P1 / (np.pi * a ** 2) \
+        * np.sqrt(1 - r_a[sl_inner] ** 2)
 
     return sig
