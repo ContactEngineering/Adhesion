@@ -47,7 +47,7 @@ class SmoothContactSystem(SystemBase):
         """ Represents a contact problem
         Parameters
         ----------
-        substrate: An instance of HalfSpace.
+        substrate: ContactMechanics.Substrate
             Defines the solid mechanics in the substrate
         interaction: Adhesion.Interactions.SoftWall
             Defines the contact formulation.
