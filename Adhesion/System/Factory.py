@@ -27,9 +27,10 @@ from NuMPI.Tools import Reduction
 from NuMPI import MPI
 from ContactMechanics.Factory import _make_system_args
 import ContactMechanics.Factory
+from SurfaceTopography.HeightContainer import UniformTopographyInterface
 
 
-def make_system(substrate, interaction, surface, communicator=MPI.COMM_WORLD,
+def make_system(surface, interaction, substrate=None, communicator=MPI.COMM_WORLD,
                 physical_sizes=None, system_class=None,
                 **kwargs):
     """
@@ -53,17 +54,29 @@ def make_system(substrate, interaction, surface, communicator=MPI.COMM_WORLD,
 
     if interaction == "hardwall":
         return ContactMechanics.Factory.make_system(
-            substrate, surface,
+            surface=surface, substrate=substrate,
             communicator=communicator,
             physical_sizes=physical_sizes,
             **kwargs)
     else:
-        substrate, surface = _make_system_args(substrate, surface,
+        substrate, surface = _make_system_args(surface=surface,
+                                               substrate=substrate,
                                                communicator=communicator,
                                                physical_sizes=physical_sizes,
                                                **kwargs)
-        # make shure the interaction has the correcrt communicator
+        # make sure the interaction has the correct communicator
         interaction.reduction = Reduction(communicator)
         interaction.communicator = communicator
 
         return system_class(substrate, interaction, surface)
+
+
+def make_contact_system(topography, *args, **kwargs):
+    return make_system(surface=topography, *args, **kwargs)
+
+
+UniformTopographyInterface.register_function("make_contact_system", make_contact_system)
+
+# # def make_contact_system(topography, *args, **kwargs):
+# #     return make_contact_system(surface=topography,  *args, **kwargs)
+# UniformTopographyInterface.register_function("make_hardwall_contact_system", make_contact_system())

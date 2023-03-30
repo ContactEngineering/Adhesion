@@ -75,7 +75,7 @@ substrate = PeriodicFFTElasticHalfSpace((nx, ny), Es, (sx, sy), )
 system = BoundedSmoothContactSystem(substrate, interaction, topography)
 
 # %%
-starting_penetration = - 2 * length_parameter  # rigid body penetration
+starting_penetration = - 4 * length_parameter  # rigid body penetration
 max_stress = abs(interaction.max_tensile)
 
 
@@ -84,17 +84,24 @@ max_stress = abs(interaction.max_tensile)
 def plot_result(filename="data.nc"):
     nc = NCStructuredGrid(filename)
     fig, ax = plt.subplots()
-    ax.plot(nc.penetration, nc.normal_force)
-    ax.set_xlabel(r"Penetration $(\pi^2 w_m^2 R / K^2)^{1/3}$")
+    ax.plot(nc.penetration[:], nc.normal_force[:])
+    ax.set_xlabel(r"Penetration $(\pi^2 w_m^2 R / E_M^2)^{1/3}$")
     ax.set_ylabel(r"Force ($\pi w_m R$)")
     plt.show()
+    
+    fig, ax = plt.subplots()
+    ax.plot(nc.normal_force[:], nc.contact_area[:])
+    ax.set_ylabel(r"Contact area $\left(\pi w R^2 /E_M\right)^{2/3}$")
+    ax.set_xlabel(r"Force ($\pi w_m R$)")
+    plt.show()
+    
     fig, ax = plt.subplots()
     x, y = topography.positions()
     for i in range(len(nc)):
         ax.plot(x[:, 0], nc.displacements[i][:, ny // 2],
                 label="penetration={:.2f}".format(nc.penetration[i]))
     ax.set_ylabel(r"displacement $(\pi^2 w_m^2 R / K^2)^{1/3}$")
-    ax.set_xlabel(r"x ($\left(\pi w R^2 /K\right)^{1/3}$)")
+    ax.set_xlabel(r"x ($\left(\pi w R^2 /E_M\right)^{1/3}$)")
     ax.legend()
     plt.show()
     nc.close()
@@ -131,11 +138,11 @@ if __name__ == '__main__':
 
             if disp0 is None:
                 disp0 = np.zeros(system.substrate.nb_subdomain_grid_pts)
-
+            init_gap = system.compute_gap(disp0, penetration)
             starttime = time.time()
 
             # This is typically the scope of minimize_proxy
-            lbounds = system._lbounds_from_heights(penetration)
+            lbounds = system.shape_minimisation_input(np.zeros(system.substrate.nb_subdomain_grid_pts))
             # sol = scipy.optimize.fmin_l_bfgs_b(
             #   # mandatory interface
             #   system.objective(penetration, gradient=True), disp0,
@@ -150,26 +157,37 @@ if __name__ == '__main__':
             # REPLACE THIS WITH CUSTOM MINIMIZER
             sol = scipy.optimize.minimize(
                 system.primal_objective(penetration, gradient=True),
-                x0=disp0,
+                x0=system.shape_minimisation_input(init_gap),
                 method="L-BFGS-B",
                 jac=True,
                 bounds=system._reshape_bounds(lbounds=lbounds, ),
-                callback=system.callback(True),
+                # callback=system.callback(True),
                 options=dict(gtol=gtol * abs(
                     interaction.max_tensile) * topography.area_per_pt,
                              # typical force on one pixel
                              ftol=0, maxcor=3),
                 )
+            
             # REPLACE THIS WITH CUSTOM MINIMIZER
+            
+            # TODO: Here the idea was actually to try other minimizers, like the bugnicourt_cg
+            
+            
             elapsed_time = time.time() - starttime
             assert sol.success, sol.message
 
             # update internal state of system so we can use it's
             # utility functionsn to compute some physical quantities
-            system._update_state(penetration, result=sol)
-
-            u = disp0 = sol.x
-
+            system.offset = penetration
+            system.gap = system.shape_minimisation_output(sol.x)
+            system.disp = u = system.gap + penetration + system.surface.heights().reshape(system.gap.shape)
+            
+            system.evaluate(system.disp, penetration, forces=True)
+            sol.x = system.shape_minimisation_output(sol.x)
+            sol.jac = system.shape_minimisation_output(sol.jac)
+            
+            # initial guess for next iteration. Very important when there is hysteresis
+            init_gap = system.gap
             #
             ncfile[i].displacements = u
 
@@ -187,7 +205,7 @@ if __name__ == '__main__':
             ncfile[i].mean_deformation = mean_deformation
             ncfile[i].elastic_energy = elastic_energy = system.substrate.energy
             ncfile[i].interaction_energy = interaction_energy = \
-                system.interaction.energy
+                system.interaction_energy
             ncfile[i].energy = energy = system.energy
 
             rel_rep_area = repulsive_area / np.prod(topography.physical_sizes)
@@ -214,5 +232,18 @@ if __name__ == '__main__':
         "elapsed time: {} \n= {}"
         "".format(elapsed_time,
                   datetime.timedelta(seconds=elapsed_time)))
+
+# %%
+system.contact_zone
+
+# %%
+if __name__ == '__main__':
+    plot_result()
+
+# %%
+length_parameter
+
+# %%
+plt.colorbar(plt.pcolormesh(system.substrate.force))
 
 # %%

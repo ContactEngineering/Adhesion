@@ -65,7 +65,7 @@ def main():
     # Piece the full system together. In particular the System.SystemBase
     # object knows how to optimize the problem. For the hard wall interaction it
     # will always use Polonsky & Keer's constrained conjugate gradient method.
-    system = make_system(substrate, interaction, surface)
+    system = make_system(substrate=substrate, interaction=interaction, surface=surface)
 
     ###
 

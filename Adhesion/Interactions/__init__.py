@@ -22,15 +22,14 @@
 # SOFTWARE.
 #
 
-from .Interactions import SoftWall, HardWall, Dugdale  # noqa: F401
-from .Potentials import Potential  # noqa: F401
+from .Cutoff import _register_functions  # noqa: F401
+
+from .Base import SoftWall, HardWall, Dugdale  # noqa: F401
+from .Potential import Potential  # noqa: F401
 from .SmoothPotential import SmoothPotential  # noqa: F401
 
 from .Harmonic import Harmonic  # noqa: F401
 from .VdW82 import VDW82, Lj82  # noqa: F401
-from .Lj93 import LJ93  # noqa: F401
+from .LJ93 import LJ93  # noqa: F401
 from .PowerLaw import PowerLaw  # noqa: F401
 from .Exponential import Exponential, RepulsiveExponential, Morse  # noqa: F401
-
-import Adhesion.Interactions.cutoffs  # noqa: F401
-import Adhesion.Interactions.SmoothPotential  # noqa: F401

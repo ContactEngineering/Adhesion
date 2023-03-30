@@ -27,7 +27,7 @@
 Harmonic potential for wall interaction
 """
 
-from Adhesion.Interactions import Potential
+from .Potential import Potential
 from NuMPI import MPI
 
 

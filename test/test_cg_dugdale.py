@@ -81,7 +81,7 @@ def test_sphere(plot=False):
     halfspace = FreeFFTElasticHalfSpace((nx, ny), contact_modulus, (sx, sx))
     interaction = Dugdale(cohesive_stress, Dugdale_length)
     topography = make_sphere(sphere_radius, (nx, ny), (sx, sy))
-    system = make_system(halfspace, interaction, topography)
+    system = make_system(substrate=halfspace, interaction=interaction, surface=topography)
 
     if plot:
         import matplotlib.pyplot as plt

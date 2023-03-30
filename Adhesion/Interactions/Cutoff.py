@@ -22,9 +22,10 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
+
 import scipy.optimize
 import numpy as np
-from Adhesion.Interactions.Potentials import DecoratedPotential, Potential
+from .Potential import DecoratedPotential, Potential
 
 
 class LinearCorePotential(DecoratedPotential):
@@ -464,6 +465,10 @@ class ParabolicCutoffPotential(DecoratedPotential):
         return True
 
 
-Potential.register_function("linearize_core", LinearCorePotential)
-Potential.register_function("cutoff", CutoffPotential)
-Potential.register_function("parabolic_cutoff", ParabolicCutoffPotential)
+def _register_functions():
+    Potential.register_function("linearize_core", LinearCorePotential)
+    Potential.register_function("cutoff", CutoffPotential)
+    Potential.register_function("parabolic_cutoff", ParabolicCutoffPotential)
+
+
+_register_functions()

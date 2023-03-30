@@ -62,7 +62,7 @@ for base_res in (32, 64, 128, 256, 512):
     substrate = Substrate(res, young, size)
 
     surface = make_sphere(radius, res, size, standoff=float('inf'))
-    system = make_system(substrate, pot, surface)
+    system = make_system(substrate=substrate, interaction=pot, surface=surface)
     offset = pot.cutoff_radius * .4
     step = pot.r_min*.01
     pullof_forces = list()

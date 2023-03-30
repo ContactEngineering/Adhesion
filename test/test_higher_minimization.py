@@ -57,7 +57,7 @@ class PulloffTest(unittest.TestCase):
         self.pot = LJ93(epsilon, sigma).spline_cutoff().linearize_core()
 
     def tst_FirstContactThenOffset(self):
-        system = make_system(self.substrate, self.pot, self.surface)
+        system = make_system(substrate=self.substrate, interaction=self.pot, surface=self.surface)
         offset0 = .5 * self.pot.r_min + .5 * self.pot.cutoff_radius
         disp0 = np.zeros(self.substrate.nb_domain_grid_pts)
 
@@ -110,7 +110,7 @@ class PulloffTest(unittest.TestCase):
         raise Exception(msg)
 
     def tst_FirstOffsetThenContact(self):
-        system = make_system(self.substrate, self.pot, self.surface)
+        system = make_system(substrate=self.substrate, interaction=self.pot, surface=self.surface)
         offset0 = .5 * self.pot.r_min + .5 * self.pot.cutoff_radius
         disp0 = np.zeros(self.substrate.nb_domain_grid_pts)
 

@@ -25,7 +25,8 @@
 import numpy as np
 from NuMPI import MPI
 
-from Adhesion.Interactions import Potential, SoftWall
+from .Base import SoftWall
+from .Potential import Potential
 
 
 class PowerLaw(Potential):

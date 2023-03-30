@@ -41,7 +41,7 @@ jobs:
     - name: Build documentation
       run: |
         source ../venv/bin/activate
-        python3 -m pip install sphinx sphinx_rtd_theme
+        python3 -m pip install sphinx sphinx_rtd_theme myst-nb jupytext
         python3 -m pip install dist/*.whl
         cd docs
         sphinx-apidoc -o source/ ../Adhesion
