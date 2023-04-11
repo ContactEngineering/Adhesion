@@ -3,18 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.ReferenceSolutions.JKR &mdash; Adhesion 0.91.0.dev35+g0676171 documentation</title>
+  <title>Adhesion.ReferenceSolutions.JKR &mdash; Adhesion 0.91.0.dev12+g713fa76 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../_static/doctools.js"></script>
         <script src="../../../_static/sphinx_highlight.js"></script>
     <script src="../../../_static/js/theme.js"></script>
@@ -34,7 +30,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev35+g0676171
+                0.91.0.dev12+g713fa76
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -49,9 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../development.html">Development</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../contributing.html">Contributing to Adhesion</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../examples/index.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul>
@@ -189,91 +183,18 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">radius</span></div>
 
 
-<span class="k">def</span> <span class="nf">_contact_radius_from_penetration_force</span><span class="p">(</span>
-        <span class="n">penetration</span><span class="p">,</span>
-        <span class="n">force</span><span class="p">,</span>
-        <span class="n">contact_modulus</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
-        <span class="n">radius</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Computes the contact radius predicted by JKR</span>
-<span class="sd">    for a given penetration and force and unknown energy release rate (work of adhesion).</span>
-
-<span class="sd">    For given force :math:`F` and penetration :math:`\delta`, we solve</span>
-
-<span class="sd">    .. math ::</span>
-
-<span class="sd">        F = 2 a E^\prime (\delta - \frac{1}{3} \frac{a^2}{R})</span>
-
-<span class="sd">    for the contact radius :math:`a`.</span>
-
-<span class="sd">    If you want to determine the energy release rate, call `JKR.nonequilibrium_elastic_energy_release_rate`</span>
-<span class="sd">    using the penetration and the contact radius afterwards.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    force : float or array of floats, optional</span>
-<span class="sd">        Normal force.</span>
-<span class="sd">    penetration : float, optional</span>
-<span class="sd">        rigid body penetration</span>
-<span class="sd">    radius : float, optional</span>
-<span class="sd">        Sphere (actually paraboloid) radius.</span>
-<span class="sd">    contact_modulus : float, optional</span>
-<span class="sd">        Contact modulus: :math:`E^* = E/(1-\nu^2)`</span>
-<span class="sd">        with Young&#39;s modulus E and Poisson number :math:`\nu`.</span>
-<span class="sd">        The default value is so that Maugis&#39;s contact Modulus is one</span>
-<span class="sd">        (:math:`K = 4 / 3 E^*`)</span>
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    Contact Radius :math:`a`: float</span>
-<span class="sd">        If no root is found returns np.nan</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polynomial</span><span class="o">.</span><span class="n">Polynomial</span><span class="p">([</span>
-        <span class="o">-</span> <span class="n">force</span><span class="p">,</span>  <span class="c1"># a^0</span>
-        <span class="mi">2</span> <span class="o">*</span> <span class="n">contact_modulus</span> <span class="o">*</span> <span class="n">penetration</span><span class="p">,</span>  <span class="c1"># a^1</span>
-        <span class="mi">0</span><span class="p">,</span>  <span class="c1"># a^2</span>
-        <span class="o">-</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">contact_modulus</span> <span class="o">/</span> <span class="n">radius</span>  <span class="c1"># a^3</span>
-    <span class="p">])</span>
-
-    <span class="n">roots</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">roots</span><span class="p">()</span>
-
-    <span class="n">a</span> <span class="o">=</span> <span class="n">roots</span><span class="p">[(</span><span class="n">roots</span><span class="o">.</span><span class="n">imag</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">roots</span><span class="o">.</span><span class="n">real</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)]</span><span class="o">.</span><span class="n">real</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
-    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="c1"># For positive forces, there are three roots, but only the largest one corresponds to a meaningful SIF</span>
-        <span class="c1"># sif = stress_intensity_factor(contact_radius=a,</span>
-        <span class="c1"># penetration=penetration, radius=radius, contact_modulus=contact_modulus)</span>
-        <span class="k">return</span> <span class="n">a</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-
-
 <div class="viewcode-block" id="contact_radius"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.JKR.contact_radius">[docs]</a><span class="k">def</span> <span class="nf">contact_radius</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">penetration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                    <span class="n">radius</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
                    <span class="n">contact_modulus</span><span class="o">=</span><span class="mf">3.</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span>
-                   <span class="n">work_of_adhesion</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+                   <span class="n">work_of_adhesion</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given normal load or rigid body penetration, sphere radius and contact</span>
 <span class="sd">    modulus compute contact radius on the stable branch.</span>
 
-<span class="sd">    - If only force or penetration is provided, it is assumed that the</span>
-<span class="sd">      nondimensionalisation from Maugis&#39;s book is used.</span>
-
-<span class="sd">    - If force and penetration are given the work of adhesion results</span>
-<span class="sd">      from these values and the provided value will be ignored.</span>
-
-<span class="sd">      For given force :math:`F` and penetration :math:`\delta`, we solve</span>
-
-<span class="sd">      .. math ::</span>
-
-<span class="sd">          F = 2 a E^\prime (\delta - \frac{1}{3} \frac{a^2}{R})</span>
-
-<span class="sd">      for the contact radius :math:`a`.</span>
-
-<span class="sd">      If you want to determine the energy release rate, call `JKR.nonequilibrium_elastic_energy_release_rate`</span>
-<span class="sd">      using the penetration and the contact radius afterwards.</span>
+<span class="sd">    if only force or penetration is provided, it is assumed that the</span>
+<span class="sd">    nondimensionalisation</span>
+<span class="sd">    from Maugis&#39;s book is used.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -294,21 +215,14 @@
     <span class="k">if</span> <span class="n">force</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">penetration</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;either force or penetration &quot;</span>
                          <span class="s2">&quot;should be provided&quot;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">force</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">penetration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">work_of_adhesion</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;only one of force or penetration &quot;</span>
-                             <span class="s2">&quot;should be provided if you prescribe the work of adhesion&quot;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">_contact_radius_from_penetration_force</span><span class="p">(</span>
-                <span class="n">penetration</span><span class="o">=</span><span class="n">penetration</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">,</span> <span class="n">contact_modulus</span><span class="o">=</span><span class="n">contact_modulus</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">work_of_adhesion</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">work_of_adhesion</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+    <span class="k">elif</span> <span class="n">force</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">penetration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;only one of force or penetration &quot;</span>
+                         <span class="s2">&quot;should be provided&quot;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">force</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">A</span> <span class="o">=</span> <span class="n">force</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span>
         <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">force</span> <span class="o">+</span> <span class="p">(</span>
-                <span class="mi">3</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="mi">3</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="n">fac</span> <span class="o">=</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.</span> <span class="o">*</span> <span class="n">contact_modulus</span><span class="p">)</span>
         <span class="n">A</span> <span class="o">*=</span> <span class="n">fac</span>
@@ -318,11 +232,11 @@
 
     <span class="k">elif</span> <span class="n">penetration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># TODO: is this solvable symbolically ?</span>
-        <span class="n">K</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">contact_modulus</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="mi">4</span><span class="o">/</span><span class="mi">3</span> <span class="o">*</span> <span class="n">contact_modulus</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">work_of_adhesion</span>
         <span class="n">R</span> <span class="o">=</span> <span class="n">radius</span>
-        <span class="n">radius_pulloff</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">R</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">K</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="n">penetration_pulloff</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">radius_pulloff</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">R</span>
+        <span class="n">radius_pulloff</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">R</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">K</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">penetration_pulloff</span> <span class="o">=</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">radius_pulloff</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">R</span>
         <span class="k">if</span> <span class="n">penetration</span> <span class="o">&gt;=</span> <span class="n">penetration_pulloff</span><span class="p">:</span>
             <span class="n">root</span> <span class="o">=</span> <span class="n">newton</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span>
                           <span class="n">a</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">R</span>
@@ -375,7 +289,7 @@
     <span class="k">if</span> <span class="n">force</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">A</span> <span class="o">=</span> <span class="n">force</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span>
         <span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">force</span> <span class="o">+</span> <span class="p">(</span>
-                <span class="mi">3</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="mi">3</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
 
         <span class="n">fac</span> <span class="o">=</span> <span class="mf">3.</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">/</span> <span class="p">(</span><span class="mf">4.</span> <span class="o">*</span> <span class="n">contact_modulus</span><span class="p">)</span>
         <span class="n">A</span> <span class="o">*=</span> <span class="n">fac</span>
@@ -535,67 +449,35 @@
     <span class="k">return</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">A</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span> <span class="o">-</span> <span class="n">A</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">A</span> <span class="o">**</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">15</span></div>
 
 
-<div class="viewcode-block" id="elastic_energy_release_rate"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.JKR.elastic_energy_release_rate">[docs]</a><span class="k">def</span> <span class="nf">elastic_energy_release_rate</span><span class="p">(</span><span class="n">contact_radius</span><span class="p">,</span> <span class="n">penetration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-                                <span class="n">contact_modulus</span><span class="o">=</span><span class="mf">3.</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="p">):</span>
+<div class="viewcode-block" id="nonequilibrium_elastic_energy_release_rate"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.JKR.nonequilibrium_elastic_energy_release_rate">[docs]</a><span class="k">def</span> <span class="nf">nonequilibrium_elastic_energy_release_rate</span><span class="p">(</span><span class="n">penetration</span><span class="p">,</span> <span class="n">contact_radius</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">contact_modulus</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 
+<span class="sd">    Returns the nondimensional energy release rate</span>
+<span class="sd">    (with respect to the nondimensional area)</span>
 
-<span class="sd">    Returns the energy release rate</span>
-<span class="sd">    (with respect to the contact area)</span>
-<span class="sd">    at either prescribed force or prescribed rigid body penetration</span>
-
-<span class="sd">    Prescribed rigid body penetration:</span>
-<span class="sd">    ----------------------------------</span>
-
-<span class="sd">        .. math ::</span>
-
-<span class="sd">            \frac{\partial U_\mathrm{el}(\delta, a)}{\partial (\pi a^2)} = \frac{R E^\prime}{2\pi a}</span>
-<span class="sd">            \left(\delta - \frac{a^2}{R}\right)^2</span>
-
-<span class="sd">        In Maugis&#39;s units:</span>
-
-<span class="sd">        .. math ::</span>
-<span class="sd">              \frac{\partial U_{el}}{\partial \pi a^2}</span>
-<span class="sd">              = \frac{3}{8 \pi}  \frac{1}{a} (\Delta - a^2)^2</span>
-
-<span class="sd">    Prescribed force</span>
-<span class="sd">    -----------------</span>
-
-<span class="sd">        .. math ::</span>
-
-<span class="sd">            K = \frac{F_H - F} {2 \sqrt{\pi a^3}}</span>
-
-<span class="sd">        with :math:`F_H = a^3 \frac{4E^\prime}{3R}`</span>
-
-<span class="sd">        .. math ::</span>
-
-<span class="sd">            \frac{\partial U_\mathrm{el}(\delta, a)}{\partial (\pi a^2)} = K^2 / 2 E^\prime</span>
+<span class="sd">    .. math ::</span>
+<span class="sd">          \frac{\partial U_{el}}{\partial \pi A^2}</span>
+<span class="sd">          = \frac{3}{8 \pi}  \frac{1}{A} (\Delta - A^2)^2</span>
 
 
-<span class="sd">    Notation and units:</span>
-<span class="sd">    ------------------</span>
-<span class="sd">        :math:`a` is the contact radius, :math:`\Delta` is the penetration.</span>
+<span class="sd">    :math:`A` is the contact radius, :math:`\Delta` is the penetration.</span>
 
-<span class="sd">        With the default values of `radius` and `contact_modulus`,</span>
-<span class="sd">        this function returns the energy release rate in units of</span>
+<span class="sd">    With the default values of `radius` and `contact_modulus`, this function returns the energy release rate in units</span>
+<span class="sd">    of</span>
 
-<span class="sd">         - :math:`w` if :math:`\Delta` and :math:`a` are in maugis - JKR units.</span>
+<span class="sd">     - :math:`w` if :math:`\Delta` and :math:`A` are in maugis - JKR units.</span>
 
-<span class="sd">         - :math:`E_M R` if :math:`\Delta` and :math:`a` are in units of :math:`R`</span>
+<span class="sd">     - :math:`E_M R` if :math:`\Delta` and :math:`A` are in units of :math:`R`</span>
 
-<span class="sd">        Note that I think perfect consistent use of the maugis-JKR units</span>
-<span class="sd">        would require to express the energy release rate</span>
-<span class="sd">        in units of :math:`\pi w` instead of just :math:`w`. I might need to change this at some point.</span>
-
+<span class="sd">    Note that I think perfect consistent use of the maugis-JKR units would require to express the energy release rate</span>
+<span class="sd">    in units of :math:`\pi w` instead of just :math:`w`. I might need to change this at some point.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
+<span class="sd">    penetration: float or np.array</span>
+<span class="sd">        :math:`\Delta` in maugis</span>
 <span class="sd">    contact_radius: float or np.array</span>
 <span class="sd">        in units of :math:`R`</span>
-<span class="sd">    penetration: float or np.array, optional</span>
-<span class="sd">        rigid body penetration penetration, :math:`\Delta` in maugis</span>
-<span class="sd">    force: float or np.ndarray, optional</span>
-<span class="sd">        normal force (positive is compressive)</span>
 <span class="sd">    radius: float</span>
 <span class="sd">        default 1, optional</span>
 <span class="sd">        radius of the sphere</span>
@@ -608,72 +490,26 @@
 <span class="sd">    -------</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">if</span> <span class="n">penetration</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">force</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Either Penetration or force need to be specified&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">penetration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">prefactor</span> <span class="o">=</span> <span class="n">contact_modulus</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">prefactor</span> <span class="o">*</span> <span class="p">(</span><span class="n">penetration</span> <span class="o">-</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">radius</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">contact_radius</span>
-        <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;1_a&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">prefactor</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">radius</span> <span class="o">-</span> <span class="n">penetration</span><span class="p">)</span> <span class="o">/</span> <span class="n">radius</span>
-                                <span class="o">-</span> <span class="p">(</span><span class="n">penetration</span> <span class="o">-</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">radius</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;1_d&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">prefactor</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">penetration</span> <span class="o">/</span> <span class="n">contact_radius</span> <span class="o">-</span> <span class="n">contact_radius</span> <span class="o">/</span> <span class="n">radius</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;2_da&quot;</span> <span class="ow">or</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;2_ad&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="o">-</span> <span class="n">prefactor</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">radius</span> <span class="o">+</span> <span class="n">penetration</span> <span class="o">/</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;2_a&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">prefactor</span> <span class="o">*</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">contact_radius</span> <span class="o">/</span> <span class="n">radius</span> <span class="o">**</span> <span class="mi">2</span>
-                                <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">penetration</span> <span class="o">-</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">radius</span><span class="p">)</span> <span class="o">/</span> <span class="n">radius</span> <span class="o">/</span> <span class="n">contact_radius</span>
-                                <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">penetration</span> <span class="o">-</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">radius</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">der</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">force</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
-            <span class="n">sif</span> <span class="o">=</span> <span class="n">stress_intensity_factor</span><span class="p">(</span>
-                <span class="n">contact_radius</span><span class="p">,</span>
-                <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">,</span>
-                <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
-                <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
-                <span class="n">contact_modulus</span><span class="o">=</span><span class="n">contact_modulus</span><span class="p">)</span>
-
-            <span class="k">return</span> <span class="n">sif</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">contact_modulus</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Derivative not implemented yet&quot;</span><span class="p">)</span></div>
+    <span class="n">prefactor</span> <span class="o">=</span> <span class="n">radius</span> <span class="o">*</span> <span class="n">contact_modulus</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prefactor</span> <span class="o">*</span> <span class="p">(</span><span class="n">penetration</span> <span class="o">-</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">contact_radius</span>
+    <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;1_a&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prefactor</span> <span class="o">*</span> <span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">penetration</span><span class="p">)</span>
+                            <span class="o">-</span> <span class="p">(</span><span class="n">penetration</span> <span class="o">-</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;1_d&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prefactor</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">penetration</span> <span class="o">/</span> <span class="n">contact_radius</span> <span class="o">-</span> <span class="n">contact_radius</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;2_da&quot;</span> <span class="ow">or</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;2_ad&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span> <span class="n">prefactor</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">penetration</span> <span class="o">/</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;2_a&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prefactor</span> <span class="o">*</span> <span class="p">(</span><span class="mi">8</span> <span class="o">*</span> <span class="n">contact_radius</span>
+                            <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">penetration</span> <span class="o">-</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">contact_radius</span>
+                            <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">penetration</span> <span class="o">-</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">der</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_stress_intensity_factor_from_force_radius</span><span class="p">(</span>
-        <span class="n">contact_radius</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span>
-        <span class="n">radius</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span>
-        <span class="n">contact_modulus</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">    Flatpunch SIF under load at infinity Tada p.377</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    force: float or np.array</span>
-<span class="sd">        Normal force</span>
-<span class="sd">    contact_radius: float or np.array</span>
-<span class="sd">    radius: float</span>
-<span class="sd">        default 1, optional</span>
-<span class="sd">        radius of the sphere</span>
-<span class="sd">    contact_modulus: float</span>
-<span class="sd">        default 3/4, optional</span>
-<span class="sd">        johnsons contact modulus</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">force_hertz</span> <span class="o">=</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">contact_modulus</span> <span class="o">/</span> <span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">radius</span><span class="p">)</span>
-    <span class="n">force_fp</span> <span class="o">=</span> <span class="n">force</span> <span class="o">-</span> <span class="n">force_hertz</span>
-
-    <span class="c1"># Flatpunch SIF under load at infinity Tada p.377</span>
-
-    <span class="k">return</span> <span class="o">-</span> <span class="n">force_fp</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">contact_radius</span> <span class="o">**</span> <span class="mi">3</span><span class="p">))</span>
-
-
-<span class="k">def</span> <span class="nf">_stress_intensity_factor_from_penetration_radius</span><span class="p">(</span><span class="n">contact_radius</span><span class="p">,</span> <span class="n">penetration</span><span class="p">,</span>
-                                                     <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">contact_modulus</span><span class="o">=</span><span class="mf">3.</span> <span class="o">/</span> <span class="mi">4</span><span class="p">):</span>
+<div class="viewcode-block" id="stress_intensity_factor"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.JKR.stress_intensity_factor">[docs]</a><span class="k">def</span> <span class="nf">stress_intensity_factor</span><span class="p">(</span><span class="n">contact_radius</span><span class="p">,</span> <span class="n">penetration</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span>
+                            <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">contact_modulus</span><span class="o">=</span><span class="mf">3.</span> <span class="o">/</span> <span class="mi">4</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    if R is not given, the length and the penetration</span>
@@ -712,7 +548,7 @@
         <span class="k">return</span> <span class="o">-</span> <span class="p">(</span><span class="n">Es</span> <span class="o">*</span> <span class="n">dc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">))</span>
     <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;1_a&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">a</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">Es</span> <span class="o">*</span> <span class="n">dc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> \
-            <span class="o">+</span> <span class="n">Es</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="n">R</span>
+               <span class="o">+</span> <span class="n">Es</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">a</span> <span class="o">/</span> <span class="n">R</span>
     <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;2_a&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">a</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">Es</span> <span class="o">*</span> <span class="n">dc</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;1_d&quot;</span><span class="p">:</span>
@@ -720,68 +556,7 @@
     <span class="k">elif</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;2_ad&quot;</span> <span class="ow">or</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;2_da&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Es</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span> <span class="o">*</span> <span class="n">a</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">3</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span>
-
-
-<div class="viewcode-block" id="stress_intensity_factor"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.JKR.stress_intensity_factor">[docs]</a><span class="k">def</span> <span class="nf">stress_intensity_factor</span><span class="p">(</span><span class="n">contact_radius</span><span class="p">,</span> <span class="n">penetration</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                            <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">contact_modulus</span><span class="o">=</span><span class="mf">3.</span> <span class="o">/</span> <span class="mi">4</span><span class="p">):</span>
-<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">    if R is not given, the length and the penetration</span>
-<span class="sd">    are epressed in units of R</span>
-
-
-<span class="sd">    Prescribed force :math:`F`</span>
-<span class="sd">    ---------------------------</span>
-
-<span class="sd">        Flatpunch SIF under load at infinity Tada p.377</span>
-
-<span class="sd">        .. math ::</span>
-
-<span class="sd">            K = \frac{F_H - F} {2 \sqrt{\pi a^3}}</span>
-
-<span class="sd">        with :math:`F_H = a^3 \frac{4E^\prime}{3R}`</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    contact_radius: float or ndarray of floats</span>
-<span class="sd">        radius of the contact area</span>
-<span class="sd">    penetration: float or ndarray of floats</span>
-<span class="sd">        rigid body penetration</span>
-<span class="sd">    der: {&quot;0&quot;, &quot;1_a&quot;, &quot;2_a&quot;, &quot;1_d&quot;, &quot;2_ad&quot;}</span>
-<span class="sd">    R: float</span>
-<span class="sd">        default 1, optional</span>
-<span class="sd">        radius of the sphere</span>
-<span class="sd">    Es: float</span>
-<span class="sd">        default 3/4, optional</span>
-<span class="sd">        johnson&#39;s contact modulus</span>
-
-<span class="sd">    Returns</span>
-<span class="sd">    -------</span>
-<span class="sd">    stress intensity factor K or it&#39;s first derivative according to the</span>
-<span class="sd">    contact_radius</span>
-
-<span class="sd">    if R and Es are not given it is in units of 4 / 3 Es \sqrt{R} / R^{der}</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">force</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">penetration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;can&#39;t specify contact radius , force and penetration&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">force</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">der</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;didn&#39;t implement derivatives&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">_stress_intensity_factor_from_force_radius</span><span class="p">(</span>
-            <span class="n">contact_radius</span><span class="o">=</span><span class="n">contact_radius</span><span class="p">,</span>
-            <span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">,</span>
-            <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
-            <span class="n">contact_modulus</span><span class="o">=</span><span class="n">contact_modulus</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">penetration</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">_stress_intensity_factor_from_penetration_radius</span><span class="p">(</span>
-            <span class="n">contact_radius</span><span class="o">=</span><span class="n">contact_radius</span><span class="p">,</span>
-            <span class="n">penetration</span><span class="o">=</span><span class="n">penetration</span><span class="p">,</span>
-            <span class="n">der</span><span class="o">=</span><span class="n">der</span><span class="p">,</span>
-            <span class="n">radius</span><span class="o">=</span><span class="n">radius</span><span class="p">,</span>
-            <span class="n">contact_modulus</span><span class="o">=</span><span class="n">contact_modulus</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="displacement_field"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.JKR.displacement_field">[docs]</a><span class="k">def</span> <span class="nf">displacement_field</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">contact_radius</span><span class="p">,</span>
@@ -831,8 +606,8 @@
     <span class="k">return</span> <span class="n">u</span></div>
 
 
-<div class="viewcode-block" id="deformed_profile"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.JKR.deformed_profile">[docs]</a><span class="k">def</span> <span class="nf">deformed_profile</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">contact_radius</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">contact_modulus</span><span class="o">=</span><span class="mf">3.</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span>
-                     <span class="n">work_of_adhesion</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">):</span>
+<div class="viewcode-block" id="deformed_profile"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.JKR.deformed_profile">[docs]</a><span class="k">def</span> <span class="nf">deformed_profile</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">contact_radius</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">contact_modulus</span><span class="o">=</span><span class="mf">3.</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span>
+                     <span class="n">work_of_adhesion</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Computes the gap in the JKR contact at radius r</span>
 <span class="sd">    Parameters</span>
