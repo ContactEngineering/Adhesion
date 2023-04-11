@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.System.Systems &mdash; Adhesion 0.91.0.dev12+g713fa76 documentation</title>
+  <title>Adhesion.System.Systems &mdash; Adhesion 0.91.0.dev4+g1902bb7 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev12+g713fa76
+                0.91.0.dev4+g1902bb7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -110,12 +110,11 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
+<span class="kn">import</span> <span class="nn">Adhesion</span>
 <span class="kn">import</span> <span class="nn">ContactMechanics</span>
 <span class="kn">import</span> <span class="nn">SurfaceTopography</span>
 <span class="kn">from</span> <span class="nn">ContactMechanics.Tools</span> <span class="kn">import</span> <span class="n">compare_containers</span>
 <span class="kn">from</span> <span class="nn">ContactMechanics.Systems</span> <span class="kn">import</span> <span class="n">IncompatibleResolutionError</span><span class="p">,</span> <span class="n">SystemBase</span>
-
-<span class="kn">from</span> <span class="nn">..Interactions</span> <span class="kn">import</span> <span class="n">SoftWall</span>
 
 
 <div class="viewcode-block" id="SmoothContactSystem"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem">[docs]</a><span class="k">class</span> <span class="nc">SmoothContactSystem</span><span class="p">(</span><span class="n">SystemBase</span><span class="p">):</span>
@@ -173,13 +172,16 @@
     <span class="k">def</span> <span class="nf">handles</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span> <span class="n">interaction_type</span><span class="p">,</span> <span class="n">surface_type</span><span class="p">,</span> <span class="n">comm</span><span class="p">):</span>
         <span class="n">is_ok</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="c1"># any periodic type of substrate formulation should do</span>
-        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span> <span class="n">ContactMechanics</span><span class="o">.</span><span class="n">Substrate</span><span class="p">)</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span>
+                            <span class="n">ContactMechanics</span><span class="o">.</span><span class="n">Substrate</span><span class="p">)</span>
 
         <span class="c1"># only soft interactions allowed</span>
-        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">interaction_type</span><span class="p">,</span> <span class="n">SoftWall</span><span class="p">)</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">interaction_type</span><span class="p">,</span>
+                            <span class="n">Adhesion</span><span class="o">.</span><span class="n">SoftWall</span><span class="p">)</span>
 
         <span class="c1"># any surface should do</span>
-        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">surface_type</span><span class="p">,</span> <span class="n">SurfaceTopography</span><span class="o">.</span><span class="n">UniformTopographyInterface</span><span class="p">)</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">surface_type</span><span class="p">,</span>
+                            <span class="n">SurfaceTopography</span><span class="o">.</span><span class="n">UniformTopographyInterface</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">is_ok</span></div>
 
 <div class="viewcode-block" id="SmoothContactSystem.compute_repulsive_force"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.SmoothContactSystem.compute_repulsive_force">[docs]</a>    <span class="k">def</span> <span class="nf">compute_repulsive_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -994,20 +996,11 @@
     <span class="k">def</span> <span class="nf">handles</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>  <span class="c1"># FIXME work around, see issue #208</span>
         <span class="k">return</span> <span class="kc">False</span></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">contact_zone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        returns an array of all coordinates, where contact pressure is</span>
-<span class="sd">        repulsive. Useful for evaluating the number of contact islands etc.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">)</span>
-
 <div class="viewcode-block" id="BoundedSmoothContactSystem.compute_nb_contact_pts"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_nb_contact_pts">[docs]</a>    <span class="k">def</span> <span class="nf">compute_nb_contact_pts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        compute and return the number of contact points.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">contact_zone</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="BoundedSmoothContactSystem.logger_input"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.logger_input">[docs]</a>    <span class="k">def</span> <span class="nf">logger_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
@@ -1143,20 +1136,7 @@
         <span class="n">pts</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">,</span>
                            <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">==</span> <span class="mf">0.</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">0.</span>
 
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="BoundedSmoothContactSystem.minimize_proxy"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.Systems.BoundedSmoothContactSystem.minimize_proxy">[docs]</a>    <span class="k">def</span> <span class="nf">minimize_proxy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-                       <span class="n">initial_displacements</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;L-BFGS-B&#39;</span><span class="p">,</span>
-                       <span class="n">gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lbounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ubounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                       <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-                       <span class="n">logger</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">lbounds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">lbounds</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
-        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">minimize_proxy</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
-                       <span class="n">initial_displacements</span><span class="o">=</span><span class="n">initial_displacements</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
-                       <span class="n">gradient</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span> <span class="n">lbounds</span><span class="o">=</span><span class="n">lbounds</span><span class="p">,</span> <span class="n">ubounds</span><span class="o">=</span><span class="n">ubounds</span><span class="p">,</span>
-                       <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
-                       <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

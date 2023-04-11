@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.System.SmoothSystemSpecialisations &mdash; Adhesion 0.91.0.dev12+g713fa76 documentation</title>
+  <title>Adhesion.System.SmoothSystemSpecialisations &mdash; Adhesion 0.91.0.dev4+g1902bb7 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -30,7 +30,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev12+g713fa76
+                0.91.0.dev4+g1902bb7
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
@@ -116,13 +116,11 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy</span>
 
+<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">SmoothContactSystem</span>
+<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">IncompatibleResolutionError</span>
 <span class="kn">from</span> <span class="nn">SurfaceTopography</span> <span class="kn">import</span> <span class="n">Topography</span>
+<span class="kn">import</span> <span class="nn">Adhesion</span>
 <span class="kn">import</span> <span class="nn">ContactMechanics</span>
-
-<span class="kn">from</span> <span class="nn">..Interactions</span> <span class="kn">import</span> <span class="n">SoftWall</span>
-
-<span class="kn">from</span> <span class="nn">.Systems</span> <span class="kn">import</span> <span class="n">SmoothContactSystem</span>
-<span class="kn">from</span> <span class="nn">.Systems</span> <span class="kn">import</span> <span class="n">IncompatibleResolutionError</span>
 
 
 <span class="c1"># convenient container for storing correspondences betwees small and large</span>
@@ -272,14 +270,17 @@
                 <span class="n">is_domain_decomposed</span><span class="p">):</span>
         <span class="n">is_ok</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="c1"># any periodic type of substrate formulation should do</span>
-        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span> <span class="n">ContactMechanics</span><span class="o">.</span><span class="n">Substrate</span><span class="p">)</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span>
+                            <span class="n">ContactMechanics</span><span class="o">.</span><span class="n">Substrate</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">is_ok</span><span class="p">:</span>
             <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="o">~</span><span class="n">substrate_type</span><span class="o">.</span><span class="n">is_periodic</span><span class="p">()</span>
         <span class="c1"># only soft interactions allowed</span>
-        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">interaction_type</span><span class="p">,</span> <span class="n">SoftWall</span><span class="p">)</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">interaction_type</span><span class="p">,</span>
+                            <span class="n">Adhesion</span><span class="o">.</span><span class="n">SoftWall</span><span class="p">)</span>
 
         <span class="c1"># any surface should do</span>
-        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">surface_type</span><span class="p">,</span> <span class="n">Topography</span><span class="p">)</span>
+        <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">surface_type</span><span class="p">,</span>
+                            <span class="n">Topography</span><span class="p">)</span>
 
         <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="ow">not</span> <span class="n">is_domain_decomposed</span>
         <span class="k">return</span> <span class="n">is_ok</span></div>
