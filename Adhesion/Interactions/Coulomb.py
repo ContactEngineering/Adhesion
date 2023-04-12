@@ -29,7 +29,7 @@ Electrostatic potential for Coulombic Interactions
 Heß, M. and Forsbach, F., 2020. Macroscopic modeling of fingerpad friction under electroadhesion: Possibilities and limitations. Frontiers in Mechanical Engineering, 6, p.567386.
 """
 
-from Adhesion.Interactions import Potential
+from .Potential import Potential
 
 import numpy as np
 from NuMPI import MPI
