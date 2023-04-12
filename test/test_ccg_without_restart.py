@@ -255,7 +255,7 @@ def test_ccg_without_restart_free_system(comm):
 
     res = optim.minimize(system.objective(penetration, gradient=True,
                                           logger=Logger("test_ccg_without_restart_free_system_lbfgsb.log")),
-                         init_disp,
+                         system.shape_minimisation_input(init_disp),
                          method='L-BFGS-B', jac=True,
                          bounds=bnds,
                          options=dict(gtol=1e-11, ftol=1e-20))

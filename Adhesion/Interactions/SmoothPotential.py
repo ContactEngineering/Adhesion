@@ -21,9 +21,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-from Adhesion.Interactions.Potentials import DecoratedPotential, Potential
+
 import numpy as np
 import scipy.optimize
+
+from .Potential import DecoratedPotential, Potential
 
 
 class SmoothPotential(DecoratedPotential):

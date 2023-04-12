@@ -16,6 +16,11 @@ Tests: [![Weekly tests](https://github.com/ContactEngineering/Adhesion/actions/w
 
 Building documentation: [![CI](https://github.com/ContactEngineering/Adhesion/actions/workflows/publish.yml/badge.svg)](https://github.com/ContactEngineering/Adhesion/actions/workflows/publish.yml)
 
+Documentation
+-------------
+
+[Sphinx built documentation](https://contactengineering.github.io/Adhesion/)
+
 Installation
 ------------
 

@@ -2,7 +2,19 @@
 Change log for Adhesion
 =======================
 
-v0.90.0 (210920)
+v0.91.1 (01Feb23)
+-----------------
+
+- BUG: Fixed discover of version when in a git repository that is not the
+  source directory of SurfaceTopography
+
+v0.91.0 (03Jan23)
+-----------------
+
+- API: `soft_wall.py` is now installed as `ce_soft_wall`
+- BUILD: Changed build system from setuptools to flit
+
+v0.90.0 (21Sep20)
 ----------------
 
 - MAINT: automatic publication to PyPI on release

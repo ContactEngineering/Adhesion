@@ -102,18 +102,91 @@ def load_unit(radius, work_of_adhesion):
     return np.pi * work_of_adhesion * radius
 
 
+def _contact_radius_from_penetration_force(
+        penetration,
+        force,
+        contact_modulus=0.75,
+        radius=1.,
+):
+    r"""
+    Computes the contact radius predicted by JKR
+    for a given penetration and force and unknown energy release rate (work of adhesion).
+
+    For given force :math:`F` and penetration :math:`\delta`, we solve
+
+    .. math ::
+
+        F = 2 a E^\prime (\delta - \frac{1}{3} \frac{a^2}{R})
+
+    for the contact radius :math:`a`.
+
+    If you want to determine the energy release rate, call `JKR.nonequilibrium_elastic_energy_release_rate`
+    using the penetration and the contact radius afterwards.
+
+    Parameters
+    ----------
+    force : float or array of floats, optional
+        Normal force.
+    penetration : float, optional
+        rigid body penetration
+    radius : float, optional
+        Sphere (actually paraboloid) radius.
+    contact_modulus : float, optional
+        Contact modulus: :math:`E^* = E/(1-\nu^2)`
+        with Young's modulus E and Poisson number :math:`\nu`.
+        The default value is so that Maugis's contact Modulus is one
+        (:math:`K = 4 / 3 E^*`)
+    Returns
+    -------
+    Contact Radius :math:`a`: float
+        If no root is found returns np.nan
+    """
+    p = np.polynomial.Polynomial([
+        - force,  # a^0
+        2 * contact_modulus * penetration,  # a^1
+        0,  # a^2
+        -2 / 3 * contact_modulus / radius  # a^3
+    ])
+
+    roots = p.roots()
+
+    a = roots[(roots.imag == 0) & (roots.real >= 0)].real
+    if len(set(a)) == 0:
+        return np.nan
+    elif len(set(a)) == 1:
+        return a[0]
+    else:
+        # For positive forces, there are three roots, but only the largest one corresponds to a meaningful SIF
+        # sif = stress_intensity_factor(contact_radius=a,
+        # penetration=penetration, radius=radius, contact_modulus=contact_modulus)
+        return a[-1]
+
+
 def contact_radius(force=None,
                    penetration=None,
                    radius=1.,
                    contact_modulus=3. / 4,
-                   work_of_adhesion=1 / np.pi):
+                   work_of_adhesion=None):
     r"""
     Given normal load or rigid body penetration, sphere radius and contact
     modulus compute contact radius on the stable branch.
 
-    if only force or penetration is provided, it is assumed that the
-    nondimensionalisation
-    from Maugis's book is used.
+    - If only force or penetration is provided, it is assumed that the
+      nondimensionalisation from Maugis's book is used.
+
+    - If force and penetration are given the work of adhesion results
+      from these values and the provided value will be ignored.
+
+      For given force :math:`F` and penetration :math:`\delta`, we solve
+
+      .. math ::
+
+          F = 2 a E^\prime (\delta - \frac{1}{3} \frac{a^2}{R})
+
+      for the contact radius :math:`a`.
+
+      If you want to determine the energy release rate, call `JKR.nonequilibrium_elastic_energy_release_rate`
+      using the penetration and the contact radius afterwards.
 
     Parameters
     ----------
@@ -134,14 +207,21 @@ def contact_radius(force=None,
     if force is None and penetration is None:
         raise ValueError("either force or penetration "
                          "should be provided")
-    elif force is not None and penetration is not None:
-        raise ValueError("only one of force or penetration "
-                         "should be provided")
+
+    if force is not None and penetration is not None:
+        if work_of_adhesion is not None:
+            raise ValueError("only one of force or penetration "
+                             "should be provided if you prescribe the work of adhesion")
+        else:
+            return _contact_radius_from_penetration_force(
+                penetration=penetration, force=force, contact_modulus=contact_modulus, radius=radius)
+    elif work_of_adhesion is None:
+        work_of_adhesion = 1 / np.pi
 
     if force is not None:
         A = force + 3 * work_of_adhesion * np.pi * radius
         B = np.sqrt(6 * work_of_adhesion * np.pi * radius * force + (
-                    3 * work_of_adhesion * np.pi * radius) ** 2)
+                3 * work_of_adhesion * np.pi * radius) ** 2)
 
         fac = 3. * radius / (4. * contact_modulus)
         A *= fac
@@ -151,11 +231,11 @@ def contact_radius(force=None,
 
     elif penetration is not None:
         # TODO: is this solvable symbolically ?
-        K = 4/3 * contact_modulus
+        K = 4 / 3 * contact_modulus
         w = work_of_adhesion
         R = radius
-        radius_pulloff = (np.pi * w * R**2 / 6 * K)**(1/3)
-        penetration_pulloff = - 3 * radius_pulloff**2 / R
+        radius_pulloff = (np.pi * w * R ** 2 / 6 * K) ** (1 / 3)
+        penetration_pulloff = - 3 * radius_pulloff ** 2 / R
         if penetration >= penetration_pulloff:
             root = newton(lambda a:
                           a ** 2 / R
@@ -208,7 +288,7 @@ def peak_pressure(force=None,
     if force is not None:
         A = force + 3 * work_of_adhesion * np.pi * radius
         B = np.sqrt(6 * work_of_adhesion * np.pi * radius * force + (
-                    3 * work_of_adhesion * np.pi * radius) ** 2)
+                3 * work_of_adhesion * np.pi * radius) ** 2)
 
         fac = 3. * radius / (4. * contact_modulus)
         A *= fac
@@ -368,35 +448,67 @@ def nonequilibrium_elastic_energy(penetration, contact_radius):
     return 3 / 4 * A * (d - A ** 2 / 3) ** 2 + A ** 5 / 15
 
 
-def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radius=1, contact_modulus=3./4, der="0"):
+def elastic_energy_release_rate(contact_radius, penetration=None, force=None, der="0", radius=1,
+                                contact_modulus=3. / 4, ):
     r"""
 
-    Returns the nondimensional energy release rate
-    (with respect to the nondimensional area)
 
-    .. math ::
-          \frac{\partial U_{el}}{\partial \pi A^2}
-          = \frac{3}{8 \pi}  \frac{1}{A} (\Delta - A^2)^2
+    Returns the energy release rate
+    (with respect to the contact area)
+    at either prescribed force or prescribed rigid body penetration
+
+    Prescribed rigid body penetration:
+    ----------------------------------
+
+        .. math ::
+
+            \frac{\partial U_\mathrm{el}(\delta, a)}{\partial (\pi a^2)} = \frac{R E^\prime}{2\pi a}
+            \left(\delta - \frac{a^2}{R}\right)^2
+
+        In Maugis's units:
+
+        .. math ::
+              \frac{\partial U_{el}}{\partial \pi a^2}
+              = \frac{3}{8 \pi}  \frac{1}{a} (\Delta - a^2)^2
+
+    Prescribed force
+    -----------------
+
+        .. math ::
+
+            K = \frac{F_H - F} {2 \sqrt{\pi a^3}}
+
+        with :math:`F_H = a^3 \frac{4E^\prime}{3R}`
+
+        .. math ::
+
+            \frac{\partial U_\mathrm{el}(\delta, a)}{\partial (\pi a^2)} = K^2 / 2 E^\prime
 
 
-    :math:`A` is the contact radius, :math:`\Delta` is the penetration.
+    Notation and units:
+    ------------------
+        :math:`a` is the contact radius, :math:`\Delta` is the penetration.
 
-    With the default values of `radius` and `contact_modulus`, this function returns the energy release rate in units
-    of
+        With the default values of `radius` and `contact_modulus`,
+        this function returns the energy release rate in units of
 
-     - :math:`w` if :math:`\Delta` and :math:`A` are in maugis - JKR units.
+         - :math:`w` if :math:`\Delta` and :math:`a` are in maugis - JKR units.
 
-     - :math:`E_M R` if :math:`\Delta` and :math:`A` are in units of :math:`R`
+         - :math:`E_M R` if :math:`\Delta` and :math:`a` are in units of :math:`R`
 
-    Note that I think perfect consistent use of the maugis-JKR units would require to express the energy release rate
-    in units of :math:`\pi w` instead of just :math:`w`. I might need to change this at some point.
+        Note that I think perfect consistent use of the maugis-JKR units
+        would require to express the energy release rate
+        in units of :math:`\pi w` instead of just :math:`w`. I might need to change this at some point.
+
 
     Parameters
     ----------
-    penetration: float or np.array
-        :math:`\Delta` in maugis
     contact_radius: float or np.array
         in units of :math:`R`
+    penetration: float or np.array, optional
+        rigid body penetration penetration, :math:`\Delta` in maugis
+    force: float or np.ndarray, optional
+        normal force (positive is compressive)
     radius: float
         default 1, optional
         radius of the sphere
@@ -409,26 +521,72 @@ def nonequilibrium_elastic_energy_release_rate(penetration, contact_radius, radi
     -------
 
     """
-    prefactor = radius * contact_modulus / (2 * np.pi)
-    if der == "0":
-        return prefactor * (penetration - contact_radius ** 2) ** 2 / contact_radius
-    elif der == "1_a":
-        return prefactor * (4 * (contact_radius ** 2 - penetration)
-                            - (penetration - contact_radius ** 2) ** 2 / contact_radius ** 2)
-    elif der == "1_d":
-        return prefactor * 2 * (penetration / contact_radius - contact_radius)
-    elif der == "2_da" or der == "2_ad":
-        return - prefactor * 2 * (1 + penetration / contact_radius ** 2)
-    elif der == "2_a":
-        return prefactor * (8 * contact_radius
-                            + 4 * (penetration - contact_radius ** 2) / contact_radius
-                            + 2 * (penetration - contact_radius ** 2) ** 2 / contact_radius ** 3)
-    else:
-        raise ValueError(der)
+
+    if penetration is None and force is None:
+        raise ValueError("Either Penetration or force need to be specified")
+    if penetration is not None:
+        prefactor = contact_modulus / (2 * np.pi)
+        if der == "0":
+            return prefactor * (penetration - contact_radius ** 2 / radius) ** 2 / contact_radius
+        elif der == "1_a":
+            return prefactor * (4 * (contact_radius ** 2 / radius - penetration) / radius
+                                - (penetration - contact_radius ** 2 / radius) ** 2 / contact_radius ** 2)
+        elif der == "1_d":
+            return prefactor * 2 * (penetration / contact_radius - contact_radius / radius)
+        elif der == "2_da" or der == "2_ad":
+            return - prefactor * 2 * (1 / radius + penetration / contact_radius ** 2)
+        elif der == "2_a":
+            return prefactor * (8 * contact_radius / radius ** 2
+                                + 4 * (penetration - contact_radius ** 2 / radius) / radius / contact_radius
+                                + 2 * (penetration - contact_radius ** 2 / radius) ** 2 / contact_radius ** 3)
+        else:
+            raise ValueError(der)
+    elif force is not None:
+        if der == "0":
+            sif = stress_intensity_factor(
+                contact_radius,
+                force=force,
+                der="0",
+                radius=radius,
+                contact_modulus=contact_modulus)
+
+            return sif ** 2 / (2 * contact_modulus)
+        else:
+            raise NotImplementedError("Derivative not implemented yet")
 
 
-def stress_intensity_factor(contact_radius, penetration, der="0",
-                            radius=1, contact_modulus=3. / 4):
+def _stress_intensity_factor_from_force_radius(
+        contact_radius, force,
+        radius=1.,
+        contact_modulus=0.75,
+):
+    """
+
+    Flatpunch SIF under load at infinity Tada p.377
+
+    Parameters
+    ----------
+    force: float or np.array
+        Normal force
+    contact_radius: float or np.array
+    radius: float
+        default 1, optional
+        radius of the sphere
+    contact_modulus: float
+        default 3/4, optional
+        johnsons contact modulus
+    """
+
+    force_hertz = contact_radius ** 3 * 4 * contact_modulus / (3 * radius)
+    force_fp = force - force_hertz
+
+    # Flatpunch SIF under load at infinity Tada p.377
+
+    return - force_fp / (2 * np.sqrt(np.pi * contact_radius ** 3))
+
+
+def _stress_intensity_factor_from_penetration_radius(contact_radius, penetration,
+                                                     der="0", radius=1, contact_modulus=3. / 4):
     r"""
 
     if R is not given, the length and the penetration
@@ -467,7 +625,7 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
         return - (Es * dc / np.sqrt(np.pi * a))
     elif der == "1_a":
         return 1 / 2 * a ** (-3 / 2) * Es * dc / np.sqrt(np.pi) \
-               + Es / np.sqrt(np.pi * a) * 2 * a / R
+            + Es / np.sqrt(np.pi * a) * 2 * a / R
     elif der == "2_a":
         return - 3 / 4 * a ** (-5 / 2) * Es * dc / np.sqrt(np.pi)
     elif der == "1_d":
@@ -476,6 +634,67 @@ def stress_intensity_factor(contact_radius, penetration, der="0",
         return Es / (2 * np.sqrt(np.pi)) * a ** (-3 / 2)
     else:
         raise ValueError()
+
+
+def stress_intensity_factor(contact_radius, penetration=None, force=None,
+                            der="0", radius=1, contact_modulus=3. / 4):
+    r"""
+
+    if R is not given, the length and the penetration
+    are epressed in units of R
+
+
+    Prescribed force :math:`F`
+    ---------------------------
+
+        Flatpunch SIF under load at infinity Tada p.377
+
+        .. math ::
+
+            K = \frac{F_H - F} {2 \sqrt{\pi a^3}}
+
+        with :math:`F_H = a^3 \frac{4E^\prime}{3R}`
+
+    Parameters
+    ----------
+    contact_radius: float or ndarray of floats
+        radius of the contact area
+    penetration: float or ndarray of floats
+        rigid body penetration
+    der: {"0", "1_a", "2_a", "1_d", "2_ad"}
+    R: float
+        default 1, optional
+        radius of the sphere
+    Es: float
+        default 3/4, optional
+        johnson's contact modulus
+
+    Returns
+    -------
+    stress intensity factor K or it's first derivative according to the
+    contact_radius
+
+    if R and Es are not given it is in units of 4 / 3 Es \sqrt{R} / R^{der}
+    """
+    if force is not None and penetration is not None:
+        raise ValueError("can't specify contact radius , force and penetration")
+    if force is not None:
+        if der != "0":
+            raise NotImplementedError("didn't implement derivatives")
+        return _stress_intensity_factor_from_force_radius(
+            contact_radius=contact_radius,
+            force=force,
+            radius=radius,
+            contact_modulus=contact_modulus)
+    elif penetration is not None:
+        return _stress_intensity_factor_from_penetration_radius(
+            contact_radius=contact_radius,
+            penetration=penetration,
+            der=der,
+            radius=radius,
+            contact_modulus=contact_modulus)
+    else:
+        raise ValueError
 
 
 def displacement_field(r, contact_radius,
@@ -525,8 +744,8 @@ def displacement_field(r, contact_radius,
     return u
 
 
-def deformed_profile(r, contact_radius, radius=1., contact_modulus=3./4,
-                     work_of_adhesion=1/np.pi):
+def deformed_profile(r, contact_radius, radius=1., contact_modulus=3. / 4,
+                     work_of_adhesion=1 / np.pi):
     r"""
     Computes the gap in the JKR contact at radius r
     Parameters

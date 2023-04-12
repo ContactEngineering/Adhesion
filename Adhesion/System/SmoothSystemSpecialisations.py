@@ -35,12 +35,13 @@ import copy
 import numpy as np
 import scipy
 
-from Adhesion.System import SmoothContactSystem
-from Adhesion.System import IncompatibleResolutionError
 from SurfaceTopography import Topography
-import Adhesion
 import ContactMechanics
 
+from ..Interactions import SoftWall
+
+from .Systems import SmoothContactSystem
+from .Systems import IncompatibleResolutionError
 
 # convenient container for storing correspondences betwees small and large
 # system
@@ -68,6 +69,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
         called when the supplied system cannot be computed with the current
         constraints
         """
+
         def __init__(self, message, disp):
             super().__init__(message)
             self.disp = disp
@@ -189,17 +191,14 @@ class FastSmoothContactSystem(SmoothContactSystem):
                 is_domain_decomposed):
         is_ok = True
         # any periodic type of substrate formulation should do
-        is_ok &= issubclass(substrate_type,
-                            ContactMechanics.Substrate)
+        is_ok &= issubclass(substrate_type, ContactMechanics.Substrate)
         if is_ok:
             is_ok &= ~substrate_type.is_periodic()
         # only soft interactions allowed
-        is_ok &= issubclass(interaction_type,
-                            Adhesion.SoftWall)
+        is_ok &= issubclass(interaction_type, SoftWall)
 
         # any surface should do
-        is_ok &= issubclass(surface_type,
-                            Topography)
+        is_ok &= issubclass(surface_type, Topography)
 
         is_ok &= not is_domain_decomposed
         return is_ok
@@ -224,7 +223,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
         self.create_babushka(offset, disp0)
         return self.babushka.objective(offset, gradient)
 
-    def create_babushka(self, offset, disp0=None,):
+    def create_babushka(self, offset, disp0=None, ):
         """
         Create a (much smaller) system with just the contacting patch plus the
         margin
@@ -246,13 +245,13 @@ class FastSmoothContactSystem(SmoothContactSystem):
         bnd_up = np.max(contact, 0)
 
         self.__babushka_offset = tuple(bnd - self.margin for bnd in bnd_lo)
-        sm_res = tuple((hi-lo + 2*self.margin for (hi, lo) in
+        sm_res = tuple((hi - lo + 2 * self.margin for (hi, lo) in
                         zip(bnd_up, bnd_lo)))
         if any(bnd < 0 for bnd in self.__babushka_offset):
             raise self.FreeBoundaryError(
                 ("With the current margin of {}, the system overlaps the lower"
                  " bounds by {}. Total nb_grid_pts is {}").format(
-                     self.margin, self.__babushka_offset, self.nb_grid_pts),
+                    self.margin, self.__babushka_offset, self.nb_grid_pts),
                 disp0)  # nopep8
         if any(res + self.__babushka_offset[i] > self.nb_grid_pts[i] for i, res
                in enumerate(sm_res)):
@@ -304,7 +303,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
             self.force[:self.nb_grid_pts[0]] -= self.interaction_force
         else:
             self.force[:self.nb_grid_pts[0], :self.nb_grid_pts[1]] -= \
-              self.interaction_force   # nopep8
+                self.interaction_force  # nopep8
         self.disp = self.substrate.evaluate_disp(self.substrate.force)
         return self.energy, self.force, self.disp
 
@@ -316,6 +315,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
         Parameters:
         babushka_nb_grid_pts -- nb_grid_pts of smaller scale
         """
+
         def boundary_generator():
             """
             computes slices for the boundaries. helps translating between large
@@ -325,11 +325,11 @@ class FastSmoothContactSystem(SmoothContactSystem):
             lg_res = self.nb_grid_pts
             for i in (0, 1):
                 for j in (0, 1):
-                    sm_slice = tuple((slice(i*sm_res[0], (i+1)*sm_res[0]),
-                                      slice(j*sm_res[1], (j+1)*sm_res[1])))
+                    sm_slice = tuple((slice(i * sm_res[0], (i + 1) * sm_res[0]),
+                                      slice(j * sm_res[1], (j + 1) * sm_res[1])))
                     lg_slice = tuple((
-                        slice(i*lg_res[0]+self.__babushka_offset[0],
-                              i*lg_res[0]+sm_res[0]+self.__babushka_offset[0]),
+                        slice(i * lg_res[0] + self.__babushka_offset[0],
+                              i * lg_res[0] + sm_res[0] + self.__babushka_offset[0]),
                         slice(j * lg_res[1] + self.__babushka_offset[1],
                               j * lg_res[1] + sm_res[1] +
                               self.__babushka_offset[1])))
@@ -366,6 +366,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
             bnd = self.bounds[0]
             babushka_array[bnd.small] = full_array[bnd.large]
             return babushka_array
+
         if full_array.shape == self.nb_grid_pts:
             return normal_nb_grid_pts()
         else:
@@ -434,7 +435,7 @@ class FastSmoothContactSystem(SmoothContactSystem):
                       to 'True', in which case the system's default callback
                       function is called.
         """
-        fun = self.objective(offset, disp0, gradient=gradient,)
+        fun = self.objective(offset, disp0, gradient=gradient, )
         if disp0 is None:
             disp0 = np.zeros(self.substrate.nb_domain_grid_pts)
         disp0 = self.shape_minimisation_input(disp0)

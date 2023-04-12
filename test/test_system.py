@@ -93,7 +93,7 @@ def test_RejectInconsistentSizes(self):
     incompat_sphere = make_sphere(self.radius, incompat_res,
                                   self.physical_sizes)
     with pytest.raises(IncompatibleResolutionError):
-        make_system(self.substrate, self.smooth, incompat_sphere,
+        make_system(substrate=self.substrate, interaction=self.smooth, surface=incompat_sphere,
                     system_class=SmoothContactSystem)
 
 
