@@ -26,7 +26,9 @@
 """
 Electrostatic potential for Coulombic Interactions
 
-Heß, M. and Forsbach, F., 2020. Macroscopic modeling of fingerpad friction under electroadhesion: Possibilities and limitations. Frontiers in Mechanical Engineering, 6, p.567386.
+Heß, M. and Forsbach, F., 2020. Macroscopic modeling of fingerpad friction under
+electroadhesion: Possibilities and limitations. Frontiers in Mechanical
+Engineering, 6, p.567386.
 """
 
 from .Potential import Potential
@@ -36,21 +38,24 @@ from NuMPI import MPI
 
 
 class Coulomb(Potential):
-    """ Electrostatic potential for Coulombic interaction when a voltage is applied across a gap between two perfect insulators
-@doi https://doi.org/10.3389/fmech.2020.567386
+    """ Electrostatic potential for Coulombic interaction when a voltage
+    is applied across a gap between two perfect insulators
+
+    @doi https://doi.org/10.3389/fmech.2020.567386
     """
     name = "Coulomb"
 
-    def __init__(self, eps0, eps1, epsg, eps2, d1, d2, voltage, communicator=MPI.COMM_WORLD):
+    def __init__(self, eps0, eps1, epsg, eps2, d1, d2, voltage,
+                 communicator=MPI.COMM_WORLD):
         """
         Parameters:
         -----------
         eps0: float
-            Permittivity of free space        
+            Permittivity of free space
         eps1: float
             Relative dielectric permittivity of bottom surface
         epsg: float
-            Relative dielectric permittivity of gap (Default = 1 for air)         
+            Relative dielectric permittivity of gap (Default=1 for air)
         eps2: float
             Relative dielectric permittivity of top surface
         d1: float
@@ -63,12 +68,12 @@ class Coulomb(Potential):
         """
         self.eps0 = float(eps0)
         self.eps1 = float(eps1)
-        self.epsg = float(epsg)        
+        self.epsg = float(epsg)
         self.eps2 = float(eps2)
         self.d1 = float(d1)
         self.d2 = float(d2)
         self.voltage = float(voltage)
-        
+
         Potential.__init__(self, communicator=communicator)
 
     def __getstate__(self):
@@ -86,19 +91,20 @@ class Coulomb(Potential):
     @property
     def r_infl(self):
         return None
-        
+
     def __repr__(self, ):
-        return ("Potential '{0.name}': eps0 = {0.eps0}, eps1 = {0.eps1}, epsg = {0.epsg}, eps2 = {0.eps2}, d1 = {0.d1}, d2 = {0.d2}, voltage = {0.voltage},").format(self)
+        return ("Potential '{0.name}': eps0 = {0.eps0}, eps1 = {0.eps1},\
+         epsg = {0.epsg}, eps2 = {0.eps2}, d1 = {0.d1}, d2 = {0.d2}, voltage = {0.voltage},").format(self)
 
     def evaluate(self, gap, potential=True, gradient=False, curvature=False,
                  mask=None):
-                 
+
         r = np.asarray(gap)
 
         V = dV = ddV = None
-        
+
         h0 = (self.d1 / self.eps1) + (self.d2 / self.eps2)
-	
+
         if potential:
             V = 0.5 * self.eps0 * (self.voltage**2) * (1 / (r/self.epsg + h0))
         if gradient:
