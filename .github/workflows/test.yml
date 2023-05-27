@@ -54,8 +54,8 @@ jobs:
           pip-compile pyproject.toml
           # Force compilation of mpi4py, netCDF4 and muSpectre
           CC=mpicc NETCDF4_DIR=/usr/lib/x86_64-linux-gnu/netcdf/pnetcdf python3 -m pip install -v \
-            --no-binary mpi4py
-            --no-binary netCDF4
+            --no-binary mpi4py \
+            --no-binary netCDF4 \
             --no-binary muspectre \
             requirements.txt
         else
