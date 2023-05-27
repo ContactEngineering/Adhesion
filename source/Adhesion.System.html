@@ -4,14 +4,18 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.System package &mdash; Adhesion 0.91.0.dev4+g1902bb7 documentation</title>
+  <title>Adhesion.System package &mdash; Adhesion 0.91.0.dev37+g4403382 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="../_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../_static/doctools.js"></script>
         <script src="../_static/sphinx_highlight.js"></script>
         <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -34,7 +38,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev4+g1902bb7
+                0.91.0.dev37+g4403382
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -49,7 +53,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../development.html">Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../testing.html">Testing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing to Adhesion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Package Reference</span></p>
 <ul class="current">
@@ -57,6 +63,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Adhesion.System package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-Adhesion.System.Factory">Adhesion.System.Factory module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Adhesion.System.Factory.make_contact_system"><code class="docutils literal notranslate"><span class="pre">make_contact_system()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.System.Factory.make_system"><code class="docutils literal notranslate"><span class="pre">make_system()</span></code></a></li>
 </ul>
 </li>
@@ -103,8 +110,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_normal_force"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_normal_force()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_repulsive_coordinates"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_repulsive_coordinates()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.compute_repulsive_force"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.compute_repulsive_force()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.contact_zone"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.contact_zone</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.handles"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.handles()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.logger_input"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.logger_input()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.minimize_proxy"><code class="docutils literal notranslate"><span class="pre">BoundedSmoothContactSystem.minimize_proxy()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.System.Systems.SmoothContactSystem"><code class="docutils literal notranslate"><span class="pre">SmoothContactSystem</span></code></a><ul>
@@ -174,8 +183,13 @@
 <section id="module-Adhesion.System.Factory">
 <span id="adhesion-system-factory-module"></span><h2>Adhesion.System.Factory module<a class="headerlink" href="#module-Adhesion.System.Factory" title="Permalink to this heading"></a></h2>
 <dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.System.Factory.make_contact_system">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.System.Factory.</span></span><span class="sig-name descname"><span class="pre">make_contact_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">topography</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Factory.html#make_contact_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Factory.make_contact_system" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="Adhesion.System.Factory.make_system">
-<span class="sig-prename descclassname"><span class="pre">Adhesion.System.Factory.</span></span><span class="sig-name descname"><span class="pre">make_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">substrate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_sizes=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_class=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Factory.html#make_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Factory.make_system" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">Adhesion.System.Factory.</span></span><span class="sig-name descname"><span class="pre">make_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">surface</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interaction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">substrate=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">physical_sizes=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system_class=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Factory.html#make_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Factory.make_system" title="Permalink to this definition"></a></dt>
 <dd><p>Factory function for contact systems. The returned object is always
 of a subtype of SystemBase.</p>
 <section id="parameters">
@@ -514,6 +528,13 @@ repulsive. Useful for evaluating the number of contact islands etc.</p>
 <p>Assumptions: there</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="Adhesion.System.Systems.BoundedSmoothContactSystem.contact_zone">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">contact_zone</span></span><a class="headerlink" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.contact_zone" title="Permalink to this definition"></a></dt>
+<dd><p>returns an array of all coordinates, where contact pressure is
+repulsive. Useful for evaluating the number of contact islands etc.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="Adhesion.System.Systems.BoundedSmoothContactSystem.handles">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Systems.html#BoundedSmoothContactSystem.handles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.handles" title="Permalink to this definition"></a></dt>
@@ -535,6 +556,65 @@ is_domain_decomposed: some systems cannot handle parallel computation</p>
 <li><p><strong>values</strong> (<em>list</em>)</p></li>
 </ul>
 </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Adhesion.System.Systems.BoundedSmoothContactSystem.minimize_proxy">
+<span class="sig-name descname"><span class="pre">minimize_proxy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_displacements</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'L-BFGS-B'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lbounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ubounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/System/Systems.html#BoundedSmoothContactSystem.minimize_proxy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.System.Systems.BoundedSmoothContactSystem.minimize_proxy" title="Permalink to this definition"></a></dt>
+<dd><p>Convenience function. Eliminates boilerplate code for most minimisation
+problems by encapsulating the use of scipy.minimize for common default
+options. In the case of smart proxy systems, this may also encapsulate
+things like dynamics computation of safety margins, extrapolation of
+results onto the proxied system, etc.</p>
+<p>Parameters:
+offset : float</p>
+<blockquote>
+<div><p>determines indentation depth</p>
+</div></blockquote>
+<dl>
+<dt>initial_displacements<span class="classifier">(default zero)</span></dt><dd><p>initial guess for displacement field. If
+not chosen appropriately, results may be unreliable.</p>
+</dd>
+<dt>method<span class="classifier">string or callable</span></dt><dd><p>(defaults to L-BFGS-B, see scipy documentation).
+Be sure to choose method that can handle high-dimensional
+parameter spaces.</p>
+</dd>
+<dt>options<span class="classifier">dict</span></dt><dd><p>(default None)
+options to be passed to the minimizer method</p>
+</dd>
+<dt>gradient<span class="classifier">bool</span></dt><dd><p>(default True)
+whether to use the gradient or not</p>
+</dd>
+<dt>lbounds<span class="classifier">array of shape substrate.subdomain_nb_grid_pts or</span></dt><dd><blockquote>
+<div><p>substrate.topography_subdomain_nb_grid_pts or “auto”</p>
+</div></blockquote>
+<dl class="simple">
+<dt>(default None)</dt><dd><p>nodal ceiling/floor</p>
+</dd>
+</dl>
+</dd>
+<dt>ubounds<span class="classifier">array of shape substrate.subdomain_nb_grid_pts or</span></dt><dd><blockquote>
+<div><p>substrate.topography_subdomain_nb_grid_pts</p>
+</div></blockquote>
+<p>(default None)</p>
+</dd>
+<dt>tol<span class="classifier">float</span></dt><dd><p>(default None)
+tolerance for termination. For detailed control, use
+solver-specific options.</p>
+</dd>
+<dt>callback<span class="classifier">callable</span></dt><dd><p>(default None)
+callback function to be at each iteration</p>
+<blockquote>
+<div><p>as callback(disp_k) where disp_k is the current
+displacement vector. Instead of a callable, it can be set
+to ‘True’, in which case the system’s default callback
+function is called.</p>
+</div></blockquote>
+</dd>
+<dt>logger :</dt><dd><p>(default None)
+log information at every objective evaluation.</p>
 </dd>
 </dl>
 </dd></dl>

@@ -4,6 +4,22 @@ Adhesion.Interactions package
 Submodules
 ----------
 
+Adhesion.Interactions.Base module
+---------------------------------
+
+.. automodule:: Adhesion.Interactions.Base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Adhesion.Interactions.Cutoff module
+-----------------------------------
+
+.. automodule:: Adhesion.Interactions.Cutoff
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Adhesion.Interactions.Exponential module
 ----------------------------------------
 
@@ -20,26 +36,18 @@ Adhesion.Interactions.Harmonic module
    :undoc-members:
    :show-inheritance:
 
-Adhesion.Interactions.Interactions module
------------------------------------------
-
-.. automodule:: Adhesion.Interactions.Interactions
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Adhesion.Interactions.Lj93 module
+Adhesion.Interactions.LJ93 module
 ---------------------------------
 
-.. automodule:: Adhesion.Interactions.Lj93
+.. automodule:: Adhesion.Interactions.LJ93
    :members:
    :undoc-members:
    :show-inheritance:
 
-Adhesion.Interactions.Potentials module
----------------------------------------
+Adhesion.Interactions.Potential module
+--------------------------------------
 
-.. automodule:: Adhesion.Interactions.Potentials
+.. automodule:: Adhesion.Interactions.Potential
    :members:
    :undoc-members:
    :show-inheritance:
@@ -64,14 +72,6 @@ Adhesion.Interactions.VdW82 module
 ----------------------------------
 
 .. automodule:: Adhesion.Interactions.VdW82
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Adhesion.Interactions.cutoffs module
-------------------------------------
-
-.. automodule:: Adhesion.Interactions.cutoffs
    :members:
    :undoc-members:
    :show-inheritance:
