@@ -21,8 +21,6 @@ jobs:
       matrix:
         mpi: ['yes', 'no']
         python-version: ['3.8', '3.9', '3.10', '3.11']
-        mpi4py-version: [3.1.4]
-        netcdf4-python-version: [1.6.3]
 
     steps:
     - uses: actions/checkout@v3
@@ -52,26 +50,14 @@ jobs:
             libnetcdf-pnetcdf-dev \
             meson \
             ninja-build
-          # Compute mpi4py and muSpectre versions
+          # Create requirements.txt
           pip-compile pyproject.toml
-          NUMPY_VERSION=$(grep 'numpy==' requirements.txt)
-          MUSPECTRE_VERSION=$(grep 'muspectre==' requirements.txt)
-          # Install numpy
-          echo "Installing ${NUMPY_VERSION}"
-          pip install -v ${NUMPY_VERSION}
-          # Install mpi4py
-          echo "Installing mpi4py==${{ matrix.mpi4py-version }}"
-          CC=mpicc python3 -m pip install -v \
-            --no-binary mpi4py \
-            mpi4py==${{ matrix.mpi4py-version }}
-          # Install netCDF4 with MPI support
-          echo "Installing netCD4==${{ matrix.netcdf4-python-version }}"
+          # Force compilation of mpi4py, netCDF4 and muSpectre
           CC=mpicc NETCDF4_DIR=/usr/lib/x86_64-linux-gnu/netcdf/pnetcdf python3 -m pip install -v \
-            --no-binary mpi4py --no-binary netCDF4 \
-            netCDF4==${{ matrix.netcdf4-python-version }}
-          # Manually install muSpectre with MPI enabled
-          echo "Installing ${MUSPECTRE_VERSION}"
-          pip install -v --no-binary muspectre ${MUSPECTRE_VERSION}
+            --no-binary mpi4py
+            --no-binary netCDF4
+            --no-binary muspectre \
+            requirements.txt
         else
           sudo apt-get install -y \
             libfftw3-dev \
