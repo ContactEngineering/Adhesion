@@ -20,9 +20,9 @@ jobs:
     strategy:
       matrix:
         mpi: ['yes', 'no']
-        python-version: ['3.8', '3.9', '3.10']
+        python-version: ['3.8', '3.9', '3.10', '3.11']
         mpi4py-version: [3.1.4]
-        netcdf4-python-version: [1.6.1]
+        netcdf4-python-version: [1.6.3]
 
     steps:
     - uses: actions/checkout@v3
@@ -54,7 +54,11 @@ jobs:
             ninja-build
           # Compute mpi4py and muSpectre versions
           pip-compile pyproject.toml
+          NUMPY_VERSION=$(grep 'numpy==' requirements.txt)
           MUSPECTRE_VERSION=$(grep 'muspectre==' requirements.txt)
+          # Install numpy
+          echo "Installing ${NUMPY_VERSION}"
+          pip install -v ${NUMPY_VERSION}
           # Install mpi4py
           echo "Installing mpi4py==${{ matrix.mpi4py-version }}"
           CC=mpicc python3 -m pip install -v \
