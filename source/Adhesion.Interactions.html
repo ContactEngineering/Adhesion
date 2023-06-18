@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.Interactions package &mdash; Adhesion 0.91.0.dev36+g2e711dcf documentation</title>
+  <title>Adhesion.Interactions package &mdash; Adhesion 0.91.0.dev82+gfda4d375 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
@@ -38,7 +38,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev36+g2e711dcf
+                0.91.0.dev82+gfda4d375
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -76,6 +76,16 @@
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.Interactions.Base.SoftWall"><code class="docutils literal notranslate"><span class="pre">SoftWall</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Adhesion.Interactions.Base.SoftWall.evaluate"><code class="docutils literal notranslate"><span class="pre">SoftWall.evaluate()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Adhesion.Interactions.Base.SoftWall.plot"><code class="docutils literal notranslate"><span class="pre">SoftWall.plot()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-Adhesion.Interactions.Coulomb">Adhesion.Interactions.Coulomb module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#Adhesion.Interactions.Coulomb.Coulomb"><code class="docutils literal notranslate"><span class="pre">Coulomb</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Adhesion.Interactions.Coulomb.Coulomb.evaluate"><code class="docutils literal notranslate"><span class="pre">Coulomb.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Adhesion.Interactions.Coulomb.Coulomb.name"><code class="docutils literal notranslate"><span class="pre">Coulomb.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Adhesion.Interactions.Coulomb.Coulomb.r_infl"><code class="docutils literal notranslate"><span class="pre">Coulomb.r_infl</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Adhesion.Interactions.Coulomb.Coulomb.r_min"><code class="docutils literal notranslate"><span class="pre">Coulomb.r_min</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -320,6 +330,62 @@ gap: array like</p>
 </dd></dl>
 
 </section>
+<section id="module-Adhesion.Interactions.Coulomb">
+<span id="adhesion-interactions-coulomb-module"></span><h2>Adhesion.Interactions.Coulomb module<a class="headerlink" href="#module-Adhesion.Interactions.Coulomb" title="Permalink to this heading"></a></h2>
+<p>Electrostatic potential for Coulombic Interactions</p>
+<p>Heß, M. and Forsbach, F., 2020. Macroscopic modeling of fingerpad friction under
+electroadhesion: Possibilities and limitations. Frontiers in Mechanical
+Engineering, 6, p.567386.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="Adhesion.Interactions.Coulomb.Coulomb">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Adhesion.Interactions.Coulomb.</span></span><span class="sig-name descname"><span class="pre">Coulomb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eps0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsg</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voltage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">communicator=&lt;NuMPI.MPIStub.Intracomm</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Coulomb.html#Coulomb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Coulomb.Coulomb" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#Adhesion.Interactions.Potential.Potential" title="Adhesion.Interactions.Potential.Potential"><code class="xref py py-class docutils literal notranslate"><span class="pre">Potential</span></code></a></p>
+<p>Electrostatic potential for Coulombic interaction when a voltage
+is applied across a gap between two perfect insulators</p>
+<p>&#64;doi <a class="reference external" href="https://doi.org/10.3389/fmech.2020.567386">https://doi.org/10.3389/fmech.2020.567386</a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Adhesion.Interactions.Coulomb.Coulomb.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Coulomb.html#Coulomb.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Coulomb.Coulomb.evaluate" title="Permalink to this definition"></a></dt>
+<dd><p>Evaluates the potential and its derivatives</p>
+<section id="id1">
+<h3>Parameters:<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<dl class="simple">
+<dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
+</dd>
+<dt>potential: bool, optional</dt><dd><p>if true, returns potential energy (default True)</p>
+</dd>
+<dt>gradient: bool, optional</dt><dd><p>if true, returns gradient (default False)</p>
+</dd>
+<dt>curvature: bool, optional</dt><dd><p>if true, returns second derivative (default False)</p>
+</dd>
+<dt>mask: ndarray of bool, optional</dt><dd><p>potential is only evaluated on gap[mask]
+this property is used by the child potential</p>
+</dd>
+</dl>
+</section>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Adhesion.Interactions.Coulomb.Coulomb.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Coulomb'</span></em><a class="headerlink" href="#Adhesion.Interactions.Coulomb.Coulomb.name" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Adhesion.Interactions.Coulomb.Coulomb.r_infl">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_infl</span></span><a class="headerlink" href="#Adhesion.Interactions.Coulomb.Coulomb.r_infl" title="Permalink to this definition"></a></dt>
+<dd><p>convenience function returning the location of the potential’s
+inflection point (if applicable)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="Adhesion.Interactions.Coulomb.Coulomb.r_min">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">r_min</span></span><a class="headerlink" href="#Adhesion.Interactions.Coulomb.Coulomb.r_min" title="Permalink to this definition"></a></dt>
+<dd><p>convenience function returning the location of the energy minimum</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 <section id="module-Adhesion.Interactions.Cutoff">
 <span id="adhesion-interactions-cutoff-module"></span><h2>Adhesion.Interactions.Cutoff module<a class="headerlink" href="#module-Adhesion.Interactions.Cutoff" title="Permalink to this heading"></a></h2>
 <dl class="py class">
@@ -333,8 +399,8 @@ discontinuity in the force</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.Cutoff.CutoffPotential.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Cutoff.html#CutoffPotential.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Cutoff.CutoffPotential.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id1">
-<h3>Parameters:<a class="headerlink" href="#id1" title="Permalink to this heading"></a></h3>
+<section id="id2">
+<h3>Parameters:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
@@ -385,8 +451,8 @@ constant. This thus corresponds to an ideal plastic model.</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.Cutoff.LinearCorePotential.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Cutoff.html#LinearCorePotential.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Cutoff.LinearCorePotential.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id2">
-<h3>Parameters:<a class="headerlink" href="#id2" title="Permalink to this heading"></a></h3>
+<section id="id3">
+<h3>Parameters:<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
@@ -430,8 +496,8 @@ chosen) cut_off radius r_c</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.Cutoff.ParabolicCutoffPotential.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Cutoff.html#ParabolicCutoffPotential.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Cutoff.ParabolicCutoffPotential.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id3">
-<h3>Parameters:<a class="headerlink" href="#id3" title="Permalink to this heading"></a></h3>
+<section id="id4">
+<h3>Parameters:<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
@@ -483,8 +549,8 @@ V’’(g) = -(gamma0/rho^2)*e^(-g(r)/rho)</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.Exponential.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Exponential.html#Exponential.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Exponential.Exponential.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id4">
-<h3>Parameters:<a class="headerlink" href="#id4" title="Permalink to this heading"></a></h3>
+<section id="id5">
+<h3>Parameters:<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
@@ -548,8 +614,8 @@ inflection point (if applicable)</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.Exponential.RepulsiveExponential.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(slice(None,</span> <span class="pre">None,</span> <span class="pre">None),</span> <span class="pre">slice(None,</span> <span class="pre">None,</span> <span class="pre">None))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Exponential.html#RepulsiveExponential.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Exponential.RepulsiveExponential.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id5">
-<h3>Parameters:<a class="headerlink" href="#id5" title="Permalink to this heading"></a></h3>
+<section id="id6">
+<h3>Parameters:<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
@@ -601,8 +667,8 @@ V (r) = 1/2 k r**2 for r &lt; 0</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.Harmonic.Harmonic.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Harmonic.html#Harmonic.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Harmonic.Harmonic.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id6">
-<h3>Parameters:<a class="headerlink" href="#id6" title="Permalink to this heading"></a></h3>
+<section id="id7">
+<h3>Parameters:<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
@@ -675,8 +741,8 @@ V_l (r) = ε[ 2/15 (σ/r)**9 - (σ/r)**3]</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.LJ93.LJ93.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/LJ93.html#LJ93.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.LJ93.LJ93.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id7">
-<h3>Parameters:<a class="headerlink" href="#id7" title="Permalink to this heading"></a></h3>
+<section id="id8">
+<h3>Parameters:<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
@@ -768,8 +834,8 @@ of all interactions as with np.where, and copies</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.Potential.Potential.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/Potential.html#Potential.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.Potential.Potential.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id8">
-<h3>Parameters:<a class="headerlink" href="#id8" title="Permalink to this heading"></a></h3>
+<section id="id9">
+<h3>Parameters:<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
@@ -850,8 +916,8 @@ inflection point (if applicable)</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.PowerLaw.PowerLaw.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/PowerLaw.html#PowerLaw.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.PowerLaw.PowerLaw.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id9">
-<h3>Parameters:<a class="headerlink" href="#id9" title="Permalink to this heading"></a></h3>
+<section id="id10">
+<h3>Parameters:<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
@@ -945,8 +1011,8 @@ _eval_poly_and_cutoff</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.SmoothPotential.SmoothPotential.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/SmoothPotential.html#SmoothPotential.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.SmoothPotential.SmoothPotential.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id10">
-<h3>Parameters:<a class="headerlink" href="#id10" title="Permalink to this heading"></a></h3>
+<section id="id11">
+<h3>Parameters:<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
@@ -1037,8 +1103,8 @@ layer is supposed do be thick</p>
 <dt class="sig sig-object py" id="Adhesion.Interactions.VdW82.VDW82.evaluate">
 <span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gap</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">potential</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curvature</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mask</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(slice(None,</span> <span class="pre">None,</span> <span class="pre">None),</span> <span class="pre">slice(None,</span> <span class="pre">None,</span> <span class="pre">None))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/Interactions/VdW82.html#VDW82.evaluate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.Interactions.VdW82.VDW82.evaluate" title="Permalink to this definition"></a></dt>
 <dd><p>Evaluates the potential and its derivatives</p>
-<section id="id11">
-<h3>Parameters:<a class="headerlink" href="#id11" title="Permalink to this heading"></a></h3>
+<section id="id12">
+<h3>Parameters:<a class="headerlink" href="#id12" title="Permalink to this heading"></a></h3>
 <dl class="simple">
 <dt>gap: array_like of float</dt><dd><p>array of distances between the two surfaces</p>
 </dd>
