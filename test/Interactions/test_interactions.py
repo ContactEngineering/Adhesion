@@ -35,8 +35,8 @@ import numpy as np
 from Adhesion.Interactions import LJ93
 from Adhesion.Interactions import VDW82
 from Adhesion.Interactions.Cutoff import LinearCorePotential
-
 from Adhesion.Interactions import Exponential, Morse
+from Adhesion.Interactions import Coulomb
 from Adhesion.Interactions import RepulsiveExponential
 from Adhesion.Interactions import PowerLaw
 from Adhesion.Interactions import SmoothPotential
@@ -433,6 +433,38 @@ class PotentialTest(unittest.TestCase):
         ddV_num = np.diff(dV_num) / (r[1] - r[0])
         self.assertLess(abs((dV[:-1] + dV[1:]) / 2 - dV_num).max(), 1e-4)
         self.assertLess(abs(ddV[1:-1] - ddV_num).max(), 1e-2)
+
+    def test_Coulomb(self):
+
+        # all values taken from table 1 in https://doi.org/10.3389/fmech.2020.567386 , with units of distance in nm
+        eps0 = 8.85e-12
+        eps1 = 3.9
+        epsg = 1
+        eps2 = 3000
+        d1 = 1e-6
+        d2 = 250e-6
+        voltage = 100
+
+        pot = Coulomb(eps0, eps1, epsg, eps2, d1, d2, voltage)
+        h0 = (d1 / eps1) + (d2 / eps2)
+        sig0 = 0.5 * eps0 * (voltage**2) * (1/h0**2)
+        r = np.linspace(0*h0, 5*h0, 1001)
+        V, dV, ddV = pot.evaluate(r, True, True, True)
+        x = r/h0
+        y = -dV/sig0
+
+        indices = [0, 200, 400, 600, 800, 1000]
+        y_test = []  # values calculated based on given input
+        for i in indices:
+            y_test.append(y[i])
+
+        y_true = [1.0, 0.25, 0.12, 0.625, 0.04, 0.028]  # true values from paper
+
+        error = (np.square(np.array(y_true) - np.array(y_test))).mean(axis=0)
+        assert error < 0.5, "error should be lower!"
+        if False:
+            import matplotlib.pyplot as plt
+            plt.plot(x, y)  # force curve as in https://doi.org/10.3389/fmech.2020.00027 in Fig.3
 
     def test_RepulsiveExponential(self):
         ns = np.array([10, 100, 1000, 10000])

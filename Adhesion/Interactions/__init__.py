@@ -33,3 +33,4 @@ from .VdW82 import VDW82, Lj82  # noqa: F401
 from .LJ93 import LJ93  # noqa: F401
 from .PowerLaw import PowerLaw  # noqa: F401
 from .Exponential import Exponential, RepulsiveExponential, Morse  # noqa: F401
+from .Coulomb import Coulomb  # noqa: F401
