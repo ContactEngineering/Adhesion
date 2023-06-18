@@ -2,6 +2,11 @@
 Change log for Adhesion
 =======================
 
+v0.91.2 (27May23)
+-----------------
+- ENH: Analytical formulas for JKR contact 
+- DOC: Examples are now in documentation and stored as plain-text (jupytext) python files
+
 v0.91.1 (01Feb23)
 -----------------
 
