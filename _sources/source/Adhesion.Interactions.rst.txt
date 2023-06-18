@@ -12,14 +12,6 @@ Adhesion.Interactions.Base module
    :undoc-members:
    :show-inheritance:
 
-Adhesion.Interactions.Coulomb module
-------------------------------------
-
-.. automodule:: Adhesion.Interactions.Coulomb
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Adhesion.Interactions.Cutoff module
 -----------------------------------
 
