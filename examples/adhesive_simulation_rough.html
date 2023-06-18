@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example of rough simulation with adhesion on the contact challenge 512x512 topography &mdash; Adhesion 0.91.0.dev45+gfce76a67 documentation</title>
+  <title>Example of rough simulation with adhesion on the contact challenge 512x512 topography &mdash; Adhesion 0.91.0.dev80+gc39518d4 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
@@ -37,7 +37,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev45+gfce76a67
+                0.91.0.dev80+gc39518d4
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -151,6 +151,49 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">BadZipFile</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">c</span><span class="p">,</span> <span class="o">=</span> <span class="n">read_published_container</span><span class="p">(</span><span class="s2">&quot;https://doi.org/10.57703/ce-rs7jq&quot;</span><span class="p">)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Container/IO.py:184,</span> in <span class="ni">read_published_container</span><span class="nt">(publication_url, **request_args)</span>
+<span class="g g-Whitespace">    </span><span class="mi">182</span> <span class="n">container_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">download_url</span><span class="p">,</span> <span class="o">**</span><span class="n">request_args</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">183</span> <span class="n">container_file</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">container_response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">184</span> <span class="k">return</span> <span class="n">read_container</span><span class="p">(</span><span class="n">container_file</span><span class="p">)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Container/IO.py:64,</span> in <span class="ni">read_container</span><span class="nt">(fn, datafile_keys)</span>
+<span class="g g-Whitespace">     </span><span class="mi">40</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">     </span><span class="mi">41</span><span class="sd"> Read all surface in a container file and associated metadata. The</span>
+<span class="g g-Whitespace">     </span><span class="mi">42</span><span class="sd"> container is a ZIP file with raw data files and a YAML file meta.yml</span>
+<span class="sd">   (...)</span>
+<span class="g g-Whitespace">     </span><span class="mi">59</span><span class="sd">     List of all surfaces contained in this container file.</span>
+<span class="g g-Whitespace">     </span><span class="mi">60</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">     </span><span class="mi">62</span> <span class="n">surfaces</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="ne">---&gt; </span><span class="mi">64</span> <span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">65</span>     <span class="n">meta</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;meta.yml&#39;</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">67</span>     <span class="n">topographies</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="nn">File /usr/lib/python3.8/zipfile.py:1269,</span> in <span class="ni">ZipFile.__init__</span><span class="nt">(self, file, mode, compression, allowZip64, compresslevel, strict_timestamps)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1267</span> <span class="k">try</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1268</span>     <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;r&#39;</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1269</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_RealGetContents</span><span class="p">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">1270</span>     <span class="k">elif</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">):</span>
+<span class="g g-Whitespace">   </span><span class="mi">1271</span>         <span class="c1"># set the modified flag so central directory gets written</span>
+<span class="g g-Whitespace">   </span><span class="mi">1272</span>         <span class="c1"># even if no files are added to the archive</span>
+<span class="g g-Whitespace">   </span><span class="mi">1273</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_didModify</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="nn">File /usr/lib/python3.8/zipfile.py:1336,</span> in <span class="ni">ZipFile._RealGetContents</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1334</span>     <span class="k">raise</span> <span class="n">BadZipFile</span><span class="p">(</span><span class="s2">&quot;File is not a zip file&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1335</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">endrec</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1336</span>     <span class="k">raise</span> <span class="n">BadZipFile</span><span class="p">(</span><span class="s2">&quot;File is not a zip file&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1337</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+<span class="g g-Whitespace">   </span><span class="mi">1338</span>     <span class="nb">print</span><span class="p">(</span><span class="n">endrec</span><span class="p">)</span>
+
+<span class="ne">BadZipFile</span>: File is not a zip file
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -165,20 +208,10 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span><span class="o">.</span><span class="n">rms_gradient</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.7336383107367028
 </pre></div>
 </div>
 </div>
@@ -189,20 +222,10 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.621658676206695e-07
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="o">/</span><span class="n">t</span><span class="o">.</span><span class="n">rms_curvature_from_area</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3.985408928768943e-07
 </pre></div>
 </div>
 </div>
@@ -245,91 +268,6 @@ We use a small fraction of this typical force as the numerical tolerance for the
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nonadhesive_system</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">make_contact_system</span><span class="p">(</span><span class="n">interaction</span><span class="o">=</span><span class="s2">&quot;hardwall&quot;</span><span class="p">,</span> <span class="n">young</span><span class="o">=</span><span class="n">Es</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">12</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">nonadhesive_system</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">make_contact_system</span><span class="p">(</span><span class="n">interaction</span><span class="o">=</span><span class="s2">&quot;hardwall&quot;</span><span class="p">,</span> <span class="n">young</span><span class="o">=</span><span class="n">Es</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/HeightContainer.py:80,</span> in <span class="ni">AbstractTopography.__getattr__.&lt;locals&gt;.func</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span> <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">80</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Support/Bibliography.py:75,</span> in <span class="ni">doi.__call__.&lt;locals&gt;.func_with_doi</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">73</span> <span class="n">doi</span><span class="o">.</span><span class="n">dois</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_add_these_dois</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">74</span> <span class="n">doi</span><span class="o">.</span><span class="n">_n</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="ne">---&gt; </span><span class="mi">75</span> <span class="n">retvals</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">76</span> <span class="n">doi</span><span class="o">.</span><span class="n">_n</span> <span class="o">-=</span> <span class="mi">1</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="k">if</span> <span class="n">doi</span><span class="o">.</span><span class="n">_n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">78</span>     <span class="c1"># We have reached the point where the original `dois` argument</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span>     <span class="c1"># was passed. Create a new set such that subsequent calls don&#39;t</span>
-<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="c1"># contaminate the bibliography.</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:75,</span> in <span class="ni">make_contact_system</span><span class="nt">(topography, *args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">74</span> <span class="k">def</span> <span class="nf">make_contact_system</span><span class="p">(</span><span class="n">topography</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">75</span>     <span class="k">return</span> <span class="n">make_system</span><span class="p">(</span><span class="n">surface</span><span class="o">=</span><span class="n">topography</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:56,</span> in <span class="ni">make_system</span><span class="nt">(surface, interaction, substrate, communicator, physical_sizes, system_class, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">36</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">37</span><span class="sd"> Factory function for contact systems. The returned object is always</span>
-<span class="g g-Whitespace">     </span><span class="mi">38</span><span class="sd"> of a subtype of SystemBase.</span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">     </span><span class="mi">52</span><span class="sd"> </span>
-<span class="g g-Whitespace">     </span><span class="mi">53</span><span class="sd"> &quot;&quot;&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">55</span> <span class="k">if</span> <span class="n">interaction</span> <span class="o">==</span> <span class="s2">&quot;hardwall&quot;</span><span class="p">:</span>
-<span class="ne">---&gt; </span><span class="mi">56</span>     <span class="k">return</span> <span class="n">ContactMechanics</span><span class="o">.</span><span class="n">Factory</span><span class="o">.</span><span class="n">make_system</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">57</span>         <span class="n">surface</span><span class="o">=</span><span class="n">surface</span><span class="p">,</span> <span class="n">substrate</span><span class="o">=</span><span class="n">substrate</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">58</span>         <span class="n">communicator</span><span class="o">=</span><span class="n">communicator</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">59</span>         <span class="n">physical_sizes</span><span class="o">=</span><span class="n">physical_sizes</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">60</span>         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">61</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">62</span>     <span class="n">substrate</span><span class="p">,</span> <span class="n">surface</span> <span class="o">=</span> <span class="n">_make_system_args</span><span class="p">(</span><span class="n">surface</span><span class="o">=</span><span class="n">surface</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">63</span>                                            <span class="n">substrate</span><span class="o">=</span><span class="n">substrate</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">64</span>                                            <span class="n">communicator</span><span class="o">=</span><span class="n">communicator</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">65</span>                                            <span class="n">physical_sizes</span><span class="o">=</span><span class="n">physical_sizes</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">66</span>                                            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/ContactMechanics/Factory.py:131,</span> in <span class="ni">make_system</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">113</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">114</span><span class="sd"> Factory function for contact systems. Checks the compatibility between the</span>
-<span class="g g-Whitespace">    </span><span class="mi">115</span><span class="sd"> substrate, interaction method and surface and returns an object of the</span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">126</span><span class="sd"> -------</span>
-<span class="g g-Whitespace">    </span><span class="mi">127</span><span class="sd"> &quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">129</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">surface</span> <span class="o">=</span> <span class="n">_make_system_args</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">131</span> <span class="k">return</span> <span class="n">NonSmoothContactSystem</span><span class="p">(</span><span class="n">substrate</span><span class="o">=</span><span class="n">substrate</span><span class="p">,</span> <span class="n">surface</span><span class="o">=</span><span class="n">surface</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/ContactMechanics/Systems.py:378,</span> in <span class="ni">NonSmoothContactSystem.__init__</span><span class="nt">(self, substrate, surface)</span>
-<span class="g g-Whitespace">    </span><span class="mi">371</span> <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">372</span><span class="w">     </span><span class="sd">&quot;&quot;&quot; Represents a contact problem</span>
-<span class="g g-Whitespace">    </span><span class="mi">373</span><span class="sd">     Keyword Arguments:</span>
-<span class="g g-Whitespace">    </span><span class="mi">374</span><span class="sd">     substrate   -- An instance of HalfSpace. Defines the solid mechanics in</span>
-<span class="g g-Whitespace">    </span><span class="mi">375</span><span class="sd">                    the substrate</span>
-<span class="g g-Whitespace">    </span><span class="mi">376</span><span class="sd">     surface     -- An instance of SurfaceTopography, defines the profile.</span>
-<span class="g g-Whitespace">    </span><span class="mi">377</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">378</span>     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">379</span>     <span class="k">if</span> <span class="ow">not</span> <span class="n">compare_containers</span><span class="p">(</span><span class="n">surface</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">,</span> <span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">380</span>         <span class="k">raise</span> <span class="n">IncompatibleResolutionError</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">381</span>             <span class="p">(</span><span class="s2">&quot;the substrate (</span><span class="si">{}</span><span class="s2">) and the surface (</span><span class="si">{}</span><span class="s2">) have incompatible &quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">382</span>              <span class="s2">&quot;nb_grid_ptss.&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">383</span>                 <span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">,</span> <span class="n">surface</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">))</span>  <span class="c1"># nopep8</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/ContactMechanics/Systems.py:71,</span> in <span class="ni">SystemBase.__init__</span><span class="nt">(self, substrate, surface)</span>
-<span class="g g-Whitespace">     </span><span class="mi">60</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">61</span><span class="sd"> Represents a contact problem</span>
-<span class="g g-Whitespace">     </span><span class="mi">62</span><span class="sd"> </span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">     </span><span class="mi">68</span><span class="sd">     Defines the profile.</span>
-<span class="g g-Whitespace">     </span><span class="mi">69</span><span class="sd"> &quot;&quot;&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">70</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span> <span class="o">=</span> <span class="n">substrate</span>
-<span class="ne">---&gt; </span><span class="mi">71</span> <span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">area_per_pt</span>
-<span class="g g-Whitespace">     </span><span class="mi">72</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface</span> <span class="o">=</span> <span class="n">surface</span>
-<span class="g g-Whitespace">     </span><span class="mi">73</span> <span class="bp">self</span><span class="o">.</span><span class="n">dim</span> <span class="o">=</span> <span class="kc">None</span>
-
-<span class="ne">AttributeError</span>: &#39;NoneType&#39; object has no attribute &#39;area_per_pt&#39;
 </pre></div>
 </div>
 </div>
