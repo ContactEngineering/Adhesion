@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.ReferenceSolutions package &mdash; Adhesion 0.91.0.dev81+gd3640eff documentation</title>
+  <title>Adhesion.ReferenceSolutions package &mdash; Adhesion 0.91.0.dev82+g2ec7cc74 documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
@@ -38,7 +38,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev81+gd3640eff
+                0.91.0.dev82+g2ec7cc74
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -88,12 +88,12 @@
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.contact_radius"><code class="docutils literal notranslate"><span class="pre">contact_radius()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.deformed_profile"><code class="docutils literal notranslate"><span class="pre">deformed_profile()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.displacement_field"><code class="docutils literal notranslate"><span class="pre">displacement_field()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.elastic_energy"><code class="docutils literal notranslate"><span class="pre">elastic_energy()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.elastic_energy_release_rate"><code class="docutils literal notranslate"><span class="pre">elastic_energy_release_rate()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.equilibrium_elastic_energy"><code class="docutils literal notranslate"><span class="pre">equilibrium_elastic_energy()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.force"><code class="docutils literal notranslate"><span class="pre">force()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.height_unit"><code class="docutils literal notranslate"><span class="pre">height_unit()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.load_unit"><code class="docutils literal notranslate"><span class="pre">load_unit()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.nonequilibrium_elastic_energy"><code class="docutils literal notranslate"><span class="pre">nonequilibrium_elastic_energy()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.peak_pressure"><code class="docutils literal notranslate"><span class="pre">peak_pressure()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.penetration"><code class="docutils literal notranslate"><span class="pre">penetration()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#Adhesion.ReferenceSolutions.JKR.radius_unit"><code class="docutils literal notranslate"><span class="pre">radius_unit()</span></code></a></li>
@@ -396,6 +396,26 @@ modulus E and Poisson number <span class="math notranslate nohighlight">\(\nu\)<
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.elastic_energy">
+<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">elastic_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">penetration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#elastic_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.elastic_energy" title="Permalink to this definition"></a></dt>
+<dd><div class="math notranslate nohighlight">
+\[\frac{U_{el}}{\pi w R (\pi^2 w^2 R / K^2)^{1/3}}
+= \frac{3}{4} A \left(\Delta - \frac{A^2}{3}\right)^2 + \frac{A^5}{15}\]</div>
+<p>For the units, see maugis p.290</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>penetration</strong> (<span class="math notranslate nohighlight">\(\Delta\)</span> in maugis) – </p></li>
+<li><p><strong>contact_radius</strong> (<span class="math notranslate nohighlight">\(A\)</span> in maugis) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>elastic energy in units of <span class="math notranslate nohighlight">\(\pi w R (\pi^2 w^2 R / K^2)^{1/3}\)</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.elastic_energy_release_rate">
 <span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">elastic_energy_release_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">penetration</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">der</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.75</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#elastic_energy_release_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.elastic_energy_release_rate" title="Permalink to this definition"></a></dt>
 <dd><p>Returns the energy release rate
@@ -529,26 +549,6 @@ instead of the work of adhesion</p>
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.load_unit">
 <span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">load_unit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radius</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">work_of_adhesion</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#load_unit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.load_unit" title="Permalink to this definition"></a></dt>
 <dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.nonequilibrium_elastic_energy">
-<span class="sig-prename descclassname"><span class="pre">Adhesion.ReferenceSolutions.JKR.</span></span><span class="sig-name descname"><span class="pre">nonequilibrium_elastic_energy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">penetration</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contact_radius</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Adhesion/ReferenceSolutions/JKR.html#nonequilibrium_elastic_energy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Adhesion.ReferenceSolutions.JKR.nonequilibrium_elastic_energy" title="Permalink to this definition"></a></dt>
-<dd><div class="math notranslate nohighlight">
-\[\frac{U_{el}}{\pi w R (\pi^2 w^2 R / K^2)^{1/3}}
-= \frac{3}{4} A \left(\Delta - \frac{A^2}{3}\right)^2 + \frac{A^5}{15}\]</div>
-<p>For the units, see maugis p.290</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>penetration</strong> (<span class="math notranslate nohighlight">\(\Delta\)</span> in maugis) – </p></li>
-<li><p><strong>contact_radius</strong> (<span class="math notranslate nohighlight">\(A\)</span> in maugis) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>elastic energy in units of <span class="math notranslate nohighlight">\(\pi w R (\pi^2 w^2 R / K^2)^{1/3}\)</span></p>
-</dd>
-</dl>
-</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="Adhesion.ReferenceSolutions.JKR.peak_pressure">
