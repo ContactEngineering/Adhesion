@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example of rough simulation with adhesion on the contact challenge 512x512 topography &mdash; Adhesion 0.91.0.dev82+gfda4d375 documentation</title>
+  <title>Example of rough simulation with adhesion on the contact challenge 512x512 topography &mdash; Adhesion 0.91.0.dev81+gd3640eff documentation</title>
       <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" type="text/css" />
@@ -37,7 +37,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev82+gfda4d375
+                0.91.0.dev81+gd3640eff
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -151,53 +151,27 @@
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">BadZipFile</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">c</span><span class="p">,</span> <span class="o">=</span> <span class="n">read_published_container</span><span class="p">(</span><span class="s2">&quot;https://doi.org/10.57703/ce-rs7jq&quot;</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Container/IO.py:184,</span> in <span class="ni">read_published_container</span><span class="nt">(publication_url, **request_args)</span>
-<span class="g g-Whitespace">    </span><span class="mi">182</span> <span class="n">container_response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">download_url</span><span class="p">,</span> <span class="o">**</span><span class="n">request_args</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">183</span> <span class="n">container_file</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">container_response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-<span class="ne">--&gt; </span><span class="mi">184</span> <span class="k">return</span> <span class="n">read_container</span><span class="p">(</span><span class="n">container_file</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Container/IO.py:64,</span> in <span class="ni">read_container</span><span class="nt">(fn, datafile_keys)</span>
-<span class="g g-Whitespace">     </span><span class="mi">40</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">41</span><span class="sd"> Read all surface in a container file and associated metadata. The</span>
-<span class="g g-Whitespace">     </span><span class="mi">42</span><span class="sd"> container is a ZIP file with raw data files and a YAML file meta.yml</span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">     </span><span class="mi">59</span><span class="sd">     List of all surfaces contained in this container file.</span>
-<span class="g g-Whitespace">     </span><span class="mi">60</span><span class="sd"> &quot;&quot;&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">62</span> <span class="n">surfaces</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="ne">---&gt; </span><span class="mi">64</span> <span class="k">with</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">65</span>     <span class="n">meta</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;meta.yml&#39;</span><span class="p">),</span> <span class="n">Loader</span><span class="o">=</span><span class="n">yaml</span><span class="o">.</span><span class="n">FullLoader</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">67</span>     <span class="n">topographies</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="nn">File /usr/lib/python3.8/zipfile.py:1269,</span> in <span class="ni">ZipFile.__init__</span><span class="nt">(self, file, mode, compression, allowZip64, compresslevel, strict_timestamps)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1267</span> <span class="k">try</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1268</span>     <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;r&#39;</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1269</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_RealGetContents</span><span class="p">()</span>
-<span class="g g-Whitespace">   </span><span class="mi">1270</span>     <span class="k">elif</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">):</span>
-<span class="g g-Whitespace">   </span><span class="mi">1271</span>         <span class="c1"># set the modified flag so central directory gets written</span>
-<span class="g g-Whitespace">   </span><span class="mi">1272</span>         <span class="c1"># even if no files are added to the archive</span>
-<span class="g g-Whitespace">   </span><span class="mi">1273</span>         <span class="bp">self</span><span class="o">.</span><span class="n">_didModify</span> <span class="o">=</span> <span class="kc">True</span>
-
-<span class="nn">File /usr/lib/python3.8/zipfile.py:1336,</span> in <span class="ni">ZipFile._RealGetContents</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1334</span>     <span class="k">raise</span> <span class="n">BadZipFile</span><span class="p">(</span><span class="s2">&quot;File is not a zip file&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1335</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">endrec</span><span class="p">:</span>
-<span class="ne">-&gt; </span><span class="mi">1336</span>     <span class="k">raise</span> <span class="n">BadZipFile</span><span class="p">(</span><span class="s2">&quot;File is not a zip file&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1337</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1338</span>     <span class="nb">print</span><span class="p">(</span><span class="n">endrec</span><span class="p">)</span>
-
-<span class="ne">BadZipFile</span>: File is not a zip file
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">_topographies</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_unit</span><span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">t</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">_topographies</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_unit</span><span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Container/SurfaceContainer.py:53,</span> in <span class="ni">SurfaceContainer.__getattr__</span><span class="nt">(self, name)</span>
+<span class="g g-Whitespace">     </span><span class="mi">51</span>     <span class="k">return</span> <span class="n">func</span>
+<span class="g g-Whitespace">     </span><span class="mi">52</span> <span class="k">else</span><span class="p">:</span>
+<span class="ne">---&gt; </span><span class="mi">53</span>     <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Unkown attribute &#39;</span><span class="si">{}</span><span class="s2">&#39; and no analysis or pipeline function of this name registered&quot;</span>
+<span class="g g-Whitespace">     </span><span class="mi">54</span>                          <span class="s2">&quot;(class </span><span class="si">{}</span><span class="s2">). Available functions: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">55</span>                                                                       <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_functions</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+
+<span class="ne">AttributeError</span>: Unkown attribute &#39;_topographies&#39; and no analysis or pipeline function of this name registered(class LazySurfaceContainer). Available functions: to_zip, bandwidth, suggest_length_unit, autocorrelation, power_spectrum, variable_bandwidth, scale_dependent_statistical_property, ciso_moment, c1d_moment, integrate_psd_from_profile, variance_half_derivative_from_autocorrelation, variance_half_derivative_via_autocorrelation_from_profile
 </pre></div>
 </div>
 </div>

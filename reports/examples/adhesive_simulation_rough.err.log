@@ -15,47 +15,21 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-c, = read_published_container("https://doi.org/10.57703/ce-rs7jq")
+t = c._topographies[1].to_unit("m")
 ------------------
 
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mBadZipFile[0m                                Traceback (most recent call last)
-Cell [0;32mIn[3], line 1[0m
-[0;32m----> 1[0m c, [38;5;241m=[39m [43mread_published_container[49m[43m([49m[38;5;124;43m"[39;49m[38;5;124;43mhttps://doi.org/10.57703/ce-rs7jq[39;49m[38;5;124;43m"[39;49m[43m)[49m
+[0;31mAttributeError[0m                            Traceback (most recent call last)
+Cell [0;32mIn[4], line 1[0m
+[0;32m----> 1[0m t [38;5;241m=[39m [43mc[49m[38;5;241;43m.[39;49m[43m_topographies[49m[[38;5;241m1[39m][38;5;241m.[39mto_unit([38;5;124m"[39m[38;5;124mm[39m[38;5;124m"[39m)
 
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Container/IO.py:184[0m, in [0;36mread_published_container[0;34m(publication_url, **request_args)[0m
-[1;32m    182[0m container_response [38;5;241m=[39m requests[38;5;241m.[39mget(download_url, [38;5;241m*[39m[38;5;241m*[39mrequest_args)
-[1;32m    183[0m container_file [38;5;241m=[39m io[38;5;241m.[39mBytesIO(container_response[38;5;241m.[39mcontent)
-[0;32m--> 184[0m [38;5;28;01mreturn[39;00m [43mread_container[49m[43m([49m[43mcontainer_file[49m[43m)[49m
+File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Container/SurfaceContainer.py:53[0m, in [0;36mSurfaceContainer.__getattr__[0;34m(self, name)[0m
+[1;32m     51[0m     [38;5;28;01mreturn[39;00m func
+[1;32m     52[0m [38;5;28;01melse[39;00m:
+[0;32m---> 53[0m     [38;5;28;01mraise[39;00m [38;5;167;01mAttributeError[39;00m([38;5;124m"[39m[38;5;124mUnkown attribute [39m[38;5;124m'[39m[38;5;132;01m{}[39;00m[38;5;124m'[39m[38;5;124m and no analysis or pipeline function of this name registered[39m[38;5;124m"[39m
+[1;32m     54[0m                          [38;5;124m"[39m[38;5;124m(class [39m[38;5;132;01m{}[39;00m[38;5;124m). Available functions: [39m[38;5;132;01m{}[39;00m[38;5;124m"[39m[38;5;241m.[39mformat(name, [38;5;28mself[39m[38;5;241m.[39m[38;5;18m__class__[39m[38;5;241m.[39m[38;5;18m__name__[39m,
+[1;32m     55[0m                                                                       [38;5;124m'[39m[38;5;124m, [39m[38;5;124m'[39m[38;5;241m.[39mjoin([38;5;28mself[39m[38;5;241m.[39m_functions[38;5;241m.[39mkeys())))
 
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Container/IO.py:64[0m, in [0;36mread_container[0;34m(fn, datafile_keys)[0m
-[1;32m     40[0m [38;5;250m[39m[38;5;124;03m"""[39;00m
-[1;32m     41[0m [38;5;124;03mRead all surface in a container file and associated metadata. The[39;00m
-[1;32m     42[0m [38;5;124;03mcontainer is a ZIP file with raw data files and a YAML file meta.yml[39;00m
-[0;32m   (...)[0m
-[1;32m     59[0m [38;5;124;03m    List of all surfaces contained in this container file.[39;00m
-[1;32m     60[0m [38;5;124;03m"""[39;00m
-[1;32m     62[0m surfaces [38;5;241m=[39m []
-[0;32m---> 64[0m [38;5;28;01mwith[39;00m [43mZipFile[49m[43m([49m[43mfn[49m[43m,[49m[43m [49m[38;5;124;43m'[39;49m[38;5;124;43mr[39;49m[38;5;124;43m'[39;49m[43m)[49m [38;5;28;01mas[39;00m z:
-[1;32m     65[0m     meta [38;5;241m=[39m yaml[38;5;241m.[39mload(z[38;5;241m.[39mopen([38;5;124m'[39m[38;5;124mmeta.yml[39m[38;5;124m'[39m), Loader[38;5;241m=[39myaml[38;5;241m.[39mFullLoader)
-[1;32m     67[0m     topographies [38;5;241m=[39m []
-
-File [0;32m/usr/lib/python3.8/zipfile.py:1269[0m, in [0;36mZipFile.__init__[0;34m(self, file, mode, compression, allowZip64, compresslevel, strict_timestamps)[0m
-[1;32m   1267[0m [38;5;28;01mtry[39;00m:
-[1;32m   1268[0m     [38;5;28;01mif[39;00m mode [38;5;241m==[39m [38;5;124m'[39m[38;5;124mr[39m[38;5;124m'[39m:
-[0;32m-> 1269[0m         [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_RealGetContents[49m[43m([49m[43m)[49m
-[1;32m   1270[0m     [38;5;28;01melif[39;00m mode [38;5;129;01min[39;00m ([38;5;124m'[39m[38;5;124mw[39m[38;5;124m'[39m, [38;5;124m'[39m[38;5;124mx[39m[38;5;124m'[39m):
-[1;32m   1271[0m         [38;5;66;03m# set the modified flag so central directory gets written[39;00m
-[1;32m   1272[0m         [38;5;66;03m# even if no files are added to the archive[39;00m
-[1;32m   1273[0m         [38;5;28mself[39m[38;5;241m.[39m_didModify [38;5;241m=[39m [38;5;28;01mTrue[39;00m
-
-File [0;32m/usr/lib/python3.8/zipfile.py:1336[0m, in [0;36mZipFile._RealGetContents[0;34m(self)[0m
-[1;32m   1334[0m     [38;5;28;01mraise[39;00m BadZipFile([38;5;124m"[39m[38;5;124mFile is not a zip file[39m[38;5;124m"[39m)
-[1;32m   1335[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m endrec:
-[0;32m-> 1336[0m     [38;5;28;01mraise[39;00m BadZipFile([38;5;124m"[39m[38;5;124mFile is not a zip file[39m[38;5;124m"[39m)
-[1;32m   1337[0m [38;5;28;01mif[39;00m [38;5;28mself[39m[38;5;241m.[39mdebug [38;5;241m>[39m [38;5;241m1[39m:
-[1;32m   1338[0m     [38;5;28mprint[39m(endrec)
-
-[0;31mBadZipFile[0m: File is not a zip file
+[0;31mAttributeError[0m: Unkown attribute '_topographies' and no analysis or pipeline function of this name registered(class LazySurfaceContainer). Available functions: to_zip, bandwidth, suggest_length_unit, autocorrelation, power_spectrum, variable_bandwidth, scale_dependent_statistical_property, ciso_moment, c1d_moment, integrate_psd_from_profile, variance_half_derivative_from_autocorrelation, variance_half_derivative_via_autocorrelation_from_profile
 
