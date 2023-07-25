@@ -120,7 +120,7 @@ def _contact_radius_from_penetration_force(
 
     for the contact radius :math:`a`.
 
-    If you want to determine the energy release rate, call `JKR.nonequilibrium_elastic_energy_release_rate`
+    If you want to determine the energy release rate, call `JKR.elastic_energy_release_rate`
     using the penetration and the contact radius afterwards.
 
     Parameters
@@ -185,7 +185,7 @@ def contact_radius(force=None,
 
       for the contact radius :math:`a`.
 
-      If you want to determine the energy release rate, call `JKR.nonequilibrium_elastic_energy_release_rate`
+      If you want to determine the energy release rate, call `JKR.elastic_energy_release_rate`
       using the penetration and the contact radius afterwards.
 
     Parameters
