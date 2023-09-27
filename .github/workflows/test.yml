@@ -75,16 +75,6 @@ jobs:
           # Manually install muSpectre with MPI enabled
           echo "Installing ${MUSPECTRE_VERSION}"
           pip install -v --no-binary muspectre ${MUSPECTRE_VERSION}
-        else
-          sudo apt-get install -y \
-            libfftw3-dev \
-            libnetcdf-dev
-          # Compute muSpectre version
-          pip-compile pyproject.toml
-          MUSPECTRE_VERSION=$(grep 'muspectre==' requirements.txt)
-          # Manually install muSpectre with FFTW support
-          echo "Installing ${MUSPECTRE_VERSION}"
-          pip install -v --no-binary muspectre ${MUSPECTRE_VERSION}
         fi
         python3 -m pip install build
         python3 -m pip list
