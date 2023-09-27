@@ -41,7 +41,7 @@ jobs:
         python3 -m venv venv
         source venv/bin/activate
         python3 -m pip install --upgrade pip pip-tools
-        sudo apt-get install -y libfftw3-dev
+        
         if [ "${{ matrix.mpi }}" == "yes" ]; then
           sudo apt-get install -y \
             openmpi-bin \
@@ -76,6 +76,10 @@ jobs:
           # Manually install muSpectre with MPI enabled
           echo "Installing ${MUSPECTRE_VERSION}"
           pip install -v --no-binary muspectre ${MUSPECTRE_VERSION}
+        else
+          # Install with fftw3
+          sudo apt-get install -y libfftw3-dev
+          pip install -v --no-binary muSpectre muSpectre
         fi
         python3 -m pip install build
         python3 -m pip list
