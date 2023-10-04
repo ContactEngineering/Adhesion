@@ -15,12 +15,12 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-20.04
-    timeout-minutes: 45
+    timeout-minutes: 90
 
     strategy:
       matrix:
         mpi: ['no'] # FIXME!!  error when installing netCDF, not finding mpi4py see issue #95
-        python-version: ['3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.9'] # FIXME : put back all versions when finished debugging
         mpi4py-version: [3.1.4]
         netcdf4-python-version: [1.6.3]
 
@@ -29,8 +29,6 @@ jobs:
       with:
         fetch-depth: 0
         submodules: recursive
-    - name: Setup upterm session
-      uses: lhotari/action-upterm@v1
 
     - name: Set up python3 ${{ matrix.python-version }}
       uses: actions/setup-python@v4
@@ -92,11 +90,16 @@ jobs:
         fi
         python3 -m pip install build
         python3 -m pip list
+        
+        # export LD_LIBRARY_PATH=$PWD/venv/lib/python${{ matrix.python-version }}/site-packages/.muspectre.mesonpy.libs/ 
 
     - name: Install extension module
       run: |
         source venv/bin/activate
         python3 -m pip install .[test]
+
+    - name: Setup upterm session
+      uses: lhotari/action-upterm@v1
 
     - name: Test with pytest
       run: |
