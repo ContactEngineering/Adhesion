@@ -265,7 +265,7 @@ def test_equilibrium_elastic_energy_vs_nonequilibrium():
     Eel = JKR.equilibrium_elastic_energy(a)
 
     np.testing.assert_allclose(Eel,
-                               JKR.nonequilibrium_elastic_energy(
+                               JKR.elastic_energy(
                                    JKR.penetration(a), a))
 
 
