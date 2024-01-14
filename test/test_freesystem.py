@@ -353,7 +353,7 @@ def test_comparison_pycontact(self):
     print("profile: min, max = {}".format(
         (S.surface.heights().min(), S.surface.heights().max())))
     options = dict(ftol=1e-15, gtol=1e-12)
-    result = minimize(fun, disp, jac=True,
+    result = minimize(fun, np.reshape(disp, (-1,)), jac=True,
                       callback=S.callback(force=True), method='L-BFGS-B',
                       options=options)
 
