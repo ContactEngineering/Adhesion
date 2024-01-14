@@ -15,18 +15,15 @@
 # ---
 
 # %%
-import matplotlib.testing.exceptions
 from SurfaceTopography.Generation import fourier_synthesis
 from matplotlib import pyplot as plt
 
 from Adhesion.Interactions import RepulsiveExponential
-from ContactMechanics import FreeFFTElasticHalfSpace, PeriodicFFTElasticHalfSpace
-from Adhesion.System import BoundedSmoothContactSystem, SmoothContactSystem
+from ContactMechanics import PeriodicFFTElasticHalfSpace
+from Adhesion.System import SmoothContactSystem
 import scipy.interpolate
 import muFFT
 from ContactMechanics.Tools.Logger import Logger
-import time
-import os
 import numpy as np
 
 np.random.seed(0)

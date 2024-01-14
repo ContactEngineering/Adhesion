@@ -88,13 +88,13 @@ def plot_result(filename="data.nc"):
     ax.set_xlabel(r"Penetration $(\pi^2 w_m^2 R / E_M^2)^{1/3}$")
     ax.set_ylabel(r"Force ($\pi w_m R$)")
     plt.show()
-    
+
     fig, ax = plt.subplots()
     ax.plot(nc.normal_force[:], nc.contact_area[:])
     ax.set_ylabel(r"Contact area $\left(\pi w R^2 /E_M\right)^{2/3}$")
     ax.set_xlabel(r"Force ($\pi w_m R$)")
     plt.show()
-    
+
     fig, ax = plt.subplots()
     x, y = topography.positions()
     for i in range(len(nc)):
@@ -166,13 +166,12 @@ if __name__ == '__main__':
                     interaction.max_tensile) * topography.area_per_pt,
                              # typical force on one pixel
                              ftol=0, maxcor=3),
-                )
-            
+            )
+
             # REPLACE THIS WITH CUSTOM MINIMIZER
-            
+
             # TODO: Here the idea was actually to try other minimizers, like the bugnicourt_cg
-            
-            
+
             elapsed_time = time.time() - starttime
             assert sol.success, sol.message
 
@@ -181,11 +180,11 @@ if __name__ == '__main__':
             system.offset = penetration
             system.gap = system.shape_minimisation_output(sol.x)
             system.disp = u = system.gap + penetration + system.surface.heights().reshape(system.gap.shape)
-            
+
             system.evaluate(system.disp, penetration, forces=True)
             sol.x = system.shape_minimisation_output(sol.x)
             sol.jac = system.shape_minimisation_output(sol.jac)
-            
+
             # initial guess for next iteration. Very important when there is hysteresis
             init_gap = system.gap
             #
