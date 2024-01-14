@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesive Simulation of the contact of a sphere &mdash; Adhesion 0.91.0.dev109+g98306d66 documentation</title>
+  <title>Adhesive Simulation of the contact of a sphere &mdash; Adhesion 0.91.0.dev109+g4bb9aaf2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -39,7 +39,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev109+g98306d66
+                0.91.0.dev109+g4bb9aaf2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -548,82 +548,13 @@ of the elastic-force and the adhesive force on each pixel.</p>
 <span class="g g-Whitespace">    </span><span class="mi">324</span>             <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">: disp.shape: </span><span class="si">{}</span><span class="s2">, res: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
 <span class="g g-Whitespace">    </span><span class="mi">325</span>                 <span class="n">err</span><span class="p">,</span> <span class="n">disp</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">res</span><span class="p">))</span>
 
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:280,</span> in <span class="ni">SmoothContactSystem.evaluate</span><span class="nt">(self, disp, offset, pot, forces, logger)</span>
-<span class="g g-Whitespace">    </span><span class="mi">277</span>     <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="g g-Whitespace">    </span><span class="mi">279</span> <span class="k">if</span> <span class="n">logger</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">280</span>     <span class="n">logger</span><span class="o">.</span><span class="n">st</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">logger_input</span><span class="p">())</span>
-<span class="g g-Whitespace">    </span><span class="mi">281</span> <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:960,</span> in <span class="ni">BoundedSmoothContactSystem.logger_input</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">945</span> <span class="n">mask</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">local_topography_subdomain_slices</span><span class="p">][</span>
-<span class="g g-Whitespace">    </span><span class="mi">946</span>     <span class="n">contacting_points</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="g g-Whitespace">    </span><span class="mi">947</span> <span class="n">max_proj_grad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">mask</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">))</span>
-<span class="g g-Whitespace">    </span><span class="mi">949</span> <span class="k">return</span> <span class="p">([</span><span class="s1">&#39;energy&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">950</span>          <span class="s1">&#39;max. proj. grad.&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">951</span>          <span class="s1">&#39;mean gap&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">952</span>          <span class="s1">&#39;frac. cont. area&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">953</span>          <span class="s1">&#39;frac. rep. area&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">954</span>          <span class="s1">&#39;frac. att. area&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">955</span>          <span class="s1">&#39;frac. int. area&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">956</span>          <span class="s1">&#39;substrate force&#39;</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">957</span>          <span class="s1">&#39;interaction force&#39;</span><span class="p">],</span>
-<span class="g g-Whitespace">    </span><span class="mi">958</span>         <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">959</span>          <span class="n">max_proj_grad</span><span class="p">,</span>
-<span class="ne">--&gt; </span><span class="mi">960</span>          <span class="bp">self</span><span class="o">.</span><span class="n">compute_mean_gap</span><span class="p">(),</span>
-<span class="g g-Whitespace">    </span><span class="mi">961</span>          <span class="bp">self</span><span class="o">.</span><span class="n">compute_nb_contact_pts</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">),</span>
-<span class="g g-Whitespace">    </span><span class="mi">962</span>          <span class="n">rel_rep_area</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">963</span>          <span class="n">rel_att_area</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">964</span>          <span class="n">rel_rep_area</span> <span class="o">+</span> <span class="n">rel_att_area</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">965</span>          <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">),</span>
-<span class="g g-Whitespace">    </span><span class="mi">966</span>          <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span><span class="p">)])</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:203,</span> in <span class="ni">SmoothContactSystem.compute_mean_gap</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">    </span><span class="mi">198</span> <span class="k">def</span> <span class="nf">compute_mean_gap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">199</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">    </span><span class="mi">200</span><span class="sd">     mean of the gap in the the physical domain (means excluding padding</span>
-<span class="g g-Whitespace">    </span><span class="mi">201</span><span class="sd">     region for the FreeFFTElasticHalfspace)</span>
-<span class="g g-Whitespace">    </span><span class="mi">202</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">203</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">gap</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/NuMPI/Tools/Reduction.py:111,</span> in <span class="ni">Reduction.sum</span><span class="nt">(self, arr, *args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">97</span> <span class="k">def</span> <span class="nf">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arr</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">98</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">99</span><span class="sd">     Summation</span>
-<span class="g g-Whitespace">    </span><span class="mi">100</span><span class="sd"> </span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">    </span><span class="mi">109</span><span class="sd">         Sum of all elements of the array over all processors</span>
-<span class="g g-Whitespace">    </span><span class="mi">110</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="ne">--&gt; </span><span class="mi">111</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_op1</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">,</span> <span class="n">arr</span><span class="p">,</span> <span class="n">MPI</span><span class="o">.</span><span class="n">SUM</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/NuMPI/Tools/Reduction.py:95,</span> in <span class="ni">Reduction._op1</span><span class="nt">(self, npop, arr, mpiop, *args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">93</span>     <span class="n">arr</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="n">filled</span><span class="p">(</span><span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">])</span>
-<span class="g g-Whitespace">     </span><span class="mi">94</span>     <span class="k">del</span> <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;initial&#39;</span><span class="p">]</span>
-<span class="ne">---&gt; </span><span class="mi">95</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_op</span><span class="p">(</span><span class="n">npop</span><span class="p">,</span> <span class="p">(</span><span class="n">arr</span><span class="p">,),</span> <span class="n">mpiop</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/NuMPI/Tools/Reduction.py:65,</span> in <span class="ni">Reduction._op</span><span class="nt">(self, npop, npargs, mpiop, *args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">46</span> <span class="k">def</span> <span class="nf">_op</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">npop</span><span class="p">,</span> <span class="n">npargs</span><span class="p">,</span> <span class="n">mpiop</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">47</span><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">48</span><span class="sd">     Generic reduction operation</span>
-<span class="g g-Whitespace">     </span><span class="mi">49</span><span class="sd"> </span>
-<span class="sd">   (...)</span>
-<span class="g g-Whitespace">     </span><span class="mi">63</span><span class="sd">         Result of the reduction operation</span>
-<span class="g g-Whitespace">     </span><span class="mi">64</span><span class="sd">     &quot;&quot;&quot;</span>
-<span class="ne">---&gt; </span><span class="mi">65</span>     <span class="n">local_result</span> <span class="o">=</span> <span class="n">npop</span><span class="p">(</span><span class="o">*</span><span class="n">npargs</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">66</span>     <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">local_result</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">67</span>     <span class="n">mpitype</span> <span class="o">=</span> <span class="n">MPI</span><span class="o">.</span><span class="n">_typedict</span><span class="p">[</span><span class="n">local_result</span><span class="o">.</span><span class="n">dtype</span><span class="o">.</span><span class="n">char</span><span class="p">]</span>
-
-<span class="nn">File &lt;__array_function__ internals&gt;:200,</span> in <span class="ni">sum</span><span class="nt">(*args, **kwargs)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/numpy/core/fromnumeric.py:2324,</span> in <span class="ni">sum</span><span class="nt">(a, axis, dtype, out, keepdims, initial, where)</span>
-<span class="g g-Whitespace">   </span><span class="mi">2321</span>         <span class="k">return</span> <span class="n">out</span>
-<span class="g g-Whitespace">   </span><span class="mi">2322</span>     <span class="k">return</span> <span class="n">res</span>
-<span class="ne">-&gt; </span><span class="mi">2324</span> <span class="k">return</span> <span class="n">_wrapreduction</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="n">keepdims</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">2325</span>                       <span class="n">initial</span><span class="o">=</span><span class="n">initial</span><span class="p">,</span> <span class="n">where</span><span class="o">=</span><span class="n">where</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/numpy/core/fromnumeric.py:86,</span> in <span class="ni">_wrapreduction</span><span class="nt">(obj, ufunc, method, axis, dtype, out, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">83</span>         <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">84</span>             <span class="k">return</span> <span class="n">reduction</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">out</span><span class="p">,</span> <span class="o">**</span><span class="n">passkwargs</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">86</span> <span class="k">return</span> <span class="n">ufunc</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">dtype</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="o">**</span><span class="n">passkwargs</span><span class="p">)</span>
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:273,</span> in <span class="ni">SmoothContactSystem.evaluate</span><span class="nt">(self, disp, offset, pot, forces, logger)</span>
+<span class="g g-Whitespace">    </span><span class="mi">271</span>     <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span> <span class="o">*=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span>
+<span class="g g-Whitespace">    </span><span class="mi">272</span>     <span class="c1">#                       ^ gradient to force per pixel</span>
+<span class="ne">--&gt; </span><span class="mi">273</span>     <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">274</span>     <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">comp_slice</span><span class="p">]</span> <span class="o">+=</span> \
+<span class="g g-Whitespace">    </span><span class="mi">275</span>         <span class="bp">self</span><span class="o">.</span><span class="n">interaction_force</span>
+<span class="g g-Whitespace">    </span><span class="mi">276</span> <span class="k">else</span><span class="p">:</span>
 
 <span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
