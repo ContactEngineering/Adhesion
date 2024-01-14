@@ -23,8 +23,6 @@
 # SOFTWARE.
 #
 
-import pytest
-
 import numpy as np
 from scipy.optimize import minimize_scalar
 

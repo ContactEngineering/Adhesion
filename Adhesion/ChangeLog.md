@@ -2,16 +2,12 @@
 Change log for Adhesion
 =======================
 
-v0.91.2 (27May23)
+v0.92.0 (14Jan24)
 -----------------
 - ENH: Analytical formulas for JKR contact 
-- DOC: Examples are now in documentation and stored as plain-text (jupytext) python files
-
-v0.91.1 (01Feb23)
------------------
-
 - BUG: Fixed discover of version when in a git repository that is not the
   source directory of SurfaceTopography
+- DOC: Examples are now in documentation and stored as plain-text (jupytext) python files
 
 v0.91.0 (03Jan23)
 -----------------

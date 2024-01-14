@@ -34,26 +34,26 @@ import scipy.optimize
 import matplotlib.pyplot as plt
 from Adhesion import LJ93smoothMin as lj
 
+pot = lj(epsilon=1., sigma=5, gamma=10)
 
-pot = lj(epsilon=1., sigma = 5, gamma = 10)
 
 def fun_gen_parabola(scale):
     poly = np.poly1d([1, 2, 3])
     dpoly = poly.deriv()
+
     def objective(x):
-        v, dv = (poly(scale*x), dpoly(scale*x)*scale)
+        v, dv = (poly(scale * x), dpoly(scale * x) * scale)
         return np.array(v), np.array(dv)
+
     return objective
+
 
 def fun_gen_lj(scale):
     def objective(x):
         v, dv, dummy = pot.evaluate(scale * x, potential=True)
         return np.array(v), np.array(-dv)
-    return objective
 
-def fun_gen_substrate(scale):
-    pot = lj(epsilon=1., sigma = 5, gamma = 10)
-    x
+    return objective
 
 
 def tester(fun_gen, x, x0):
@@ -61,29 +61,29 @@ def tester(fun_gen, x, x0):
         scales = list()
         vals = list()
         for i in range(-20, 40):
-            scale = 2**i
+            scale = 2 ** i
             scales.append(scale)
             fun = fun_gen(scale)
-            x_use = x/scale
+            x_use = x / scale
             if False:
                 plt.figure()
                 v, dv = fun(x_use)
                 plt.plot(x, v)
                 plt.plot(x, dv)
-                eval_idx = (len(x)*3)//4
-                plt.plot(x, dv[eval_idx]*(x_use-x_use[eval_idx])+v[eval_idx])
+                eval_idx = (len(x) * 3) // 4
+                plt.plot(x, dv[eval_idx] * (x_use - x_use[eval_idx]) + v[eval_idx])
             try:
-                res = scipy.optimize.minimize(fun, jac=True, x0=x0/scale, method=method)
+                res = scipy.optimize.minimize(fun, jac=True, x0=x0 / scale, method=method)
                 if isinstance(res.message, bytes):
                     res.message = res.message.decode()
-                print(res.x*scale, res.fun, res.message, res.jac)
+                print(res.x * scale, res.fun, res.message, res.jac)
                 vals.append((res.success, res.message))
             except Exception as err:
                 print(err)
                 vals.append((False, err))
 
         outcomes = set((mes for _, mes in vals))
-        layers = {outcome:np.zeros(len(scales)) for outcome in outcomes}
+        layers = {outcome: np.zeros(len(scales)) for outcome in outcomes}
         for i, (scale, (succ, outcome)) in enumerate(zip(scales, vals)):
             factor = 1 if succ else -1
             layers[outcome][i] = factor
@@ -91,11 +91,11 @@ def tester(fun_gen, x, x0):
         ax1.set_yscale('log')
         scales = np.array(scales)
         print(layers.keys())
-        colors = ('b', 'r', 'g', 'k','b', 'r', 'g', 'k','b', 'r', 'g', 'k',)
+        colors = ('b', 'r', 'g', 'k', 'b', 'r', 'g', 'k', 'b', 'r', 'g', 'k',)
         plots = list()
         legs = list()
         for color, (mes, layer) in zip(colors, layers.items()):
-            plots.append(ax1.barh(scales, layer, height = scales, color = color))
+            plots.append(ax1.barh(scales, layer, height=scales, color=color))
             legs.append(mes)
         fig.legend(plots, legs, 'lower center')
         fig.subplots_adjust(bottom=.25)
@@ -105,16 +105,15 @@ def tester(fun_gen, x, x0):
         fig.suptitle(method)
 
 
-
-
 def main():
     x = np.arange(-2, 0.00001, .01)
     x0 = 6.
-    #tester(fun_gen_parabola, x, x0)
-    x0=3.
+    # tester(fun_gen_parabola, x, x0)
+    x0 = 3.
     x = np.arange(2, 12, .01)
     tester(fun_gen_lj, x, x0)
     plt.show()
 
-if __name__  == '__main__':
+
+if __name__ == '__main__':
     main()

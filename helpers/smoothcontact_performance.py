@@ -26,6 +26,8 @@
 Uses cProfile and Snakeviz to show in which function the most time is spent
 """
 
+import subprocess
+
 import numpy as np
 from ContactMechanics import FreeFFTElasticHalfSpace
 from SurfaceTopography import make_sphere
@@ -135,7 +137,7 @@ def do_step():
 
     u = result.x
     u.shape = ext_surface.nb_subdomain_grid_pts
-    f = substrate.evaluate_force(u)
+    substrate.evaluate_force(u)
     converged = result.success
     assert converged
 
@@ -154,8 +156,6 @@ do_step()
 
 # then call snakeviz profile_out.<rank> to get the see the performance analysis
 
-import subprocess
-
 subprocess.call("snakeviz {}".format(
     "profile_out_{}procs.{}".format(comm.Get_size(), comm.Get_rank())),
-                shell=True)
+    shell=True)

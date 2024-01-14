@@ -26,8 +26,9 @@
 
 import time
 
-starttime=time.time()
 import numpy as np
+import matplotlib.pyplot as plt
+
 from ContactMechanics import FreeFFTElasticHalfSpace
 from SurfaceTopography import make_sphere
 
@@ -41,6 +42,8 @@ from NuMPI import MPI
 
 import sys
 
+starttime = time.time()
+
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 
@@ -49,11 +52,9 @@ try:
 except Exception:
     n = 128
 
-import matplotlib.pyplot as plt
-
 fig, (axt, axit) = plt.subplots(2, 1, sharex=True)
 
-for n in [128,256,512]:
+for n in [128, 256, 512]:
     # sphere radius:
     r_s = 10.0
     # contact radius
@@ -61,7 +62,7 @@ for n in [128,256,512]:
     # peak pressure
     p_0 = 2.5
     # equivalent Young's modulus
-    E_s = 102.#102.
+    E_s = 102.  # 102.
     # work of adhesion
     w = 1.0
     # tolerance for optimizer
@@ -72,20 +73,19 @@ for n in [128,256,512]:
     nx, ny = n, n
     sx = 21.0
 
-    z0 = 0.05 # needed to get small tolerance, but very very slow
+    z0 = 0.05  # needed to get small tolerance, but very very slow
 
-    fftengine = PFFTEngine((2*nx, 2*ny), comm=comm)
+    fftengine = PFFTEngine((2 * nx, 2 * ny), comm=comm)
     pnp = Reduction(comm=comm)
 
     # the "Min" part of the potential (linear for small z) is needed for the LBFGS without bounds
-    inter = VDW82smoothMin(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2, gamma=w, pnp = pnp)
+    inter = VDW82smoothMin(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2, gamma=w, pnp=pnp)
 
     # Parallel SurfaceTopography Patch
 
-    substrate = FreeFFTElasticHalfSpace((nx,ny), young=E_s, physical_sizes=(sx, sx), fft=fftengine, pnp=pnp)
-    #print(substrate._comp_nb_grid_pts)
-    #print(fftengine.nb_domain_grid_pts)
-
+    substrate = FreeFFTElasticHalfSpace((nx, ny), young=E_s, physical_sizes=(sx, sx), fft=fftengine, pnp=pnp)
+    # print(substrate._comp_nb_grid_pts)
+    # print(fftengine.nb_domain_grid_pts)
 
     surface = make_sphere(radius=r_s, nb_grid_pts=(nx, ny), physical_sizes=(sx, sx),
                           subdomain_locations=substrate.topography_subdomain_locations,
@@ -111,26 +111,24 @@ for n in [128,256,512]:
     nits = [None] * len(maxcors)
 
     for i, maxcor in enumerate(maxcors):
-        starttime =time.time()
-        result = LBFGS(system.objective(penetration, gradient=True), disp0, jac=True, pnp=pnp, maxcor=maxcor, gtol=1e-6 * abs(w/z0))
+        starttime = time.time()
+        result = LBFGS(system.objective(penetration, gradient=True), disp0, jac=True, pnp=pnp, maxcor=maxcor,
+                       gtol=1e-6 * abs(w / z0))
         times[i] = time.time() - starttime
-        nits[i]=result.nit
-        #result = system.minimize_proxy(offsets[i], disp0=None,method = LBFGS,options=dict(gtol = 1e-3, maxiter =100,maxls=10))
+        nits[i] = result.nit
+        # result = system.minimize_proxy(offsets[i], disp0=None,method = LBFGS,
+        # options=dict(gtol = 1e-3, maxiter =100,maxls=10))
         print(result.nit)
         print(times[i])
         converged = result.success
         assert converged
 
-
     if rank == 0:
-
         axt.plot(maxcors, times, label="n={}".format(n))
         axit.plot(maxcors, nits, label="n={}".format(n))
-
 
 axit.set_xlabel("# gradients stored (-)")
 axt.set_ylabel("execution time (s)")
 axit.set_ylabel("# of iterations")
 axt.legend()
 fig.savefig("influence_maxcor.png")
-
