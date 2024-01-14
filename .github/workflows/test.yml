@@ -53,12 +53,12 @@ jobs:
             export NETCDF4_DIR=/usr/lib/x86_64-linux-gnu/netcdf/pnetcdf
             export CC=mpicc
             python3 -m pip install -v --no-binary mpi4py mpi4py==${{ matrix.mpi4py-version }}
-            python3 -m pip install -v cython
-            python3 -m pip install -v --no-build-isolation --no-binary netCDF4 netCDF4==${{ matrix.netcdf4-python-version }}
-            python3 -m pip install -v --no-binary muSpectre muSpectre==${{ matrix.muspectre-version }}
           else
             sudo apt-get install libhdf5-dev libnetcdf-dev
           fi
+          python3 -m pip install -v cython
+          python3 -m pip install -v --no-build-isolation --no-binary netCDF4 netCDF4==${{ matrix.netcdf4-python-version }}
+          python3 -m pip install -v --no-binary muSpectre muSpectre==${{ matrix.muspectre-version }}
           python3 -m pip install -v .[test]
           # Check that NetCDF install was not overriden
           python3 .check_netcdf_capabilities.py ${{ matrix.mpi }}
