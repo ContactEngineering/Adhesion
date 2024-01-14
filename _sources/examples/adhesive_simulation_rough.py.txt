@@ -21,9 +21,11 @@
 
 # %%
 from SurfaceTopography import read_published_container
-import Adhesion  # noqa: F401 required to register the "make_system" function
+import Adhesion # required to register the "make_system" function
+from Adhesion.Interactions import Exponential
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 
 from matplotlib.colors import LinearSegmentedColormap
 
@@ -43,14 +45,14 @@ t.rms_gradient()
 t.rms_height_from_area()
 
 # %%
-1 / t.rms_curvature_from_area()
+1/t.rms_curvature_from_area()
 
 # %%
-Es = 25e6  # N / m2
-challenge_wint = 0.05  # mJ / m2
-challenge_rho = 2.071e-9  # interaction_range in the contact challenge
+Es = 25e6 # N / m2
+challenge_wint = 0.05 # mJ / m2
+challenge_rho = 2.071e-9 # interaction_range in the contact challenge
 # External load 250 kPa
-challenge_external_pressure = 250e3  # Pa
+challenge_external_pressure = 250e3 # Pa
 
 # %% [markdown]
 # ## Defining meaningful numerical tolerances
@@ -82,16 +84,16 @@ penetration_tol = 1e-3 * t.rms_gradient() * t.pixel_size[0]
 nonadhesive_system = t.make_contact_system(interaction="hardwall", young=Es)
 
 # %%
-sol = nonadhesive_system.minimize_proxy(external_force=np.prod(t.physical_sizes)
-                                                       * challenge_external_pressure, pentol=penetration_tol)
+sol = nonadhesive_system.minimize_proxy(external_force=np.prod(t.physical_sizes) 
+                                        * challenge_external_pressure, pentol=penetration_tol)
 
 # %%
 nonadhesive_offset = sol.offset
 
 # %%
-fig, ax = plt.subplots()
-cmap = LinearSegmentedColormap.from_list('contactcmap', ((1, 1, 1, 0.), "black"), N=256)
-ax.matshow(nonadhesive_system.contact_zone.T, cmap=cmap)
+fig,ax=plt.subplots()
+cmap = LinearSegmentedColormap.from_list('contactcmap', ((1,1,1,0.), "black"), N=256)
+ax.matshow(nonadhesive_system.contact_zone.T, cmap = cmap)
 ax.grid(False)
 
 # %% [markdown]
@@ -102,7 +104,7 @@ from Adhesion.Interactions import Exponential
 from Adhesion.System import BoundedSmoothContactSystem
 
 # %%
-interaction = Exponential(gamma0=challenge_wint, rho=challenge_rho * 30)
+interaction=Exponential(gamma0=challenge_wint ,rho=challenge_rho*30)
 
 # %%
 w = -interaction.evaluate(0)[0]
@@ -140,6 +142,7 @@ print(
 # %%
 rho = interaction.rho
 
+
 print("P&R stickiness criterion: "
       "{}".format(t.rms_gradient() * Es * rho / 2 / w *
                   (t.rms_gradient() ** 2 / t.rms_curvature_from_area() / rho)
@@ -162,7 +165,7 @@ print("rms_height / interaction_length: "
 # [Monti Sanner and Pastewka 2021](https://doi.org/10.1007/s11249-021-01454-6)
 
 # %%
-g0 = 16 / 3 * t.rms_gradient() ** 2 / t.rms_curvature_from_area()
+g0 = 16 /3 * t.rms_gradient()**2 / t.rms_curvature_from_area()
 
 # %%
 g0
@@ -207,9 +210,9 @@ interaction.rho ** 2 * 8 / 3 / np.pi * Es / w / dx
 # $\mu_{rho}$
 
 # %%
-np.sqrt(- interaction.evaluate(0, True, True, True)[-1]  # min curvature for the exponential interaction
-        / Es * dx
-        )
+np.sqrt(- interaction.evaluate(0, True, True, True)[-1] # min curvature for the exponential interaction
+                 / Es * dx
+                )
 
 # %% [markdown]
 # should be smaller than 0.5
@@ -221,26 +224,26 @@ np.sqrt(- interaction.evaluate(0, True, True, True)[-1]  # min curvature for the
 system = t.make_contact_system(interaction=interaction, young=Es, system_class=BoundedSmoothContactSystem)
 
 # %%
-sol = system.minimize_proxy(
-    offset=nonadhesive_offset,
-    # tol=pixel_force_tol,
-    lbounds="auto",
-    options=dict(
-        ftol=0,
-        gtol=pixel_force_tol,
-        maxcor=3,
-        maxiter=1000,
-    )
-)
+sol=system.minimize_proxy(
+               offset=nonadhesive_offset, 
+               # tol=pixel_force_tol, 
+               lbounds="auto",
+                options=dict(
+                    ftol=0,
+                    gtol=pixel_force_tol,
+                    maxcor=3,
+                    maxiter=1000,
+                    )
+                         )
 assert sol.success
 
 # %%
-fig, ax = plt.subplots(figsize=(10, 10))
+fig,ax=plt.subplots(figsize=(10, 10))
 color = "red"
-cmap = LinearSegmentedColormap.from_list('contactcmap', ((1, 1, 1, 0.), color), N=256)
-ax.matshow(system.contact_zone.T, cmap=cmap)
-cmap = LinearSegmentedColormap.from_list('contactcmap', ((1, 1, 1, 0.), "black"), N=256)
-ax.matshow(nonadhesive_system.contact_zone.T, cmap=cmap)
+cmap = LinearSegmentedColormap.from_list('contactcmap', ((1,1,1,0.), color), N=256)
+ax.matshow(system.contact_zone.T, cmap = cmap)
+cmap = LinearSegmentedColormap.from_list('contactcmap', ((1,1,1,0.), "black"), N=256)
+ax.matshow(nonadhesive_system.contact_zone.T, cmap = cmap)
 
 ax.grid(False)
 
@@ -253,8 +256,8 @@ fig
 # Gaps
 
 # %%
-fig, ax = plt.subplots()
-plt.colorbar(ax.matshow(system.gap[:128, :128].T / interaction.rho), label=r"$g/\rho$")
+fig,ax=plt.subplots()
+plt.colorbar(ax.matshow(system.gap[:128,:128].T / interaction.rho), label=r"$g/\rho$")
 ax.set_xlim(0, 128)
 ax.set_ylim(0, 128)
 

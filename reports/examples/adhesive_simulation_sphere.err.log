@@ -30,8 +30,8 @@ nbclient.exceptions.CellTimeoutError: A cell timed out while it was being execut
 The message was: Cell execution timed out.
 Here is a preview of the cell contents:
 -------------------
-['# create outputfile', 'ncfilename = "sphere_simulation_hardwall_cubic.nc"', 'nc = NCStructuredGrid(ncfilename, "w", nb_domain_grid_pts=t.nb_grid_pts)', '', 'disp0 = None']
+['# create outputfile', 'ncfilename="sphere_simulation_hardwall_cubic.nc"', 'nc = NCStructuredGrid(ncfilename, "w", nb_domain_grid_pts=t.nb_grid_pts)', '', 'disp0=None']
 ...
-['        break', '    penetration_prev = penetration', '', '    i += 1', 'nc.close()']
+['        break ', '    penetration_prev = penetration', '    ', '    i+=1', 'nc.close()']
 -------------------
 

@@ -21,6 +21,7 @@
 
 # %%
 import numpy as np
+import pytest
 
 from SurfaceTopography import make_sphere
 from Adhesion.Interactions import Exponential, Lj82
@@ -64,7 +65,6 @@ assert sol.success
 
 # %%
 import matplotlib.pyplot as plt
-
 fig, ax = plt.subplots()
 
 # plt.colorbar(ax.contourf(

@@ -16,6 +16,7 @@ Traceback (most recent call last):
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
 import numpy as np
+import pytest
 
 from SurfaceTopography import make_sphere
 from Adhesion.Interactions import Exponential, Lj82
@@ -27,12 +28,11 @@ from Adhesion.System import SmoothContactSystem, BoundedSmoothContactSystem
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
-Cell [0;32mIn[2], line 5[0m
-[1;32m      3[0m [38;5;28;01mfrom[39;00m [38;5;21;01mSurfaceTopography[39;00m [38;5;28;01mimport[39;00m make_sphere
-[1;32m      4[0m [38;5;28;01mfrom[39;00m [38;5;21;01mAdhesion[39;00m[38;5;21;01m.[39;00m[38;5;21;01mInteractions[39;00m [38;5;28;01mimport[39;00m Exponential, Lj82
-[0;32m----> 5[0m [38;5;28;01mfrom[39;00m [38;5;21;01mAdhesion[39;00m[38;5;21;01m.[39;00m[38;5;21;01mInteractions[39;00m[38;5;21;01m.[39;00m[38;5;21;01mcutoffs[39;00m [38;5;28;01mimport[39;00m LinearCorePotential
-[1;32m      6[0m [38;5;28;01mfrom[39;00m [38;5;21;01mContactMechanics[39;00m [38;5;28;01mimport[39;00m (FreeFFTElasticHalfSpace)
-[1;32m      7[0m [38;5;28;01mfrom[39;00m [38;5;21;01mAdhesion[39;00m[38;5;21;01m.[39;00m[38;5;21;01mSystem[39;00m [38;5;28;01mimport[39;00m SmoothContactSystem, BoundedSmoothContactSystem
+Cell [0;32mIn[2], line 2[0m
+[1;32m      1[0m [38;5;28;01mimport[39;00m [38;5;21;01mnumpy[39;00m [38;5;28;01mas[39;00m [38;5;21;01mnp[39;00m
+[0;32m----> 2[0m [38;5;28;01mimport[39;00m [38;5;21;01mpytest[39;00m
+[1;32m      4[0m [38;5;28;01mfrom[39;00m [38;5;21;01mSurfaceTopography[39;00m [38;5;28;01mimport[39;00m make_sphere
+[1;32m      5[0m [38;5;28;01mfrom[39;00m [38;5;21;01mAdhesion[39;00m[38;5;21;01m.[39;00m[38;5;21;01mInteractions[39;00m [38;5;28;01mimport[39;00m Exponential, Lj82
 
-[0;31mModuleNotFoundError[0m: No module named 'Adhesion.Interactions.cutoffs'
+[0;31mModuleNotFoundError[0m: No module named 'pytest'
 

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&lt;no title&gt; &mdash; Adhesion 0.91.0.dev106+g6a54b7e8 documentation</title>
+  <title>&lt;no title&gt; &mdash; Adhesion 0.91.0.dev107+g79b0715d documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -37,7 +37,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev106+g6a54b7e8
+                0.91.0.dev107+g79b0715d
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -110,15 +110,18 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SurfaceTopography.Generation</span> <span class="kn">import</span> <span class="n">fourier_synthesis</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.testing.exceptions</span>
+<span class="kn">from</span> <span class="nn">SurfaceTopography.Generation</span> <span class="kn">import</span> <span class="n">fourier_synthesis</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
 <span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">RepulsiveExponential</span>
-<span class="kn">from</span> <span class="nn">ContactMechanics</span> <span class="kn">import</span> <span class="n">PeriodicFFTElasticHalfSpace</span>
-<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">SmoothContactSystem</span>
+<span class="kn">from</span> <span class="nn">ContactMechanics</span> <span class="kn">import</span> <span class="n">FreeFFTElasticHalfSpace</span><span class="p">,</span> <span class="n">PeriodicFFTElasticHalfSpace</span>
+<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">BoundedSmoothContactSystem</span><span class="p">,</span> <span class="n">SmoothContactSystem</span>
 <span class="kn">import</span> <span class="nn">scipy.interpolate</span>
 <span class="kn">import</span> <span class="nn">muFFT</span>
 <span class="kn">from</span> <span class="nn">ContactMechanics.Tools.Logger</span> <span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
