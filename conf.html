@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&lt;no title&gt; &mdash; Adhesion 0.91.0.dev101+g02991674 documentation</title>
+  <title>&lt;no title&gt; &mdash; Adhesion 0.91.0.dev101+g6b57ccb2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -37,7 +37,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev101+g02991674
+                0.91.0.dev101+g6b57ccb2
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -109,6 +109,7 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">Adhesion</span>
+
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="s1">&#39;../..&#39;</span><span class="p">))</span>
 
 <span class="c1"># -- General configuration ------------------------------------------------</span>
@@ -127,8 +128,6 @@
               <span class="s1">&#39;sphinx.ext.autosummary&#39;</span><span class="p">,</span>
               <span class="s2">&quot;myst_nb&quot;</span>
               <span class="p">]</span>
-
-
 
 <span class="c1"># Add any paths that contain templates here, relative to this directory.</span>
 <span class="n">templates_path</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;_templates&#39;</span><span class="p">]</span>
@@ -175,7 +174,6 @@
 <span class="c1"># If true, `todo` and `todoList` produce output, else they produce nothing.</span>
 <span class="n">todo_include_todos</span> <span class="o">=</span> <span class="kc">False</span>
 
-
 <span class="c1"># -- Options for HTML output ----------------------------------------------</span>
 
 <span class="c1"># The theme to use for HTML and HTML Help pages.  See the documentation for</span>
@@ -199,19 +197,18 @@
 <span class="c1">#</span>
 <span class="c1"># This is required for the alabaster theme</span>
 <span class="c1"># refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars</span>
-<span class="c1">#html_sidebars = {</span>
+<span class="c1"># html_sidebars = {</span>
 <span class="c1">#    &#39;**&#39;: [</span>
 <span class="c1">#        &#39;relations.html&#39;,  # needs &#39;show_related&#39;: True theme option to display</span>
 <span class="c1">#        &#39;searchbox.html&#39;,</span>
 <span class="c1">#    ]</span>
-<span class="c1">#}</span>
+<span class="c1"># }</span>
 
 
 <span class="c1"># -- Options for HTMLHelp output ------------------------------------------</span>
 
 <span class="c1"># Output file base name for HTML help builder.</span>
 <span class="n">htmlhelp_basename</span> <span class="o">=</span> <span class="s1">&#39;Adhesiondoc&#39;</span>
-
 
 <span class="c1"># -- Options for LaTeX output ---------------------------------------------</span>
 
@@ -241,7 +238,6 @@
      <span class="s1">&#39;Pastewka&#39;</span><span class="p">,</span> <span class="s1">&#39;manual&#39;</span><span class="p">),</span>
 <span class="p">]</span>
 
-
 <span class="c1"># -- Options for manual page output ---------------------------------------</span>
 
 <span class="c1"># One entry per manual page. List of tuples</span>
@@ -250,7 +246,6 @@
     <span class="p">(</span><span class="n">master_doc</span><span class="p">,</span> <span class="s1">&#39;Adhesion&#39;</span><span class="p">,</span> <span class="s1">&#39;Adhesion Documentation&#39;</span><span class="p">,</span>
      <span class="n">authors</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="p">]</span>
-
 
 <span class="c1"># -- Options for Texinfo output -------------------------------------------</span>
 
@@ -269,7 +264,6 @@
 <span class="n">nb_custom_formats</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;.py&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;jupytext.reads&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;fmt&quot;</span><span class="p">:</span> <span class="s2">&quot;py:percent&quot;</span><span class="p">}],</span>
 <span class="p">}</span>
-
 
 <span class="n">nb_execution_timeout</span> <span class="o">=</span> <span class="mi">240</span>
 </pre></div>
