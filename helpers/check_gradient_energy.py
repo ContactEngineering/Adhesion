@@ -1,13 +1,8 @@
 from SurfaceTopography import make_sphere
-from SurfaceTopography.Generation import fourier_synthesis
 import Adhesion.Interactions as Inter
 from Adhesion.System import SmoothContactSystem
 import ContactMechanics as Solid
 import numpy as np
-
-
-
-
 
 nx = 32
 
@@ -27,8 +22,8 @@ system = SmoothContactSystem(substrate=substrate, surface=topography,
 
 
 def check_fun_grad_consistency(fun,
-        x0 , dx=None,
-        hs=np.array([1e1, 1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5,1e-6, 1e-7])):
+                               x0, dx=None,
+                               hs=np.array([1e1, 1, 1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7])):
     """
     Tests the consistency between the function and its gradient values.
 
@@ -42,27 +37,27 @@ def check_fun_grad_consistency(fun,
     obj = fun
 
     x = x0
-    if dx is None: 
+    if dx is None:
         dx = 1 * (0.5 + np.random.random(size=(x0.shape)))
-    dx *= np.linalg.norm(dx) # make it a unit vector 
+    dx *= np.linalg.norm(dx)  # make it a unit vector
 
-    en, grad = obj(x)  
+    en, grad = obj(x)
 
     taylor = []
 
     for h in hs:
         _en, _grad = obj(x + h * dx)
         _taylor = _en - en - np.sum(grad * h * dx)
-        _taylor = _taylor/h**2
-        if not taylor :
+        _taylor = _taylor / h ** 2
+        if not taylor:
             _max_taylor = _taylor
-            lower_bnd = _max_taylor/10
-            upper_bnd = _max_taylor*10
+            lower_bnd = _max_taylor / 10
+            upper_bnd = _max_taylor * 10
         taylor.append(_taylor)
-        np.testing.assert_array_less(lower_bnd,_taylor,err_msg='lower bound not met.')
-        np.testing.assert_array_less(_taylor,upper_bnd,err_msg='upper bound not met.')
+        np.testing.assert_array_less(lower_bnd, _taylor, err_msg='lower bound not met.')
+        np.testing.assert_array_less(_taylor, upper_bnd, err_msg='upper bound not met.')
 
-    if True :
+    if True:
         # Visualize the quadratic convergence of the taylor expansion
         # What to expect:
         # Taylor expansion: g(x + h ∆x) - g(x) = Hessian * h * ∆x + O(h^2)
@@ -80,7 +75,7 @@ def check_fun_grad_consistency(fun,
 obj_float = system.objective_k_float(0, True, True)
 obj_real = system.objective(0, True, True)
 
-x = np.random.uniform(size=nx) 
+x = np.random.uniform(size=nx)
 # dx = np.zeros(nx)
 # dx[8]=1
 

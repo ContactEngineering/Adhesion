@@ -51,7 +51,7 @@ dV_t = Symbol('dV_t', real=True)
 ddV_t = Symbol('ddV_t', real=True)
 ddV_m = Symbol('ddV_M', real=True)
 
-fun = c0 - c1*dr - c2/2*dr**2 - c3/3*dr**3 - c4/4*dr**4
+fun = c0 - c1 * dr - c2 / 2 * dr ** 2 - c3 / 3 * dr ** 3 - c4 / 4 * dr ** 4
 dfun = sympy.diff(fun, dr)
 ddfun = sympy.diff(dfun, dr)
 print("Spline:")
@@ -71,17 +71,18 @@ bnds[5] = ddfun.subs(dr, dr_c)
 
 stored_bnds = deepcopy(bnds)
 
+
 def pbnd(boundaries):
     print("\n")
     for key, bnd in boundaries.items():
         print("Boundary condition {}:".format(key))
         pprint(bnd)
 
+
 # assuming the origin for Δr is at the cutoff (Δrc):
 bnds[3] = bnds[3].subs(dr_c, 0.)  # everything is zero at r_cut
 bnds[4] = bnds[4].subs(dr_c, 0.)  # everything is zero at r_cut
 bnds[5] = bnds[5].subs(dr_c, 0.)  # everything is zero at r_cut
-
 
 print()
 print('#####################################')
@@ -123,12 +124,10 @@ pprint(dγfun)
 guess_γfun = γfun.subs({"dV_t": 0, "ddV_t": ddV_m})
 guess_sol = sympy.solve(guess_γfun, dr_t)[0]
 
-
 print('\ninitial guess: note that you need to evaluate the curvature at r_min '
       'for the square root te be guaranteed to be real (i.e, than the '
       'curvature and γ have the same sign')
 pprint(guess_sol)
-
 
 print()
 print("for usage in code:")
@@ -137,7 +136,6 @@ print("\nobjective_fun: ", γfun)
 print("\nobjective_derivative: ", dγfun)
 print("\ninitial guess for Δr_t: ", guess_sol)
 print("\nsol for Δr_m: ", sol_drm)
-
 
 print()
 print('#####################################')
@@ -162,10 +160,10 @@ print("∂(Δrt)/∂(ddV_t) at zero :")
 dΔrt_0 = sympy.limit(dΔrt, ddV_t, 0)
 pprint(dΔrt_0)
 print("∂(Δrt)/∂(ddV_t) at zero with substitution:")
-a = Symbol('a', positive = True)
-b = Symbol('b', positive = True)
-subs = {dV_t: a/3, dgam:b/-12}
-resubs = {a:3*dV_t, b:-12*dgam}
+a = Symbol('a', positive=True)
+b = Symbol('b', positive=True)
+subs = {dV_t: a / 3, dgam: b / -12}
+resubs = {a: 3 * dV_t, b: -12 * dgam}
 sub_ddrt = dΔrt.subs(subs)
 subdΔrt_0 = sympy.limit(sub_ddrt, ddV_t, 0)
 pprint(subdΔrt_0)
@@ -196,4 +194,3 @@ pprint(bnd6_sol)
 print('substituted polynomial')
 polynomial = sympy.simplify(fun.subs(coeff_sol))
 pprint(polynomial)
-

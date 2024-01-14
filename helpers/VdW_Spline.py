@@ -42,24 +42,22 @@ hama = Symbol('A', positive=True)
 dV_t = Symbol('dV_t', real=True)
 ddV_t = Symbol('ddV_t', real=True)
 
-
-vdw = -hama/(12*r**2*sympy.pi)+c_sr/r**8
+vdw = -hama / (12 * r ** 2 * sympy.pi) + c_sr / r ** 8
 dvdw = sympy.diff(vdw, r)
 ddvdw = sympy.diff(dvdw, r)
 
-
-radicant = -12 * dgam * ddV_t + 9 * dV_t**2
+radicant = -12 * dgam * ddV_t + 9 * dV_t ** 2
 print('radicant')
 pprint(radicant)
 
 print("radicant for van der Waals")
-vdw_radicant = radicant.subs({dgam: vdw, dV_t:dvdw, ddV_t:ddvdw})
+vdw_radicant = radicant.subs({dgam: vdw, dV_t: dvdw, ddV_t: ddvdw})
 pprint(vdw_radicant)
 
-#boundaries of validity
+# boundaries of validity
 print("Roots of radicant")
 sol_radicant = sympy.solve(vdw_radicant, r)
 for sol in sol_radicant:
     pprint(sol)
     print('is positive: {}'.format(sol.is_positive))
-#pprint(sol_radicant)
+# pprint(sol_radicant)

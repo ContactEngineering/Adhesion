@@ -36,7 +36,7 @@ from Adhesion import LJ93smoothMin as LJ_pot
 from ContactMechanics import FreeFFTElasticHalfSpace as Substrate
 
 plt.ion()
-for base_res in (64, ):#128, 256, 512, 1024):
+for base_res in (64,):  # 128, 256, 512, 1024):
     res = (base_res, base_res)
     base_size = 128.
     size = (base_size, base_size)
@@ -44,17 +44,17 @@ for base_res in (64, ):#128, 256, 512, 1024):
 
     substrate = Substrate(res, young, size)
 
-    radius = size[0]/10
+    radius = size[0] / 10
     surface = make_sphere(radius, res, size, standoff=float('inf'))
 
-    sigma = radius/10
-    for factor in (.01, .1):#, 1.):
-        epsilon = sigma * young*factor
+    sigma = radius / 10
+    for factor in (.01, .1):  # , 1.):
+        epsilon = sigma * young * factor
         pot = LJ_pot(epsilon, sigma)
         system = make_system(substrate=substrate, interaction=pot, surface=surface)
         percent_min = .8
         offset = pot.r_min
-        step = pot.r_min*.01
+        step = pot.r_min * .01
         pullof_forces = list()
         offsets = list()
         contact_area = list()
@@ -66,7 +66,7 @@ for base_res in (64, ):#128, 256, 512, 1024):
             force = system.compute_normal_force()
             contact_area.append(system.compute_nb_contact_pts(disp, offset))
             print("force = {}".format(force))
-            pullof_forces.append(force/epsilon)
+            pullof_forces.append(force / epsilon)
             offset += step
             offsets.append(offset)
 

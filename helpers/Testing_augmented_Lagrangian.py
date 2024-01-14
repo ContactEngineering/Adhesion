@@ -39,6 +39,7 @@ import os
 import numpy as np
 
 import scipy.optimize
+
 sys.path.append(os.path.join(os.getcwd(), "../PyCo/Tools/"))
 from AugmentedLagrangian import augmented_lagrangian
 
@@ -63,16 +64,19 @@ from AugmentedLagrangian import augmented_lagrangian
 # In[11]:
 
 def fun(x):
-    return (x[0]**2 + x[1]**2 - 1) - x[0]
+    return (x[0] ** 2 + x[1] ** 2 - 1) - x[0]
+
+
 def constraint(x):
-    return x[0]**2 + x[1]**2 - 1
+    return x[0] ** 2 + x[1] ** 2 - 1
+
+
 tol = 1.e-2
 result = scipy.optimize.minimize(fun, x0=np.array((-1, .1)),
-       	                         constraints={'type':'eq','fun':constraint},
-	                         method=augmented_lagrangian, tol=tol,
-	                         options={'multiplier0': np.array((0.)),
+                                 constraints={'type': 'eq', 'fun': constraint},
+                                 method=augmented_lagrangian, tol=tol,
+                                 options={'multiplier0': np.array((0.)),
                                           'disp': True,
                                           'store_iterates': 'iterate'})
 
 print(result)
-

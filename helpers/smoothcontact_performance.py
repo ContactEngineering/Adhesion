@@ -158,4 +158,4 @@ import subprocess
 
 subprocess.call("snakeviz {}".format(
     "profile_out_{}procs.{}".format(comm.Get_size(), comm.Get_rank())),
-                shell=True)
+    shell=True)

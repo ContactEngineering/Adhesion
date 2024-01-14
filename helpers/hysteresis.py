@@ -35,17 +35,16 @@ from SurfaceTopography import make_sphere
 from Adhesion import VDW82smoothMin as VdwPot
 from ContactMechanics import FreeFFTElasticHalfSpace as Substrate
 
-
 plt.ion()
 
 E_silicon = 166e9
 nu_silicon = .17
 E_diamond = 1220e9
 nu_diamond = .2
-young = 1./((1-nu_silicon**2)/E_silicon+(1-nu_diamond**2)/E_diamond)
+young = 1. / ((1 - nu_silicon ** 2) / E_silicon + (1 - nu_diamond ** 2) / E_diamond)
 
 radius = 40e-9
-base_size = 2*radius
+base_size = 2 * radius
 size = (base_size, base_size)
 
 c_sr = 2.1e-78
@@ -63,12 +62,13 @@ for base_res in (32, 64, 128, 256, 512):
     surface = make_sphere(radius, res, size, standoff=float('inf'))
     system = make_system(substrate=substrate, interaction=pot, surface=surface)
     offset = pot.cutoff_radius
-    step = pot.r_min*.01
+    step = pot.r_min * .01
     pullof_forces = list()
     offsets = list()
     contact_area = list()
     disp = np.zeros(substrate.nb_domain_grid_pts)
     force = -1.
+
 
     def iterator(initial_offset):
         loc_offset = float(initial_offset)
@@ -82,6 +82,7 @@ for base_res in (32, 64, 128, 256, 512):
         while force < 0.:
             loc_offset += step
             yield loc_offset
+
 
     ax1.set_ylabel("normal force")
     ax2.set_ylabel("contact area", color='r')
@@ -114,8 +115,6 @@ for base_res in (32, 64, 128, 256, 512):
     marker.set_ydata(())
     marker.set_xdata(())
     fig.savefig("fig_{:0>5}.png".format(res[0]))
-
-
 
 plt.ioff()
 plt.show()

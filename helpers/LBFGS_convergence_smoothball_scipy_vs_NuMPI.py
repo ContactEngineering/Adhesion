@@ -31,8 +31,7 @@ import numpy as np
 from ContactMechanics import FreeFFTElasticHalfSpace
 from SurfaceTopography import make_sphere
 
-
-#TODO: update API use
+# TODO: update API use
 from FFTEngine import PFFTEngine
 from NuMPI.Optimization import LBFGS
 from NuMPI.Tools.Reduction import Reduction
@@ -45,11 +44,12 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 pnp = Reduction(comm=comm)
 
+
 class iter_inspector():
     def __init__(self):
         self.neval = 0
         self.energies = []
-        self.maxgradients =[]
+        self.maxgradients = []
 
     def __call__(self, system):
         self.neval += 1
@@ -75,8 +75,7 @@ class decorated_objective:
 
 import matplotlib.pyplot as plt
 
-
-fig, (axEn, axgrad) = plt.subplots(2,1, sharex = True)
+fig, (axEn, axgrad) = plt.subplots(2, 1, sharex=True)
 n = 256
 
 endx = []
@@ -161,10 +160,12 @@ for method, name in zip([LBFGS, "L-BFGS-B"],
 
     axgrad.plot(range(objective_monitor.neval), objective_monitor.maxgradients, label="{}".format(name))
     axEn.plot(range(objective_monitor.neval), (objective_monitor.energies -
-                objective_monitor.energies[-1] )/ (objective_monitor.energies[0] - objective_monitor.energies[-1]),
+                                               objective_monitor.energies[-1]) / (
+                          objective_monitor.energies[0] - objective_monitor.energies[-1]),
               label="{}".format(name))
 
-print("max(|deformation {} - {} |)= {}".format("NuMPI", "Scipy", np.max(abs(endx[0].reshape(-1)-endx[1].reshape(-1)))))
+print(
+    "max(|deformation {} - {} |)= {}".format("NuMPI", "Scipy", np.max(abs(endx[0].reshape(-1) - endx[1].reshape(-1)))))
 print("max(|deformation Scipy|) = {}".format(np.max(abs(endx[-1]))))
 
 axEn.set_xlabel("# of objective evaluations")
