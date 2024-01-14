@@ -28,7 +28,6 @@ import time
 
 import scipy.optimize
 
-starttime = time.time()
 import numpy as np
 from ContactMechanics import FreeFFTElasticHalfSpace
 from SurfaceTopography import make_sphere
@@ -40,6 +39,8 @@ from Adhesion import VDW82smoothMin
 from System import SmoothContactSystem
 
 from NuMPI import MPI
+
+starttime = time.time()
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()

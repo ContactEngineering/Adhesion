@@ -69,7 +69,6 @@ for base_res in (32, 64, 128, 256, 512):
     disp = np.zeros(substrate.nb_domain_grid_pts)
     force = -1.
 
-
     def iterator(initial_offset):
         loc_offset = float(initial_offset)
         yield loc_offset
@@ -82,7 +81,6 @@ for base_res in (32, 64, 128, 256, 512):
         while force < 0.:
             loc_offset += step
             yield loc_offset
-
 
     ax1.set_ylabel("normal force")
     ax2.set_ylabel("contact area", color='r')

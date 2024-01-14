@@ -26,7 +26,6 @@
 
 import time
 
-starttime = time.time()
 import numpy as np
 from ContactMechanics import FreeFFTElasticHalfSpace
 from SurfaceTopography import make_sphere
@@ -40,6 +39,8 @@ from System import SmoothContactSystem
 from NuMPI import MPI
 
 import sys
+
+starttime = time.time()
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()

@@ -35,6 +35,8 @@ import numpy as np
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from SurfaceTopography.Generation import fourier_synthesis
 
+from muFFT import PFFTEngine
+
 # TODO: this file uses deprecated API and is broken
 from NuMPI.Optimization import LBFGS
 from NuMPI.Tools.Reduction import Reduction

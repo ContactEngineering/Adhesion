@@ -40,6 +40,8 @@ from System import SmoothContactSystem
 
 from NuMPI import MPI
 
+import matplotlib.pyplot as plt
+
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 pnp = Reduction(comm=comm)
@@ -72,8 +74,6 @@ class decorated_objective:
         self.maxgradients.append(pnp.max(abs(system.force)))
         return val
 
-
-import matplotlib.pyplot as plt
 
 fig, (axEn, axgrad) = plt.subplots(2, 1, sharex=True)
 n = 256
@@ -161,7 +161,7 @@ for method, name in zip([LBFGS, "L-BFGS-B"],
     axgrad.plot(range(objective_monitor.neval), objective_monitor.maxgradients, label="{}".format(name))
     axEn.plot(range(objective_monitor.neval), (objective_monitor.energies -
                                                objective_monitor.energies[-1]) / (
-                          objective_monitor.energies[0] - objective_monitor.energies[-1]),
+                      objective_monitor.energies[0] - objective_monitor.energies[-1]),
               label="{}".format(name))
 
 print(

@@ -56,11 +56,6 @@ def fun_gen_lj(scale):
     return objective
 
 
-def fun_gen_substrate(scale):
-    pot = lj(epsilon=1., sigma=5, gamma=10)
-    x
-
-
 def tester(fun_gen, x, x0):
     for method in ("CG", 'bfgs', 'l-bfgs-b'):
         scales = list()

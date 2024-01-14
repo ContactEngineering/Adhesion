@@ -26,11 +26,13 @@
 
 # coding: utf-8
 
-## Testing the Augmented Lagrangian of Adhesion
+# Testing the Augmented Lagrangian of Adhesion
 
-# The implementation of the augmented Lagrangian in Tools follows closely the description of the `LANCELOT` algorithm described in Bierlaire (2006)
+# The implementation of the augmented Lagrangian in Tools follows closely the description of the `LANCELOT` algorithm
+# described in Bierlaire (2006)
 
-# The function `augmented_lagrangian` has the form of custom minimizer for [scipy.optimize.minimize](http://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.optimize.minimize.html)
+# The function `augmented_lagrangian` has the form of custom minimizer for
+# [scipy.optimize.minimize](http://docs.scipy.org/doc/scipy-0.14.0/reference/generated/scipy.optimize.minimize.html)
 
 # In[4]:
 
@@ -40,7 +42,6 @@ import numpy as np
 
 import scipy.optimize
 
-sys.path.append(os.path.join(os.getcwd(), "../PyCo/Tools/"))
 from AugmentedLagrangian import augmented_lagrangian
 
 
