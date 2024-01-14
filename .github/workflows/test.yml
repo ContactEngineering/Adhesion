@@ -58,6 +58,8 @@ jobs:
           fi
           python3 -m pip install -v cython
           python3 -m pip install -v --no-build-isolation --no-binary netCDF4 netCDF4==${{ matrix.netcdf4-python-version }}
+          # We need to force compilation of muSpectre; otherwise it will download a binary wheel which has no FFTW
+          # support, but we need this for the half-complex tests
           python3 -m pip install -v --no-binary muSpectre muSpectre==${{ matrix.muspectre-version }}
           python3 -m pip install -v .[test]
           # Check that NetCDF install was not overriden
