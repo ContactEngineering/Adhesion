@@ -1,79 +1,37 @@
 Traceback (most recent call last):
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 778, in _async_poll_for_reply
+    msg = await ensure_async(self.kc.shell_channel.get_msg(timeout=new_timeout))
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/jupyter_core/utils/__init__.py", line 198, in ensure_async
+    result = await obj
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/jupyter_client/channels.py", line 315, in get_msg
+    raise Empty
+_queue.Empty
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
   File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
     executenb(
   File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 1305, in execute
     return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
-  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/jupyter_core/utils/__init__.py", line 173, in wrapped
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
     return loop.run_until_complete(inner)
   File "/usr/lib/python3.8/asyncio/base_events.py", line 616, in run_until_complete
     return future.result()
   File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 705, in async_execute
     await self.async_execute_cell(
-  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 1058, in async_execute_cell
-    await self._check_raise_for_error(cell, cell_index, exec_reply)
-  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 914, in _check_raise_for_error
-    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
-nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
-------------------
-system = t.make_contact_system(
-    interaction=interaction,
-    system_class=BoundedSmoothContactSystem,
-    young=Es
-           )
-------------------
-
-
-[0;31m---------------------------------------------------------------------------[0m
-[0;31mAttributeError[0m                            Traceback (most recent call last)
-Cell [0;32mIn[10], line 1[0m
-[0;32m----> 1[0m system [38;5;241m=[39m [43mt[49m[38;5;241;43m.[39;49m[43mmake_contact_system[49m[43m([49m
-[1;32m      2[0m [43m    [49m[43minteraction[49m[38;5;241;43m=[39;49m[43minteraction[49m[43m,[49m
-[1;32m      3[0m [43m    [49m[43msystem_class[49m[38;5;241;43m=[39;49m[43mBoundedSmoothContactSystem[49m[43m,[49m
-[1;32m      4[0m [43m    [49m[43myoung[49m[38;5;241;43m=[39;49m[43mEs[49m
-[1;32m      5[0m [43m           [49m[43m)[49m
-
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/HeightContainer.py:80[0m, in [0;36mAbstractTopography.__getattr__.<locals>.func[0;34m(*args, **kwargs)[0m
-[1;32m     79[0m [38;5;28;01mdef[39;00m [38;5;21mfunc[39m([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs):
-[0;32m---> 80[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_functions[49m[43m[[49m[43mname[49m[43m][49m[43m([49m[38;5;28;43mself[39;49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[43margs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
-
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Support/Bibliography.py:75[0m, in [0;36mdoi.__call__.<locals>.func_with_doi[0;34m(*args, **kwargs)[0m
-[1;32m     73[0m doi[38;5;241m.[39mdois[38;5;241m.[39mupdate([38;5;28mself[39m[38;5;241m.[39m_add_these_dois)
-[1;32m     74[0m doi[38;5;241m.[39m_n [38;5;241m+[39m[38;5;241m=[39m [38;5;241m1[39m
-[0;32m---> 75[0m retvals [38;5;241m=[39m [43mfunc[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
-[1;32m     76[0m doi[38;5;241m.[39m_n [38;5;241m-[39m[38;5;241m=[39m [38;5;241m1[39m
-[1;32m     77[0m [38;5;28;01mif[39;00m doi[38;5;241m.[39m_n [38;5;241m==[39m [38;5;241m0[39m:
-[1;32m     78[0m     [38;5;66;03m# We have reached the point where the original `dois` argument[39;00m
-[1;32m     79[0m     [38;5;66;03m# was passed. Create a new set such that subsequent calls don't[39;00m
-[1;32m     80[0m     [38;5;66;03m# contaminate the bibliography.[39;00m
-
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:75[0m, in [0;36mmake_contact_system[0;34m(topography, *args, **kwargs)[0m
-[1;32m     74[0m [38;5;28;01mdef[39;00m [38;5;21mmake_contact_system[39m(topography, [38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs):
-[0;32m---> 75[0m     [38;5;28;01mreturn[39;00m [43mmake_system[49m[43m([49m[43msurface[49m[38;5;241;43m=[39;49m[43mtopography[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[43margs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
-
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:71[0m, in [0;36mmake_system[0;34m(surface, interaction, substrate, communicator, physical_sizes, system_class, **kwargs)[0m
-[1;32m     68[0m interaction[38;5;241m.[39mreduction [38;5;241m=[39m Reduction(communicator)
-[1;32m     69[0m interaction[38;5;241m.[39mcommunicator [38;5;241m=[39m communicator
-[0;32m---> 71[0m [38;5;28;01mreturn[39;00m [43msystem_class[49m[43m([49m[43msubstrate[49m[43m,[49m[43m [49m[43minteraction[49m[43m,[49m[43m [49m[43msurface[49m[43m)[49m
-
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:63[0m, in [0;36mSmoothContactSystem.__init__[0;34m(self, substrate, interaction, surface)[0m
-[1;32m     60[0m [38;5;28;01mif[39;00m surface[38;5;241m.[39mhas_undefined_data:
-[1;32m     61[0m     [38;5;28;01mraise[39;00m [38;5;167;01mValueError[39;00m([38;5;124m"[39m[38;5;124mThe topography you provided contains undefined [39m[38;5;124m"[39m
-[1;32m     62[0m                      [38;5;124m"[39m[38;5;124mdata[39m[38;5;124m"[39m)
-[0;32m---> 63[0m [38;5;28;43msuper[39;49m[43m([49m[43m)[49m[38;5;241;43m.[39;49m[38;5;21;43m__init__[39;49m[43m([49m[43msubstrate[49m[38;5;241;43m=[39;49m[43msubstrate[49m[43m,[49m[43m [49m[43msurface[49m[38;5;241;43m=[39;49m[43msurface[49m[43m)[49m
-[1;32m     64[0m [38;5;28mself[39m[38;5;241m.[39minteraction [38;5;241m=[39m interaction
-[1;32m     65[0m [38;5;28;01mif[39;00m [38;5;129;01mnot[39;00m compare_containers(surface[38;5;241m.[39mnb_grid_pts, substrate[38;5;241m.[39mnb_grid_pts):
-
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/ContactMechanics/Systems.py:71[0m, in [0;36mSystemBase.__init__[0;34m(self, substrate, surface)[0m
-[1;32m     60[0m [38;5;250m[39m[38;5;124;03m"""[39;00m
-[1;32m     61[0m [38;5;124;03mRepresents a contact problem[39;00m
-[1;32m     62[0m 
-[0;32m   (...)[0m
-[1;32m     68[0m [38;5;124;03m    Defines the profile.[39;00m
-[1;32m     69[0m [38;5;124;03m"""[39;00m
-[1;32m     70[0m [38;5;28mself[39m[38;5;241m.[39msubstrate [38;5;241m=[39m substrate
-[0;32m---> 71[0m [38;5;28mself[39m[38;5;241m.[39marea_per_pt [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43msubstrate[49m[38;5;241;43m.[39;49m[43marea_per_pt[49m
-[1;32m     72[0m [38;5;28mself[39m[38;5;241m.[39msurface [38;5;241m=[39m surface
-[1;32m     73[0m [38;5;28mself[39m[38;5;241m.[39mdim [38;5;241m=[39m [38;5;28;01mNone[39;00m
-
-[0;31mAttributeError[0m: 'NoneType' object has no attribute 'area_per_pt'
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 1001, in async_execute_cell
+    exec_reply = await self.task_poll_for_reply
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 802, in _async_poll_for_reply
+    error_on_timeout_execute_reply = await self._async_handle_timeout(timeout, cell)
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 852, in _async_handle_timeout
+    raise CellTimeoutError.error_from_timeout_and_cell(
+nbclient.exceptions.CellTimeoutError: A cell timed out while it was being executed, after 240 seconds.
+The message was: Cell execution timed out.
+Here is a preview of the cell contents:
+-------------------
+['# create outputfile', 'ncfilename="sphere_simulation_hardwall_cubic.nc"', 'nc = NCStructuredGrid(ncfilename, "w", nb_domain_grid_pts=t.nb_grid_pts)', '', 'disp0=None']
+...
+['        break ', '    penetration_prev = penetration', '    ', '    i+=1', 'nc.close()']
+-------------------
 
