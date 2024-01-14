@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesive Simulation of the contact of a sphere &mdash; Adhesion 0.91.0.dev100+g26c813eb documentation</title>
+  <title>Adhesive Simulation of the contact of a sphere &mdash; Adhesion 0.91.0.dev101+g02991674 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -39,7 +39,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.91.0.dev100+g26c813eb
+                0.91.0.dev101+g02991674
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -434,12 +434,6 @@ of the elastic-force and the adhesive force on each pixel.</p>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.5
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.30000000000000004
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.09999999999999998
-</pre></div>
-</div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
 <span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span> <span class="n">line</span> <span class="mi">12</span>
@@ -579,19 +573,32 @@ of the elastic-force and the adhesive force on each pixel.</p>
 <span class="ne">--&gt; </span><span class="mi">148</span>     <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span>
 <span class="g g-Whitespace">    </span><span class="mi">149</span>         <span class="n">disp</span><span class="p">,</span> <span class="n">pot</span><span class="p">,</span> <span class="n">forces</span><span class="p">)</span>
 
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/ContactMechanics/FFTElasticHalfSpace.py:773,</span> in <span class="ni">PeriodicFFTElasticHalfSpace.evaluate</span><span class="nt">(self, disp, pot, forces)</span>
-<span class="g g-Whitespace">    </span><span class="mi">771</span> <span class="n">force</span> <span class="o">=</span> <span class="n">potential</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="g g-Whitespace">    </span><span class="mi">772</span> <span class="k">if</span> <span class="n">forces</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">773</span>     <span class="n">force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_force</span><span class="p">(</span><span class="n">disp</span><span class="p">)</span>
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/ContactMechanics/FFTElasticHalfSpace.py:775,</span> in <span class="ni">PeriodicFFTElasticHalfSpace.evaluate</span><span class="nt">(self, disp, pot, forces)</span>
+<span class="g g-Whitespace">    </span><span class="mi">773</span>     <span class="n">force</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_force</span><span class="p">(</span><span class="n">disp</span><span class="p">)</span>
 <span class="g g-Whitespace">    </span><span class="mi">774</span>     <span class="k">if</span> <span class="n">pot</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">775</span>         <span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_elastic_energy</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">disp</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">775</span>         <span class="n">potential</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluate_elastic_energy</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">disp</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">776</span> <span class="k">elif</span> <span class="n">pot</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">777</span>     <span class="c1"># kforce = self.evaluate_k_force(disp)</span>
+<span class="g g-Whitespace">    </span><span class="mi">778</span>     <span class="c1"># TODO: OPTIMISATION: here kdisp is computed twice, because it&#39;s</span>
+<span class="g g-Whitespace">    </span><span class="mi">779</span>     <span class="c1">#  needed in kforce</span>
+<span class="g g-Whitespace">    </span><span class="mi">780</span>     <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">disp</span>
 
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/ContactMechanics/FFTElasticHalfSpace.py:535,</span> in <span class="ni">PeriodicFFTElasticHalfSpace.evaluate_force</span><span class="nt">(self, disp)</span>
-<span class="g g-Whitespace">    </span><span class="mi">533</span> <span class="bp">self</span><span class="o">.</span><span class="n">fftengine</span><span class="o">.</span><span class="n">fft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">534</span> <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">surface_stiffness</span>
-<span class="ne">--&gt; </span><span class="mi">535</span> <span class="bp">self</span><span class="o">.</span><span class="n">fftengine</span><span class="o">.</span><span class="n">ifft</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">536</span> <span class="k">return</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()</span><span class="o">.</span><span class="n">real</span> <span class="o">*</span> \
-<span class="g g-Whitespace">    </span><span class="mi">537</span>     <span class="bp">self</span><span class="o">.</span><span class="n">area_per_pt</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">fftengine</span><span class="o">.</span><span class="n">normalisation</span>
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/ContactMechanics/FFTElasticHalfSpace.py:608,</span> in <span class="ni">PeriodicFFTElasticHalfSpace.evaluate_elastic_energy</span><span class="nt">(self, forces, disp)</span>
+<span class="g g-Whitespace">    </span><span class="mi">601</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">602</span><span class="sd"> computes and returns the elastic energy due to forces and displacements</span>
+<span class="g g-Whitespace">    </span><span class="mi">603</span><span class="sd"> Arguments:</span>
+<span class="g g-Whitespace">    </span><span class="mi">604</span><span class="sd"> forces -- array of forces</span>
+<span class="g g-Whitespace">    </span><span class="mi">605</span><span class="sd"> disp   -- array of displacements</span>
+<span class="g g-Whitespace">    </span><span class="mi">606</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">607</span> <span class="c1"># pylint: disable=no-self-use</span>
+<span class="ne">--&gt; </span><span class="mi">608</span> <span class="k">return</span> <span class="mf">.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pnp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">disp</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="o">-</span><span class="n">forces</span><span class="p">))</span>
+
+<span class="nn">File &lt;__array_function__ internals&gt;:200,</span> in <span class="ni">ravel</span><span class="nt">(*args, **kwargs)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/numpy/core/fromnumeric.py:1885,</span> in <span class="ni">ravel</span><span class="nt">(a, order)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1883</span>     <span class="k">return</span> <span class="n">asarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1884</span> <span class="k">else</span><span class="p">:</span>
+<span class="ne">-&gt; </span><span class="mi">1885</span>     <span class="k">return</span> <span class="n">asanyarray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
 
 <span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
