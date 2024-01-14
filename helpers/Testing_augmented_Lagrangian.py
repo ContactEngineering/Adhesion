@@ -36,8 +36,6 @@
 
 # In[4]:
 
-import sys
-import os
 import numpy as np
 
 import scipy.optimize
@@ -45,7 +43,7 @@ import scipy.optimize
 from AugmentedLagrangian import augmented_lagrangian
 
 
-### Book example
+# Book example
 
 # Example 20.5: Minimise the fuction $f(x)$
 # $$\min_{x\in\mathbb{R}^2} 2(x_1^2+x_2^2 -1)-x_1$$

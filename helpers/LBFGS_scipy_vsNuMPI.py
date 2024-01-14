@@ -29,6 +29,8 @@ import time
 import scipy.optimize
 
 import numpy as np
+import matplotlib.pyplot as plt
+
 from ContactMechanics import FreeFFTElasticHalfSpace
 from SurfaceTopography import make_sphere
 
@@ -74,8 +76,6 @@ class decorated_objective:
         self.maxgradients.append(pnp.max(abs(system.force)))
         return val
 
-
-import matplotlib.pyplot as plt
 
 fig, (axt, axit) = plt.subplots(2, 1, sharex=True)
 ns = [128, 256, 512]

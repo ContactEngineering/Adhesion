@@ -27,6 +27,8 @@
 import time
 
 import numpy as np
+import matplotlib.pyplot as plt
+
 from ContactMechanics import FreeFFTElasticHalfSpace
 from SurfaceTopography import make_sphere
 
@@ -49,8 +51,6 @@ try:
     n = int(sys.argv[1])
 except Exception:
     n = 128
-
-import matplotlib.pyplot as plt
 
 fig, (axt, axit) = plt.subplots(2, 1, sharex=True)
 
@@ -116,7 +116,8 @@ for n in [128, 256, 512]:
                        gtol=1e-6 * abs(w / z0))
         times[i] = time.time() - starttime
         nits[i] = result.nit
-        # result = system.minimize_proxy(offsets[i], disp0=None,method = LBFGS,options=dict(gtol = 1e-3, maxiter =100,maxls=10))
+        # result = system.minimize_proxy(offsets[i], disp0=None,method = LBFGS,
+        # options=dict(gtol = 1e-3, maxiter =100,maxls=10))
         print(result.nit)
         print(times[i])
         converged = result.success

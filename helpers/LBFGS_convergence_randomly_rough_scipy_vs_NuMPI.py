@@ -32,6 +32,8 @@ import os
 import scipy.optimize
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from SurfaceTopography.Generation import fourier_synthesis
 
@@ -77,8 +79,6 @@ class decorated_objective:
         self.maxgradients.append(pnp.max(abs(system.force)))
         return val
 
-
-import matplotlib.pyplot as plt
 
 fig, (axEn, axgrad) = plt.subplots(2, 1, sharex=True)
 n = 512
@@ -161,7 +161,7 @@ for method, name in zip(["L-BFGS-B", LBFGS],
 
     axgrad.plot(range(objective_monitor.neval), objective_monitor.maxgradients, label="{}".format(name))
     axEn.plot(range(objective_monitor.neval), (objective_monitor.energies - objective_monitor.energies[-1]) / (
-                objective_monitor.energies[0] - objective_monitor.energies[-1]), label="{}".format(name))
+            objective_monitor.energies[0] - objective_monitor.energies[-1]), label="{}".format(name))
 
 axgrad.legend()
 fig.suptitle("n={}".format(n))

@@ -28,6 +28,8 @@ import os
 import scipy.optimize
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 from ContactMechanics import FreeFFTElasticHalfSpace
 from SurfaceTopography import make_sphere
 
@@ -39,8 +41,6 @@ from Adhesion import VDW82smoothMin
 from System import SmoothContactSystem
 
 from NuMPI import MPI
-
-import matplotlib.pyplot as plt
 
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
