@@ -22,9 +22,9 @@ from Adhesion.Interactions import PowerLaw, Exponential
 
 # %% pycharm={"name": "#%%\n"}
 pot = PowerLaw(0.5, 3 * 0.2, 3)
-exp = Exponential(0.5, 0.2)
+exp = Exponential(0.5, 0.2) 
 
-fig, (axpot, axf, axcurv) = plt.subplots(3, 1)
+fig, (axpot, axf, axcurv) = plt.subplots(3,1)
 r = np.linspace(-0.001, 2)
 
 v, dv, ddv = pot.evaluate(r, True, True, True)
@@ -47,7 +47,9 @@ for a in (axpot, axf, axcurv):
     a.grid()
 
 axcurv.set_xlabel("gap")
-axpot.legend()
+axpot.legend() 
 fig.savefig("PowerLawPotential.png")
 
 # %% pycharm={"name": "#%%\n"}
+
+

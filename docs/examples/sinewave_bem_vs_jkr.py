@@ -74,7 +74,7 @@ for p in [6, 8, 10, 12]:
             offset=offsets[i],
             callback=None,
             lbounds="auto"
-        )
+            )
         assert sol.success, sol.message
         disp0 = sol.x
         mean_pressures[i] = system.compute_normal_force() / s
@@ -156,7 +156,7 @@ for p in [6, 8, 10, 12]:
             offset=offset,
             callback=None,
             lbounds="auto"
-        )
+            )
         assert sol.success, sol.message
         disp0 = sol.x
         mean_pressures[i] = system.compute_normal_force() / s

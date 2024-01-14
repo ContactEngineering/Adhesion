@@ -20,7 +20,6 @@
 import os
 import sys
 import Adhesion
-
 sys.path.insert(0, os.path.abspath('../..'))
 
 # -- General configuration ------------------------------------------------
@@ -39,6 +38,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.autosummary',
               "myst_nb"
               ]
+
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -85,6 +86,7 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -108,18 +110,19 @@ html_static_path = ['_static']
 #
 # This is required for the alabaster theme
 # refs: http://alabaster.readthedocs.io/en/latest/installation.html#sidebars
-# html_sidebars = {
+#html_sidebars = {
 #    '**': [
 #        'relations.html',  # needs 'show_related': True theme option to display
 #        'searchbox.html',
 #    ]
-# }
+#}
 
 
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'Adhesiondoc'
+
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -149,6 +152,7 @@ latex_documents = [
      'Pastewka', 'manual'),
 ]
 
+
 # -- Options for manual page output ---------------------------------------
 
 # One entry per manual page. List of tuples
@@ -157,6 +161,7 @@ man_pages = [
     (master_doc, 'Adhesion', 'Adhesion Documentation',
      authors, 1)
 ]
+
 
 # -- Options for Texinfo output -------------------------------------------
 
@@ -175,5 +180,6 @@ texinfo_documents = [
 nb_custom_formats = {
     ".py": ["jupytext.reads", {"fmt": "py:percent"}],
 }
+
 
 nb_execution_timeout = 240
