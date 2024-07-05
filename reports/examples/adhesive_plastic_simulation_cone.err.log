@@ -15,45 +15,40 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-system = t.make_contact_system(
-    interaction=interaction,
-    system_class=BoundedSmoothContactSystem,
-    young=Es
+system = make_system(
+    interaction=Lj82(w, z0),
+    substrate=FreeFFTElasticHalfSpace(
+        nb_grid_pts=topography.nb_grid_pts, young=Es,
+        physical_sizes=topography.physical_sizes,
+        check_boundaries=False),
+    surface=PlasticTopography(topography=topography, hardness=hardness),
+    system_class=PlasticSmoothContactSystem
            )
 ------------------
 
 
 [0;31m---------------------------------------------------------------------------[0m
 [0;31mAttributeError[0m                            Traceback (most recent call last)
-Cell [0;32mIn[10], line 1[0m
-[0;32m----> 1[0m system [38;5;241m=[39m [43mt[49m[38;5;241;43m.[39;49m[43mmake_contact_system[49m[43m([49m
-[1;32m      2[0m [43m    [49m[43minteraction[49m[38;5;241;43m=[39;49m[43minteraction[49m[43m,[49m
-[1;32m      3[0m [43m    [49m[43msystem_class[49m[38;5;241;43m=[39;49m[43mBoundedSmoothContactSystem[49m[43m,[49m
-[1;32m      4[0m [43m    [49m[43myoung[49m[38;5;241;43m=[39;49m[43mEs[49m
-[1;32m      5[0m [43m           [49m[43m)[49m
-
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/HeightContainer.py:79[0m, in [0;36mAbstractTopography.__getattr__.<locals>.func[0;34m(*args, **kwargs)[0m
-[1;32m     78[0m [38;5;28;01mdef[39;00m [38;5;21mfunc[39m([38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs):
-[0;32m---> 79[0m     [38;5;28;01mreturn[39;00m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43m_functions[49m[43m[[49m[43mname[49m[43m][49m[43m([49m[38;5;28;43mself[39;49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[43margs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
-
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Support/Bibliography.py:76[0m, in [0;36mdoi.__call__.<locals>.func_with_doi[0;34m(*args, **kwargs)[0m
-[1;32m     74[0m doi[38;5;241m.[39mdois[38;5;241m.[39mupdate([38;5;28mself[39m[38;5;241m.[39m_add_these_dois)
-[1;32m     75[0m doi[38;5;241m.[39m_n [38;5;241m+[39m[38;5;241m=[39m [38;5;241m1[39m
-[0;32m---> 76[0m retvals [38;5;241m=[39m [43mfunc[49m[43m([49m[38;5;241;43m*[39;49m[43margs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
-[1;32m     77[0m doi[38;5;241m.[39m_n [38;5;241m-[39m[38;5;241m=[39m [38;5;241m1[39m
-[1;32m     78[0m [38;5;28;01mif[39;00m doi[38;5;241m.[39m_n [38;5;241m==[39m [38;5;241m0[39m:
-[1;32m     79[0m     [38;5;66;03m# We have reached the point where the original `dois` argument[39;00m
-[1;32m     80[0m     [38;5;66;03m# was passed. Create a new set such that subsequent calls don't[39;00m
-[1;32m     81[0m     [38;5;66;03m# contaminate the bibliography.[39;00m
-
-File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:75[0m, in [0;36mmake_contact_system[0;34m(topography, *args, **kwargs)[0m
-[1;32m     74[0m [38;5;28;01mdef[39;00m [38;5;21mmake_contact_system[39m(topography, [38;5;241m*[39margs, [38;5;241m*[39m[38;5;241m*[39mkwargs):
-[0;32m---> 75[0m     [38;5;28;01mreturn[39;00m [43mmake_system[49m[43m([49m[43msurface[49m[38;5;241;43m=[39;49m[43mtopography[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[43margs[49m[43m,[49m[43m [49m[38;5;241;43m*[39;49m[38;5;241;43m*[39;49m[43mkwargs[49m[43m)[49m
+Cell [0;32mIn[7], line 1[0m
+[0;32m----> 1[0m system [38;5;241m=[39m [43mmake_system[49m[43m([49m
+[1;32m      2[0m [43m    [49m[43minteraction[49m[38;5;241;43m=[39;49m[43mLj82[49m[43m([49m[43mw[49m[43m,[49m[43m [49m[43mz0[49m[43m)[49m[43m,[49m
+[1;32m      3[0m [43m    [49m[43msubstrate[49m[38;5;241;43m=[39;49m[43mFreeFFTElasticHalfSpace[49m[43m([49m
+[1;32m      4[0m [43m        [49m[43mnb_grid_pts[49m[38;5;241;43m=[39;49m[43mtopography[49m[38;5;241;43m.[39;49m[43mnb_grid_pts[49m[43m,[49m[43m [49m[43myoung[49m[38;5;241;43m=[39;49m[43mEs[49m[43m,[49m
+[1;32m      5[0m [43m        [49m[43mphysical_sizes[49m[38;5;241;43m=[39;49m[43mtopography[49m[38;5;241;43m.[39;49m[43mphysical_sizes[49m[43m,[49m
+[1;32m      6[0m [43m        [49m[43mcheck_boundaries[49m[38;5;241;43m=[39;49m[38;5;28;43;01mFalse[39;49;00m[43m)[49m[43m,[49m
+[1;32m      7[0m [43m    [49m[43msurface[49m[38;5;241;43m=[39;49m[43mPlasticTopography[49m[43m([49m[43mtopography[49m[38;5;241;43m=[39;49m[43mtopography[49m[43m,[49m[43m [49m[43mhardness[49m[38;5;241;43m=[39;49m[43mhardness[49m[43m)[49m[43m,[49m
+[1;32m      8[0m [43m    [49m[43msystem_class[49m[38;5;241;43m=[39;49m[43mPlasticSmoothContactSystem[49m
+[1;32m      9[0m [43m           [49m[43m)[49m
 
 File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:71[0m, in [0;36mmake_system[0;34m(surface, interaction, substrate, communicator, physical_sizes, system_class, **kwargs)[0m
 [1;32m     68[0m interaction[38;5;241m.[39mreduction [38;5;241m=[39m Reduction(communicator)
 [1;32m     69[0m interaction[38;5;241m.[39mcommunicator [38;5;241m=[39m communicator
 [0;32m---> 71[0m [38;5;28;01mreturn[39;00m [43msystem_class[49m[43m([49m[43msubstrate[49m[43m,[49m[43m [49m[43minteraction[49m[43m,[49m[43m [49m[43msurface[49m[43m)[49m
+
+File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/PlasticSystemSpecialisations.py:47[0m, in [0;36mPlasticSmoothContactSystem.__init__[0;34m(self, substrate, interaction, surface)[0m
+[1;32m     45[0m [38;5;28;01mdef[39;00m [38;5;21m__init__[39m([38;5;28mself[39m, substrate, interaction, surface):
+[1;32m     46[0m     plastic_interaction [38;5;241m=[39m interaction[38;5;241m.[39mlinearize_core(hardness[38;5;241m=[39msurface[38;5;241m.[39mhardness)
+[0;32m---> 47[0m     [38;5;28;43msuper[39;49m[43m([49m[43m)[49m[38;5;241;43m.[39;49m[38;5;21;43m__init__[39;49m[43m([49m[43msubstrate[49m[43m,[49m[43m [49m[43mplastic_interaction[49m[43m,[49m[43m [49m[43msurface[49m[43m)[49m
 
 File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:82[0m, in [0;36mSmoothContactSystem.__init__[0;34m(self, substrate, interaction, surface)[0m
 [1;32m     77[0m [38;5;28mself[39m[38;5;241m.[39mengine [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39msubstrate[38;5;241m.[39mfftengine

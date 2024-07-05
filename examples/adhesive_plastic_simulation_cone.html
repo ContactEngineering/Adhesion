@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesive Plastic Simulation &mdash; Adhesion 0.92.0 documentation</title>
+  <title>Adhesive Plastic Simulation &mdash; Adhesion 0.92.0.dev1+ga1b10a33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -39,7 +39,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.92.0
+                0.92.0.dev1+ga1b10a33
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -146,6 +146,15 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
+fatal: not a git repository (or any of the parent directories): .git
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
+</pre></div>
+</div>
+</div>
 </div>
 <section id="prepare-geometry">
 <h2>Prepare Geometry<a class="headerlink" href="#prepare-geometry" title="Permalink to this heading"></a></h2>
@@ -178,7 +187,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;y ($z_0$)&#39;)
 </pre></div>
 </div>
-<img alt="../_images/746ae3067364895349da14ce32afafbb96d45ce9799e01b1cf2f187e5c4e8cfd.png" src="../_images/746ae3067364895349da14ce32afafbb96d45ce9799e01b1cf2f187e5c4e8cfd.png" />
+<img alt="../_images/7f64cc036a4ee5728113af4c06d922fb165901910124bef1d5f9a577277e53ec.png" src="../_images/7f64cc036a4ee5728113af4c06d922fb165901910124bef1d5f9a577277e53ec.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -195,7 +204,7 @@
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;heights ($z_0$)&#39;)
 </pre></div>
 </div>
-<img alt="../_images/8a2bcb85087e8a3ee6d0d767e71dd2ea5a8838fd64183f1ee2d21a613e767d93.png" src="../_images/8a2bcb85087e8a3ee6d0d767e71dd2ea5a8838fd64183f1ee2d21a613e767d93.png" />
+<img alt="../_images/852bbf17b125b3b08f9a69fc4c63ebaded6bca15708321885b2eab194d944f37.png" src="../_images/852bbf17b125b3b08f9a69fc4c63ebaded6bca15708321885b2eab194d944f37.png" />
 </div>
 </div>
 </section>
@@ -229,6 +238,43 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">system</span> <span class="o">=</span> <span class="n">make_system</span><span class="p">(</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="n">interaction</span><span class="o">=</span><span class="n">Lj82</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">z0</span><span class="p">),</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">substrate</span><span class="o">=</span><span class="n">FreeFFTElasticHalfSpace</span><span class="p">(</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>         <span class="n">nb_grid_pts</span><span class="o">=</span><span class="n">topography</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">,</span> <span class="n">young</span><span class="o">=</span><span class="n">Es</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>         <span class="n">physical_sizes</span><span class="o">=</span><span class="n">topography</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>         <span class="n">check_boundaries</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">surface</span><span class="o">=</span><span class="n">PlasticTopography</span><span class="p">(</span><span class="n">topography</span><span class="o">=</span><span class="n">topography</span><span class="p">,</span> <span class="n">hardness</span><span class="o">=</span><span class="n">hardness</span><span class="p">),</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">system_class</span><span class="o">=</span><span class="n">PlasticSmoothContactSystem</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span>            <span class="p">)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:71,</span> in <span class="ni">make_system</span><span class="nt">(surface, interaction, substrate, communicator, physical_sizes, system_class, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">68</span> <span class="n">interaction</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">Reduction</span><span class="p">(</span><span class="n">communicator</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">69</span> <span class="n">interaction</span><span class="o">.</span><span class="n">communicator</span> <span class="o">=</span> <span class="n">communicator</span>
+<span class="ne">---&gt; </span><span class="mi">71</span> <span class="k">return</span> <span class="n">system_class</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/PlasticSystemSpecialisations.py:47,</span> in <span class="ni">PlasticSmoothContactSystem.__init__</span><span class="nt">(self, substrate, interaction, surface)</span>
+<span class="g g-Whitespace">     </span><span class="mi">45</span> <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">46</span>     <span class="n">plastic_interaction</span> <span class="o">=</span> <span class="n">interaction</span><span class="o">.</span><span class="n">linearize_core</span><span class="p">(</span><span class="n">hardness</span><span class="o">=</span><span class="n">surface</span><span class="o">.</span><span class="n">hardness</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">47</span>     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">plastic_interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:82,</span> in <span class="ni">SmoothContactSystem.__init__</span><span class="nt">(self, substrate, interaction, surface)</span>
+<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span>
+<span class="g g-Whitespace">     </span><span class="mi">79</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span><span class="p">,</span> <span class="s2">&quot;register_halfcomplex_field&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">communicator</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="c1"># avoids the initialization to fail if we use an fftengine without these hcffts implemnented</span>
+<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="c1"># preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet</span>
+<span class="ne">---&gt; </span><span class="mi">82</span>     <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-real-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">83</span>     <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-fourier-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span>     <span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_stiffness_k</span><span class="p">()</span>
+
+<span class="ne">AttributeError</span>: &#39;_muFFT.PocketFFT&#39; object has no attribute &#39;fetch_or_register_halfcomplex_field&#39;
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -250,9 +296,6 @@
 <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">hspace</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/0d120ab360cc0b9fe13aedcc4c99c371ea65a2eabadff3c6ba5be63ca4108b9c.png" src="../_images/0d120ab360cc0b9fe13aedcc4c99c371ea65a2eabadff3c6ba5be63ca4108b9c.png" />
 </div>
 </div>
 <section id="loading-history">
@@ -278,11 +321,6 @@ and so do the achievable gradient tolerance.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hardness</span> <span class="o">*</span> <span class="n">topography</span><span class="o">.</span><span class="n">area_per_pt</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>7.62939453125
 </pre></div>
 </div>
 </div>
@@ -338,35 +376,6 @@ and so do the achievable gradient tolerance.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = -1.0
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = -0.25
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.5
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 1.25
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 2.0
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 1.25
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.5
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = -0.25
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = -1.0
-</pre></div>
-</div>
-</div>
 </div>
 <p>Bug small steps in the not yet in contact region leads to problems, why ?</p>
 <div class="cell docutils container">
@@ -375,20 +384,10 @@ and so do the achievable gradient tolerance.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>-1.0
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>open<span class="w"> </span>laststep.log
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/bin/sh: 1: open: not found
 </pre></div>
 </div>
 </div>
@@ -429,17 +428,6 @@ and so do the achievable gradient tolerance.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../_images/7d537e4def8a5a0af8df0d96c362ba843cd40d873534129874880991d046016a.png" src="../_images/7d537e4def8a5a0af8df0d96c362ba843cd40d873534129874880991d046016a.png" />
-<img alt="../_images/118a0a05ef542c3c98f4dd73c5b6933f9bfd0b9946f63bfea6781d4156822554.png" src="../_images/118a0a05ef542c3c98f4dd73c5b6933f9bfd0b9946f63bfea6781d4156822554.png" />
-<img alt="../_images/a2e809aa1454a6dcd9fe65949f09245dd6b307c5319557471d194206165fe53f.png" src="../_images/a2e809aa1454a6dcd9fe65949f09245dd6b307c5319557471d194206165fe53f.png" />
-<img alt="../_images/c9cdfe3b71185e6885011d431287b958c79b93493f5b7af580c841399a4f1291.png" src="../_images/c9cdfe3b71185e6885011d431287b958c79b93493f5b7af580c841399a4f1291.png" />
-<img alt="../_images/1a29641f65b1e66ef14ac646ebea40646f14510293ee9cf8f335a9669e4a216e.png" src="../_images/1a29641f65b1e66ef14ac646ebea40646f14510293ee9cf8f335a9669e4a216e.png" />
-<img alt="../_images/5de40d2d7e9057295a95020d7e61a9c8ca0f05e5fb563006c8b1013ff28151b1.png" src="../_images/5de40d2d7e9057295a95020d7e61a9c8ca0f05e5fb563006c8b1013ff28151b1.png" />
-<img alt="../_images/1f03fa873d097a619eee6754e256ccb674df54324e974e5eb972b88798ea45bb.png" src="../_images/1f03fa873d097a619eee6754e256ccb674df54324e974e5eb972b88798ea45bb.png" />
-<img alt="../_images/177b6745fd0b6e15e38fccb3499cbe18e5fe69bf17ebdb451e85f847328d5ac3.png" src="../_images/177b6745fd0b6e15e38fccb3499cbe18e5fe69bf17ebdb451e85f847328d5ac3.png" />
-<img alt="../_images/b2e460831724cb25f3b17616c93d834ab5cacb8718dd2406043bd53cbb82963f.png" src="../_images/b2e460831724cb25f3b17616c93d834ab5cacb8718dd2406043bd53cbb82963f.png" />
-</div>
 </div>
 </section>
 <section id="scalar-quantities-during-loading">
@@ -454,12 +442,6 @@ and so do the achievable gradient tolerance.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Force [N]&#39;)
-</pre></div>
-</div>
-<img alt="../_images/777f818b7f47f6530092336e246d530ab2303179bdc6b69597554d77422d98f3.png" src="../_images/777f818b7f47f6530092336e246d530ab2303179bdc6b69597554d77422d98f3.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -472,9 +454,6 @@ and so do the achievable gradient tolerance.</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../_images/369a2ff28ae8c13a27b2426270597d3de79e92252869872c42ba74dd790595d3.png" src="../_images/369a2ff28ae8c13a27b2426270597d3de79e92252869872c42ba74dd790595d3.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -486,9 +465,6 @@ and so do the achievable gradient tolerance.</p>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/74f86752dc6113d92fa5e074deac7fdc68e019184491a0712baa787660be474d.png" src="../_images/74f86752dc6113d92fa5e074deac7fdc68e019184491a0712baa787660be474d.png" />
 </div>
 </div>
 </section>

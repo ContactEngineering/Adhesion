@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Smooth against JKR &mdash; Adhesion 0.92.0 documentation</title>
+  <title>Smooth against JKR &mdash; Adhesion 0.92.0.dev1+ga1b10a33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -39,7 +39,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.92.0
+                0.92.0.dev1+ga1b10a33
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -108,6 +108,15 @@
 <span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">VDW82</span><span class="p">,</span> <span class="n">Exponential</span>
 <span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">SmoothContactSystem</span><span class="p">,</span> <span class="n">BoundedSmoothContactSystem</span>
 <span class="kn">from</span> <span class="nn">Adhesion.ReferenceSolutions.sinewave</span> <span class="kn">import</span> <span class="n">JKR</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
+fatal: not a git repository (or any of the parent directories): .git
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
 </pre></div>
 </div>
 </div>
@@ -197,7 +206,32 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/fcb0c02f27b0f997c973f29d5518ba6b1c05f9661ce78b66996fc7e987b48798.png" src="../_images/fcb0c02f27b0f997c973f29d5518ba6b1c05f9661ce78b66996fc7e987b48798.png" />
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">33</span>
+<span class="g g-Whitespace">     </span><span class="mi">25</span> <span class="n">substrate</span> <span class="o">=</span> <span class="n">PeriodicFFTElasticHalfSpace</span><span class="p">((</span><span class="n">n</span><span class="p">,),</span> <span class="n">young</span><span class="o">=</span><span class="n">Es</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">26</span>                                         <span class="n">physical_sizes</span><span class="o">=</span><span class="p">(</span><span class="n">s</span><span class="p">,),</span>
+<span class="g g-Whitespace">     </span><span class="mi">27</span>                                         <span class="n">fft</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="n">surface</span> <span class="o">=</span> <span class="n">UniformLineScan</span><span class="p">(</span>
+<span class="g g-Whitespace">     </span><span class="mi">30</span>     <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">2.</span> <span class="o">/</span> <span class="n">n</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">31</span>     <span class="n">physical_sizes</span><span class="o">=</span><span class="p">(</span><span class="n">s</span><span class="p">,))</span>
+<span class="ne">---&gt; </span><span class="mi">33</span> <span class="n">system</span> <span class="o">=</span> <span class="n">SmoothContactSystem</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">inter</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">35</span> <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">36</span> <span class="n">offsets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">offsets</span><span class="p">,</span> <span class="n">offsets</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:82,</span> in <span class="ni">SmoothContactSystem.__init__</span><span class="nt">(self, substrate, interaction, surface)</span>
+<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span>
+<span class="g g-Whitespace">     </span><span class="mi">79</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span><span class="p">,</span> <span class="s2">&quot;register_halfcomplex_field&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">communicator</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="c1"># avoids the initialization to fail if we use an fftengine without these hcffts implemnented</span>
+<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="c1"># preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet</span>
+<span class="ne">---&gt; </span><span class="mi">82</span>     <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-real-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">83</span>     <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-fourier-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span>     <span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_stiffness_k</span><span class="p">()</span>
+
+<span class="ne">AttributeError</span>: &#39;_muFFT.PocketFFT&#39; object has no attribute &#39;fetch_or_register_halfcomplex_field&#39;
+</pre></div>
+</div>
+<img alt="../_images/4fc71c549ed4969fa0831431099564431cdcaba239870448fdf2bfe5f2b1c980.png" src="../_images/4fc71c549ed4969fa0831431099564431cdcaba239870448fdf2bfe5f2b1c980.png" />
 </div>
 </div>
 </section>
@@ -283,9 +317,6 @@
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/171bc14c94b02f61a75de75f2dbabb268a995e52f0a06fa7aed58d6038931cfb.png" src="../_images/171bc14c94b02f61a75de75f2dbabb268a995e52f0a06fa7aed58d6038931cfb.png" />
 </div>
 </div>
 </section>

@@ -1,0 +1,45 @@
+Traceback (most recent call last):
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 1305, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 616, in run_until_complete
+    return future.result()
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 705, in async_execute
+    await self.async_execute_cell(
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 1058, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 914, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+nx, ny = 256, 256  # should be choosen so that the system size
+# is bigger then the jump in radius
+sx, sy = (nx * dx, ny * dx)
+topography = make_sphere(R, (nx, ny), (sx, sy), kind="paraboloid")
+interaction = Exponential(work_of_adhesion, length_parameter)
+substrate = PeriodicFFTElasticHalfSpace((nx, ny), Es, (sx, sy), )
+system = BoundedSmoothContactSystem(substrate, interaction, topography)
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mAttributeError[0m                            Traceback (most recent call last)
+Cell [0;32mIn[8], line 7[0m
+[1;32m      5[0m interaction [38;5;241m=[39m Exponential(work_of_adhesion, length_parameter)
+[1;32m      6[0m substrate [38;5;241m=[39m PeriodicFFTElasticHalfSpace((nx, ny), Es, (sx, sy), )
+[0;32m----> 7[0m system [38;5;241m=[39m [43mBoundedSmoothContactSystem[49m[43m([49m[43msubstrate[49m[43m,[49m[43m [49m[43minteraction[49m[43m,[49m[43m [49m[43mtopography[49m[43m)[49m
+
+File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:82[0m, in [0;36mSmoothContactSystem.__init__[0;34m(self, substrate, interaction, surface)[0m
+[1;32m     77[0m [38;5;28mself[39m[38;5;241m.[39mengine [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39msubstrate[38;5;241m.[39mfftengine
+[1;32m     79[0m [38;5;28;01mif[39;00m [38;5;28mhasattr[39m(substrate[38;5;241m.[39mfftengine, [38;5;124m"[39m[38;5;124mregister_halfcomplex_field[39m[38;5;124m"[39m) [38;5;129;01mand[39;00m [38;5;28mself[39m[38;5;241m.[39mengine[38;5;241m.[39mcommunicator[38;5;241m.[39msize [38;5;241m==[39m [38;5;241m1[39m:
+[1;32m     80[0m     [38;5;66;03m# avoids the initialization to fail if we use an fftengine without these hcffts implemnented[39;00m
+[1;32m     81[0m     [38;5;66;03m# preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet[39;00m
+[0;32m---> 82[0m     [38;5;28mself[39m[38;5;241m.[39mreal_buffer [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mengine[49m[38;5;241;43m.[39;49m[43mfetch_or_register_halfcomplex_field[49m([38;5;124m"[39m[38;5;124mhc-real-space[39m[38;5;124m"[39m, [38;5;241m1[39m)
+[1;32m     83[0m     [38;5;28mself[39m[38;5;241m.[39mfourier_buffer [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mengine[38;5;241m.[39mfetch_or_register_halfcomplex_field([38;5;124m"[39m[38;5;124mhc-fourier-space[39m[38;5;124m"[39m, [38;5;241m1[39m)
+[1;32m     85[0m     [38;5;28mself[39m[38;5;241m.[39mstiffness_k [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39m_compute_stiffness_k()
+
+[0;31mAttributeError[0m: '_muFFT.PocketFFT' object has no attribute 'fetch_or_register_halfcomplex_field'
+

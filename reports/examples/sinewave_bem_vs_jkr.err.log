@@ -1,0 +1,122 @@
+Traceback (most recent call last):
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/jupyter_cache/executors/utils.py", line 58, in single_nb_execution
+    executenb(
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 1305, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/jupyter_core/utils/__init__.py", line 165, in wrapped
+    return loop.run_until_complete(inner)
+  File "/usr/lib/python3.8/asyncio/base_events.py", line 616, in run_until_complete
+    return future.result()
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 705, in async_execute
+    await self.async_execute_cell(
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 1058, in async_execute_cell
+    await self._check_raise_for_error(cell, cell_index, exec_reply)
+  File "/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/nbclient/client.py", line 914, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+
+s = 1.
+
+Es = 1. / np.pi
+alpha = 0.2  # nondimensionalized stress intensity factor
+w = alpha ** 2 / (2 * Es)
+
+fig, ax = plt.subplots()
+ax.set_title("comparison against analytical")
+a = np.linspace(0, 0.4)
+ax.plot(np.sin(np.pi * a) ** 2 - alpha * np.sqrt(np.tan(np.pi * a)), a * 2,
+        "--k", label="JKR limit")
+
+ax.set_xlabel(R"mean pressure ($\pi E^* h / \lambda$)")
+ax.set_ylabel("frac. contact area (-)")
+
+for p in [6, 8, 10, 12]:
+    n = 2 ** p
+    dx = s / n
+    z0 = 2 * np.sqrt(dx)
+
+    inter = VDW82(w * z0 ** 8 / 3, 16 * np.pi * w * z0 ** 2
+                  ).spline_cutoff(gamma=w
+                                  ).linearize_core()
+
+    substrate = PeriodicFFTElasticHalfSpace((n,), young=Es,
+                                            physical_sizes=(s,),
+                                            fft='serial')
+
+    surface = UniformLineScan(
+        np.cos(np.arange(0, n) * np.pi * 2. / n),
+        physical_sizes=(s,))
+
+    system = SmoothContactSystem(substrate, inter, surface)
+
+    offsets = np.linspace(-2, 0.35, 20)
+    offsets = np.concatenate((offsets, offsets[-2::-1]))
+
+    contact_areas = np.zeros_like(offsets)
+    mean_pressures = np.zeros_like(offsets)
+
+    nsteps = len(offsets)
+    disp0 = None
+    gtol = 1e-5
+    i = 0
+    for offset in offsets:
+        if disp0 is not None:
+            disp0 += offset - offset_prev  # noqa: F821
+        sol = system.minimize_proxy(
+            initial_displacements=disp0,
+            options=dict(gtol=gtol * max(Es * surface.rms_slope_from_profile(), abs(
+                inter.max_tensile)) * surface.area_per_pt,
+                         # max absolute value of the gradient
+                         # of the objective for convergence
+                         ),
+            # logger=Logger("laststep.log"),
+            method="L-BFGS-B",
+            offset=offsets[i],
+            callback=None,
+            lbounds="auto"
+            )
+        assert sol.success, sol.message
+        disp0 = sol.x
+        mean_pressures[i] = system.compute_normal_force() / s
+        contact_areas[i] = np.count_nonzero(system.gap < inter.r_infl) / n
+
+        # print("step {}".format(i))
+        offset_prev = offset
+        i += 1
+    abserror = np.max(abs(
+        mean_pressures - JKR.mean_pressure(contact_areas / 2, alpha)))
+    ax.plot(mean_pressures, contact_areas,
+            label="n={}, error={:.1e}".format(n, abserror))
+
+    plt.pause(0.0001)
+ax.grid()
+ax.legend()
+plt.show()
+------------------
+
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mAttributeError[0m                            Traceback (most recent call last)
+Cell [0;32mIn[2], line 33[0m
+[1;32m     25[0m substrate [38;5;241m=[39m PeriodicFFTElasticHalfSpace((n,), young[38;5;241m=[39mEs,
+[1;32m     26[0m                                         physical_sizes[38;5;241m=[39m(s,),
+[1;32m     27[0m                                         fft[38;5;241m=[39m[38;5;124m'[39m[38;5;124mserial[39m[38;5;124m'[39m)
+[1;32m     29[0m surface [38;5;241m=[39m UniformLineScan(
+[1;32m     30[0m     np[38;5;241m.[39mcos(np[38;5;241m.[39marange([38;5;241m0[39m, n) [38;5;241m*[39m np[38;5;241m.[39mpi [38;5;241m*[39m [38;5;241m2.[39m [38;5;241m/[39m n),
+[1;32m     31[0m     physical_sizes[38;5;241m=[39m(s,))
+[0;32m---> 33[0m system [38;5;241m=[39m [43mSmoothContactSystem[49m[43m([49m[43msubstrate[49m[43m,[49m[43m [49m[43minter[49m[43m,[49m[43m [49m[43msurface[49m[43m)[49m
+[1;32m     35[0m offsets [38;5;241m=[39m np[38;5;241m.[39mlinspace([38;5;241m-[39m[38;5;241m2[39m, [38;5;241m0.35[39m, [38;5;241m20[39m)
+[1;32m     36[0m offsets [38;5;241m=[39m np[38;5;241m.[39mconcatenate((offsets, offsets[[38;5;241m-[39m[38;5;241m2[39m::[38;5;241m-[39m[38;5;241m1[39m]))
+
+File [0;32m~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:82[0m, in [0;36mSmoothContactSystem.__init__[0;34m(self, substrate, interaction, surface)[0m
+[1;32m     77[0m [38;5;28mself[39m[38;5;241m.[39mengine [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39msubstrate[38;5;241m.[39mfftengine
+[1;32m     79[0m [38;5;28;01mif[39;00m [38;5;28mhasattr[39m(substrate[38;5;241m.[39mfftengine, [38;5;124m"[39m[38;5;124mregister_halfcomplex_field[39m[38;5;124m"[39m) [38;5;129;01mand[39;00m [38;5;28mself[39m[38;5;241m.[39mengine[38;5;241m.[39mcommunicator[38;5;241m.[39msize [38;5;241m==[39m [38;5;241m1[39m:
+[1;32m     80[0m     [38;5;66;03m# avoids the initialization to fail if we use an fftengine without these hcffts implemnented[39;00m
+[1;32m     81[0m     [38;5;66;03m# preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet[39;00m
+[0;32m---> 82[0m     [38;5;28mself[39m[38;5;241m.[39mreal_buffer [38;5;241m=[39m [38;5;28;43mself[39;49m[38;5;241;43m.[39;49m[43mengine[49m[38;5;241;43m.[39;49m[43mfetch_or_register_halfcomplex_field[49m([38;5;124m"[39m[38;5;124mhc-real-space[39m[38;5;124m"[39m, [38;5;241m1[39m)
+[1;32m     83[0m     [38;5;28mself[39m[38;5;241m.[39mfourier_buffer [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39mengine[38;5;241m.[39mfetch_or_register_halfcomplex_field([38;5;124m"[39m[38;5;124mhc-fourier-space[39m[38;5;124m"[39m, [38;5;241m1[39m)
+[1;32m     85[0m     [38;5;28mself[39m[38;5;241m.[39mstiffness_k [38;5;241m=[39m [38;5;28mself[39m[38;5;241m.[39m_compute_stiffness_k()
+
+[0;31mAttributeError[0m: '_muFFT.PocketFFT' object has no attribute 'fetch_or_register_halfcomplex_field'
+

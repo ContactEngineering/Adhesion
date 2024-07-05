@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesive Simulation of the contact of a sphere &mdash; Adhesion 0.92.0 documentation</title>
+  <title>Adhesive Simulation of the contact of a sphere &mdash; Adhesion 0.92.0.dev1+ga1b10a33 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -39,7 +39,7 @@
             Adhesion
           </a>
               <div class="version">
-                0.92.0
+                0.92.0.dev1+ga1b10a33
               </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
@@ -147,6 +147,15 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
+fatal: not a git repository (or any of the parent directories): .git
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
+</pre></div>
+</div>
+</div>
 </div>
 <p>Nondimensionalisation using the JKR units following the convensions in Maugis’ book.
 See https://contactengineering.github.io/Adhesion/source/Adhesion.ReferenceSolutions.html#module-Adhesion.ReferenceSolutions.JKR and/or https://doi.org/10.1016/j.jmps.2022.104781 , https://doi.org/10.1088/0022-3727/41/16/163001</p>
@@ -185,7 +194,7 @@ See https://contactengineering.github.io/Adhesion/source/Adhesion.ReferenceSolut
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;y ($z_0$)&#39;)
 </pre></div>
 </div>
-<img alt="../_images/ca3da55ad7b4f26a5c5498e16e0bd0eebaca996f2f431a60290602bb4a48e35a.png" src="../_images/ca3da55ad7b4f26a5c5498e16e0bd0eebaca996f2f431a60290602bb4a48e35a.png" />
+<img alt="../_images/678f3c50825692812f226c538935fa5140ffc7a9d320e3057f02c02135d19323.png" src="../_images/678f3c50825692812f226c538935fa5140ffc7a9d320e3057f02c02135d19323.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -202,7 +211,7 @@ See https://contactengineering.github.io/Adhesion/source/Adhesion.ReferenceSolut
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;heights ($z_0$)&#39;)
 </pre></div>
 </div>
-<img alt="../_images/06b9ff2715411cfb29abb94823dad8243b31a898c3139f8528073bd217e0248f.png" src="../_images/06b9ff2715411cfb29abb94823dad8243b31a898c3139f8528073bd217e0248f.png" />
+<img alt="../_images/e5110116e19c7b1e7e12924a14ab0c2211ae4b4a80314f33cbf9f98060d5b734.png" src="../_images/e5110116e19c7b1e7e12924a14ab0c2211ae4b4a80314f33cbf9f98060d5b734.png" />
 </div>
 </div>
 </section>
@@ -278,7 +287,7 @@ This argument was put forward by <a class="reference external" href="https://doi
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/77277522f00ab5e919a87d31f3556c1494aa83b683617d2362069282e71c9534.png" src="../_images/77277522f00ab5e919a87d31f3556c1494aa83b683617d2362069282e71c9534.png" />
+<img alt="../_images/f5ad904c45b455b765fc4bb8ed12f59e90234d5abbd6d7b49b2412249aca5cf5.png" src="../_images/f5ad904c45b455b765fc4bb8ed12f59e90234d5abbd6d7b49b2412249aca5cf5.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -288,6 +297,52 @@ This argument was put forward by <a class="reference external" href="https://doi
     <span class="n">system_class</span><span class="o">=</span><span class="n">BoundedSmoothContactSystem</span><span class="p">,</span>
     <span class="n">young</span><span class="o">=</span><span class="n">Es</span>
            <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">system</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">make_contact_system</span><span class="p">(</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="n">interaction</span><span class="o">=</span><span class="n">interaction</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">system_class</span><span class="o">=</span><span class="n">BoundedSmoothContactSystem</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">young</span><span class="o">=</span><span class="n">Es</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>            <span class="p">)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/HeightContainer.py:79,</span> in <span class="ni">AbstractTopography.__getattr__.&lt;locals&gt;.func</span><span class="nt">(*args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">78</span> <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="ne">---&gt; </span><span class="mi">79</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Support/Bibliography.py:76,</span> in <span class="ni">doi.__call__.&lt;locals&gt;.func_with_doi</span><span class="nt">(*args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">74</span> <span class="n">doi</span><span class="o">.</span><span class="n">dois</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_add_these_dois</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">75</span> <span class="n">doi</span><span class="o">.</span><span class="n">_n</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="ne">---&gt; </span><span class="mi">76</span> <span class="n">retvals</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="n">doi</span><span class="o">.</span><span class="n">_n</span> <span class="o">-=</span> <span class="mi">1</span>
+<span class="g g-Whitespace">     </span><span class="mi">78</span> <span class="k">if</span> <span class="n">doi</span><span class="o">.</span><span class="n">_n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">79</span>     <span class="c1"># We have reached the point where the original `dois` argument</span>
+<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="c1"># was passed. Create a new set such that subsequent calls don&#39;t</span>
+<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="c1"># contaminate the bibliography.</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:75,</span> in <span class="ni">make_contact_system</span><span class="nt">(topography, *args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">74</span> <span class="k">def</span> <span class="nf">make_contact_system</span><span class="p">(</span><span class="n">topography</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="ne">---&gt; </span><span class="mi">75</span>     <span class="k">return</span> <span class="n">make_system</span><span class="p">(</span><span class="n">surface</span><span class="o">=</span><span class="n">topography</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:71,</span> in <span class="ni">make_system</span><span class="nt">(surface, interaction, substrate, communicator, physical_sizes, system_class, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">68</span> <span class="n">interaction</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">Reduction</span><span class="p">(</span><span class="n">communicator</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">69</span> <span class="n">interaction</span><span class="o">.</span><span class="n">communicator</span> <span class="o">=</span> <span class="n">communicator</span>
+<span class="ne">---&gt; </span><span class="mi">71</span> <span class="k">return</span> <span class="n">system_class</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
+
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:82,</span> in <span class="ni">SmoothContactSystem.__init__</span><span class="nt">(self, substrate, interaction, surface)</span>
+<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span>
+<span class="g g-Whitespace">     </span><span class="mi">79</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span><span class="p">,</span> <span class="s2">&quot;register_halfcomplex_field&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">communicator</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="c1"># avoids the initialization to fail if we use an fftengine without these hcffts implemnented</span>
+<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="c1"># preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet</span>
+<span class="ne">---&gt; </span><span class="mi">82</span>     <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-real-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">83</span>     <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-fourier-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">85</span>     <span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_stiffness_k</span><span class="p">()</span>
+
+<span class="ne">AttributeError</span>: &#39;_muFFT.PocketFFT&#39; object has no attribute &#39;fetch_or_register_halfcomplex_field&#39;
 </pre></div>
 </div>
 </div>
@@ -385,124 +440,6 @@ of the elastic-force and the adhesive force on each pixel.</p>
     
     <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>
 <span class="n">nc</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = -0.30000000000000004
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = -0.10000000000000003
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.09999999999999998
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.30000000000000004
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.5
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.7
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.9000000000000001
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 1.1
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 1.3
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 1.5
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 1.3
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 1.1
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.9000000000000001
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.7
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.5
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.30000000000000004
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">14</span><span class="p">],</span> <span class="n">line</span> <span class="mi">12</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span> <span class="k">for</span> <span class="n">penetration</span> <span class="ow">in</span> <span class="n">penetrations</span><span class="p">(</span><span class="n">start_pen</span><span class="p">,</span> <span class="n">max_pen</span><span class="p">,</span> <span class="n">dpen</span><span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">11</span>     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;penetration = </span><span class="si">{</span><span class="n">penetration</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">12</span>     <span class="n">sol</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">minimize_proxy</span><span class="p">(</span>                                       
-<span class="g g-Whitespace">     </span><span class="mi">13</span>         <span class="n">initial_displacements</span><span class="o">=</span><span class="n">disp0</span><span class="p">,</span>                                                                                       
-<span class="g g-Whitespace">     </span><span class="mi">14</span>         <span class="n">options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">gtol</span><span class="o">=</span><span class="n">gtol</span><span class="p">,</span> <span class="c1"># max absolute value of the gradient of the objective for convergence </span>
-<span class="g g-Whitespace">     </span><span class="mi">15</span>                      <span class="n">ftol</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="c1"># stop only if the gradient criterion is fullfilled</span>
-<span class="g g-Whitespace">     </span><span class="mi">16</span>                      <span class="n">maxcor</span><span class="o">=</span><span class="mi">3</span> <span class="c1"># number of gradients stored for hessian approximation</span>
-<span class="g g-Whitespace">     </span><span class="mi">17</span>                     <span class="p">),</span>                               
-<span class="g g-Whitespace">     </span><span class="mi">18</span>         <span class="n">logger</span><span class="o">=</span><span class="n">Logger</span><span class="p">(</span><span class="s2">&quot;laststep.log&quot;</span><span class="p">),</span>                                 
-<span class="g g-Whitespace">     </span><span class="mi">19</span>         <span class="n">offset</span><span class="o">=</span><span class="n">penetration</span><span class="p">,</span>                                           
-<span class="g g-Whitespace">     </span><span class="mi">20</span>         <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>                                                 
-<span class="g g-Whitespace">     </span><span class="mi">21</span>                 <span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">22</span>     <span class="k">assert</span> <span class="n">sol</span><span class="o">.</span><span class="n">success</span><span class="p">,</span> <span class="n">sol</span><span class="o">.</span><span class="n">message</span>
-<span class="g g-Whitespace">     </span><span class="mi">23</span>     <span class="n">disp0</span> <span class="o">=</span> <span class="n">u</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">disp</span> 
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:1072,</span> in <span class="ni">BoundedSmoothContactSystem.minimize_proxy</span><span class="nt">(self, offset, initial_displacements, method, gradient, lbounds, ubounds, callback, logger, **kwargs)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1070</span> <span class="k">if</span> <span class="n">lbounds</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1071</span>     <span class="n">lbounds</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span>
-<span class="ne">-&gt; </span><span class="mi">1072</span> <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">minimize_proxy</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1073</span>                               <span class="n">initial_displacements</span><span class="o">=</span><span class="n">initial_displacements</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1074</span>                               <span class="n">gradient</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span> <span class="n">lbounds</span><span class="o">=</span><span class="n">lbounds</span><span class="p">,</span> <span class="n">ubounds</span><span class="o">=</span><span class="n">ubounds</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1075</span>                               <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
-<span class="g g-Whitespace">   </span><span class="mi">1076</span>                               <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/ContactMechanics/Systems.py:327,</span> in <span class="ni">SystemBase.minimize_proxy</span><span class="nt">(self, offset, initial_displacements, method, gradient, lbounds, ubounds, callback, logger, **kwargs)</span>
-<span class="g g-Whitespace">    </span><span class="mi">324</span> <span class="n">bounded_minimizers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;L-BFGS-B&#39;</span><span class="p">,</span> <span class="s1">&#39;TNC&#39;</span><span class="p">,</span> <span class="s1">&#39;SLSQP&#39;</span><span class="p">}</span>
-<span class="g g-Whitespace">    </span><span class="mi">326</span> <span class="k">if</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">bounded_minimizers</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">327</span>     <span class="n">result</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">328</span>         <span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">initial_displacements</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">329</span>         <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">330</span>         <span class="n">bounds</span><span class="o">=</span><span class="n">bnds</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">331</span>         <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">332</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">333</span>     <span class="n">result</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">334</span>         <span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="o">=</span><span class="n">initial_displacements</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">335</span>         <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">gradient</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">336</span>         <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/scipy/optimize/_minimize.py:696,</span> in <span class="ni">minimize</span><span class="nt">(fun, x0, args, method, jac, hess, hessp, bounds, constraints, tol, callback, options)</span>
-<span class="g g-Whitespace">    </span><span class="mi">693</span>     <span class="n">res</span> <span class="o">=</span> <span class="n">_minimize_newtoncg</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">jac</span><span class="p">,</span> <span class="n">hess</span><span class="p">,</span> <span class="n">hessp</span><span class="p">,</span> <span class="n">callback</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">694</span>                              <span class="o">**</span><span class="n">options</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">695</span> <span class="k">elif</span> <span class="n">meth</span> <span class="o">==</span> <span class="s1">&#39;l-bfgs-b&#39;</span><span class="p">:</span>
-<span class="ne">--&gt; </span><span class="mi">696</span>     <span class="n">res</span> <span class="o">=</span> <span class="n">_minimize_lbfgsb</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">jac</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">697</span>                            <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">698</span> <span class="k">elif</span> <span class="n">meth</span> <span class="o">==</span> <span class="s1">&#39;tnc&#39;</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">699</span>     <span class="n">res</span> <span class="o">=</span> <span class="n">_minimize_tnc</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">x0</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">jac</span><span class="p">,</span> <span class="n">bounds</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">700</span>                         <span class="o">**</span><span class="n">options</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/scipy/optimize/_lbfgsb_py.py:350,</span> in <span class="ni">_minimize_lbfgsb</span><span class="nt">(fun, x0, args, jac, bounds, disp, maxcor, ftol, gtol, eps, maxfun, maxiter, iprint, callback, maxls, finite_diff_rel_step, **unknown_options)</span>
-<span class="g g-Whitespace">    </span><span class="mi">346</span> <span class="n">n_iterations</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="g g-Whitespace">    </span><span class="mi">348</span> <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">349</span>     <span class="c1"># x, f, g, wa, iwa, task, csave, lsave, isave, dsave = \</span>
-<span class="ne">--&gt; </span><span class="mi">350</span>     <span class="n">_lbfgsb</span><span class="o">.</span><span class="n">setulb</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">low_bnd</span><span class="p">,</span> <span class="n">upper_bnd</span><span class="p">,</span> <span class="n">nbd</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">factr</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">351</span>                    <span class="n">pgtol</span><span class="p">,</span> <span class="n">wa</span><span class="p">,</span> <span class="n">iwa</span><span class="p">,</span> <span class="n">task</span><span class="p">,</span> <span class="n">iprint</span><span class="p">,</span> <span class="n">csave</span><span class="p">,</span> <span class="n">lsave</span><span class="p">,</span>
-<span class="g g-Whitespace">    </span><span class="mi">352</span>                    <span class="n">isave</span><span class="p">,</span> <span class="n">dsave</span><span class="p">,</span> <span class="n">maxls</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">353</span>     <span class="n">task_str</span> <span class="o">=</span> <span class="n">task</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">354</span>     <span class="k">if</span> <span class="n">task_str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;FG&#39;</span><span class="p">):</span>
-<span class="g g-Whitespace">    </span><span class="mi">355</span>         <span class="c1"># The minimization routine wants f and g at the current x.</span>
-<span class="g g-Whitespace">    </span><span class="mi">356</span>         <span class="c1"># Note that interruptions due to maxfun are postponed</span>
-<span class="g g-Whitespace">    </span><span class="mi">357</span>         <span class="c1"># until the completion of the current minimization iteration.</span>
-<span class="g g-Whitespace">    </span><span class="mi">358</span>         <span class="c1"># Overwrite f and g:</span>
-
-<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>
