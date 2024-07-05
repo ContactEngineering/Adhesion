@@ -1,5 +1,5 @@
 [build-system]
-requires = ["flit_core>=3.2", "numpy"]
+requires = ["flit_core>=3.2", "numpy<2.0"]
 build-backend = "flit_core.buildapi"
 
 [project]
@@ -19,10 +19,10 @@ classifiers = [
 requires-python = ">=3.8.0"
 dynamic = [ "version" ]
 dependencies = [
-    "numpy>=1.16.3",
+    "numpy<2",
     "scipy>=1.9.0",
     "NuMPI>=0.4.0",
-    "muSpectre>=0.26.4",
+    "muFFT>=0.91.2",
     "SurfaceTopography>=1.12.0",
     "ContactMechanics>=1.2.0",
     "netCDF4"
