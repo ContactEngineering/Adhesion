@@ -138,7 +138,7 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
         decoded_message = result.message
 
     assert decoded_message == \
-        'CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL'
+        'CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL'
 
 
 """
