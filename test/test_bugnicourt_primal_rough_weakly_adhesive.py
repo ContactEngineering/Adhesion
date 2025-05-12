@@ -1,6 +1,6 @@
 """
 
-Runs the  primal (gap as DOFS) ccg_without_restart algorithm with fixed penetration
+Runs the  primal (gap as DOFS) CCGWithoutRestart algorithm with fixed penetration
 and with constrained mean gap. Compares the gaps with the old serial lbfgsb
 code with displacements as variables
 
@@ -13,7 +13,7 @@ from Adhesion.Interactions import Exponential
 from ContactMechanics.Systems import NonSmoothContactSystem
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from Adhesion.System import make_system, BoundedSmoothContactSystem
-from NuMPI.Optimization.ccg_without_restart import constrained_conjugate_gradients
+from NuMPI.Optimization.CCGWithoutRestart import constrained_conjugate_gradients
 from NuMPI.Tools import Reduction
 
 import os
@@ -112,7 +112,7 @@ def get_reference_data_file(_comm):
     return path
 
 
-def test_ccg_without_restart_weakly_adhesive(comm, verbose=False):
+def test_CCGWithoutRestart_weakly_adhesive(comm, verbose=False):
     topography_file = get_topography_file(comm)
     reference_data_file = get_reference_data_file(comm)
     _penetration = penetration

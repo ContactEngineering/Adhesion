@@ -5,7 +5,7 @@ from SurfaceTopography.Generation import fourier_synthesis
 from ContactMechanics.Tools.Logger import Logger
 from Adhesion.Interactions import Exponential
 from Adhesion.System import BoundedSmoothContactSystem
-from NuMPI.Optimization import ccg_without_restart
+from NuMPI.Optimization import CCGWithoutRestart
 import numpy as np
 import scipy.optimize as optim
 import pytest
@@ -66,7 +66,7 @@ def test_force_computation_mean_gap_constrained():
     init_gap = init_disp - topography.heights() - penetration
     init_gap[init_gap < 0] = 0
 
-    res = ccg_without_restart.constrained_conjugate_gradients(
+    res = CCGWithoutRestart.constrained_conjugate_gradients(
         system.primal_objective(penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap,
@@ -75,7 +75,7 @@ def test_force_computation_mean_gap_constrained():
         )
 
     assert res.success
-    print("ccg_without_restart nit: {}".format(res.nit))
+    print("CCGWithoutRestart nit: {}".format(res.nit))
     gap = res.x.reshape(substrate.nb_subdomain_grid_pts)
 
     grad = system.primal_objective(penetration, gradient=True)(
@@ -99,7 +99,7 @@ def test_force_computation_mean_gap_constrained():
     init_gap = init_disp - topography.heights() - _penetration
     init_gap[init_gap < 0] = 0
 
-    res = ccg_without_restart.constrained_conjugate_gradients(
+    res = CCGWithoutRestart.constrained_conjugate_gradients(
         system.primal_objective(_penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
@@ -108,7 +108,7 @@ def test_force_computation_mean_gap_constrained():
         )
 
     assert res.success
-    print("ccg_without_restart nit: {}".format(res.nit))
+    print("CCGWithoutRestart nit: {}".format(res.nit))
     gap = res.x.reshape(substrate.nb_subdomain_grid_pts)
 
     np.testing.assert_allclose(gap, gap_lbfgs,
@@ -179,7 +179,7 @@ def test_mean_value_mode_is_penetration_indepentent():
 
     ca = []
     arbitrary_penetration = 0
-    res = ccg_without_restart.constrained_conjugate_gradients(
+    res = CCGWithoutRestart.constrained_conjugate_gradients(
         system.primal_objective(arbitrary_penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
@@ -192,7 +192,7 @@ def test_mean_value_mode_is_penetration_indepentent():
 
     ca = []
     arbitrary_penetration = 100
-    res = ccg_without_restart.constrained_conjugate_gradients(
+    res = CCGWithoutRestart.constrained_conjugate_gradients(
         system.primal_objective(arbitrary_penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
@@ -202,11 +202,11 @@ def test_mean_value_mode_is_penetration_indepentent():
         )
     assert ca[0] == first_ca
     assert res.success
-    print("ccg_without_restart nit: {}".format(res.nit))
+    print("CCGWithoutRestart nit: {}".format(res.nit))
 
     ca = []
     arbitrary_penetration = -100
-    res = ccg_without_restart.constrained_conjugate_gradients(
+    res = CCGWithoutRestart.constrained_conjugate_gradients(
         system.primal_objective(arbitrary_penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=mean_gap,
@@ -216,10 +216,10 @@ def test_mean_value_mode_is_penetration_indepentent():
         )
     assert ca[0] == first_ca
     assert res.success
-    print("ccg_without_restart nit: {}".format(res.nit))
+    print("CCGWithoutRestart nit: {}".format(res.nit))
 
 
-def test_ccg_without_restart_free_system(comm):
+def test_CCGWithoutRestart_free_system(comm):
     pnp = Reduction(comm)
 
     nx, ny = 32, 21
@@ -254,7 +254,7 @@ def test_ccg_without_restart_free_system(comm):
     init_disp[bounded.filled(False)] = lbounds[bounded.filled(False)]
 
     res = optim.minimize(system.objective(penetration, gradient=True,
-                                          logger=Logger("test_ccg_without_restart_free_system_lbfgsb.log")),
+                                          logger=Logger("test_CCGWithoutRestart_free_system_lbfgsb.log")),
                          system.shape_minimisation_input(init_disp),
                          method='L-BFGS-B', jac=True,
                          bounds=bnds,
@@ -283,8 +283,8 @@ def test_ccg_without_restart_free_system(comm):
 
     lbounds_parallel = system._lbounds_from_heights(penetration)
 
-    res = ccg_without_restart.constrained_conjugate_gradients(
-        system.objective(penetration, gradient=True, logger=Logger("test_ccg_without_restart_free_system_cg.log")),
+    res = CCGWithoutRestart.constrained_conjugate_gradients(
+        system.objective(penetration, gradient=True, logger=Logger("test_CCGWithoutRestart_free_system_cg.log")),
         # We also test that the logger and the postprocessing involved work properly in parallel
         system.hessian_product_function(penetration),
         init_disp[substrate.subdomain_slices].reshape(-1),

@@ -2,7 +2,7 @@ from SurfaceTopography import make_sphere
 import ContactMechanics as Solid
 from Adhesion.Interactions import Exponential
 from Adhesion.System import BoundedSmoothContactSystem
-from NuMPI.Optimization import ccg_without_restart, ccg_with_restart
+from NuMPI.Optimization import CCGWithoutRestart, CCGWithRestart
 import numpy as np
 import scipy.optimize as optim
 import pytest
@@ -39,20 +39,20 @@ def test_primal_obj(offset):
     init_gap = init_disp - surface.heights() - offset
 
     # ####################POLONSKY-KEER##############################
-    res = ccg_with_restart.constrained_conjugate_gradients(
+    res = CCGWithRestart.constrained_conjugate_gradients(
         system.primal_objective(offset, gradient=True),
         system.primal_hessian_product, x0=init_gap, gtol=gtol)
 
     assert res.success
-    ccg_with_restart_gap = res.x.reshape((nx, ny))
+    CCGWithRestart_gap = res.x.reshape((nx, ny))
 
     # ####################BUGNICOURT###################################
-    res = ccg_without_restart.constrained_conjugate_gradients(
+    res = CCGWithoutRestart.constrained_conjugate_gradients(
         system.primal_objective(offset, gradient=True),
         system.primal_hessian_product, x0=init_gap, mean_val=None, gtol=gtol)
     assert res.success
 
-    ccg_without_restart_gap = res.x.reshape((nx, ny))
+    CCGWithoutRestart_gap = res.x.reshape((nx, ny))
 
     # #####################LBFGSB#####################################
     res = optim.minimize(
@@ -65,14 +65,14 @@ def test_primal_obj(offset):
     assert res.success
     lbfgsb_gap = res.x.reshape((nx, ny))
 
-    np.testing.assert_allclose(ccg_with_restart_gap, ccg_without_restart_gap, atol=1e-3)
-    np.testing.assert_allclose(ccg_with_restart_gap, lbfgsb_gap, atol=1e-3)
-    np.testing.assert_allclose(lbfgsb_gap, ccg_without_restart_gap, atol=1e-3)
+    np.testing.assert_allclose(CCGWithRestart_gap, CCGWithoutRestart_gap, atol=1e-3)
+    np.testing.assert_allclose(CCGWithRestart_gap, lbfgsb_gap, atol=1e-3)
+    np.testing.assert_allclose(lbfgsb_gap, CCGWithoutRestart_gap, atol=1e-3)
 
     # ##########TEST MEAN VALUES#######################################
     mean_val = np.mean(lbfgsb_gap)
     # ####################POLONSKY-KEER##############################
-    res = ccg_with_restart.constrained_conjugate_gradients(
+    res = CCGWithRestart.constrained_conjugate_gradients(
         system.primal_objective(offset, gradient=True),
         system.primal_hessian_product,
         init_gap,
@@ -80,10 +80,10 @@ def test_primal_obj(offset):
         mean_value=mean_val)
 
     assert res.success
-    ccg_with_restart_gap_mean_cons = res.x.reshape((nx, ny))
+    CCGWithRestart_gap_mean_cons = res.x.reshape((nx, ny))
 
     # ####################BUGNICOURT###################################
-    ccg_without_restart.constrained_conjugate_gradients(system.primal_objective
+    CCGWithoutRestart.constrained_conjugate_gradients(system.primal_objective
                                                         (offset, gradient=True),
                                                         system.
                                                         primal_hessian_product,
@@ -93,9 +93,9 @@ def test_primal_obj(offset):
                                                         )
     assert res.success
 
-    ccg_without_restart_gap_mean_cons = res.x.reshape((nx, ny))
+    CCGWithoutRestart_gap_mean_cons = res.x.reshape((nx, ny))
 
-    np.testing.assert_allclose(ccg_with_restart_gap_mean_cons, lbfgsb_gap, atol=1e-3)
-    np.testing.assert_allclose(ccg_without_restart_gap_mean_cons, lbfgsb_gap, atol=1e-3)
-    np.testing.assert_allclose(lbfgsb_gap, ccg_without_restart_gap, atol=1e-3)
-    np.testing.assert_allclose(lbfgsb_gap, ccg_without_restart_gap_mean_cons, atol=1e-3)
+    np.testing.assert_allclose(CCGWithRestart_gap_mean_cons, lbfgsb_gap, atol=1e-3)
+    np.testing.assert_allclose(CCGWithoutRestart_gap_mean_cons, lbfgsb_gap, atol=1e-3)
+    np.testing.assert_allclose(lbfgsb_gap, CCGWithoutRestart_gap, atol=1e-3)
+    np.testing.assert_allclose(lbfgsb_gap, CCGWithoutRestart_gap_mean_cons, atol=1e-3)
