@@ -79,8 +79,8 @@ class SmoothContactSystem(SystemBase):
         if hasattr(substrate.fftengine, "halfcomplex_field") and self.engine.communicator.size == 1:
             # avoids the initialization to fail if we use an fftengine without these hcffts implemnented
             # preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet
-            self.real_buffer = self.engine.halfcomplex_field("hc-real-space", 1)
-            self.fourier_buffer = self.engine.halfcomplex_field("hc-fourier-space", 1)
+            self.real_buffer = self.engine.halfcomplex_field("hc-real-space",)
+            self.fourier_buffer = self.engine.halfcomplex_field("hc-fourier-space",)
 
             self.stiffness_k = self._compute_stiffness_k()
 
@@ -584,9 +584,9 @@ class SmoothContactSystem(SystemBase):
             self.interaction_force *= -self.area_per_pt
             #                     ^ gradient to force per pixel
 
-            self.real_buffer.array()[...] = self.interaction_force
+            self.real_buffer.p = self.interaction_force
             self.engine.hcfft(self.real_buffer, self.fourier_buffer)
-            interaction_force_float_k = self.fourier_buffer.array()[...].copy()
+            interaction_force_float_k = self.fourier_buffer.p.copy()
 
             adh_coeffs = self._fourier_coefficients()
             interaction_force_float_k *= adh_coeffs
@@ -748,13 +748,13 @@ class SmoothContactSystem(SystemBase):
         """
 
         # TODO: fourier transforming the offset is useless
-        self.real_buffer.array()[...] = offset
+        self.real_buffer.p[...] = offset
         self.engine.hcfft(self.real_buffer, self.fourier_buffer)
-        offset_k = self.fourier_buffer.array()[...].copy()
+        offset_k = self.fourier_buffer.p.copy()
 
-        self.real_buffer.array()[...] = self.surface.heights().copy()
+        self.real_buffer.p[:] = self.surface.heights().copy()
         self.engine.hcfft(self.real_buffer, self.fourier_buffer)
-        self.heights_k_float = self.fourier_buffer.array()[...].copy()
+        self.heights_k_float = self.fourier_buffer.p.copy()
 
         if gradient:
             def fun(disp_):
@@ -764,9 +764,9 @@ class SmoothContactSystem(SystemBase):
                 gap_float_k = (disp_float_k / np.sqrt(self.stiffness_k * self.area_per_pt)) \
                     - self.heights_k_float - offset_k
 
-                self.fourier_buffer.array()[...] = gap_float_k.copy()
+                self.fourier_buffer.p = gap_float_k.copy()
                 self.engine.ihcfft(self.fourier_buffer, self.real_buffer)
-                gap = self.real_buffer.array()[...].copy() * self.engine.normalisation
+                gap = self.real_buffer.p * self.engine.normalisation
 
                 self.energy, self.force_h = self.evaluate_k(disp_float_k,
                                                             gap, offset,
@@ -837,11 +837,11 @@ class SmoothContactSystem(SystemBase):
 
         self.real_buffer.array()[...] = offset
         self.engine.hcfft(self.real_buffer, self.fourier_buffer)
-        offset_k = self.fourier_buffer.array()[...].copy()
+        offset_k = self.fourier_buffer.p.copy()
 
         self.real_buffer.array()[...] = self.surface.heights().copy()
         self.engine.hcfft(self.real_buffer, self.fourier_buffer)
-        self.heights_k_float = self.fourier_buffer.array()[...].copy()
+        self.heights_k_float = self.fourier_buffer.p.copy()
 
         if gradient:
             def fun(disp_k):
@@ -849,9 +849,9 @@ class SmoothContactSystem(SystemBase):
                 orig_shape = np.shape(disp_float_k)
                 disp_float_k = disp_float_k.reshape(self.substrate.nb_grid_pts)
                 gap_float_k = disp_float_k - self.heights_k_float - offset_k
-                self.fourier_buffer.array()[...] = gap_float_k.copy()
+                self.fourier_buffer.p = gap_float_k.copy()
                 self.engine.ihcfft(self.fourier_buffer, self.real_buffer)
-                gap = self.real_buffer.array()[...].copy() \
+                gap = self.real_buffer.p.copy() \
                     * self.engine.normalisation
 
                 self.energy, self.force_h = self.evaluate_k(disp_float_k,

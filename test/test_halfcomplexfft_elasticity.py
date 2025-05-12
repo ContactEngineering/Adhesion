@@ -78,15 +78,15 @@ def test_sinewave_(k, nx, ny):
 
     substrate = PeriodicFFTElasticHalfSpace((nx, ny), E_s, (sx, sy),
                                             fft='fftw')
-    engine = FFT((nx, ny), fft='fftw')
+    engine = FFT((nx, ny))
 
     real_buffer = engine.register_halfcomplex_field(
-        "real-space", 1)
+        "real-space",)
     fourier_buffer = engine.register_halfcomplex_field(
-        "fourier-space", 1)
+        "fourier-space",)
     real_buffer.array()[...] = disp.copy()
     engine.hcfft(real_buffer, fourier_buffer)
-    k_float_disp = fourier_buffer.array()[...].copy()
+    k_float_disp = fourier_buffer.p.copy()
     k_float_disp_mw = k_float_disp * np.sqrt(system.stiffness_k)
 
     engine.create_plan(1)

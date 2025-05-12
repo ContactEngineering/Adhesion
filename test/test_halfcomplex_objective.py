@@ -42,18 +42,18 @@ def test_2d():
 
     disp0 = np.random.uniform(0, 1, size=surface.nb_grid_pts)
 
-    engine = muFFT.FFT(substrate.nb_grid_pts, fft='fftw',
+    engine = muFFT.FFT(substrate.nb_grid_pts,
                        allow_temporary_buffer=False,
                        allow_destroy_input=True)
 
     real_buffer = engine.register_halfcomplex_field(
-        "real-space", 1)
+        "real-space",)
     fourier_buffer = engine.register_halfcomplex_field(
-        "fourier-space", 1)
+        "fourier-space",)
 
     real_buffer.array()[...] = disp0.copy()
     engine.hcfft(real_buffer, fourier_buffer)
-    k_float_disp = fourier_buffer.array()[...].copy()
+    k_float_disp = fourier_buffer.p.copy()
     k_float_disp_mw = k_float_disp * np.sqrt(
         system.stiffness_k)
 
