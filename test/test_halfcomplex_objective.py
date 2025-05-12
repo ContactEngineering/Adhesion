@@ -123,7 +123,7 @@ def test_1d():
                          system_class=SmoothContactSystem)
     substrate = system.substrate
 
-    engine = muFFT.FFT(substrate.nb_grid_pts, fft='fftw',
+    engine = muFFT.FFT(substrate.nb_grid_pts,
                        allow_temporary_buffer=False,
                        allow_destroy_input=True)
 
