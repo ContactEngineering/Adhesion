@@ -2,6 +2,13 @@
 Change log for Adhesion
 =======================
 
+
+v0.91.3 (13May25)
+-----------------
+- MAINT: adjust to new muFFT and NUMPI APIs
+- MAINT: drop python 3.8 support
+- DOC: correct some missing renames
+
 v0.91.2 (27May23)
 -----------------
 - ENH: Analytical formulas for JKR contact 
