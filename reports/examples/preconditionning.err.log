@@ -194,7 +194,7 @@ plt.colorbar(plt.imshow(gap))
 [32m--> [39m[32m190[39m [38;5;28;01mreturn[39;00m [43mfactory[49m[43m([49m[43mnb_grid_pts[49m[43m,[49m[43m [49m[43mcommunicator[49m[43m,[49m[43m [49m[43m*[49m[43m*[49m[43mkwargs[49m[43m)[49m
 
 [31mTypeError[39m: __init__(): incompatible constructor arguments. The following argument types are supported:
-    1. _muFFT.PocketFFT(nb_grid_pts: List[int], communicator: _muGrid.Communicator = <_muGrid.Communicator object at 0x7fa0499106f0>, flags: _muFFT.FFT_PlanFlags = <FFT_PlanFlags.estimate: 0>, allow_temporary_buffer: bool = True, allow_destroy_input: bool = False)
+    1. _muFFT.PocketFFT(nb_grid_pts: List[int], communicator: _muGrid.Communicator = <_muGrid.Communicator object at 0x7f440f11e830>, flags: _muFFT.FFT_PlanFlags = <FFT_PlanFlags.estimate: 0>, allow_temporary_buffer: bool = True, allow_destroy_input: bool = False)
 
-Invoked with: (128, 128), <_muGrid.Communicator object at 0x7fa048bf4930>; kwargs: fft='fftw', allow_temporary_buffer=False, allow_destroy_input=True
+Invoked with: (128, 128), <_muGrid.Communicator object at 0x7f440e65aa70>; kwargs: fft='fftw', allow_temporary_buffer=False, allow_destroy_input=True
 
