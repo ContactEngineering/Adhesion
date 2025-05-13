@@ -20,13 +20,13 @@ Adhesion.DiscoverVersion module
 
 .. automodule:: Adhesion.DiscoverVersion
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: Adhesion
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

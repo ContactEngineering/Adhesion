@@ -1,25 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesive Simulation of the contact of a sphere &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>Adhesive Simulation of the contact of a sphere &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,9 +35,6 @@
           <a href="../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -131,28 +125,32 @@
 </div>
 </div>
 <section id="adhesive-simulation-of-the-contact-of-a-sphere">
-<h1>Adhesive Simulation of the contact of a sphere<a class="headerlink" href="#adhesive-simulation-of-the-contact-of-a-sphere" title="Permalink to this heading"></a></h1>
+<h1>Adhesive Simulation of the contact of a sphere<a class="headerlink" href="#adhesive-simulation-of-the-contact-of-a-sphere" title="Link to this heading"></a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">SurfaceTopography</span> <span class="kn">import</span> <span class="n">Topography</span>
-<span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">PowerLaw</span>
-<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">BoundedSmoothContactSystem</span>
-<span class="kn">from</span> <span class="nn">ContactMechanics.Tools.Logger</span> <span class="kn">import</span> <span class="n">screen</span><span class="p">,</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">SurfaceTopography.Special</span> <span class="kn">import</span> <span class="n">make_sphere</span>
-<span class="kn">from</span> <span class="nn">NuMPI.IO.NetCDF</span> <span class="kn">import</span> <span class="n">NCStructuredGrid</span>
-<span class="kn">from</span> <span class="nn">Adhesion.ReferenceSolutions</span> <span class="kn">import</span> <span class="n">JKR</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">SurfaceTopography</span><span class="w"> </span><span class="kn">import</span> <span class="n">Topography</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.Interactions</span><span class="w"> </span><span class="kn">import</span> <span class="n">PowerLaw</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.System</span><span class="w"> </span><span class="kn">import</span> <span class="n">BoundedSmoothContactSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ContactMechanics.Tools.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">screen</span><span class="p">,</span> <span class="n">Logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">SurfaceTopography.Special</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_sphere</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">NuMPI.IO.NetCDF</span><span class="w"> </span><span class="kn">import</span> <span class="n">NCStructuredGrid</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.ReferenceSolutions</span><span class="w"> </span><span class="kn">import</span> <span class="n">JKR</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
-fatal: not a git repository (or any of the parent directories): .git
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">9</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">from</span><span class="w"> </span><span class="nn">ContactMechanics.Tools.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">screen</span><span class="p">,</span> <span class="n">Logger</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="kn">from</span><span class="w"> </span><span class="nn">SurfaceTopography.Special</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_sphere</span>
+<span class="ne">----&gt; </span><span class="mi">9</span> <span class="kn">from</span><span class="w"> </span><span class="nn">NuMPI.IO.NetCDF</span><span class="w"> </span><span class="kn">import</span> <span class="n">NCStructuredGrid</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.ReferenceSolutions</span><span class="w"> </span><span class="kn">import</span> <span class="n">JKR</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;NuMPI.IO.NetCDF&#39;
 </pre></div>
 </div>
 </div>
@@ -169,7 +167,7 @@ See https://contactengineering.github.io/Adhesion/source/Adhesion.ReferenceSolut
 </div>
 </div>
 <section id="prepare-geometry">
-<h2>Prepare Geometry<a class="headerlink" href="#prepare-geometry" title="Permalink to this heading"></a></h2>
+<h2>Prepare Geometry<a class="headerlink" href="#prepare-geometry" title="Link to this heading"></a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="mi">256</span><span class="p">,</span><span class="mi">256</span>
@@ -190,12 +188,6 @@ See https://contactengineering.github.io/Adhesion/source/Adhesion.ReferenceSolut
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;y ($z_0$)&#39;)
-</pre></div>
-</div>
-<img alt="../_images/678f3c50825692812f226c538935fa5140ffc7a9d320e3057f02c02135d19323.png" src="../_images/678f3c50825692812f226c538935fa5140ffc7a9d320e3057f02c02135d19323.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -207,18 +199,12 @@ See https://contactengineering.github.io/Adhesion/source/Adhesion.ReferenceSolut
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;heights ($z_0$)&#39;)
-</pre></div>
-</div>
-<img alt="../_images/e5110116e19c7b1e7e12924a14ab0c2211ae4b4a80314f33cbf9f98060d5b734.png" src="../_images/e5110116e19c7b1e7e12924a14ab0c2211ae4b4a80314f33cbf9f98060d5b734.png" />
-</div>
 </div>
 </section>
 <section id="setup-system">
-<h2>Setup system<a class="headerlink" href="#setup-system" title="Permalink to this heading"></a></h2>
+<h2>Setup system<a class="headerlink" href="#setup-system" title="Link to this heading"></a></h2>
 <section id="choosing-appropriate-discretization">
-<h3>Choosing appropriate discretization<a class="headerlink" href="#choosing-appropriate-discretization" title="Permalink to this heading"></a></h3>
+<h3>Choosing appropriate discretization<a class="headerlink" href="#choosing-appropriate-discretization" title="Link to this heading"></a></h3>
 <p>Guideline for appropriate discretisation.</p>
 <p>With the exponential and the cubic interaction potential close to the JKR limit, the pixel size needs to be smaller than $2\rho^2$ (in JKR units).</p>
 <p>$$
@@ -229,12 +215,12 @@ $$</p>
 <p>Several arguments lead to this scaling relation:</p>
 <ol class="arabic simple">
 <li><p>More than one pixels need to fall within the range of interaction at the edge of the contact. We estimate the gap at the contact edge using the JKR equation.</p></li>
-<li><p>The region where the stresses peak to the maximimum cohesive stress is called the cohesive zone and needs to include more than one pixel. The width of this region can be estimated from the region where the square-root singular stresses of the JKR solution exceed the max interaction stress. See e.g. <a class="reference external" href="https://eds.s.ebscohost.com/abstract?site=eds&amp;scope=site&amp;jrnl=03542025&amp;AN=102396230&amp;h=iFXqZ3C8CtweMQrf8a%2bDvdqqxAsDZsUJqlRrgcoUV9RtbO3xhCb%2be%2b8cXCY4qScc%2fzZSOR7GTlUaVs8neUuNAw%3d%3d&amp;crl=f&amp;resultLocal=ErrCrlNoResults&amp;resultNs=Ehost&amp;crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d03542025%26AN%3d102396230">Pohrt and Popov 2015</a>.</p></li>
+<li><p>The region where the stresses peak to the maximimum cohesive stress is called the cohesive zone and needs to include more than one pixel. The width of this region can be estimated from the region where the square-root singular stresses of the JKR solution exceed the max interaction stress. See e.g. <a class="reference external" href="https://eds.s.ebscohost.com/abstract?site=eds&amp;amp;scope=site&amp;amp;jrnl=03542025&amp;amp;AN=102396230&amp;amp;h=iFXqZ3C8CtweMQrf8a%2bDvdqqxAsDZsUJqlRrgcoUV9RtbO3xhCb%2be%2b8cXCY4qScc%2fzZSOR7GTlUaVs8neUuNAw%3d%3d&amp;amp;crl=f&amp;amp;resultLocal=ErrCrlNoResults&amp;amp;resultNs=Ehost&amp;amp;crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d03542025%26AN%3d102396230">Pohrt and Popov 2015</a>.</p></li>
 <li><p>The elastic coupling between neighboring pixels (the stiffness associeted with the highest Fourier mode $\sim E^* / \Delta x$) should be stronger than the stiffness of the interaction force $\phi^{\prime\prime}$. This requirement means that $\min(\phi^{\prime\prime}) \sim w / \rho^2 &lt; E^* / \Delta x$, up to a numerical prefactor.
 This argument was put forward by <a class="reference external" href="https://doi.org/10.3390/lubricants9020017">Wang, Zhou and Müser 2021</a> (See Equation (9) and Fig.8).</p></li>
-<li><p><span class="xref myst">Persson and Scarraggi</span>, Appendix A: Consider a penny-shaped crack of size one pixel. In the continuum and JKR limit, a penny shaped crack propagates at a a critical stress $\sim \sqrt{w E \Delta x}$. If the interaction strength is larger than this value, the crack will grow at larger stresses than predicted by the continuum, JKR limit, leading to artificially large adhesion.</p></li>
+<li><p><a class="reference internal" href="#"><span class="xref myst">Persson and Scarraggi</span></a>, Appendix A: Consider a penny-shaped crack of size one pixel. In the continuum and JKR limit, a penny shaped crack propagates at a a critical stress $\sim \sqrt{w E \Delta x}$. If the interaction strength is larger than this value, the crack will grow at larger stresses than predicted by the continuum, JKR limit, leading to artificially large adhesion.</p></li>
 </ol>
-<p>Arguments similar to 2 and 4  lead to an implementation of adhesion using a pixel detachment criterion in Refs. <a class="reference external" href="http://dx.doi.org/10.1007/s10409-016-0630-y">Hulikal et al. 2017</a> and <a class="reference external" href="https://eds.s.ebscohost.com/abstract?site=eds&amp;scope=site&amp;jrnl=03542025&amp;AN=102396230&amp;h=iFXqZ3C8CtweMQrf8a%2bDvdqqxAsDZsUJqlRrgcoUV9RtbO3xhCb%2be%2b8cXCY4qScc%2fzZSOR7GTlUaVs8neUuNAw%3d%3d&amp;crl=f&amp;resultLocal=ErrCrlNoResults&amp;resultNs=Ehost&amp;crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d03542025%26AN%3d102396230">Pohrt and Popov 2015</a>.</p>
+<p>Arguments similar to 2 and 4  lead to an implementation of adhesion using a pixel detachment criterion in Refs. <a class="reference external" href="http://dx.doi.org/10.1007/s10409-016-0630-y">Hulikal et al. 2017</a> and <a class="reference external" href="https://eds.s.ebscohost.com/abstract?site=eds&amp;amp;scope=site&amp;amp;jrnl=03542025&amp;amp;AN=102396230&amp;amp;h=iFXqZ3C8CtweMQrf8a%2bDvdqqxAsDZsUJqlRrgcoUV9RtbO3xhCb%2be%2b8cXCY4qScc%2fzZSOR7GTlUaVs8neUuNAw%3d%3d&amp;amp;crl=f&amp;amp;resultLocal=ErrCrlNoResults&amp;amp;resultNs=Ehost&amp;amp;crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d03542025%26AN%3d102396230">Pohrt and Popov 2015</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interaction_range</span> <span class="o">=</span> <span class="mf">0.1</span>
@@ -245,11 +231,6 @@ This argument was put forward by <a class="reference external" href="https://doi
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span><span class="o">.</span><span class="n">pixel_size</span> <span class="o">/</span> <span class="n">interaction_range</span><span class="o">**</span><span class="mi">2</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([1.953125, 1.953125])
 </pre></div>
 </div>
 </div>
@@ -286,9 +267,6 @@ This argument was put forward by <a class="reference external" href="https://doi
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<img alt="../_images/f5ad904c45b455b765fc4bb8ed12f59e90234d5abbd6d7b49b2412249aca5cf5.png" src="../_images/f5ad904c45b455b765fc4bb8ed12f59e90234d5abbd6d7b49b2412249aca5cf5.png" />
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -300,58 +278,12 @@ This argument was put forward by <a class="reference external" href="https://doi
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">system</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">make_contact_system</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="n">interaction</span><span class="o">=</span><span class="n">interaction</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">system_class</span><span class="o">=</span><span class="n">BoundedSmoothContactSystem</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">young</span><span class="o">=</span><span class="n">Es</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>            <span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/HeightContainer.py:79,</span> in <span class="ni">AbstractTopography.__getattr__.&lt;locals&gt;.func</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">78</span> <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">79</span>     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_functions</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Support/Bibliography.py:76,</span> in <span class="ni">doi.__call__.&lt;locals&gt;.func_with_doi</span><span class="nt">(*args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">74</span> <span class="n">doi</span><span class="o">.</span><span class="n">dois</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_add_these_dois</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">75</span> <span class="n">doi</span><span class="o">.</span><span class="n">_n</span> <span class="o">+=</span> <span class="mi">1</span>
-<span class="ne">---&gt; </span><span class="mi">76</span> <span class="n">retvals</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="n">doi</span><span class="o">.</span><span class="n">_n</span> <span class="o">-=</span> <span class="mi">1</span>
-<span class="g g-Whitespace">     </span><span class="mi">78</span> <span class="k">if</span> <span class="n">doi</span><span class="o">.</span><span class="n">_n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span>     <span class="c1"># We have reached the point where the original `dois` argument</span>
-<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="c1"># was passed. Create a new set such that subsequent calls don&#39;t</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="c1"># contaminate the bibliography.</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:75,</span> in <span class="ni">make_contact_system</span><span class="nt">(topography, *args, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">74</span> <span class="k">def</span> <span class="nf">make_contact_system</span><span class="p">(</span><span class="n">topography</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ne">---&gt; </span><span class="mi">75</span>     <span class="k">return</span> <span class="n">make_system</span><span class="p">(</span><span class="n">surface</span><span class="o">=</span><span class="n">topography</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:71,</span> in <span class="ni">make_system</span><span class="nt">(surface, interaction, substrate, communicator, physical_sizes, system_class, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">68</span> <span class="n">interaction</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">Reduction</span><span class="p">(</span><span class="n">communicator</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">69</span> <span class="n">interaction</span><span class="o">.</span><span class="n">communicator</span> <span class="o">=</span> <span class="n">communicator</span>
-<span class="ne">---&gt; </span><span class="mi">71</span> <span class="k">return</span> <span class="n">system_class</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:82,</span> in <span class="ni">SmoothContactSystem.__init__</span><span class="nt">(self, substrate, interaction, surface)</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span><span class="p">,</span> <span class="s2">&quot;register_halfcomplex_field&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">communicator</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="c1"># avoids the initialization to fail if we use an fftengine without these hcffts implemnented</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="c1"># preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet</span>
-<span class="ne">---&gt; </span><span class="mi">82</span>     <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-real-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">83</span>     <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-fourier-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">85</span>     <span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_stiffness_k</span><span class="p">()</span>
-
-<span class="ne">AttributeError</span>: &#39;_muFFT.PocketFFT&#39; object has no attribute &#39;fetch_or_register_halfcomplex_field&#39;
-</pre></div>
-</div>
-</div>
 </div>
 <section id="loading-history">
-<h4>loading history<a class="headerlink" href="#loading-history" title="Permalink to this heading"></a></h4>
+<h4>loading history<a class="headerlink" href="#loading-history" title="Link to this heading"></a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">penetrations</span><span class="p">(</span><span class="n">start_pen</span><span class="p">,</span> <span class="n">max_pen</span><span class="p">,</span> <span class="n">dpen</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">penetrations</span><span class="p">(</span><span class="n">start_pen</span><span class="p">,</span> <span class="n">max_pen</span><span class="p">,</span> <span class="n">dpen</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    The advantage of using this function is that it generates penetrations that are exactly the same during approach and retraction. </span>
 <span class="sd">    </span>
@@ -384,7 +316,7 @@ This argument was put forward by <a class="reference external" href="https://doi
 </section>
 </section>
 <section id="simulate">
-<h3>Simulate<a class="headerlink" href="#simulate" title="Permalink to this heading"></a></h3>
+<h3>Simulate<a class="headerlink" href="#simulate" title="Link to this heading"></a></h3>
 <p>Choice of the gradient tolerance: The gradient is the error in the balance
 of the elastic-force and the adhesive force on each pixel.</p>
 <p>This error should be small compared to this force.</p>
@@ -447,7 +379,7 @@ of the elastic-force and the adhesive force on each pixel.</p>
 </section>
 </section>
 <section id="plot-pressure-distributions-and-deformed-profiles">
-<h2>plot pressure distributions and deformed profiles<a class="headerlink" href="#plot-pressure-distributions-and-deformed-profiles" title="Permalink to this heading"></a></h2>
+<h2>plot pressure distributions and deformed profiles<a class="headerlink" href="#plot-pressure-distributions-and-deformed-profiles" title="Link to this heading"></a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nc</span> <span class="o">=</span> <span class="n">NCStructuredGrid</span><span class="p">(</span><span class="n">ncfilename</span><span class="p">)</span>
@@ -489,7 +421,7 @@ of the elastic-force and the adhesive force on each pixel.</p>
 <p>Note that the pressures you see in the last plot are the numerical errors.</p>
 </section>
 <section id="scalar-quantities-during-loading">
-<h2>Scalar quantities during loading<a class="headerlink" href="#scalar-quantities-during-loading" title="Permalink to this heading"></a></h2>
+<h2>Scalar quantities during loading<a class="headerlink" href="#scalar-quantities-during-loading" title="Link to this heading"></a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
@@ -523,7 +455,7 @@ of the elastic-force and the adhesive force on each pixel.</p>
 </div>
 </section>
 <section id="further-experiments">
-<h2>Further experiments<a class="headerlink" href="#further-experiments" title="Permalink to this heading"></a></h2>
+<h2>Further experiments<a class="headerlink" href="#further-experiments" title="Link to this heading"></a></h2>
 <p>Decrease tthe number of grid points to 64 (increasing the pixel size by a factor of 4). Is the result still qualitatively accurate ?</p>
 <p>Decreasing the interaction range will lead to similar issues (but requires more patience).</p>
 </section>

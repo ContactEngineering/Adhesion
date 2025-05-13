@@ -1,24 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.System.SmoothSystemSpecialisations &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+  <title>Adhesion.System.SmoothSystemSpecialisations &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,9 +32,6 @@
           <a href="../../../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -118,26 +112,28 @@
 <span class="sd">implements the periodic and non-periodic smooth contact systems</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">namedtuple</span>
-<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy</span>
 
-<span class="kn">from</span> <span class="nn">SurfaceTopography</span> <span class="kn">import</span> <span class="n">Topography</span>
-<span class="kn">import</span> <span class="nn">ContactMechanics</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">SurfaceTopography</span><span class="w"> </span><span class="kn">import</span> <span class="n">Topography</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ContactMechanics</span>
 
-<span class="kn">from</span> <span class="nn">..Interactions</span> <span class="kn">import</span> <span class="n">SoftWall</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">..Interactions</span><span class="w"> </span><span class="kn">import</span> <span class="n">SoftWall</span>
 
-<span class="kn">from</span> <span class="nn">.Systems</span> <span class="kn">import</span> <span class="n">SmoothContactSystem</span>
-<span class="kn">from</span> <span class="nn">.Systems</span> <span class="kn">import</span> <span class="n">IncompatibleResolutionError</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Systems</span><span class="w"> </span><span class="kn">import</span> <span class="n">SmoothContactSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Systems</span><span class="w"> </span><span class="kn">import</span> <span class="n">IncompatibleResolutionError</span>
 
 <span class="c1"># convenient container for storing correspondences betwees small and large</span>
 <span class="c1"># system</span>
 <span class="n">BndSet</span> <span class="o">=</span> <span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;BndSet&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s1">&#39;large&#39;</span><span class="p">,</span> <span class="s1">&#39;small&#39;</span><span class="p">))</span>
 
 
-<div class="viewcode-block" id="FastSmoothContactSystem"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem">[docs]</a><span class="k">class</span> <span class="nc">FastSmoothContactSystem</span><span class="p">(</span><span class="n">SmoothContactSystem</span><span class="p">):</span>
+<div class="viewcode-block" id="FastSmoothContactSystem">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">FastSmoothContactSystem</span><span class="p">(</span><span class="n">SmoothContactSystem</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    This proxy class tries to take advantage of the system-physical_sizes</span>
 <span class="sd">    independence of non-periodic FFT-solved systems by determining the required</span>
@@ -153,17 +149,22 @@
     <span class="c1"># declare that this class is only a proxy</span>
     <span class="n">_proxyclass</span> <span class="o">=</span> <span class="kc">True</span>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.FreeBoundaryError"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.FreeBoundaryError">[docs]</a>    <span class="k">class</span> <span class="nc">FreeBoundaryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<div class="viewcode-block" id="FastSmoothContactSystem.FreeBoundaryError">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.FreeBoundaryError">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">FreeBoundaryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        called when the supplied system cannot be computed with the current</span>
 <span class="sd">        constraints</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">disp</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">disp</span><span class="p">):</span>
             <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">disp</span> <span class="o">=</span> <span class="n">disp</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.BabushkaBoundaryError"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.BabushkaBoundaryError">[docs]</a>    <span class="k">class</span> <span class="nc">BabushkaBoundaryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.BabushkaBoundaryError">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.BabushkaBoundaryError">[docs]</a>
+    <span class="k">class</span><span class="w"> </span><span class="nc">BabushkaBoundaryError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Called when the choosen physical_sizes of the Babushka System</span>
 <span class="sd">        had an Influence on the Solution. In the Future, one may catch</span>
@@ -171,7 +172,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">pass</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">,</span> <span class="n">margin</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot; Represents a contact problem</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">        -----------</span>
@@ -207,7 +209,9 @@
                 <span class="p">(</span><span class="s2">&quot;Class &#39;</span><span class="si">{}</span><span class="s2">&#39; is not fully implemented for 1D. Please help!&quot;</span>
                  <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.shape_minimisation_input"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.shape_minimisation_input">[docs]</a>    <span class="k">def</span> <span class="nf">shape_minimisation_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_array</span><span class="p">):</span>
+<div class="viewcode-block" id="FastSmoothContactSystem.shape_minimisation_input">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.shape_minimisation_input">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">shape_minimisation_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">in_array</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        For minimisation of smart systems, the initial guess array (e.g.</span>
 <span class="sd">        displacement) may have a non-intuitive shape and physical_sizes</span>
@@ -229,7 +233,10 @@
             <span class="k">return</span> <span class="n">in_array</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">raise</span> <span class="n">IncompatibleResolutionError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.check_margins"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.check_margins">[docs]</a>    <span class="k">def</span> <span class="nf">check_margins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.check_margins">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.check_margins">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_margins</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Checks whether the safety margin is sufficient (i.e. the outer ring of</span>
 <span class="sd">        the force array equals zero</span>
@@ -246,7 +253,10 @@
                 <span class="p">(</span><span class="s2">&quot;Small system probably too small, increase the margins and &quot;</span>
                  <span class="s2">&quot;reevaluate self.objective(...).&quot;</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">disp</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.check_margins_babushka"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.check_margins_babushka">[docs]</a>    <span class="k">def</span> <span class="nf">check_margins_babushka</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.check_margins_babushka">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.check_margins_babushka">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">check_margins_babushka</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Inspired from check_margins but acts on the babushka System:</span>
 <span class="sd">        When the pressures are non-zero at the boundary of the babushka-area,</span>
@@ -275,8 +285,11 @@
                 <span class="p">(</span><span class="s2">&quot;Babushka Area has been chosen too small: &quot;</span>
                  <span class="s2">&quot;Pressure is non-zero at the bounds of the Babushka System&quot;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.handles"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.handles">[docs]</a>    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">handles</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span> <span class="n">interaction_type</span><span class="p">,</span> <span class="n">surface_type</span><span class="p">,</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.handles">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.handles">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">handles</span><span class="p">(</span><span class="n">substrate_type</span><span class="p">,</span> <span class="n">interaction_type</span><span class="p">,</span> <span class="n">surface_type</span><span class="p">,</span>
                 <span class="n">is_domain_decomposed</span><span class="p">):</span>
         <span class="n">is_ok</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="c1"># any periodic type of substrate formulation should do</span>
@@ -292,7 +305,10 @@
         <span class="n">is_ok</span> <span class="o">&amp;=</span> <span class="ow">not</span> <span class="n">is_domain_decomposed</span>
         <span class="k">return</span> <span class="n">is_ok</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.objective"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.objective">[docs]</a>    <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.objective">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.objective">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">objective</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        See super().objective for general description this method&#39;s purpose.</span>
 <span class="sd">        Difference for this class wrt &#39;dumb&#39; systems:</span>
@@ -312,7 +328,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">create_babushka</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">objective</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">gradient</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.create_babushka"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.create_babushka">[docs]</a>    <span class="k">def</span> <span class="nf">create_babushka</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="p">):</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.create_babushka">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.create_babushka">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_babushka</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Create a (much smaller) system with just the contacting patch plus the</span>
 <span class="sd">        margin</span>
@@ -364,18 +383,30 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span> <span class="o">=</span> <span class="n">SmoothContactSystem</span><span class="p">(</span>
             <span class="n">sm_substrate</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction</span><span class="p">),</span> <span class="n">sm_surface</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.compute_normal_force"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.compute_normal_force">[docs]</a>    <span class="k">def</span> <span class="nf">compute_normal_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.compute_normal_force">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.compute_normal_force">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_normal_force</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">interaction_force</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.callback"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.callback">[docs]</a>    <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.callback">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.callback">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">babushka</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="n">force</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.evaluate"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disp</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">pot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.evaluate">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.evaluate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">disp</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">pot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">forces</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
             <span class="s2">&quot;This proxy-class cannot be evaluated. If you do not understand &quot;</span>
             <span class="s2">&quot;this, use the base-class instead&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.deproxified"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.deproxified">[docs]</a>    <span class="k">def</span> <span class="nf">deproxified</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.deproxified">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.deproxified">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">deproxified</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Extrapolates the state of the babushka system onto the proxied sytem</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -396,7 +427,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">disp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">evaluate_disp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">force</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">force</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">disp</span></div>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.compute_babushka_bounds"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.compute_babushka_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">compute_babushka_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">babushka_nb_grid_pts</span><span class="p">):</span>
+
+<div class="viewcode-block" id="FastSmoothContactSystem.compute_babushka_bounds">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.compute_babushka_bounds">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute_babushka_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">babushka_nb_grid_pts</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        returns a list of tuples that contain the equivalent slices in the</span>
 <span class="sd">        small and the large array. It differentiates between nb_grid_pts and</span>
@@ -405,7 +439,7 @@
 <span class="sd">        babushka_nb_grid_pts -- nb_grid_pts of smaller scale</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">def</span> <span class="nf">boundary_generator</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">boundary_generator</span><span class="p">():</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            computes slices for the boundaries. helps translating between large</span>
 <span class="sd">            and small arrays using copy-less ndarray views</span>
@@ -426,7 +460,8 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">bounds</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">((</span><span class="n">bnd</span> <span class="k">for</span> <span class="n">bnd</span> <span class="ow">in</span> <span class="n">boundary_generator</span><span class="p">()))</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_babushka_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_array</span><span class="p">,</span> <span class="n">babushka_array</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_babushka_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_array</span><span class="p">,</span> <span class="n">babushka_array</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        returns the equivalent small-scale array representation of a given</span>
 <span class="sd">        large-scale array. In the case of nb_domain_grid_pts arrays, this</span>
@@ -437,7 +472,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># pylint: disable=unused-argument</span>
-        <span class="k">def</span> <span class="nf">nb_domain_grid_pts</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">nb_domain_grid_pts</span><span class="p">():</span>
             <span class="s2">&quot;used when arrays correspond to the substrate&quot;</span>
             <span class="k">nonlocal</span> <span class="n">babushka_array</span>
             <span class="k">if</span> <span class="n">babushka_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -447,7 +482,7 @@
                 <span class="n">babushka_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">small</span><span class="p">]</span> <span class="o">=</span> <span class="n">full_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">large</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">babushka_array</span>
 
-        <span class="k">def</span> <span class="nf">normal_nb_grid_pts</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">normal_nb_grid_pts</span><span class="p">():</span>
             <span class="s2">&quot;used when arrays correspond to the interaction or the surface&quot;</span>
             <span class="k">nonlocal</span> <span class="n">babushka_array</span>
             <span class="k">if</span> <span class="n">babushka_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -461,7 +496,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">nb_domain_grid_pts</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">_get_full_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">babushka_array</span><span class="p">,</span> <span class="n">full_array</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_full_array</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">babushka_array</span><span class="p">,</span> <span class="n">full_array</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        returns the equivalent large-scale array representation of a given</span>
 <span class="sd">        Small-scale array.</span>
@@ -471,7 +506,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># pylint: disable=unused-argument</span>
-        <span class="k">def</span> <span class="nf">nb_domain_grid_pts</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">nb_domain_grid_pts</span><span class="p">():</span>
             <span class="s2">&quot;used when arrays correspond to the substrate&quot;</span>
             <span class="k">nonlocal</span> <span class="n">full_array</span>
             <span class="k">if</span> <span class="n">full_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -481,7 +516,7 @@
                 <span class="n">full_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">large</span><span class="p">]</span> <span class="o">=</span> <span class="n">babushka_array</span><span class="p">[</span><span class="n">bnd</span><span class="o">.</span><span class="n">small</span><span class="p">]</span>
             <span class="k">return</span> <span class="n">full_array</span>
 
-        <span class="k">def</span> <span class="nf">normal_nb_grid_pts</span><span class="p">():</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">normal_nb_grid_pts</span><span class="p">():</span>
             <span class="s2">&quot;used when arrays correspond to the interaction or the surface&quot;</span>
             <span class="k">nonlocal</span> <span class="n">full_array</span>
             <span class="k">if</span> <span class="n">full_array</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -495,7 +530,9 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">nb_domain_grid_pts</span><span class="p">()</span>
 
-<div class="viewcode-block" id="FastSmoothContactSystem.minimize_proxy"><a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.minimize_proxy">[docs]</a>    <span class="k">def</span> <span class="nf">minimize_proxy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;L-BFGS-B&#39;</span><span class="p">,</span>
+<div class="viewcode-block" id="FastSmoothContactSystem.minimize_proxy">
+<a class="viewcode-back" href="../../../source/Adhesion.System.html#Adhesion.System.SmoothSystemSpecialisations.FastSmoothContactSystem.minimize_proxy">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">minimize_proxy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">disp0</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;L-BFGS-B&#39;</span><span class="p">,</span>
                        <span class="n">options</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lbounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ubounds</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">tol</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                        <span class="n">deproxify_everytime</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
@@ -531,14 +568,14 @@
         <span class="k">if</span> <span class="n">callback</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
             <span class="n">use_callback</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="n">gradient</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">callback</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">def</span> <span class="nf">use_callback</span><span class="p">(</span><span class="n">disp_k</span><span class="p">):</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">use_callback</span><span class="p">(</span><span class="n">disp_k</span><span class="p">):</span>
                 <span class="c1"># pylint: disable=missing-docstring</span>
                 <span class="c1"># pylint: disable=unused-argument</span>
                 <span class="k">pass</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">use_callback</span> <span class="o">=</span> <span class="n">callback</span>
 
-        <span class="k">def</span> <span class="nf">compound_callback</span><span class="p">(</span><span class="n">disp_k</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">compound_callback</span><span class="p">(</span><span class="n">disp_k</span><span class="p">):</span>
 <span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">            The callback first check whether the new state of the system</span>
 <span class="sd">            violates the physical_sizes restrictions of the babuška</span>
@@ -587,7 +624,9 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">check_margins</span><span class="p">()</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimize_proxy</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span> <span class="n">err</span><span class="o">.</span><span class="n">disp</span><span class="p">,</span> <span class="n">method</span><span class="p">,</span> <span class="n">options</span><span class="p">,</span>
                                        <span class="n">gradient</span><span class="p">,</span> <span class="n">tol</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span></div></div>
+        <span class="k">return</span> <span class="n">result</span></div>
+</div>
+
 </pre></div>
 
            </div>

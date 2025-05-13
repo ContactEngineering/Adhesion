@@ -1,24 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.Interactions.PowerLaw &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+  <title>Adhesion.Interactions.PowerLaw &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,9 +32,6 @@
           <a href="../../../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -111,14 +105,16 @@
 <span class="c1"># OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE</span>
 <span class="c1"># SOFTWARE.</span>
 <span class="c1">#</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">NuMPI</span> <span class="kn">import</span> <span class="n">MPI</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">NuMPI</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
 
-<span class="kn">from</span> <span class="nn">.Base</span> <span class="kn">import</span> <span class="n">SoftWall</span>
-<span class="kn">from</span> <span class="nn">.Potential</span> <span class="kn">import</span> <span class="n">Potential</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Base</span><span class="w"> </span><span class="kn">import</span> <span class="n">SoftWall</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.Potential</span><span class="w"> </span><span class="kn">import</span> <span class="n">Potential</span>
 
 
-<div class="viewcode-block" id="PowerLaw"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.PowerLaw.PowerLaw">[docs]</a><span class="k">class</span> <span class="nc">PowerLaw</span><span class="p">(</span><span class="n">Potential</span><span class="p">):</span>
+<div class="viewcode-block" id="PowerLaw">
+<a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.PowerLaw.PowerLaw">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PowerLaw</span><span class="p">(</span><span class="n">Potential</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot; Polynomial interaction wiches value, first and second derivatives are</span>
 <span class="sd">    0 at the cutoff radius :math:`r_c`</span>
 
@@ -131,7 +127,7 @@
 
     <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;PowerLaw&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">work_of_adhesion</span><span class="p">,</span> <span class="n">cutoff_radius</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">work_of_adhesion</span><span class="p">,</span> <span class="n">cutoff_radius</span><span class="p">,</span> <span class="n">exponent</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
                  <span class="n">communicator</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters:</span>
@@ -146,39 +142,41 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">exponent</span> <span class="o">=</span> <span class="n">exponent</span>
         <span class="n">SoftWall</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="n">communicator</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span>
                 <span class="s2">&quot;Potential &#39;</span><span class="si">{0.name}</span><span class="s2">&#39;: &quot;</span>
                 <span class="s2">&quot;work_of_adhesion = </span><span class="si">{0.work_of_adhesion}</span><span class="s2">,&quot;</span>
                 <span class="s2">&quot;cutoff_radius = </span><span class="si">{0.cutoff_radius}</span><span class="s2">, exponent = </span><span class="si">{0.exponent}</span><span class="s2">&quot;</span>
                 <span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">state</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__getstate__</span><span class="p">(),</span> \
             <span class="bp">self</span><span class="o">.</span><span class="n">exponent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_of_adhesion</span>
         <span class="k">return</span> <span class="n">state</span>
 
-    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="n">superstate</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">exponent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_of_adhesion</span> <span class="o">=</span> <span class="n">state</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__setstate__</span><span class="p">(</span><span class="n">superstate</span><span class="p">)</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">has_cutoff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">has_cutoff</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">r_min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">r_min</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">r_infl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">r_infl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">max_tensile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">max_tensile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">work_of_adhesion</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">rho</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">exponent</span>
 
-<div class="viewcode-block" id="PowerLaw.evaluate"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.PowerLaw.PowerLaw.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<div class="viewcode-block" id="PowerLaw.evaluate">
+<a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.PowerLaw.PowerLaw.evaluate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">curvature</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                  <span class="n">mask</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -201,7 +199,9 @@
         <span class="k">if</span> <span class="n">curvature</span><span class="p">:</span>
             <span class="n">ddV</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">g</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span> <span class="n">p</span> <span class="o">*</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="n">rc</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">gpm2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">V</span><span class="p">,</span> <span class="n">dV</span><span class="p">,</span> <span class="n">ddV</span></div></div>
+        <span class="k">return</span> <span class="n">V</span><span class="p">,</span> <span class="n">dV</span><span class="p">,</span> <span class="n">ddV</span></div>
+</div>
+
 </pre></div>
 
            </div>

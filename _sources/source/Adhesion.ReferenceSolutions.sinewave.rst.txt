@@ -9,13 +9,13 @@ Adhesion.ReferenceSolutions.sinewave.JKR module
 
 .. automodule:: Adhesion.ReferenceSolutions.sinewave.JKR
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: Adhesion.ReferenceSolutions.sinewave
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

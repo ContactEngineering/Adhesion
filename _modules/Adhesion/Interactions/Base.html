@@ -1,24 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.Interactions.Base &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+  <title>Adhesion.Interactions.Base &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,9 +32,6 @@
           <a href="../../../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -116,26 +110,33 @@
 <span class="sd">Defines the base class for contact description</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">copy</span>
-<span class="kn">from</span> <span class="nn">NuMPI</span> <span class="kn">import</span> <span class="n">MPI</span>
-<span class="kn">from</span> <span class="nn">NuMPI.Tools</span> <span class="kn">import</span> <span class="n">Reduction</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">NuMPI</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">NuMPI.Tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reduction</span>
 
 
-<div class="viewcode-block" id="Interaction"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.Interaction">[docs]</a><span class="k">class</span> <span class="nc">Interaction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Interaction">
+<a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.Interaction">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Interaction</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;base class for all interactions, e.g. interatomic potentials&quot;&quot;&quot;</span>
     <span class="c1"># pylint: disable=too-few-public-methods</span>
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="HardWall"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.HardWall">[docs]</a><span class="k">class</span> <span class="nc">HardWall</span><span class="p">(</span><span class="n">Interaction</span><span class="p">):</span>
+
+<div class="viewcode-block" id="HardWall">
+<a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.HardWall">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HardWall</span><span class="p">(</span><span class="n">Interaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;base class for non-smooth contact mechanics&quot;&quot;&quot;</span>
 
     <span class="c1"># pylint: disable=too-few-public-methods</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">penetration</span> <span class="o">=</span> <span class="kc">None</span>
 
-<div class="viewcode-block" id="HardWall.compute"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.HardWall.compute">[docs]</a>    <span class="k">def</span> <span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+<div class="viewcode-block" id="HardWall.compute">
+<a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.HardWall.compute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">compute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters:</span>
 <span class="sd">        -----------</span>
@@ -144,39 +145,49 @@
 <span class="sd">        tol: float, optional</span>
 <span class="sd">            tolerance for determining whether the gap is closed, default 0.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">penetration</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gap</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">,</span> <span class="o">-</span><span class="n">gap</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">penetration</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gap</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">,</span> <span class="o">-</span><span class="n">gap</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
+</div>
 
 
-<div class="viewcode-block" id="Dugdale"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.Dugdale">[docs]</a><span class="k">class</span> <span class="nc">Dugdale</span><span class="p">(</span><span class="n">HardWall</span><span class="p">):</span>
+
+<div class="viewcode-block" id="Dugdale">
+<a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.Dugdale">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Dugdale</span><span class="p">(</span><span class="n">HardWall</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Potential class representing a Dugdale cohesive zone model&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stress</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stress</span><span class="p">,</span> <span class="n">length</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stress</span> <span class="o">=</span> <span class="n">stress</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_length</span> <span class="o">=</span> <span class="n">length</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">stress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stress</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length</span>
 
-<div class="viewcode-block" id="Dugdale.evaluate"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.Dugdale.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
+<div class="viewcode-block" id="Dugdale.evaluate">
+<a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.Dugdale.evaluate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">0.</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">gap</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_length</span><span class="p">,</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">_stress</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">gap</span><span class="p">),</span>
-                        <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">gap</span><span class="p">))</span></div></div>
+                        <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">gap</span><span class="p">))</span></div>
+</div>
 
 
-<div class="viewcode-block" id="SoftWall"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.SoftWall">[docs]</a><span class="k">class</span> <span class="nc">SoftWall</span><span class="p">(</span><span class="n">Interaction</span><span class="p">):</span>
+
+<div class="viewcode-block" id="SoftWall">
+<a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.SoftWall">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SoftWall</span><span class="p">(</span><span class="n">Interaction</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;base class for smooth contact mechanics&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">communicator</span><span class="o">=</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">communicator</span> <span class="o">=</span> <span class="n">communicator</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">Reduction</span><span class="p">(</span><span class="n">communicator</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__deepcopy__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">memo</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        makes a deepcopy of all the attributes except self.reduction,</span>
 <span class="sd">        where it stores the same reference</span>
@@ -208,13 +219,15 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">),</span> <span class="n">memo</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">result</span>
 
-    <span class="k">def</span> <span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__getstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span>
 
-    <span class="k">def</span> <span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__setstate__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">energy</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">gradient</span> <span class="o">=</span> <span class="n">state</span>
 
-<div class="viewcode-block" id="SoftWall.evaluate"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.SoftWall.evaluate">[docs]</a>    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="SoftWall.evaluate">
+<a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.SoftWall.evaluate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gap</span><span class="p">,</span> <span class="n">potential</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">gradient</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        computes and returns the interaction energy and/or forces based on the</span>
 <span class="sd">        as fuction of the gap</span>
@@ -229,8 +242,11 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="SoftWall.plot"><a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.SoftWall.plot">[docs]</a>    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<div class="viewcode-block" id="SoftWall.plot">
+<a class="viewcode-back" href="../../../source/Adhesion.Interactions.html#Adhesion.Interactions.Base.SoftWall.plot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
         <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axpot</span><span class="p">,</span> <span class="n">axf</span><span class="p">,</span> <span class="n">axcurv</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.7</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_min</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">r_min</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
 
@@ -255,7 +271,9 @@
         <span class="n">axcurv</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;gap&quot;</span><span class="p">)</span>
         <span class="n">axpot</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 
-        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axpot</span><span class="p">,</span> <span class="n">axf</span><span class="p">,</span> <span class="n">axcurv</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">axpot</span><span class="p">,</span> <span class="n">axf</span><span class="p">,</span> <span class="n">axcurv</span><span class="p">)</span></div>
+</div>
+
 </pre></div>
 
            </div>

@@ -1,25 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&lt;no title&gt; &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>&lt;no title&gt; &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -36,9 +33,6 @@
           <a href="../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -110,33 +104,24 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.testing.exceptions</span>
-<span class="kn">from</span> <span class="nn">SurfaceTopography.Generation</span> <span class="kn">import</span> <span class="n">fourier_synthesis</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.testing.exceptions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">SurfaceTopography.Generation</span><span class="w"> </span><span class="kn">import</span> <span class="n">fourier_synthesis</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 
-<span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">RepulsiveExponential</span>
-<span class="kn">from</span> <span class="nn">ContactMechanics</span> <span class="kn">import</span> <span class="n">FreeFFTElasticHalfSpace</span><span class="p">,</span> <span class="n">PeriodicFFTElasticHalfSpace</span>
-<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">BoundedSmoothContactSystem</span><span class="p">,</span> <span class="n">SmoothContactSystem</span>
-<span class="kn">import</span> <span class="nn">scipy.interpolate</span>
-<span class="kn">import</span> <span class="nn">muFFT</span>
-<span class="kn">from</span> <span class="nn">ContactMechanics.Tools.Logger</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.Interactions</span><span class="w"> </span><span class="kn">import</span> <span class="n">RepulsiveExponential</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ContactMechanics</span><span class="w"> </span><span class="kn">import</span> <span class="n">FreeFFTElasticHalfSpace</span><span class="p">,</span> <span class="n">PeriodicFFTElasticHalfSpace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.System</span><span class="w"> </span><span class="kn">import</span> <span class="n">BoundedSmoothContactSystem</span><span class="p">,</span> <span class="n">SmoothContactSystem</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.interpolate</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">muFFT</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ContactMechanics.Tools.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
 <span class="n">Es</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="n">hprms</span><span class="o">=</span><span class="mf">0.1</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
-fatal: not a git repository (or any of the parent directories): .git
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
 </pre></div>
 </div>
 </div>
@@ -171,7 +156,7 @@ fatal: not a git repository (or any of the parent directories): .git
 <span class="n">system</span> <span class="o">=</span> <span class="n">SmoothContactSystem</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">topography</span><span class="p">)</span>
 
 <span class="c1"># TODO: This should probably end up as a method of the system</span>
-<span class="k">def</span> <span class="nf">fix_mw_sol</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fix_mw_sol</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
 
     <span class="n">var</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">stiffness_k</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="o">*</span> <span class="n">system</span><span class="o">.</span><span class="n">area_per_pt</span><span class="p">)</span>
@@ -179,7 +164,7 @@ fatal: not a git repository (or any of the parent directories): .git
     <span class="n">fourier_sol_MW</span> <span class="o">=</span> <span class="n">fix_fourier_sol</span><span class="p">(</span><span class="n">_fourier_sol_mw</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fourier_sol_MW</span>
 
-<span class="k">def</span> <span class="nf">fix_fourier_sol</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fix_fourier_sol</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="n">var</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="n">fourier_buffer</span><span class="o">.</span><span class="n">array</span><span class="p">()[</span><span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="n">var</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">)</span>
     <span class="n">engine</span><span class="o">.</span><span class="n">ihcfft</span><span class="p">(</span><span class="n">fourier_buffer</span><span class="p">,</span><span class="n">real_buffer</span><span class="p">)</span>
@@ -293,34 +278,37 @@ fatal: not a git repository (or any of the parent directories): .git
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/Interactions/Exponential.py:218: RuntimeWarning: overflow encountered in exp
-  V_rep = gam_rep * np.exp(g_rep)
-</pre></div>
-</div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0
 </pre></div>
 </div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/Adhesion/venv/lib/python3.12/site-packages/Adhesion/Interactions/Exponential.py:218: RuntimeWarning: overflow encountered in exp
+  V_rep = gam_rep * np.exp(g_rep)
+</pre></div>
+</div>
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">26</span>
-<span class="g g-Whitespace">     </span><span class="mi">20</span> <span class="n">substrate</span> <span class="o">=</span> <span class="n">PeriodicFFTElasticHalfSpace</span><span class="p">(</span>
-<span class="g g-Whitespace">     </span><span class="mi">21</span>     <span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">),</span> <span class="n">Es</span><span class="p">,</span> <span class="n">physical_sizes</span><span class="o">=</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">),</span>
-<span class="g g-Whitespace">     </span><span class="mi">22</span>     <span class="n">fft</span><span class="o">=</span><span class="s1">&#39;serial&#39;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">24</span> <span class="n">interaction</span> <span class="o">=</span> <span class="n">RepulsiveExponential</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">w</span><span class="p">,</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">interaction_range</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">interaction_range</span><span class="p">)</span><span class="o">.</span><span class="n">linearize_core</span><span class="p">(</span><span class="n">hardness</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">26</span> <span class="n">system</span> <span class="o">=</span> <span class="n">SmoothContactSystem</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">topography</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">28</span> <span class="c1"># TODO: This should probably end up as a method of the system</span>
-<span class="g g-Whitespace">     </span><span class="mi">29</span> <span class="k">def</span> <span class="nf">fix_mw_sol</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">61</span>
+<span class="g g-Whitespace">     </span><span class="mi">57</span> <span class="n">offset_temp</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">system</span><span class="o">.</span><span class="n">surface</span><span class="o">.</span><span class="n">rms_height_from_area</span><span class="p">()</span>
+<span class="g g-Whitespace">     </span><span class="mi">59</span> <span class="n">init_disp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_subdomain_grid_pts</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">61</span> <span class="n">engine</span> <span class="o">=</span> <span class="n">muFFT</span><span class="o">.</span><span class="n">FFT</span><span class="p">(</span><span class="n">system</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">,</span> <span class="n">fft</span><span class="o">=</span><span class="s1">&#39;fftw&#39;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">62</span>                    <span class="n">allow_temporary_buffer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">63</span>                    <span class="n">allow_destroy_input</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">65</span> <span class="n">real_buffer</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;real-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">66</span> <span class="n">fourier_buffer</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;fourier-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:82,</span> in <span class="ni">SmoothContactSystem.__init__</span><span class="nt">(self, substrate, interaction, surface)</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span><span class="p">,</span> <span class="s2">&quot;register_halfcomplex_field&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">communicator</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="c1"># avoids the initialization to fail if we use an fftengine without these hcffts implemnented</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="c1"># preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet</span>
-<span class="ne">---&gt; </span><span class="mi">82</span>     <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-real-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">83</span>     <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-fourier-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">85</span>     <span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_stiffness_k</span><span class="p">()</span>
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.12/site-packages/muFFT/__init__.py:190,</span> in <span class="ni">FFT</span><span class="nt">(nb_grid_pts, engine, communicator, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">167</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">168</span><span class="sd"> The FFT class handles forward and inverse transforms and instantiates</span>
+<span class="g g-Whitespace">    </span><span class="mi">169</span><span class="sd"> the correct engine object to carry out the transform.</span>
+<span class="sd">   (...)    187     Default: None</span>
+<span class="g g-Whitespace">    </span><span class="mi">188</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="g g-Whitespace">    </span><span class="mi">189</span> <span class="n">factory</span><span class="p">,</span> <span class="n">communicator</span> <span class="o">=</span> <span class="n">get_engine_factory</span><span class="p">(</span><span class="n">engine</span><span class="p">,</span> <span class="n">communicator</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">190</span> <span class="k">return</span> <span class="n">factory</span><span class="p">(</span><span class="n">nb_grid_pts</span><span class="p">,</span> <span class="n">communicator</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-<span class="ne">AttributeError</span>: &#39;_muFFT.PocketFFT&#39; object has no attribute &#39;fetch_or_register_halfcomplex_field&#39;
+<span class="ne">TypeError</span>: __init__(): incompatible constructor arguments. The following argument types are supported:
+<span class="g g-Whitespace">    </span><span class="mi">1</span><span class="o">.</span> <span class="n">_muFFT</span><span class="o">.</span><span class="n">PocketFFT</span><span class="p">(</span><span class="n">nb_grid_pts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">communicator</span><span class="p">:</span> <span class="n">_muGrid</span><span class="o">.</span><span class="n">Communicator</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">_muGrid</span><span class="o">.</span><span class="n">Communicator</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7fa0499106f0</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">flags</span><span class="p">:</span> <span class="n">_muFFT</span><span class="o">.</span><span class="n">FFT_PlanFlags</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">FFT_PlanFlags</span><span class="o">.</span><span class="n">estimate</span><span class="p">:</span> <span class="mi">0</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">allow_temporary_buffer</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">allow_destroy_input</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span>
+
+<span class="n">Invoked</span> <span class="k">with</span><span class="p">:</span> <span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">128</span><span class="p">),</span> <span class="o">&lt;</span><span class="n">_muGrid</span><span class="o">.</span><span class="n">Communicator</span> <span class="nb">object</span> <span class="n">at</span> <span class="mh">0x7fa048bf4930</span><span class="o">&gt;</span><span class="p">;</span> <span class="n">kwargs</span><span class="p">:</span> <span class="n">fft</span><span class="o">=</span><span class="s1">&#39;fftw&#39;</span><span class="p">,</span> <span class="n">allow_temporary_buffer</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">allow_destroy_input</span><span class="o">=</span><span class="kc">True</span>
 </pre></div>
 </div>
 </div>

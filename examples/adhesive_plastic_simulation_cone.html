@@ -1,25 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesive Plastic Simulation &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>Adhesive Plastic Simulation &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,9 +35,6 @@
           <a href="../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -131,33 +125,24 @@
 </div>
 </div>
 <section id="adhesive-plastic-simulation">
-<h1>Adhesive Plastic Simulation<a class="headerlink" href="#adhesive-plastic-simulation" title="Permalink to this heading"></a></h1>
+<h1>Adhesive Plastic Simulation<a class="headerlink" href="#adhesive-plastic-simulation" title="Link to this heading"></a></h1>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">from</span> <span class="nn">SurfaceTopography</span> <span class="kn">import</span> <span class="n">Topography</span><span class="p">,</span> <span class="n">PlasticTopography</span>
-<span class="kn">from</span> <span class="nn">ContactMechanics</span> <span class="kn">import</span> <span class="n">FreeFFTElasticHalfSpace</span>
-<span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">Lj82</span>
-<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">make_system</span>
-<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">PlasticSmoothContactSystem</span>
-<span class="kn">from</span> <span class="nn">ContactMechanics.Tools.Logger</span> <span class="kn">import</span> <span class="n">screen</span><span class="p">,</span> <span class="n">Logger</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
-fatal: not a git repository (or any of the parent directories): .git
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
+<span class="kn">from</span><span class="w"> </span><span class="nn">SurfaceTopography</span><span class="w"> </span><span class="kn">import</span> <span class="n">Topography</span><span class="p">,</span> <span class="n">PlasticTopography</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ContactMechanics</span><span class="w"> </span><span class="kn">import</span> <span class="n">FreeFFTElasticHalfSpace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.Interactions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lj82</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.System</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_system</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.System</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlasticSmoothContactSystem</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ContactMechanics.Tools.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">screen</span><span class="p">,</span> <span class="n">Logger</span>
 </pre></div>
 </div>
 </div>
 </div>
 <section id="prepare-geometry">
-<h2>Prepare Geometry<a class="headerlink" href="#prepare-geometry" title="Permalink to this heading"></a></h2>
+<h2>Prepare Geometry<a class="headerlink" href="#prepare-geometry" title="Link to this heading"></a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span><span class="mi">128</span>
@@ -187,7 +172,7 @@ fatal: not a git repository (or any of the parent directories): .git
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;y ($z_0$)&#39;)
 </pre></div>
 </div>
-<img alt="../_images/7f64cc036a4ee5728113af4c06d922fb165901910124bef1d5f9a577277e53ec.png" src="../_images/7f64cc036a4ee5728113af4c06d922fb165901910124bef1d5f9a577277e53ec.png" />
+<img alt="../_images/4a54fc63015a8e41d79456fe27a3cc3de398c6e0033467f9fdc2e32c1d09ea74.png" src="../_images/4a54fc63015a8e41d79456fe27a3cc3de398c6e0033467f9fdc2e32c1d09ea74.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -204,12 +189,12 @@ fatal: not a git repository (or any of the parent directories): .git
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;heights ($z_0$)&#39;)
 </pre></div>
 </div>
-<img alt="../_images/852bbf17b125b3b08f9a69fc4c63ebaded6bca15708321885b2eab194d944f37.png" src="../_images/852bbf17b125b3b08f9a69fc4c63ebaded6bca15708321885b2eab194d944f37.png" />
+<img alt="../_images/b6bb99c0d5e124a3cbbb6de319753be47f0dbe782637641775c9d08e13c75163.png" src="../_images/b6bb99c0d5e124a3cbbb6de319753be47f0dbe782637641775c9d08e13c75163.png" />
 </div>
 </div>
 </section>
 <section id="material-properties">
-<h2>Material Properties<a class="headerlink" href="#material-properties" title="Permalink to this heading"></a></h2>
+<h2>Material Properties<a class="headerlink" href="#material-properties" title="Link to this heading"></a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Es</span> <span class="o">=</span> <span class="mf">50.</span>
@@ -222,7 +207,7 @@ fatal: not a git repository (or any of the parent directories): .git
 </div>
 </section>
 <section id="setup-system">
-<h2>setup system<a class="headerlink" href="#setup-system" title="Permalink to this heading"></a></h2>
+<h2>setup system<a class="headerlink" href="#setup-system" title="Link to this heading"></a></h2>
 <p>the <code class="docutils literal notranslate"><span class="pre">make_system</span></code> automatically knows it has to do a plastic simulation if we pass a <code class="docutils literal notranslate"><span class="pre">PlasticTopogaraphy</span></code></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -235,43 +220,6 @@ fatal: not a git repository (or any of the parent directories): .git
     <span class="n">surface</span><span class="o">=</span><span class="n">PlasticTopography</span><span class="p">(</span><span class="n">topography</span><span class="o">=</span><span class="n">topography</span><span class="p">,</span> <span class="n">hardness</span><span class="o">=</span><span class="n">hardness</span><span class="p">),</span>
     <span class="n">system_class</span><span class="o">=</span><span class="n">PlasticSmoothContactSystem</span>
            <span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">system</span> <span class="o">=</span> <span class="n">make_system</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="n">interaction</span><span class="o">=</span><span class="n">Lj82</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">z0</span><span class="p">),</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span>     <span class="n">substrate</span><span class="o">=</span><span class="n">FreeFFTElasticHalfSpace</span><span class="p">(</span>
-<span class="g g-Whitespace">      </span><span class="mi">4</span>         <span class="n">nb_grid_pts</span><span class="o">=</span><span class="n">topography</span><span class="o">.</span><span class="n">nb_grid_pts</span><span class="p">,</span> <span class="n">young</span><span class="o">=</span><span class="n">Es</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>         <span class="n">physical_sizes</span><span class="o">=</span><span class="n">topography</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">,</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>         <span class="n">check_boundaries</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
-<span class="g g-Whitespace">      </span><span class="mi">7</span>     <span class="n">surface</span><span class="o">=</span><span class="n">PlasticTopography</span><span class="p">(</span><span class="n">topography</span><span class="o">=</span><span class="n">topography</span><span class="p">,</span> <span class="n">hardness</span><span class="o">=</span><span class="n">hardness</span><span class="p">),</span>
-<span class="g g-Whitespace">      </span><span class="mi">8</span>     <span class="n">system_class</span><span class="o">=</span><span class="n">PlasticSmoothContactSystem</span>
-<span class="g g-Whitespace">      </span><span class="mi">9</span>            <span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Factory.py:71,</span> in <span class="ni">make_system</span><span class="nt">(surface, interaction, substrate, communicator, physical_sizes, system_class, **kwargs)</span>
-<span class="g g-Whitespace">     </span><span class="mi">68</span> <span class="n">interaction</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">Reduction</span><span class="p">(</span><span class="n">communicator</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">69</span> <span class="n">interaction</span><span class="o">.</span><span class="n">communicator</span> <span class="o">=</span> <span class="n">communicator</span>
-<span class="ne">---&gt; </span><span class="mi">71</span> <span class="k">return</span> <span class="n">system_class</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/PlasticSystemSpecialisations.py:47,</span> in <span class="ni">PlasticSmoothContactSystem.__init__</span><span class="nt">(self, substrate, interaction, surface)</span>
-<span class="g g-Whitespace">     </span><span class="mi">45</span> <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">):</span>
-<span class="g g-Whitespace">     </span><span class="mi">46</span>     <span class="n">plastic_interaction</span> <span class="o">=</span> <span class="n">interaction</span><span class="o">.</span><span class="n">linearize_core</span><span class="p">(</span><span class="n">hardness</span><span class="o">=</span><span class="n">surface</span><span class="o">.</span><span class="n">hardness</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">47</span>     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">plastic_interaction</span><span class="p">,</span> <span class="n">surface</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:82,</span> in <span class="ni">SmoothContactSystem.__init__</span><span class="nt">(self, substrate, interaction, surface)</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span><span class="p">,</span> <span class="s2">&quot;register_halfcomplex_field&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">communicator</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="c1"># avoids the initialization to fail if we use an fftengine without these hcffts implemnented</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="c1"># preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet</span>
-<span class="ne">---&gt; </span><span class="mi">82</span>     <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-real-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">83</span>     <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-fourier-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">85</span>     <span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_stiffness_k</span><span class="p">()</span>
-
-<span class="ne">AttributeError</span>: &#39;_muFFT.PocketFFT&#39; object has no attribute &#39;fetch_or_register_halfcomplex_field&#39;
 </pre></div>
 </div>
 </div>
@@ -297,9 +245,12 @@ fatal: not a git repository (or any of the parent directories): .git
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/2e930f72da6e80498ef7f883172bf94a2c70cb1372f26a2d064fc4258f2b70b2.png" src="../_images/2e930f72da6e80498ef7f883172bf94a2c70cb1372f26a2d064fc4258f2b70b2.png" />
+</div>
 </div>
 <section id="loading-history">
-<h3>loading history<a class="headerlink" href="#loading-history" title="Permalink to this heading"></a></h3>
+<h3>loading history<a class="headerlink" href="#loading-history" title="Link to this heading"></a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">penetrations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
@@ -310,7 +261,7 @@ fatal: not a git repository (or any of the parent directories): .git
 </div>
 </section>
 <section id="simulate">
-<h3>Simulate<a class="headerlink" href="#simulate" title="Permalink to this heading"></a></h3>
+<h3>Simulate<a class="headerlink" href="#simulate" title="Link to this heading"></a></h3>
 <p>Choice of the gradient tolerance: The gradient is the error in the balance
 of the elastic-force and the adhesive force on each pixel.</p>
 <p>This error should be small compared to this force.</p>
@@ -321,6 +272,11 @@ and so do the achievable gradient tolerance.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hardness</span> <span class="o">*</span> <span class="n">topography</span><span class="o">.</span><span class="n">area_per_pt</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(7.62939453125)
 </pre></div>
 </div>
 </div>
@@ -376,11 +332,45 @@ and so do the achievable gradient tolerance.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = -1.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = -0.25
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.5
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 1.25
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 2.0
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 1.25
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = 0.5
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = -0.25
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>penetration = -1.0
+</pre></div>
+</div>
+</div>
 </div>
 <p>Bug small steps in the not yet in contact region leads to problems, why ?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">penetration</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(-1.0)
 </pre></div>
 </div>
 </div>
@@ -391,11 +381,22 @@ and so do the achievable gradient tolerance.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/usr/bin/open: 882: www-browser: not found
+/usr/bin/open: 882: links2: not found
+/usr/bin/open: 882: elinks: not found
+/usr/bin/open: 882: links: not found
+/usr/bin/open: 882: lynx: not found
+/usr/bin/open: 882: w3m: not found
+xdg-open: no method available for opening &#39;laststep.log&#39;
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 </section>
 <section id="plot-pressure-distributions-and-deformed-profiles">
-<h2>plot pressure distributions and deformed profiles<a class="headerlink" href="#plot-pressure-distributions-and-deformed-profiles" title="Permalink to this heading"></a></h2>
+<h2>plot pressure distributions and deformed profiles<a class="headerlink" href="#plot-pressure-distributions-and-deformed-profiles" title="Link to this heading"></a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">penetrations</span><span class="p">)):</span>
@@ -428,10 +429,21 @@ and so do the achievable gradient tolerance.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/05087760c9f95956f9b08af7e16ca81d88433808ba33f62fac1ab4dc5728101b.png" src="../_images/05087760c9f95956f9b08af7e16ca81d88433808ba33f62fac1ab4dc5728101b.png" />
+<img alt="../_images/8d88e2176d964af13b03778c0cb7167140d2bedc806f7448c2585ab1e2ecb406.png" src="../_images/8d88e2176d964af13b03778c0cb7167140d2bedc806f7448c2585ab1e2ecb406.png" />
+<img alt="../_images/0618afb798bd27652e5b234de79220d4ee8a63846a0479211167a6cf2f1b2105.png" src="../_images/0618afb798bd27652e5b234de79220d4ee8a63846a0479211167a6cf2f1b2105.png" />
+<img alt="../_images/f0b2ce67833e91698bd0e8bb572d6bc90ff1611c3a85d781db90207c77a51c35.png" src="../_images/f0b2ce67833e91698bd0e8bb572d6bc90ff1611c3a85d781db90207c77a51c35.png" />
+<img alt="../_images/fdc3ec297bb20afc8d967e609fb8553afa98c2484af124ce46a10569343d5bcb.png" src="../_images/fdc3ec297bb20afc8d967e609fb8553afa98c2484af124ce46a10569343d5bcb.png" />
+<img alt="../_images/2390577b43f59eab7da1b723135840ea806af4d3708cbde5fd097ec8819b72a6.png" src="../_images/2390577b43f59eab7da1b723135840ea806af4d3708cbde5fd097ec8819b72a6.png" />
+<img alt="../_images/e2e5037c1c4a7f33eceb856e0b6a334bcce75b286c7d8d897456fcf3356e5610.png" src="../_images/e2e5037c1c4a7f33eceb856e0b6a334bcce75b286c7d8d897456fcf3356e5610.png" />
+<img alt="../_images/7782318ac3b02988ebb020cc2d04a48d463207f359aae0ee4436e9083b6c061a.png" src="../_images/7782318ac3b02988ebb020cc2d04a48d463207f359aae0ee4436e9083b6c061a.png" />
+<img alt="../_images/488303a44cbb9fb9d26187990f7dd6d9da191144b8c682d23674628646a58ff5.png" src="../_images/488303a44cbb9fb9d26187990f7dd6d9da191144b8c682d23674628646a58ff5.png" />
+</div>
 </div>
 </section>
 <section id="scalar-quantities-during-loading">
-<h2>scalar quantities during loading<a class="headerlink" href="#scalar-quantities-during-loading" title="Permalink to this heading"></a></h2>
+<h2>scalar quantities during loading<a class="headerlink" href="#scalar-quantities-during-loading" title="Link to this heading"></a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
@@ -441,6 +453,12 @@ and so do the achievable gradient tolerance.</p>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Force [N]&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Text(0, 0.5, &#39;Force [N]&#39;)
+</pre></div>
+</div>
+<img alt="../_images/194e0ab84400e4d78590819f5610e0382f2d1d9093c326322d21e469c5034f7c.png" src="../_images/194e0ab84400e4d78590819f5610e0382f2d1d9093c326322d21e469c5034f7c.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -454,6 +472,9 @@ and so do the achievable gradient tolerance.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/4c7d0f41c81a257e7ae6e57aba276e0a16e57e88ca9921ba8dfe4687d225ca02.png" src="../_images/4c7d0f41c81a257e7ae6e57aba276e0a16e57e88ca9921ba8dfe4687d225ca02.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -465,6 +486,9 @@ and so do the achievable gradient tolerance.</p>
 <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/cdd9da61ad779011590a1de91ba1a7394c6a7ef4c267316dfd7cc6ed0601e140.png" src="../_images/cdd9da61ad779011590a1de91ba1a7394c6a7ef4c267316dfd7cc6ed0601e140.png" />
 </div>
 </div>
 </section>

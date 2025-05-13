@@ -1,25 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example of rough simulation with adhesion on the contact challenge 512x512 topography &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>Example of rough simulation with adhesion on the contact challenge 512x512 topography &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -38,9 +35,6 @@
           <a href="../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -131,27 +125,18 @@
 </div>
 </div>
 <section id="example-of-rough-simulation-with-adhesion-on-the-contact-challenge-512x512-topography">
-<h1>Example of rough simulation with adhesion on the contact challenge 512x512 topography<a class="headerlink" href="#example-of-rough-simulation-with-adhesion-on-the-contact-challenge-512x512-topography" title="Permalink to this heading"></a></h1>
+<h1>Example of rough simulation with adhesion on the contact challenge 512x512 topography<a class="headerlink" href="#example-of-rough-simulation-with-adhesion-on-the-contact-challenge-512x512-topography" title="Link to this heading"></a></h1>
 <p>The adhesion is longer ranged in this example than in the original contact challenge problem definitition because we use a much coarser grid here.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">SurfaceTopography</span> <span class="kn">import</span> <span class="n">read_published_container</span>
-<span class="kn">import</span> <span class="nn">Adhesion</span> <span class="c1"># required to register the &quot;make_system&quot; function</span>
-<span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">Exponential</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">SurfaceTopography</span><span class="w"> </span><span class="kn">import</span> <span class="n">read_published_container</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">Adhesion</span> <span class="c1"># required to register the &quot;make_system&quot; function</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.Interactions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Exponential</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mpl</span>
 
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LinearSegmentedColormap</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
-fatal: not a git repository (or any of the parent directories): .git
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.colors</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearSegmentedColormap</span>
 </pre></div>
 </div>
 </div>
@@ -175,7 +160,7 @@ fatal: not a git repository (or any of the parent directories): .git
 <span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
 <span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">t</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">_topographies</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_unit</span><span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
 
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/SurfaceTopography/Container/SurfaceContainer.py:53,</span> in <span class="ni">SurfaceContainer.__getattr__</span><span class="nt">(self, name)</span>
+<span class="nn">File ~/work/Adhesion/venv/lib/python3.12/site-packages/SurfaceTopography/Container/SurfaceContainer.py:53,</span> in <span class="ni">SurfaceContainer.__getattr__</span><span class="nt">(self, name)</span>
 <span class="g g-Whitespace">     </span><span class="mi">51</span>     <span class="k">return</span> <span class="n">func</span>
 <span class="g g-Whitespace">     </span><span class="mi">52</span> <span class="k">else</span><span class="p">:</span>
 <span class="ne">---&gt; </span><span class="mi">53</span>     <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Unkown attribute &#39;</span><span class="si">{}</span><span class="s2">&#39; and no analysis or pipeline function of this name registered&quot;</span>
@@ -227,7 +212,7 @@ fatal: not a git repository (or any of the parent directories): .git
 </div>
 </div>
 <section id="defining-meaningful-numerical-tolerances">
-<h2>Defining meaningful numerical tolerances<a class="headerlink" href="#defining-meaningful-numerical-tolerances" title="Permalink to this heading"></a></h2>
+<h2>Defining meaningful numerical tolerances<a class="headerlink" href="#defining-meaningful-numerical-tolerances" title="Link to this heading"></a></h2>
 <p>In adhesive simulations, the optimisation variable is the displacement.
 The algorithm seeks the minimum of the total energy $\Pi_\mathrm{tot}$, where the residual $\partial \Pi_\mathrm{tot}/\partial u_{ij} = 0$</p>
 <p>A typical repulsive contact pressure is $E^\prime h^\prime_{rms}$, leading to the typical repulsive pixel force $E^\prime h^\prime_{rms} \Delta x^2$.
@@ -249,7 +234,7 @@ We use a small fraction of this typical force as the numerical tolerance for the
 </div>
 </div>
 <section id="nonadhesive-contact-system">
-<h3>Nonadhesive contact system<a class="headerlink" href="#nonadhesive-contact-system" title="Permalink to this heading"></a></h3>
+<h3>Nonadhesive contact system<a class="headerlink" href="#nonadhesive-contact-system" title="Link to this heading"></a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nonadhesive_system</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">make_contact_system</span><span class="p">(</span><span class="n">interaction</span><span class="o">=</span><span class="s2">&quot;hardwall&quot;</span><span class="p">,</span> <span class="n">young</span><span class="o">=</span><span class="n">Es</span><span class="p">)</span>
@@ -284,11 +269,11 @@ We use a small fraction of this typical force as the numerical tolerance for the
 </div>
 </section>
 <section id="contact-system-with-hardwall-repulsion">
-<h3>contact system with hardwall repulsion<a class="headerlink" href="#contact-system-with-hardwall-repulsion" title="Permalink to this heading"></a></h3>
+<h3>contact system with hardwall repulsion<a class="headerlink" href="#contact-system-with-hardwall-repulsion" title="Link to this heading"></a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">Exponential</span>
-<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">BoundedSmoothContactSystem</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.Interactions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Exponential</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.System</span><span class="w"> </span><span class="kn">import</span> <span class="n">BoundedSmoothContactSystem</span>
 </pre></div>
 </div>
 </div>
@@ -316,9 +301,9 @@ We use a small fraction of this typical force as the numerical tolerance for the
 </div>
 </section>
 <section id="properties-of-the-adhesive-rough-contact">
-<h3>Properties of the adhesive rough contact<a class="headerlink" href="#properties-of-the-adhesive-rough-contact" title="Permalink to this heading"></a></h3>
+<h3>Properties of the adhesive rough contact<a class="headerlink" href="#properties-of-the-adhesive-rough-contact" title="Link to this heading"></a></h3>
 <section id="energy-for-full-conformal-contact">
-<h4>Energy for full conformal contact<a class="headerlink" href="#energy-for-full-conformal-contact" title="Permalink to this heading"></a></h4>
+<h4>Energy for full conformal contact<a class="headerlink" href="#energy-for-full-conformal-contact" title="Link to this heading"></a></h4>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Persson and Tosatti adhesion criterion: &quot;</span><span class="p">)</span>
@@ -336,7 +321,7 @@ We use a small fraction of this typical force as the numerical tolerance for the
 </div>
 </section>
 <section id="pastewka-and-robbins-criterion">
-<h4>Pastewka and Robbins criterion<a class="headerlink" href="#pastewka-and-robbins-criterion" title="Permalink to this heading"></a></h4>
+<h4>Pastewka and Robbins criterion<a class="headerlink" href="#pastewka-and-robbins-criterion" title="Link to this heading"></a></h4>
 <p>P&amp;R equation 10, with $\kappa_{rep} = 2$, $d_{rep}=4 h^{\prime}<em>{rms} / h^{\prime\prime}</em>{rms}$
 (Only valid in the DMT regime, i.e. until the onset of stickiness)
 If this value is smaller then 1 the surfaces are sticky and
@@ -397,9 +382,9 @@ See below.</p>
 <p>This value should be smaller than 0.1 for the assumptions behind the Pastewka and Robbins theory to be valid. We hence cannot apply the theory to the system considered here.</p>
 </section>
 <section id="estimate-whether-the-discretisation-is-alright">
-<h4>Estimate whether the discretisation is alright<a class="headerlink" href="#estimate-whether-the-discretisation-is-alright" title="Permalink to this heading"></a></h4>
+<h4>Estimate whether the discretisation is alright<a class="headerlink" href="#estimate-whether-the-discretisation-is-alright" title="Link to this heading"></a></h4>
 <section id="process-zone-in-a-crack">
-<h5>Process zone in a crack<a class="headerlink" href="#process-zone-in-a-crack" title="Permalink to this heading"></a></h5>
+<h5>Process zone in a crack<a class="headerlink" href="#process-zone-in-a-crack" title="Link to this heading"></a></h5>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">process_zone_size</span> <span class="o">=</span> <span class="n">Es</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">interaction</span><span class="o">.</span><span class="n">max_tensile</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
@@ -413,7 +398,7 @@ See below.</p>
 </div>
 </section>
 <section id="empirical-criterion-on-contact-of-spheres-see-adhesive-simulation-sphere-ipynb">
-<h5>Empirical criterion on contact of spheres (see <span class="xref myst">adhesive_simulation_sphere.ipynb</span>)<a class="headerlink" href="#empirical-criterion-on-contact-of-spheres-see-adhesive-simulation-sphere-ipynb" title="Permalink to this heading"></a></h5>
+<h5>Empirical criterion on contact of spheres (see <a class="reference internal" href="#"><span class="xref myst">adhesive_simulation_sphere.ipynb</span></a>)<a class="headerlink" href="#empirical-criterion-on-contact-of-spheres-see-adhesive-simulation-sphere-ipynb" title="Link to this heading"></a></h5>
 <p>$$
 dx \leq 2 \rho^2 \frac{4}{3\pi} \frac{1}{\ell_a}
 $$</p>
@@ -427,7 +412,7 @@ $$</p>
 </div>
 </section>
 <section id="wang-zhou-and-muser-2021-equation-9-and-fig-8">
-<h5><a class="reference external" href="https://doi.org/10.3390/lubricants9020017">Wang, Zhou and Müser 2021</a> Equation (9) and Fig.8:<a class="headerlink" href="#wang-zhou-and-muser-2021-equation-9-and-fig-8" title="Permalink to this heading"></a></h5>
+<h5><a class="reference external" href="https://doi.org/10.3390/lubricants9020017">Wang, Zhou and Müser 2021</a> Equation (9) and Fig.8:<a class="headerlink" href="#wang-zhou-and-muser-2021-equation-9-and-fig-8" title="Link to this heading"></a></h5>
 <p>$\mu_{rho}$</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -443,7 +428,7 @@ $$</p>
 </section>
 </section>
 <section id="adhesive-simulation">
-<h3>Adhesive simulation<a class="headerlink" href="#adhesive-simulation" title="Permalink to this heading"></a></h3>
+<h3>Adhesive simulation<a class="headerlink" href="#adhesive-simulation" title="Link to this heading"></a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span> <span class="o">=</span> <span class="n">t</span><span class="o">.</span><span class="n">make_contact_system</span><span class="p">(</span><span class="n">interaction</span><span class="o">=</span><span class="n">interaction</span><span class="p">,</span> <span class="n">young</span><span class="o">=</span><span class="n">Es</span><span class="p">,</span> <span class="n">system_class</span><span class="o">=</span><span class="n">BoundedSmoothContactSystem</span><span class="p">)</span>
@@ -507,7 +492,7 @@ $$</p>
 </div>
 </section>
 <section id="how-adhesion-affected-the-mean-pressure-in-mpa">
-<h3>How adhesion affected the mean pressure (in MPa)<a class="headerlink" href="#how-adhesion-affected-the-mean-pressure-in-mpa" title="Permalink to this heading"></a></h3>
+<h3>How adhesion affected the mean pressure (in MPa)<a class="headerlink" href="#how-adhesion-affected-the-mean-pressure-in-mpa" title="Link to this heading"></a></h3>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="o">.</span><span class="n">compute_normal_force</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
@@ -525,9 +510,9 @@ $$</p>
 </section>
 </section>
 <section id="further-examples">
-<h2>Further examples<a class="headerlink" href="#further-examples" title="Permalink to this heading"></a></h2>
+<h2>Further examples<a class="headerlink" href="#further-examples" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><span class="xref myst">../test/test_bugnicourt_primal_rough_weakly_adhesive.py</span></p></li>
+<li><p><a class="reference internal" href="#"><span class="xref myst">../test/test_bugnicourt_primal_rough_weakly_adhesive.py</span></a></p></li>
 </ul>
 </section>
 </section>

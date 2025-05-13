@@ -9,13 +9,13 @@ Adhesion.CommandLineInterface.SoftWall module
 
 .. automodule:: Adhesion.CommandLineInterface.SoftWall
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: Adhesion.CommandLineInterface
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

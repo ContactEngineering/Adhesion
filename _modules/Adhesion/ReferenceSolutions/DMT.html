@@ -1,24 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.ReferenceSolutions.DMT &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+  <title>Adhesion.ReferenceSolutions.DMT &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,9 +32,6 @@
           <a href="../../../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -116,14 +110,16 @@
 <span class="sd">Helper tools for Adhesion</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
-<span class="kn">import</span> <span class="nn">ContactMechanics.ReferenceSolutions.Hertz</span> <span class="k">as</span> <span class="nn">Hertz</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ContactMechanics.ReferenceSolutions.Hertz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">Hertz</span>
 
 
 <span class="c1">###</span>
 
-<div class="viewcode-block" id="radius_and_pressure"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.DMT.radius_and_pressure">[docs]</a><span class="k">def</span> <span class="nf">radius_and_pressure</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Es</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+<div class="viewcode-block" id="radius_and_pressure">
+<a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.DMT.radius_and_pressure">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">radius_and_pressure</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Es</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given normal load, sphere radius and contact modulus compute contact radius</span>
 <span class="sd">    and peak pressure.</span>
@@ -144,7 +140,10 @@
     <span class="k">return</span> <span class="n">Hertz</span><span class="o">.</span><span class="n">radius_and_pressure</span><span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">R</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Es</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="surface_stress"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.DMT.surface_stress">[docs]</a><span class="k">def</span> <span class="nf">surface_stress</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">nu</span><span class="p">):</span>
+
+<div class="viewcode-block" id="surface_stress">
+<a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.DMT.surface_stress">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">surface_stress</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">nu</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Given distance from the center of the sphere, contact radius and Poisson</span>
 <span class="sd">    number contact, compute the stress at the surface.</span>
@@ -171,8 +170,12 @@
     <span class="k">return</span> <span class="n">Hertz</span><span class="o">.</span><span class="n">surface_stress</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">nu</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="surface_displacements"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.DMT.surface_displacements">[docs]</a><span class="k">def</span> <span class="nf">surface_displacements</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+
+<div class="viewcode-block" id="surface_displacements">
+<a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.DMT.surface_displacements">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">surface_displacements</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">Hertz</span><span class="o">.</span><span class="n">surface_displacements</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span></div>
+
 </pre></div>
 
            </div>

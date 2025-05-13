@@ -1,24 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.ReferenceSolutions.sinewave.JKR &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css" />
+  <title>Adhesion.ReferenceSolutions.sinewave.JKR &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
-        <script src="../../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../../genindex.html" />
     <link rel="search" title="Search" href="../../../../search.html" /> 
@@ -35,9 +32,6 @@
           <a href="../../../../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -173,14 +167,16 @@
 
 <span class="sd">&quot;&quot;&quot;</span>  <span class="c1"># noqa E501</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">tan</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">log</span>
-<span class="kn">import</span> <span class="nn">scipy.optimize</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">cos</span><span class="p">,</span> <span class="n">tan</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">pi</span><span class="p">,</span> <span class="n">log</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.optimize</span>
 
-<span class="kn">from</span> <span class="nn">ContactMechanics.ReferenceSolutions</span> <span class="kn">import</span> <span class="n">Westergaard</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ContactMechanics.ReferenceSolutions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Westergaard</span>
 
 
-<div class="viewcode-block" id="flatpunch_pressure"><a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.flatpunch_pressure">[docs]</a><span class="k">def</span> <span class="nf">flatpunch_pressure</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+<div class="viewcode-block" id="flatpunch_pressure">
+<a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.flatpunch_pressure">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">flatpunch_pressure</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    </span>
 <span class="sd">    solution by koiter</span>
@@ -218,7 +214,10 @@
     <span class="k">return</span> <span class="n">res</span></div>
 
 
-<div class="viewcode-block" id="mean_pressure"><a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.mean_pressure">[docs]</a><span class="k">def</span> <span class="nf">mean_pressure</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mean_pressure">
+<a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.mean_pressure">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mean_pressure</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    mean pressure in units of :math:`\pi E^* h/ \lambda`</span>
 
@@ -255,10 +254,11 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;derivative flag should be &quot;0&quot;, &quot;1&quot;, &quot;2&quot;&#39;</span><span class="p">)</span></div>
 
 
+
 <span class="n">_mean_pressure</span> <span class="o">=</span> <span class="n">mean_pressure</span>
 
 
-<span class="k">def</span> <span class="nf">_find_min_max_a</span><span class="p">(</span><span class="n">alpha</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_find_min_max_a</span><span class="p">(</span><span class="n">alpha</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Parameters</span>
@@ -271,7 +271,7 @@
     <span class="n">a_upper</span> <span class="o">=</span> <span class="mf">0.3</span>
     <span class="n">a_lower</span> <span class="o">=</span> <span class="mf">0.2</span>
 
-    <span class="k">def</span> <span class="nf">obj</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">obj</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">_mean_pressure</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span>
 
     <span class="k">while</span> <span class="n">obj</span><span class="p">(</span><span class="n">a_upper</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -282,7 +282,7 @@
 
     <span class="n">a_inflexion</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">optimize</span><span class="o">.</span><span class="n">brentq</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">a_lower</span><span class="p">,</span> <span class="n">a_upper</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">obj</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">obj</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">mean_pressure</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="p">)</span>
 
     <span class="k">while</span> <span class="n">obj</span><span class="p">(</span><span class="n">a_upper</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -297,7 +297,9 @@
     <span class="k">return</span> <span class="n">a_min</span><span class="p">,</span> <span class="n">a_inflexion</span><span class="p">,</span> <span class="n">a_max</span>
 
 
-<div class="viewcode-block" id="contact_radius"><a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.contact_radius">[docs]</a><span class="k">def</span> <span class="nf">contact_radius</span><span class="p">(</span><span class="n">mean_pressure</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+<div class="viewcode-block" id="contact_radius">
+<a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.contact_radius">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">contact_radius</span><span class="p">(</span><span class="n">mean_pressure</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Parameters</span>
@@ -323,7 +325,10 @@
         <span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">_mean_pressure</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">-</span> <span class="n">mean_pressure</span><span class="p">,</span> <span class="n">a_min</span><span class="p">,</span> <span class="n">a_max</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="mean_gap"><a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.mean_gap">[docs]</a><span class="k">def</span> <span class="nf">mean_gap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+
+<div class="viewcode-block" id="mean_gap">
+<a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.mean_gap">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mean_gap</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    from carbon mangialardi equation (39)</span>
 <span class="sd">    </span>
@@ -355,7 +360,10 @@
         <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">mean_pressure</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="pressure"><a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.pressure">[docs]</a><span class="k">def</span> <span class="nf">pressure</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">mean_pressure</span><span class="p">):</span>
+
+<div class="viewcode-block" id="pressure">
+<a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.pressure">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pressure</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">mean_pressure</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -376,7 +384,10 @@
         <span class="o">-</span> <span class="n">flatpunch_load</span> <span class="o">*</span> <span class="n">flatpunch_pressure</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="elastic_energy"><a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.elastic_energy">[docs]</a><span class="k">def</span> <span class="nf">elastic_energy</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">mean_pressure</span><span class="p">):</span>
+
+<div class="viewcode-block" id="elastic_energy">
+<a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.elastic_energy">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">elastic_energy</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">mean_pressure</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">     :math:`\frac{U - U_{flat}}{h p_{wfc} A}`</span>
 
@@ -395,7 +406,10 @@
     <span class="k">return</span> <span class="o">-</span> <span class="n">log</span><span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">))</span> <span class="o">*</span> <span class="n">mean_pressure</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">sin</span><span class="p">(</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">**</span> <span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span></div>
 
 
-<div class="viewcode-block" id="stress_intensity_factor_asymmetric"><a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.stress_intensity_factor_asymmetric">[docs]</a><span class="k">def</span> <span class="nf">stress_intensity_factor_asymmetric</span><span class="p">(</span><span class="n">a_s</span><span class="p">,</span> <span class="n">a_o</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="stress_intensity_factor_asymmetric">
+<a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.stress_intensity_factor_asymmetric">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">stress_intensity_factor_asymmetric</span><span class="p">(</span><span class="n">a_s</span><span class="p">,</span> <span class="n">a_o</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">    Stress intensity factor at the crack front at `a_s`</span>
@@ -450,7 +464,10 @@
         <span class="k">return</span> <span class="p">(</span><span class="n">dsqcotan</span> <span class="o">*</span> <span class="n">B</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">dB</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span></div>
 
 
-<div class="viewcode-block" id="stress_intensity_factor_symmetric"><a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.stress_intensity_factor_symmetric">[docs]</a><span class="k">def</span> <span class="nf">stress_intensity_factor_symmetric</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
+
+<div class="viewcode-block" id="stress_intensity_factor_symmetric">
+<a class="viewcode-back" href="../../../../source/Adhesion.ReferenceSolutions.sinewave.html#Adhesion.ReferenceSolutions.sinewave.JKR.stress_intensity_factor_symmetric">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">stress_intensity_factor_symmetric</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">der</span><span class="o">=</span><span class="s2">&quot;0&quot;</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">der</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span>
                 <span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span>
@@ -460,6 +477,7 @@
                 <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">P</span><span class="p">)</span>
                 <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span>
                 <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">a</span><span class="p">)))</span></div>
+
 </pre></div>
 
            </div>

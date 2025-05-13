@@ -1,25 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MIT license &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css" />
+  <title>MIT license &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-        <script src="../_static/jquery.js"></script>
-        <script src="../_static/underscore.js"></script>
-        <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../_static/doctools.js"></script>
-        <script src="../_static/sphinx_highlight.js"></script>
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" /> 
@@ -36,9 +33,6 @@
           <a href="../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -90,7 +84,7 @@
   <p>Copyright 2020 Antoine Sanner
 2020 Lars Pastewka</p>
 <section id="mit-license">
-<h1>MIT license<a class="headerlink" href="#mit-license" title="Permalink to this heading"></a></h1>
+<h1>MIT license<a class="headerlink" href="#mit-license" title="Link to this heading"></a></h1>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the “Software”), to deal
 in the Software without restriction, including without limitation the rights
@@ -108,38 +102,40 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">scipy.optimize</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">ContactMechanics</span> <span class="kn">import</span> <span class="n">PeriodicFFTElasticHalfSpace</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">scipy.optimize</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ContactMechanics</span><span class="w"> </span><span class="kn">import</span> <span class="n">PeriodicFFTElasticHalfSpace</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.Interactions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Exponential</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">NuMPI.IO.NetCDF</span><span class="w"> </span><span class="kn">import</span> <span class="n">NCStructuredGrid</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
-fatal: not a git repository (or any of the parent directories): .git
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fatal: not a git repository (or any of the parent directories): .git
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">Adhesion.Interactions</span> <span class="kn">import</span> <span class="n">Exponential</span>
-<span class="kn">from</span> <span class="nn">NuMPI.IO.NetCDF</span> <span class="kn">import</span> <span class="n">NCStructuredGrid</span>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">line</span> <span class="mi">2</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.Interactions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Exponential</span>
+<span class="ne">----&gt; </span><span class="mi">2</span> <span class="kn">from</span><span class="w"> </span><span class="nn">NuMPI.IO.NetCDF</span><span class="w"> </span><span class="kn">import</span> <span class="n">NCStructuredGrid</span>
+
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;NuMPI.IO.NetCDF&#39;
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ContactMechanics.Tools.Logger</span> <span class="kn">import</span> <span class="n">Logger</span>
-<span class="kn">from</span> <span class="nn">Adhesion.System</span> <span class="kn">import</span> <span class="n">BoundedSmoothContactSystem</span>
-<span class="kn">import</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">from</span> <span class="nn">SurfaceTopography</span> <span class="kn">import</span> <span class="n">make_sphere</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ContactMechanics.Tools.Logger</span><span class="w"> </span><span class="kn">import</span> <span class="n">Logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Adhesion.System</span><span class="w"> </span><span class="kn">import</span> <span class="n">BoundedSmoothContactSystem</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">SurfaceTopography</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_sphere</span>
 </pre></div>
 </div>
 </div>
@@ -193,27 +189,6 @@ this way the typical displacements, forces and contact areas are of order 1</p>
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">8</span><span class="p">],</span> <span class="n">line</span> <span class="mi">7</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">interaction</span> <span class="o">=</span> <span class="n">Exponential</span><span class="p">(</span><span class="n">work_of_adhesion</span><span class="p">,</span> <span class="n">length_parameter</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">substrate</span> <span class="o">=</span> <span class="n">PeriodicFFTElasticHalfSpace</span><span class="p">((</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">),</span> <span class="n">Es</span><span class="p">,</span> <span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="n">sy</span><span class="p">),</span> <span class="p">)</span>
-<span class="ne">----&gt; </span><span class="mi">7</span> <span class="n">system</span> <span class="o">=</span> <span class="n">BoundedSmoothContactSystem</span><span class="p">(</span><span class="n">substrate</span><span class="p">,</span> <span class="n">interaction</span><span class="p">,</span> <span class="n">topography</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.8/site-packages/Adhesion/System/Systems.py:82,</span> in <span class="ni">SmoothContactSystem.__init__</span><span class="nt">(self, substrate, interaction, surface)</span>
-<span class="g g-Whitespace">     </span><span class="mi">77</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span>
-<span class="g g-Whitespace">     </span><span class="mi">79</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">substrate</span><span class="o">.</span><span class="n">fftengine</span><span class="p">,</span> <span class="s2">&quot;register_halfcomplex_field&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">communicator</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-<span class="g g-Whitespace">     </span><span class="mi">80</span>     <span class="c1"># avoids the initialization to fail if we use an fftengine without these hcffts implemnented</span>
-<span class="g g-Whitespace">     </span><span class="mi">81</span>     <span class="c1"># preconditionning is not parallelized yet, this we have no parallelized wrapper for hcfft in muFFT yet</span>
-<span class="ne">---&gt; </span><span class="mi">82</span>     <span class="bp">self</span><span class="o">.</span><span class="n">real_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-real-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">83</span>     <span class="bp">self</span><span class="o">.</span><span class="n">fourier_buffer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">fetch_or_register_halfcomplex_field</span><span class="p">(</span><span class="s2">&quot;hc-fourier-space&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">85</span>     <span class="bp">self</span><span class="o">.</span><span class="n">stiffness_k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_compute_stiffness_k</span><span class="p">()</span>
-
-<span class="ne">AttributeError</span>: &#39;_muFFT.PocketFFT&#39; object has no attribute &#39;fetch_or_register_halfcomplex_field&#39;
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -226,7 +201,7 @@ this way the typical displacements, forces and contact areas are of order 1</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># demo how to plot things. You can import this from outside !</span>
-<span class="k">def</span> <span class="nf">plot_result</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;data.nc&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_result</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s2">&quot;data.nc&quot;</span><span class="p">):</span>
     <span class="n">nc</span> <span class="o">=</span> <span class="n">NCStructuredGrid</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">nc</span><span class="o">.</span><span class="n">penetration</span><span class="p">[:],</span> <span class="n">nc</span><span class="o">.</span><span class="n">normal_force</span><span class="p">[:])</span>

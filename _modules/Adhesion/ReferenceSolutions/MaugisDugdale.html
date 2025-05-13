@@ -1,24 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en">
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesion.ReferenceSolutions.MaugisDugdale &mdash; Adhesion 0.92.0.dev2+g0fd0773d documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
-      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css" />
+  <title>Adhesion.ReferenceSolutions.MaugisDugdale &mdash; Adhesion 0.91.0.dev107+g84678d7b documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
 
   
-  <!--[if lt IE 9]>
-    <script src="../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
-        <script src="../../../_static/jquery.js"></script>
-        <script src="../../../_static/underscore.js"></script>
-        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script src="../../../_static/doctools.js"></script>
-        <script src="../../../_static/sphinx_highlight.js"></script>
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=9d51b269"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" /> 
@@ -35,9 +32,6 @@
           <a href="../../../index.html" class="icon icon-home">
             Adhesion
           </a>
-              <div class="version">
-                0.92.0.dev2+g0fd0773d
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -118,11 +112,13 @@
 <span class="sd">See: D. Maugis, J. Colloid Interf. Sci. 150, 243 (1992)</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">brentq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">brentq</span>
 
 
-<div class="viewcode-block" id="afindroot"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.MaugisDugdale.afindroot">[docs]</a><span class="k">def</span> <span class="nf">afindroot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<div class="viewcode-block" id="afindroot">
+<a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.MaugisDugdale.afindroot">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">afindroot</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
         <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">ia</span><span class="p">,</span> <span class="n">ib</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
@@ -137,16 +133,22 @@
         <span class="k">return</span> <span class="n">brentq</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span></div>
 
 
+
 <span class="c1">###</span>
 
-<div class="viewcode-block" id="maugis_parameter"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.MaugisDugdale.maugis_parameter">[docs]</a><span class="k">def</span> <span class="nf">maugis_parameter</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">elastic_modulus</span><span class="p">,</span> <span class="n">work_of_adhesion</span><span class="p">,</span>
+<div class="viewcode-block" id="maugis_parameter">
+<a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.MaugisDugdale.maugis_parameter">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">maugis_parameter</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">elastic_modulus</span><span class="p">,</span> <span class="n">work_of_adhesion</span><span class="p">,</span>
                      <span class="n">cohesive_stress</span><span class="p">):</span>
     <span class="n">K</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">elastic_modulus</span> <span class="o">/</span> <span class="mi">3</span>
     <span class="k">return</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">cohesive_stress</span> <span class="o">/</span> <span class="p">(</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">K</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">radius</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="fm"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.MaugisDugdale.fm">[docs]</a><span class="k">def</span> <span class="nf">fm</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
+
+<div class="viewcode-block" id="fm">
+<a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.MaugisDugdale.fm">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">fm</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">):</span>
     <span class="n">mu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
     <span class="n">tanmu</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan</span><span class="p">(</span><span class="n">mu</span><span class="p">)</span>
     <span class="c1"># This is Eq. (6.17) from Maugis&#39; paper</span>
@@ -154,7 +156,8 @@
                 <span class="mf">4.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">lam</span> <span class="o">*</span> <span class="n">a</span> <span class="o">*</span> <span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="n">tanmu</span> <span class="o">-</span> <span class="n">m</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span></div>
 
 
-<span class="k">def</span> <span class="nf">_load</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">return_m</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">return_m</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute load for the Maugis-Dugdale model given the area and Maugis</span>
 <span class="sd">    parameter.</span>
@@ -181,7 +184,7 @@
         <span class="k">return</span> <span class="n">P</span>
 
 
-<span class="k">def</span> <span class="nf">_load_and_displacement</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">return_m</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_and_displacement</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">lam</span><span class="p">,</span> <span class="n">return_m</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Compute load and displacement for the Maugis-Dugdale model given the area</span>
 <span class="sd">    and Maugis parameter.</span>
@@ -209,7 +212,9 @@
         <span class="k">return</span> <span class="n">P</span><span class="p">,</span> <span class="n">d</span>
 
 
-<div class="viewcode-block" id="load_and_displacement"><a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.MaugisDugdale.load_and_displacement">[docs]</a><span class="k">def</span> <span class="nf">load_and_displacement</span><span class="p">(</span><span class="n">contact_radius</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">elastic_modulus</span><span class="p">,</span>
+<div class="viewcode-block" id="load_and_displacement">
+<a class="viewcode-back" href="../../../source/Adhesion.ReferenceSolutions.html#Adhesion.ReferenceSolutions.MaugisDugdale.load_and_displacement">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_and_displacement</span><span class="p">(</span><span class="n">contact_radius</span><span class="p">,</span> <span class="n">radius</span><span class="p">,</span> <span class="n">elastic_modulus</span><span class="p">,</span>
                           <span class="n">work_of_adhesion</span><span class="p">,</span> <span class="n">cohesive_stress</span><span class="p">):</span>
     <span class="n">lam</span> <span class="o">=</span> <span class="n">maugis_parameter</span><span class="p">(</span><span class="n">radius</span><span class="p">,</span> <span class="n">elastic_modulus</span><span class="p">,</span> <span class="n">work_of_adhesion</span><span class="p">,</span>
                            <span class="n">cohesive_stress</span><span class="p">)</span>
@@ -220,6 +225,7 @@
     <span class="k">return</span> <span class="p">(</span><span class="n">N</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">*</span> <span class="n">radius</span><span class="p">,</span>
             <span class="n">d</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">work_of_adhesion</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">radius</span> <span class="o">/</span> <span class="n">K</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span>
                         <span class="mf">1.</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span></div>
+
 </pre></div>
 
            </div>

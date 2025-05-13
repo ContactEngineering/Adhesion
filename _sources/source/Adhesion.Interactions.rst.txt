@@ -9,85 +9,85 @@ Adhesion.Interactions.Base module
 
 .. automodule:: Adhesion.Interactions.Base
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.Interactions.Coulomb module
 ------------------------------------
 
 .. automodule:: Adhesion.Interactions.Coulomb
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.Interactions.Cutoff module
 -----------------------------------
 
 .. automodule:: Adhesion.Interactions.Cutoff
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.Interactions.Exponential module
 ----------------------------------------
 
 .. automodule:: Adhesion.Interactions.Exponential
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.Interactions.Harmonic module
 -------------------------------------
 
 .. automodule:: Adhesion.Interactions.Harmonic
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.Interactions.LJ93 module
 ---------------------------------
 
 .. automodule:: Adhesion.Interactions.LJ93
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.Interactions.Potential module
 --------------------------------------
 
 .. automodule:: Adhesion.Interactions.Potential
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.Interactions.PowerLaw module
 -------------------------------------
 
 .. automodule:: Adhesion.Interactions.PowerLaw
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.Interactions.SmoothPotential module
 --------------------------------------------
 
 .. automodule:: Adhesion.Interactions.SmoothPotential
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.Interactions.VdW82 module
 ----------------------------------
 
 .. automodule:: Adhesion.Interactions.VdW82
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: Adhesion.Interactions
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

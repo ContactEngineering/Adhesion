@@ -9,37 +9,37 @@ Adhesion.System.Factory module
 
 .. automodule:: Adhesion.System.Factory
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.System.PlasticSystemSpecialisations module
 ---------------------------------------------------
 
 .. automodule:: Adhesion.System.PlasticSystemSpecialisations
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.System.SmoothSystemSpecialisations module
 --------------------------------------------------
 
 .. automodule:: Adhesion.System.SmoothSystemSpecialisations
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Adhesion.System.Systems module
 ------------------------------
 
 .. automodule:: Adhesion.System.Systems
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: Adhesion.System
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
