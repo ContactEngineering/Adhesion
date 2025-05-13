@@ -2,14 +2,13 @@
 # jupyter:
 #   jupytext:
 #     formats: py:percent
-
 #     text_representation:
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.4
+#       jupytext_version: 1.17.1
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -25,7 +24,7 @@ import pytest
 
 from SurfaceTopography import make_sphere
 from Adhesion.Interactions import Exponential, Lj82
-from Adhesion.Interactions.cutoffs import LinearCorePotential
+from Adhesion.Interactions.Cutoff import LinearCorePotential
 from ContactMechanics import (FreeFFTElasticHalfSpace)
 from Adhesion.System import SmoothContactSystem, BoundedSmoothContactSystem
 
@@ -135,3 +134,5 @@ plt.colorbar(plt.imshow(smooth_contacting_zone.T), label="contact")
 
 # %% [markdown]
 # Here it is slightly larger
+
+# %%
