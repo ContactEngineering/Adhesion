@@ -27,14 +27,17 @@ I should use better units, there are often abnormal termination in linesearch pr
 
 """
 
-
 import time
 import os
 import scipy.optimize
 import numpy as np
 
+import matplotlib.pyplot as plt
+
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from SurfaceTopography.Generation import fourier_synthesis
+
+from muFFT import PFFTEngine
 
 # TODO: this file uses deprecated API and is broken
 from NuMPI.Optimization import LBFGS
@@ -48,11 +51,12 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 pnp = Reduction(comm=comm)
 
+
 class iter_inspector():
     def __init__(self):
         self.neval = 0
         self.energies = []
-        self.maxgradients =[]
+        self.maxgradients = []
 
     def __call__(self, system):
         self.neval += 1
@@ -76,10 +80,7 @@ class decorated_objective:
         return val
 
 
-import matplotlib.pyplot as plt
-
-
-fig, (axEn, axgrad) = plt.subplots(2,1, sharex = True)
+fig, (axEn, axgrad) = plt.subplots(2, 1, sharex=True)
 n = 512
 
 axEn.set_xlabel("# of objective evaluations")
@@ -88,7 +89,6 @@ axEn.set_yscale("log")
 
 axgrad.set_yscale("log")
 axgrad.set_ylabel(r"$|grad|_{\infty}$")
-
 
 for a in (axEn, axgrad):
     a.set_xlabel("# of objective evaluations")
@@ -104,7 +104,7 @@ for method, name in zip(["L-BFGS-B", LBFGS],
 
     nx, ny = n, n
     dx = 1.0
-    dy = 1.0 # in units of z0
+    dy = 1.0  # in units of z0
     sx = nx * dx
     sy = ny * dy
 
@@ -124,7 +124,6 @@ for method, name in zip(["L-BFGS-B", LBFGS],
                                             physical_sizes=(sx, sx), pnp=pnp)
     # print(substrate._comp_nb_grid_pts)
     # print(fftengine.nb_domain_grid_pts)
-
 
     surface = fourier_synthesis((nx, ny), (sx, sy), hurst=0.8, rms_height=1, short_cutoff=8, long_cutoff=sx / 2)
 
@@ -161,11 +160,9 @@ for method, name in zip(["L-BFGS-B", LBFGS],
     print(result.nit)
 
     axgrad.plot(range(objective_monitor.neval), objective_monitor.maxgradients, label="{}".format(name))
-    axEn.plot(range(objective_monitor.neval), (objective_monitor.energies - objective_monitor.energies[-1] )/ (objective_monitor.energies[0] - objective_monitor.energies[-1]), label="{}".format(name))
-
+    axEn.plot(range(objective_monitor.neval), (objective_monitor.energies - objective_monitor.energies[-1]) / (
+            objective_monitor.energies[0] - objective_monitor.energies[-1]), label="{}".format(name))
 
 axgrad.legend()
 fig.suptitle("n={}".format(n))
 fig.savefig("{}.png".format(os.path.basename(__file__)))
-
-

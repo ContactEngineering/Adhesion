@@ -30,13 +30,13 @@ symbolic calculations for potentials
 from sympy import Symbol, pprint
 import sympy
 
-
 r = Symbol('r', positive=True)
+
 
 def show_props(pot, name):
     print("{} potential:".format(name))
-    #dpot = sympy.simplify(sympy.diff(pot, r))
-    #ddpot = sympy.simplify(sympy.diff(dpot, r))
+    # dpot = sympy.simplify(sympy.diff(pot, r))
+    # ddpot = sympy.simplify(sympy.diff(dpot, r))
     dpot = sympy.diff(pot, r)
     ddpot = sympy.diff(dpot, r)
     pprint(pot)
@@ -59,13 +59,14 @@ def main():
     eps = Symbol('ε', positive=True)
     sig = Symbol('σ', positive=True)
 
-    LJ93 = eps*(-(sig/r)**3 + (2*sig**9)/(15*r**9))
+    LJ93 = eps * (-(sig / r) ** 3 + (2 * sig ** 9) / (15 * r ** 9))
     show_props(LJ93, 'LJ')
 
     hama = Symbol("A", positive=True)
     c_sr = Symbol("C_sr", positive=True)
-    vdW82 = -hama/(12*sympy.pi*r**2) + c_sr*r**-8
+    vdW82 = -hama / (12 * sympy.pi * r ** 2) + c_sr * r ** -8
     show_props(vdW82, 'LJ')
+
 
 if __name__ == '__main__':
     main()
