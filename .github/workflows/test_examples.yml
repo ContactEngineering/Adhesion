@@ -20,7 +20,7 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.11']
-
+        mufft-version: [0.93.1]
     steps:
     - uses: actions/checkout@v4
       with:
@@ -43,15 +43,8 @@ jobs:
         sudo apt-get install -y \
             libfftw3-dev \
             libnetcdf-dev
-          # Compute muSpectre version
-          pip-compile pyproject.toml
-          MUSPECTRE_VERSION=$(grep 'muspectre==' requirements.txt)
-          # Manually install muSpectre with FFTW support
-          echo "Installing ${MUSPECTRE_VERSION}"
-          pip install -v --no-binary muspectre ${MUSPECTRE_VERSION}
-        
-        python3 -m pip install build
-        python3 -m pip list
+        python3 -m pip install -v --no-binary muFFT muFFT==${{ matrix.mufft-version }}
+        python3 -m pip install -v .[test]
 
     - name: Install extension module
       run: |
