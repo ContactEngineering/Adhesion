@@ -79,9 +79,9 @@ def test_wavy(comm):
     disp0 = np.zeros(substrate.nb_subdomain_grid_pts)
     for i in range(nsteps):
         result = l_bfgs(system.objective(offsets[i], gradient=True),
-                       disp0, jac=True,
-                       maxcor=3,
-                       gtol=1e-5, pnp=pnp)
+                        disp0, jac=True,
+                        maxcor=3,
+                        gtol=1e-5, pnp=pnp)
         assert result.success
         force[i] = system.compute_normal_force()
 
