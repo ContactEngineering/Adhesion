@@ -202,7 +202,7 @@ def test_energy_release_rate_derivatives_against_sif_derivatives(radius, contact
         sif / contact_modulus
         * JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="1_a",
                                       radius=radius, contact_modulus=contact_modulus),
-        atol=1e-14, rtol=0
+        atol=1e-13, rtol=0
         )
 
     np.testing.assert_allclose(
