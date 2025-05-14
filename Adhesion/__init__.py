@@ -28,7 +28,10 @@
 Defines all interaction modes used in Adhesion
 """
 
-from .DiscoverVersion import __version__  # noqa: F401
+from DiscoverVersion import get_version
 
 # These imports are required to register the analysis functions!
 from .System import Factory  # noqa: F401
+
+
+__version__ = get_version('Adhesion', __file__)
