@@ -41,7 +41,8 @@ docs = [
     "sphinx",
     "sphinx-rtd-theme",
     "myst_nb",
-    "numpydoc"
+    "numpydoc",
+    "jupytext"
 ]
 
 [project.urls]
