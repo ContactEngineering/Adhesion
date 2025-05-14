@@ -25,7 +25,7 @@ dependencies = [
     "NuMPI>=0.5.0",
     "muFFT>=0.93.1",
     "SurfaceTopography>=1.18.3",
-    "ContactMechanics>=1.6.1",
+    "ContactMechanics>=1.6.0",
     "netCDF4"
 ]
 
