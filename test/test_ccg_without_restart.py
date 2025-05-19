@@ -219,7 +219,7 @@ def test_mean_value_mode_is_penetration_indepentent():
     print("CCGWithoutRestart nit: {}".format(res.nit))
 
 
-def test_CCGWithoutRestart_free_system(comm):
+def test_ccg_without_restart_free_system(comm):
     pnp = Reduction(comm)
 
     nx, ny = 32, 21
@@ -254,7 +254,7 @@ def test_CCGWithoutRestart_free_system(comm):
     init_disp[bounded.filled(False)] = lbounds[bounded.filled(False)]
 
     res = optim.minimize(system.objective(penetration, gradient=True,
-                                          logger=Logger("test_CCGWithoutRestart_free_system_lbfgsb.log")),
+                                          logger=Logger("test_ccg_without_restart_free_system_lbfgsb.log")),
                          system.shape_minimisation_input(init_disp),
                          method='L-BFGS-B', jac=True,
                          bounds=bnds,
@@ -284,7 +284,7 @@ def test_CCGWithoutRestart_free_system(comm):
     lbounds_parallel = system._lbounds_from_heights(penetration)
 
     res = CCGWithoutRestart.constrained_conjugate_gradients(
-        system.objective(penetration, gradient=True, logger=Logger("test_CCGWithoutRestart_free_system_cg.log")),
+        system.objective(penetration, gradient=True, logger=Logger("test_ccg_without_restart_free_system_cg.log")),
         # We also test that the logger and the postprocessing involved work properly in parallel
         system.hessian_product_function(penetration),
         init_disp[substrate.subdomain_slices].reshape(-1),

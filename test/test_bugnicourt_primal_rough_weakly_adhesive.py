@@ -112,7 +112,7 @@ def get_reference_data_file(_comm):
     return path
 
 
-def test_CCGWithoutRestart_weakly_adhesive(comm, verbose=False):
+def test_ccg_without_restart_weakly_adhesive(comm, verbose=False):
     topography_file = get_topography_file(comm)
     reference_data_file = get_reference_data_file(comm)
     _penetration = penetration
