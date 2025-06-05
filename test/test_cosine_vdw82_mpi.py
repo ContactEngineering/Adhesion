@@ -27,7 +27,7 @@ import numpy as np
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from SurfaceTopography import Topography
 
-from NuMPI.Optimization import LBFGS
+from NuMPI.Optimization.LBFGS import l_bfgs
 from NuMPI.Tools.Reduction import Reduction
 from Adhesion.Interactions import VDW82
 from Adhesion.System import SmoothContactSystem
@@ -78,10 +78,10 @@ def test_wavy(comm):
     nsteps = len(offsets)
     disp0 = np.zeros(substrate.nb_subdomain_grid_pts)
     for i in range(nsteps):
-        result = LBFGS(system.objective(offsets[i], gradient=True),
-                       disp0, jac=True,
-                       maxcor=3,
-                       gtol=1e-5, pnp=pnp)
+        result = l_bfgs(system.objective(offsets[i], gradient=True),
+                        disp0, jac=True,
+                        maxcor=3,
+                        gtol=1e-5, pnp=pnp)
         assert result.success
         force[i] = system.compute_normal_force()
 

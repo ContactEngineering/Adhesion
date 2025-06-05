@@ -138,7 +138,10 @@ def test_minimization_parabolic_cutoff_linear_core(young, r_c):
         decoded_message = result.message
 
     assert decoded_message == \
-        'CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL'
+           'CONVERGENCE: NORM OF PROJECTED GRADIENT <= PGTOL' \
+           or \
+           decoded_message == \
+           'CONVERGENCE: NORM_OF_PROJECTED_GRADIENT_<=_PGTOL'
 
 
 """
@@ -353,7 +356,8 @@ def test_comparison_pycontact(self):
     print("profile: min, max = {}".format(
         (S.surface.heights().min(), S.surface.heights().max())))
     options = dict(ftol=1e-15, gtol=1e-12)
-    result = minimize(fun, np.reshape(disp, (-1,)), jac=True,
+    disp_reshaped = S.shape_minimisation_input(disp)
+    result = minimize(fun, disp_reshaped, jac=True,
                       callback=S.callback(force=True), method='L-BFGS-B',
                       options=options)
 

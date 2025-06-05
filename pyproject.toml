@@ -1,5 +1,5 @@
 [build-system]
-requires = ["flit_core>=3.2", "numpy<2.0"]
+requires = ["flit_core>=3.2", "DiscoverVersion"]
 build-backend = "flit_core.buildapi"
 
 [project]
@@ -9,7 +9,7 @@ readme = "README.md"
 license = { file = "LICENSE.md" }
 authors = [
     { name = "Till Junge", email = "till.junge@altermail.ch" },
-    { name = "Antoine Sanner", email = "antoine.sanner@imtek.uni-freiburg.de" },
+    { name = "Antoine Sanner", email = "asanner@ethz.ch" },
     { name = "Lars Pastewka", email = "lars.pastewka@imtek.uni-freiburg.de" }
 ]
 classifiers = [
@@ -19,22 +19,30 @@ classifiers = [
 requires-python = ">=3.8.0"
 dynamic = [ "version" ]
 dependencies = [
-    "numpy<2",
+    "DiscoverVersion",
+    "numpy",
     "scipy>=1.9.0",
-    "NuMPI>=0.4.0",
-    "muFFT>=0.91.2",
-    "SurfaceTopography>=1.12.0",
-    "ContactMechanics>=1.2.0",
+    "NuMPI>=0.5.0",
+    "muFFT>=0.93.1",
+    "SurfaceTopography>=1.18.3",
+    "ContactMechanics>=1.6.0",
     "netCDF4"
 ]
 
 [project.optional-dependencies]
 test = [
-    "flake8<5",
+    "flake8<8",
     "pytest",
     "pytest-cov",
     "pytest-flake8",
     "runtests"
+]
+docs = [
+    "sphinx",
+    "sphinx-rtd-theme",
+    "myst_nb",
+    "numpydoc",
+    "jupytext"
 ]
 
 [project.urls]

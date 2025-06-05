@@ -2,14 +2,13 @@
 # jupyter:
 #   jupytext:
 #     formats: py:percent
-
 #     text_representation:
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.4
+#       jupytext_version: 1.17.1
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -17,7 +16,11 @@
 # %% [markdown]
 # # Adhesive Simulation of the contact of a sphere
 
+
 # %%
+import pytest
+pytest.skip('Reason: dropped suport for NCStructuredGrid', allow_module_level=True)
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -26,7 +29,6 @@ from Adhesion.Interactions import PowerLaw
 from Adhesion.System import BoundedSmoothContactSystem
 from ContactMechanics.Tools.Logger import screen, Logger
 from SurfaceTopography.Special import make_sphere
-from NuMPI.IO.NetCDF import NCStructuredGrid
 from Adhesion.ReferenceSolutions import JKR
 
 
@@ -187,7 +189,7 @@ dpen = 0.2
 # %% pycharm={"name": "#%%\n"}
 gtol = 1e-4 * abs(interaction.max_tensile) * t.area_per_pt
 
-# %% tags=[]
+# %%
 
 # create outputfile
 ncfilename="sphere_simulation_hardwall_cubic.nc"

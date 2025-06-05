@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 from Adhesion.Interactions import Exponential
 from Adhesion.System import make_system, BoundedSmoothContactSystem
 import numpy as np
-from NuMPI.Optimization import ccg_without_restart
+from NuMPI.Optimization import CCGWithoutRestart
 from NuMPI import MPI
 import scipy.optimize as optim
 
@@ -105,7 +105,7 @@ def test_bug_bench():
     # iter_lbfgsb = sol.nfev
     # mean_val_lbfgs = np.mean(sol.x)
 
-    res = ccg_without_restart.constrained_conjugate_gradients(
+    res = CCGWithoutRestart.constrained_conjugate_gradients(
         system.primal_objective(penetration, gradient=True),
         system.primal_hessian_product,
         x0=init_gap, mean_val=None,

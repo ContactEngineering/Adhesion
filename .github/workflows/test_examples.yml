@@ -14,56 +14,48 @@ on:
 
 jobs:
   tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 40
 
     strategy:
       matrix:
-        python-version: ['3.8', '3.9', '3.10']
-
+        python-version: ['3.11']
+        mufft-version: [0.93.1]
     steps:
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          submodules: recursive
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: recursive
 
-      - name: Set up python3 ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+    - name: Set up python3 ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
 
-      - name: Install dependencies and extension module
-        run: |
-          set -x
-          sudo apt-get update -qy
-          sudo apt-get install -y python3-dev python3-venv libfftw3-dev libopenblas-dev
-          python3 -m venv venv
-          source venv/bin/activate
-          python3 -m pip install --upgrade pip
-          python3 -m pip install flit numpy pip-tools setuptools wheel
-          sudo apt-get install libhdf5-dev libnetcdf-dev
-          python3 -m pip install -v .[test]
-          # Check that NetCDF install was not overriden
-          python3 .check_netcdf_capabilities.py no
-          python3 .check_mufft_capabilities.py no
+    - name: Install dependencies
+      run: |
+        sudo apt-get update -qy
+        python3 -m venv venv
+        source venv/bin/activate
+        python3 -m pip install --upgrade pip pip-tools
+        
+        # Serial installation of muSpectre with FFTW support
+        sudo apt-get install -y \
+            libfftw3-dev \
+            libnetcdf-dev
+        python3 -m pip install -v --no-binary muFFT muFFT==${{ matrix.mufft-version }}
+        python3 -m pip install -v .[test]
 
-      - name: Install extension module
-        run: |
-          source venv/bin/activate
-          python3 -m pip install .[test]
+    - name: Install extension module
+      run: |
+        source venv/bin/activate
+        python3 -m pip install .[test]
 
-      - name: Test example files
-        run: |
-          source venv/bin/activate
-          python3 -m pip install jupytext
-          python3 -m pip list
-          cd docs/examples
-          for f in *.ipynb
-          do
-              jupytext --check  pytest --warn-only $f
-          done
-  
-          for f in *.py
-          do
-              jupytext --check pytest --warn-only $f
-          done
+    - name: Test example files
+      run: |
+        set -e
+        source venv/bin/activate
+        python3 -m pip install jupytext
+        cd docs/examples
+        
+        pytest test_examples.py

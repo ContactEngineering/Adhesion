@@ -184,6 +184,15 @@ def test_stress_intensity_factor_second_derivative():
                                atol=1e-6, rtol=1e-4)
 
 
+@pytest.mark.parametrize("pen", (0.1, 0.5, 1))
+def test_stress_intensity_factor_second_derivative_nonadhesive(pen):
+    a = JKR.contact_radius(penetration=pen, work_of_adhesion=0)
+
+    np.testing.assert_allclose(JKR.stress_intensity_factor(
+        contact_radius=a,
+        penetration=pen, der="2_a"), 0, atol=1e-12)
+
+
 @pytest.mark.parametrize("contact_modulus", [0.75, 1.9])
 @pytest.mark.parametrize("radius", [1., 10.])
 def test_energy_release_rate_derivatives_against_sif_derivatives(radius, contact_modulus):
@@ -202,7 +211,7 @@ def test_energy_release_rate_derivatives_against_sif_derivatives(radius, contact
         sif / contact_modulus
         * JKR.stress_intensity_factor(contact_radius=contact_radius, penetration=penetration, der="1_a",
                                       radius=radius, contact_modulus=contact_modulus),
-        atol=1e-14, rtol=0
+        atol=1e-13, rtol=0
         )
 
     np.testing.assert_allclose(

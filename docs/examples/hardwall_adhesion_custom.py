@@ -26,6 +26,10 @@
 
 
 # %%
+import pytest
+pytest.skip('Reason: dropped suport for NCStructuredGrid', allow_module_level=True)
+
+# %%
 import scipy.optimize
 import matplotlib.pyplot as plt
 import numpy as np
