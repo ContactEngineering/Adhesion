@@ -2,14 +2,13 @@
 # jupyter:
 #   jupytext:
 #     formats: py:percent
-
 #     text_representation:
 #       extension: .py
 #       format_name: percent
 #       format_version: '1.3'
-#       jupytext_version: 1.14.4
+#       jupytext_version: 1.17.1
 #   kernelspec:
-#     display_name: Python 3
+#     display_name: Python 3 (ipykernel)
 #     language: python
 #     name: python3
 # ---
@@ -33,9 +32,9 @@ from matplotlib.colors import LinearSegmentedColormap
 c, = read_published_container("https://doi.org/10.57703/ce-rs7jq")
 
 # %%
-t = c._topographies[1].to_unit("m")
+t = c[1].to_unit('m')
 
-# %% tags=[]
+# %%
 t.is_periodic
 
 # %%
@@ -277,6 +276,6 @@ nonadhesive_system.compute_normal_force() / np.prod(t.physical_sizes) / 1000
 
 # %% [markdown]
 #
-# - [../test/test_bugnicourt_primal_rough_weakly_adhesive.py]()
+# - [../../test/test_bugnicourt_primal_rough_weakly_adhesive.py]()
 
 # %%

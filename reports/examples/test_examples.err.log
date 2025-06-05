@@ -25,27 +25,40 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
+
+import pathlib
+import runpy
 import pytest
-pytest.skip('Reason: dropped suport for NCStructuredGrid', allow_module_level=True)
+import subprocess
 
-import numpy as np
-import matplotlib.pyplot as plt
+basedir = pathlib.Path(__file__,'..',).resolve()
+# print(scripts)
+scripts = basedir.glob('*.py')
 
-from SurfaceTopography import Topography
-from Adhesion.Interactions import PowerLaw
-from Adhesion.System import BoundedSmoothContactSystem
-from ContactMechanics.Tools.Logger import screen, Logger
-from SurfaceTopography.Special import make_sphere
-from Adhesion.ReferenceSolutions import JKR
+@pytest.mark.parametrize('script', scripts)
+def test_script_execution( script):
+    runpy.run_path(str(script))
+    # call = f"jupytext --to notebook --output - {script} | jupyter nbconvert --execute --allow-errors -y --stdin --to=html --output={script.name}.html".split(" ")
+    # assert subprocess.check_call(call, env=env, shell=True) == 0
+
+notebooks = basedir.glob('*.ipynb')
+@pytest.mark.parametrize('nb', notebooks)
+def test_notebooks_execution(nb):
+    path = str(nb)
+    assert subprocess.check_call(['jupytext', '--to', 'py', path],) == 0
+
+    runpy.run_path(path.removesuffix(".ipynb") + ".py")
 ------------------
 
 
 [31m---------------------------------------------------------------------------[39m
 [31mModuleNotFoundError[39m                       Traceback (most recent call last)
-[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 1[39m
-[32m----> [39m[32m1[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpytest[39;00m
-[32m      2[39m pytest.skip([33m'[39m[33mReason: dropped suport for NCStructuredGrid[39m[33m'[39m, allow_module_level=[38;5;28;01mTrue[39;00m)
-[32m      4[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mnumpy[39;00m[38;5;250m [39m[38;5;28;01mas[39;00m[38;5;250m [39m[34;01mnp[39;00m
+[36mCell[39m[36m [39m[32mIn[1][39m[32m, line 3[39m
+[32m      1[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpathlib[39;00m
+[32m      2[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mrunpy[39;00m
+[32m----> [39m[32m3[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01mpytest[39;00m
+[32m      4[39m [38;5;28;01mimport[39;00m[38;5;250m [39m[34;01msubprocess[39;00m
+[32m      6[39m basedir = pathlib.Path([34m__file__[39m,[33m'[39m[33m..[39m[33m'[39m,).resolve()
 
 [31mModuleNotFoundError[39m: No module named 'pytest'
 

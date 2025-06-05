@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Example of rough simulation with adhesion on the contact challenge 512x512 topography &mdash; Adhesion 0.91.0.dev108+g52a8467e documentation</title>
+  <title>Example of rough simulation with adhesion on the contact challenge 512x512 topography &mdash; Adhesion 0.92.0.dev30+g77c94ccc documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=fb11df9d"></script>
+      <script src="../_static/documentation_options.js?v=8a0e9b1e"></script>
       <script src="../_static/doctools.js?v=9bcbadda"></script>
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../_static/js/theme.js"></script>
@@ -103,28 +103,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># ---</span>
-<span class="c1"># jupyter:</span>
-<span class="c1">#   jupytext:</span>
-<span class="c1">#     formats: py:percent</span>
-
-<span class="c1">#     text_representation:</span>
-<span class="c1">#       extension: .py</span>
-<span class="c1">#       format_name: percent</span>
-<span class="c1">#       format_version: &#39;1.3&#39;</span>
-<span class="c1">#       jupytext_version: 1.14.4</span>
-<span class="c1">#   kernelspec:</span>
-<span class="c1">#     display_name: Python 3</span>
-<span class="c1">#     language: python</span>
-<span class="c1">#     name: python3</span>
-<span class="c1"># ---</span>
-</pre></div>
-</div>
-</div>
-</div>
-<section id="example-of-rough-simulation-with-adhesion-on-the-contact-challenge-512x512-topography">
+  <section id="example-of-rough-simulation-with-adhesion-on-the-contact-challenge-512x512-topography">
 <h1>Example of rough simulation with adhesion on the contact challenge 512x512 topography<a class="headerlink" href="#example-of-rough-simulation-with-adhesion-on-the-contact-challenge-512x512-topography" title="Link to this heading"></a></h1>
 <p>The adhesion is longer ranged in this example than in the original contact challenge problem definitition because we use a much coarser grid here.</p>
 <div class="cell docutils container">
@@ -150,24 +129,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">_topographies</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_unit</span><span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">AttributeError</span><span class="g g-Whitespace">                            </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">t</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">_topographies</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_unit</span><span class="p">(</span><span class="s2">&quot;m&quot;</span><span class="p">)</span>
-
-<span class="nn">File ~/work/Adhesion/venv/lib/python3.12/site-packages/SurfaceTopography/Container/SurfaceContainer.py:53,</span> in <span class="ni">SurfaceContainer.__getattr__</span><span class="nt">(self, name)</span>
-<span class="g g-Whitespace">     </span><span class="mi">51</span>     <span class="k">return</span> <span class="n">func</span>
-<span class="g g-Whitespace">     </span><span class="mi">52</span> <span class="k">else</span><span class="p">:</span>
-<span class="ne">---&gt; </span><span class="mi">53</span>     <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Unkown attribute &#39;</span><span class="si">{}</span><span class="s2">&#39; and no analysis or pipeline function of this name registered&quot;</span>
-<span class="g g-Whitespace">     </span><span class="mi">54</span>                          <span class="s2">&quot;(class </span><span class="si">{}</span><span class="s2">). Available functions: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
-<span class="g g-Whitespace">     </span><span class="mi">55</span>                                                                       <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_functions</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
-
-<span class="ne">AttributeError</span>: Unkown attribute &#39;_topographies&#39; and no analysis or pipeline function of this name registered(class LazySurfaceContainer). Available functions: to_zip, bandwidth, suggest_length_unit, autocorrelation, power_spectrum, variable_bandwidth, scale_dependent_statistical_property, ciso_moment, c1d_moment, integrate_psd_from_profile, variance_half_derivative_from_autocorrelation, variance_half_derivative_via_autocorrelation_from_profile
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_unit</span><span class="p">(</span><span class="s1">&#39;m&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -178,10 +140,20 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span><span class="o">.</span><span class="n">rms_gradient</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.7336383107366982)
 </pre></div>
 </div>
 </div>
@@ -192,10 +164,20 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(7.621658676206695e-07)
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span><span class="o">/</span><span class="n">t</span><span class="o">.</span><span class="n">rms_curvature_from_area</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(3.9854089287690105e-07)
 </pre></div>
 </div>
 </div>
@@ -266,6 +248,9 @@ We use a small fraction of this typical force as the numerical tolerance for the
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/2480d6754752e0bdb59cd9ebae4be107f3d66bfca3278c8223bea1208aac1843.png" src="../_images/2480d6754752e0bdb59cd9ebae4be107f3d66bfca3278c8223bea1208aac1843.png" />
+</div>
 </div>
 </section>
 <section id="contact-system-with-hardwall-repulsion">
@@ -318,6 +303,12 @@ We use a small fraction of this typical force as the numerical tolerance for the
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Persson and Tosatti adhesion criterion: 
+elastic deformation energy for full contact / work of adhesion: 39.13343569623426
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="pastewka-and-robbins-criterion">
@@ -346,12 +337,24 @@ See below.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>P&amp;R stickiness criterion: 26.030372997649295
+Generalized Tabor parameter following Martin Müser
+0.18802240638058296
+</pre></div>
+</div>
+</div>
 </div>
 <p>Is the Pastewka Robbins assumption of short-ranged adhesion valid ?</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;rms_height / interaction_length: &quot;</span>
       <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">rms_height_from_area</span><span class="p">()</span> <span class="o">/</span> <span class="n">interaction</span><span class="o">.</span><span class="n">rho</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>rms_height / interaction_length: 12.267276156778841
 </pre></div>
 </div>
 </div>
@@ -370,11 +373,21 @@ See below.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(1.1440252811276238e-06)
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;rho / g0: &quot;</span>
       <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">g0</span> <span class="o">/</span> <span class="n">interaction</span><span class="o">.</span><span class="n">rho</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>rho / g0: 18.41341189646908
 </pre></div>
 </div>
 </div>
@@ -395,6 +408,11 @@ See below.</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>nb pixels in process zone: 3.145522527469698
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="empirical-criterion-on-contact-of-spheres-see-adhesive-simulation-sphere-ipynb">
@@ -409,6 +427,11 @@ $$</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(8.388060073252527)
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="wang-zhou-and-muser-2021-equation-9-and-fig-8">
@@ -419,6 +442,11 @@ $$</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="o">-</span> <span class="n">interaction</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># min curvature for the exponential interaction</span>
                  <span class="o">/</span> <span class="n">Es</span> <span class="o">*</span> <span class="n">dx</span>
                 <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(0.3181109830364135)
 </pre></div>
 </div>
 </div>
@@ -467,6 +495,9 @@ $$</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/9f8c020ac20f24e096b15e39a366d21e09241b6807cb2f078ae795775bce1242.png" src="../_images/9f8c020ac20f24e096b15e39a366d21e09241b6807cb2f078ae795775bce1242.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -475,6 +506,9 @@ $$</p>
 <span class="n">fig</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/dc39a6ea5bb78a2df9f6834263ca4ebfdb899fc6f1adb86d2e9bd15fe11a322c.png" src="../_images/dc39a6ea5bb78a2df9f6834263ca4ebfdb899fc6f1adb86d2e9bd15fe11a322c.png" />
 </div>
 </div>
 <p>Gaps</p>
@@ -489,6 +523,9 @@ $$</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/a749081cf7f73142d7560b355b3adbd1353474de1d419322eab300f6169fb320.png" src="../_images/a749081cf7f73142d7560b355b3adbd1353474de1d419322eab300f6169fb320.png" />
+</div>
 </div>
 </section>
 <section id="how-adhesion-affected-the-mean-pressure-in-mpa">
@@ -499,10 +536,20 @@ $$</p>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(245.56262277967687)
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">nonadhesive_system</span><span class="o">.</span><span class="n">compute_normal_force</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">physical_sizes</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>np.float64(250.0)
 </pre></div>
 </div>
 </div>
@@ -512,7 +559,7 @@ $$</p>
 <section id="further-examples">
 <h2>Further examples<a class="headerlink" href="#further-examples" title="Link to this heading"></a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="#"><span class="xref myst">../test/test_bugnicourt_primal_rough_weakly_adhesive.py</span></a></p></li>
+<li><p><a class="reference internal" href="#"><span class="xref myst">../../test/test_bugnicourt_primal_rough_weakly_adhesive.py</span></a></p></li>
 </ul>
 </section>
 </section>
