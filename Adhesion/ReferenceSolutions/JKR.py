@@ -620,6 +620,7 @@ def _stress_intensity_factor_from_penetration_radius(contact_radius, penetration
 
     dh = a ** 2 / R  # hertzian displacement
     dc = d - dh  # displacement imposed to the external crack
+    dcda = - 2 * a / R
 
     if der == "0":
         return - (Es * dc / np.sqrt(np.pi * a))
@@ -628,6 +629,8 @@ def _stress_intensity_factor_from_penetration_radius(contact_radius, penetration
             + Es / np.sqrt(np.pi * a) * 2 * a / R
     elif der == "2_a":
         return - 3 / 4 * a ** (-5 / 2) * Es * dc / np.sqrt(np.pi)
+    elif der == "3_a":
+        return 15 / 8 * a ** (-7 / 2) * Es * dc / np.sqrt(np.pi) - 3 / 4 * a ** (-5 / 2) * Es * dcda / np.sqrt(np.pi)
     elif der == "1_d":
         return - Es / np.sqrt(np.pi * a)
     elif der == "2_ad" or der == "2_da":

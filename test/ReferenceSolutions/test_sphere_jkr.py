@@ -184,6 +184,31 @@ def test_stress_intensity_factor_second_derivative():
                                atol=1e-6, rtol=1e-4)
 
 
+def test_stress_intensity_factor_third_derivative():
+    a = np.linspace(0.5, 1, 1000)
+
+    pen = 0.5
+    am = a[2:-2]
+    da = a[1] - a[0]
+    dK_da3_num = (-1 / 2 * JKR.stress_intensity_factor(a[:-4], pen, )
+                  + JKR.stress_intensity_factor(a[1:-3], pen, )
+                  - JKR.stress_intensity_factor(a[3:-1], pen, )
+                  + 0.5 * JKR.stress_intensity_factor(a[4:], pen, )) / da ** 3
+    dK_da3_analytical = JKR.stress_intensity_factor(
+        contact_radius=am,
+        penetration=pen, der="3_a")
+    if True:
+        import matplotlib.pyplot as plt
+        fig, ax = plt.subplots()
+        ax.plot(am, dK_da3_num, "+", label="numerical")
+        ax.plot(am, dK_da3_analytical, "o", mfc="none",
+                label="analytical")
+        plt.show()
+
+    np.testing.assert_allclose(dK_da3_analytical, dK_da3_num,
+                               atol=1e-6, rtol=1e-4)
+
+
 @pytest.mark.parametrize("pen", (0.1, 0.5, 1))
 def test_stress_intensity_factor_second_derivative_nonadhesive(pen):
     a = JKR.contact_radius(penetration=pen, work_of_adhesion=0)
