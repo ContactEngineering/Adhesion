@@ -2,8 +2,8 @@
 Change log for Adhesion
 =======================
 
-v0.93.0 (05Jun25)
------------------
+v1.0.0 (05Jun25)
+----------------
 
 - ENH: third derivative of stress intensity factor of a JKR contact
 
@@ -16,12 +16,11 @@ v0.92.1 (05Jun25)
 
 v0.92.0 (14Jan24)
 -----------------
-- 
+
 - ENH: Analytical formulas for JKR contact 
 - BUG: Fixed discover of version when in a git repository that is not the
   source directory of SurfaceTopography
 - DOC: Examples are now in documentation and stored as plain-text (jupytext) python files
-
 
 v0.91.0 (03Jan23)
 -----------------
