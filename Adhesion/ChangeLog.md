@@ -2,16 +2,21 @@
 Change log for Adhesion
 =======================
 
-
-
-v0.92.1 (13May25)
+v0.93.0 (05Jun25)
 -----------------
+
+- ENH: third derivative of stress intensity factor of a JKR contact
+
+v0.92.1 (05Jun25)
+-----------------
+
 - MAINT: adjust to new muFFT and NUMPI APIs
 - MAINT: drop python 3.8 support
 - DOC: correct some missing renames
 
 v0.92.0 (14Jan24)
 -----------------
+- 
 - ENH: Analytical formulas for JKR contact 
 - BUG: Fixed discover of version when in a git repository that is not the
   source directory of SurfaceTopography
