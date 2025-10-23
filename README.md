@@ -19,6 +19,8 @@ Building documentation: [![CI](https://github.com/ContactEngineering/Adhesion/ac
 Documentation
 -------------
 
+Computer-generated overview of code structure: [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ContactEngineering/Adhesion)
+
 [Sphinx built documentation](https://contactengineering.github.io/Adhesion/)
 
 Installation
