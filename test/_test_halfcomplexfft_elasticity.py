@@ -1,11 +1,13 @@
 import numpy as np
 import pytest
-from muFFT import FFT
+from muGrid import Communicator, FFTEngine
 from ContactMechanics import PeriodicFFTElasticHalfSpace
 from SurfaceTopography.Generation import fourier_synthesis
 from Adhesion.Interactions import RepulsiveExponential
 from Adhesion.System import make_system, SmoothContactSystem
 from NuMPI import MPI
+
+pytestmark = pytest.mark.skip(reason="muGrid no longer supports halfcomplex FFTs")
 
 pytestmark = pytest.mark.skipif(MPI.COMM_WORLD.Get_size() > 1,
                                 reason="tests only serial funcionalities, "
@@ -76,9 +78,8 @@ def test_sinewave_(k, nx, ny):
                        np.linspace(0, sx, nx + 1)[:-1])
     disp = np.cos(qx * X + qy * Y) + np.sin(qx * X + qy * Y)
 
-    substrate = PeriodicFFTElasticHalfSpace((nx, ny), E_s, (sx, sy),
-                                            fft='fftw')
-    engine = FFT((nx, ny))
+    substrate = PeriodicFFTElasticHalfSpace((nx, ny), E_s, (sx, sy))
+    engine = substrate.fftengine
 
     real_buffer = engine.register_halfcomplex_field(
         "real-space",)
