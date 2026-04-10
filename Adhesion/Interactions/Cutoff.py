@@ -416,7 +416,7 @@ class ParabolicCutoffPotential(DecoratedPotential):
         """
         computes the coefficients of the corrective parabola
         """
-        ΔV, ΔdV, ΔddV = [-float(dummy)
+        ΔV, ΔdV, ΔddV = [-dummy.item()
                          for dummy
                          in self.parent_potential.evaluate(
                 self.cutoff_radius, potential=True,

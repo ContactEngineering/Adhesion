@@ -2,10 +2,14 @@
 Change log for Adhesion
 =======================
 
-v1.0.0 (05Jun25)
+v0.93 (05Jun25)
 ----------------
 
 - ENH: third derivative of stress intensity factor of a JKR contact
+- MAINT: adjust to new muGrid API
+- MAINT: drop support for halfcomplex ffts and hence (preconditionned) calculations in fourier space 
+- MAINT: drop python 3.9 support
+
 
 v0.92.1 (05Jun25)
 -----------------
