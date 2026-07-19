@@ -2,7 +2,7 @@
 Change log for Adhesion
 =======================
 
-v0.93 (05Jun25)
+v0.93 (19Jul26)
 ----------------
 
 - ENH: third derivative of stress intensity factor of a JKR contact
