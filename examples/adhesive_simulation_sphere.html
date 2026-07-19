@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Adhesive Simulation of the contact of a sphere &mdash; Adhesion 0.92.1.dev18+g81c59abe documentation</title>
+  <title>Adhesive Simulation of the contact of a sphere &mdash; Adhesion 0.92.1.dev19+gd4590102 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
@@ -14,7 +14,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=069fe088"></script>
+      <script src="../_static/documentation_options.js?v=217399b4"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/js/theme.js"></script>
@@ -196,12 +196,12 @@ $$</p>
 <p>Several arguments lead to this scaling relation:</p>
 <ol class="arabic simple">
 <li><p>More than one pixels need to fall within the range of interaction at the edge of the contact. We estimate the gap at the contact edge using the JKR equation.</p></li>
-<li><p>The region where the stresses peak to the maximimum cohesive stress is called the cohesive zone and needs to include more than one pixel. The width of this region can be estimated from the region where the square-root singular stresses of the JKR solution exceed the max interaction stress. See e.g. <a class="reference external" href="https://eds.s.ebscohost.com/abstract?site=eds&amp;amp;scope=site&amp;amp;jrnl=03542025&amp;amp;AN=102396230&amp;amp;h=iFXqZ3C8CtweMQrf8a%2bDvdqqxAsDZsUJqlRrgcoUV9RtbO3xhCb%2be%2b8cXCY4qScc%2fzZSOR7GTlUaVs8neUuNAw%3d%3d&amp;amp;crl=f&amp;amp;resultLocal=ErrCrlNoResults&amp;amp;resultNs=Ehost&amp;amp;crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d03542025%26AN%3d102396230">Pohrt and Popov 2015</a>.</p></li>
+<li><p>The region where the stresses peak to the maximimum cohesive stress is called the cohesive zone and needs to include more than one pixel. The width of this region can be estimated from the region where the square-root singular stresses of the JKR solution exceed the max interaction stress. See e.g. <a class="reference external" href="https://eds.s.ebscohost.com/abstract?site=eds&amp;scope=site&amp;jrnl=03542025&amp;AN=102396230&amp;h=iFXqZ3C8CtweMQrf8a%2bDvdqqxAsDZsUJqlRrgcoUV9RtbO3xhCb%2be%2b8cXCY4qScc%2fzZSOR7GTlUaVs8neUuNAw%3d%3d&amp;crl=f&amp;resultLocal=ErrCrlNoResults&amp;resultNs=Ehost&amp;crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d03542025%26AN%3d102396230">Pohrt and Popov 2015</a>.</p></li>
 <li><p>The elastic coupling between neighboring pixels (the stiffness associeted with the highest Fourier mode $\sim E^* / \Delta x$) should be stronger than the stiffness of the interaction force $\phi^{\prime\prime}$. This requirement means that $\min(\phi^{\prime\prime}) \sim w / \rho^2 &lt; E^* / \Delta x$, up to a numerical prefactor.
 This argument was put forward by <a class="reference external" href="https://doi.org/10.3390/lubricants9020017">Wang, Zhou and Müser 2021</a> (See Equation (9) and Fig.8).</p></li>
 <li><p><a class="reference internal" href="#"><span class="xref myst">Persson and Scarraggi</span></a>, Appendix A: Consider a penny-shaped crack of size one pixel. In the continuum and JKR limit, a penny shaped crack propagates at a a critical stress $\sim \sqrt{w E \Delta x}$. If the interaction strength is larger than this value, the crack will grow at larger stresses than predicted by the continuum, JKR limit, leading to artificially large adhesion.</p></li>
 </ol>
-<p>Arguments similar to 2 and 4  lead to an implementation of adhesion using a pixel detachment criterion in Refs. <a class="reference external" href="http://dx.doi.org/10.1007/s10409-016-0630-y">Hulikal et al. 2017</a> and <a class="reference external" href="https://eds.s.ebscohost.com/abstract?site=eds&amp;amp;scope=site&amp;amp;jrnl=03542025&amp;amp;AN=102396230&amp;amp;h=iFXqZ3C8CtweMQrf8a%2bDvdqqxAsDZsUJqlRrgcoUV9RtbO3xhCb%2be%2b8cXCY4qScc%2fzZSOR7GTlUaVs8neUuNAw%3d%3d&amp;amp;crl=f&amp;amp;resultLocal=ErrCrlNoResults&amp;amp;resultNs=Ehost&amp;amp;crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d03542025%26AN%3d102396230">Pohrt and Popov 2015</a>.</p>
+<p>Arguments similar to 2 and 4  lead to an implementation of adhesion using a pixel detachment criterion in Refs. <a class="reference external" href="http://dx.doi.org/10.1007/s10409-016-0630-y">Hulikal et al. 2017</a> and <a class="reference external" href="https://eds.s.ebscohost.com/abstract?site=eds&amp;scope=site&amp;jrnl=03542025&amp;AN=102396230&amp;h=iFXqZ3C8CtweMQrf8a%2bDvdqqxAsDZsUJqlRrgcoUV9RtbO3xhCb%2be%2b8cXCY4qScc%2fzZSOR7GTlUaVs8neUuNAw%3d%3d&amp;crl=f&amp;resultLocal=ErrCrlNoResults&amp;resultNs=Ehost&amp;crlhashurl=login.aspx%3fdirect%3dtrue%26profile%3dehost%26scope%3dsite%26authtype%3dcrawler%26jrnl%3d03542025%26AN%3d102396230">Pohrt and Popov 2015</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">interaction_range</span> <span class="o">=</span> <span class="mf">0.1</span>
